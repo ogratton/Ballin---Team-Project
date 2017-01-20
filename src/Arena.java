@@ -13,14 +13,14 @@ public class Arena extends JPanel implements ActionListener {
 
 	private Timer timer;
 	private Ball ball;
-	private final int DELAY = 1000/60;
+	private final int DELAY = 10;
 
-	public Arena() {
+	public Arena(int WIDTH, int HEIGHT) {
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		setBackground(Color.BLACK);
 
-		ball = new Ball();
+		ball = new Ball(WIDTH, HEIGHT);
 
 		timer = new Timer(DELAY, this);
 		timer.start();

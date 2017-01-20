@@ -4,9 +4,10 @@ import javax.swing.JFrame;
 public class GameTest extends JFrame {
 
 	public GameTest() {
-		add(new Arena());
-
-		setSize(1000, 600);
+		int WIDTH = 1000;
+		int HEIGHT = 600;
+		add(new Arena(WIDTH, HEIGHT));
+		setSize(WIDTH + 26, HEIGHT + 50);
 		setResizable(false);
 
 		setTitle("Game Test");
