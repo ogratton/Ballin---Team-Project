@@ -6,8 +6,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import resources.Character;
+
 /**
- * Class with functions pertaining to the retrieval and loading of sprites from a given sprite sheet
+ * Class with functions pertaining to the retrieval and loading of sprites from
+ * a given sprite sheet
+ * 
  * @author George Kaye
  *
  */
@@ -15,24 +19,26 @@ import javax.imageio.ImageIO;
 public class Sprite {
 
 	// enum for the different types of sprite
-	public static enum SheetType{CHARACTER, TILE};
-	
-	// how big each sprite is (square)
-	private static final int TILE_SIZE = 50;
+	public static enum SheetType {
+		CHARACTER, TILE
+	};
 
 	/**
 	 * Load a sprite from a sprite sheet on the system
-	 * @param spriteName the name of the sprite
-	 * @param spriteType the type of the sprite
+	 * 
+	 * @param spriteName
+	 *            the name of the sprite
+	 * @param spriteType
+	 *            the type of the sprite
 	 * @return a BufferedImage of the sprite sheet
 	 */
-	
-	public static BufferedImage loadSprite(String spriteName, SheetType spriteType) {
+
+	public static BufferedImage loadSpriteSheet(String spriteName, SheetType spriteType) {
 
 		BufferedImage sprite = null;
 		String sheetType = "";
-		
-		switch(spriteType){
+
+		switch (spriteType) {
 		case CHARACTER:
 			sheetType = "characters/";
 			break;
@@ -40,11 +46,11 @@ public class Sprite {
 			sheetType = "tiles/";
 			break;
 		}
-		
-		String address = "graphics/sprites/" + sheetType + spriteName + "/sheet.png";
-		
+
+		String address = "src/graphics/sprites/" + sheetType + spriteName + "/sheet.png";
+
 		try {
-			
+			System.out.println(address);
 			sprite = ImageIO.read(new File(address));
 		} catch (IOException e) {
 			System.err.println("sprite sheet not found!");
@@ -55,15 +61,39 @@ public class Sprite {
 	}
 
 	/**
-	 * Get an individual sprite from a sprite sheet
-	 * @param spriteSheet the sprite sheet
-	 * @param x the column of the sprite
-	 * @param y the row of the sprite
-	 * @return a BufferedImage of the sprite
+	 * Determine the name of a sprite sheet for a class
+	 * @param classType the class
+	 * @return the name
 	 */
 	
-	public static BufferedImage getSprite(BufferedImage spriteSheet, int x, int y) {
-		return spriteSheet.getSubimage(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+	public static String determineSpriteSheetName(Character.Class classType) {
+
+		switch (classType) {
+		case DEFAULT:
+			return "wizard";
+		}
+		
+		return "";
+
+	}
+
+	/**
+	 * Get an individual sprite from a sprite sheet
+	 * 
+	 * @param spriteSheet
+	 *            the sprite sheet
+	 * @param x
+	 *            the column of the sprite
+	 * @param y
+	 *            the row of the sprite
+	 * @param size
+	 *            the size of the sprite
+	 * @return a BufferedImage of the sprite
+	 */
+
+	public static BufferedImage getSprite(BufferedImage spriteSheet, int x, int y, int size) {
+		System.out.println(x + ", " + y);
+		return spriteSheet.getSubimage(x * size, y * size, size, size);
 	}
 
 }
