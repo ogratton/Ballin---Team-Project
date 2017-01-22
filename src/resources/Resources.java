@@ -1,4 +1,4 @@
-package game;
+package resources;
 
 /*
  * These things are needed by UI, Physics and Graphics, and possibly Networking,

@@ -1,4 +1,4 @@
-package game;
+package resources;
 
 import java.awt.geom.Point2D;
 
@@ -10,7 +10,7 @@ public class Character {
 	
 	public enum Heading{N,E,S,W,NE,NW,SE,SW};
 	
-	// this will have all the classes in use.
+	// this will have all the Character classes in use.
 	public enum Class{DEFAULT}; // add to this as we develop more classes.
 	
 	// flags for keys pressed. 
@@ -21,7 +21,7 @@ public class Character {
 	private boolean up, right, left, down, jump, punch, block;
 	
 	//these are for the physics engine.
-	private double mass, inv_mass, speed_x, speed_y, max_speed_x, max_speed_y, acc;
+	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc;
 	
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -79,10 +79,10 @@ public class Character {
 		this.mass = mass;
 		this.inv_mass = 1.0/mass;
 		
-		this.speed_x = speed_x;
-		this.speed_y = speed_y;
-		this.max_speed_x = max_speed_x;
-		this.max_speed_y = max_speed_y;
+		this.dx = speed_x;
+		this.dy= speed_y;
+		this.maxdx= max_speed_x;
+		this.maxdy= max_speed_y;
 		this.acc= acceleration;
 		this.centre = centre;
 		this.radius = radius;
@@ -121,80 +121,83 @@ public class Character {
 	public void setBlock(boolean block) {
 		this.block = block;
 	}
-	
-	public boolean getUp() {
+	//getters
+	public boolean up() {
 		return up;
 	}
-	public boolean getDown() {
+	public boolean down() {
 		return down;
 	}
-	public boolean getLeft() {
+	public boolean left() {
 		return left;
 	}
-	public boolean getRight() {
+	public boolean right() {
 		return right;
 	}
-	public boolean getJump() {
+	public boolean jump() {
 		return jump;
 	}
-	public boolean getPunch() {
+	public boolean punch() {
 		return punch;
 	}
-	public boolean getBlock() {
+	public boolean block() {
 		return block;
 	}
-	
-	public void setMass(double mass) {
+	//setters
+	public void mass(double mass) {
 		this.mass = mass;
 		inv_mass = 1.0/mass;
 	}
-	public void setSpeed_x(double speed_x) {
-		this.speed_x = speed_x;
+	public void dx(double speed_x) {
+		this.dx = speed_x;
 	}
-	public void setSpeed_y(double speed_y) {
-		this.speed_y = speed_y;
+	public void dy(double speed_y) {
+		this.dy = speed_y;
 	}
-	public void setMaxSpeed_x(double max_speed_x) {
-		this.max_speed_x = max_speed_x;
+	public void maxdx(double max_speed_x) {
+		this.maxdx = max_speed_x;
 	}
-	public void setMaxSpeed_y(double max_speed_y) {
-		this.max_speed_y = max_speed_y;
+	public void maxdy(double max_speed_y) {
+		this.maxdy = max_speed_y;
 	}
-	public void setAcc(double acceleration) {
+	public void acc(double acceleration) {
 		acc = acceleration;
 	}
-	public void setPos(Point2D position) {
+	public void pos(Point2D position) {
 		centre = position;
 	}
-	public void setRadius(double radius) {
+	public void radius(double radius) {
 		this.radius = radius;
 	}
 	public void setFacing(Heading facing) {
 		this.facing = facing;
 	}
-
-	public double getMass() {
+	//getters
+	public double mass() {
 		return mass;
 	}
-	public double getSpeed_x() {
-		return speed_x;
+	public double inv_mass() {
+		return inv_mass;
 	}
-	public double getSpeed_y() {
-		return speed_y;
+	public double dx() {
+		return dx;
 	}
-	public double getMaxSpeed_x() {
-		return max_speed_x;
+	public double dy() {
+		return dy;
 	}
-	public double getMaxSpeed_y() {
-		return max_speed_y;
+	public double maxdx() {
+		return maxdx;
 	}
-	public double getAcc() {
+	public double maxdy() {
+		return maxdy;
+	}
+	public double acc() {
 		return acc;
 	}
-	public Point2D getPos() {
+	public Point2D pos() {
 		return centre;
 	}
-	public double getRadius() {
+	public double radius() {
 		return radius;
 	}
 	public Heading getFacing() {
