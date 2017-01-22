@@ -21,7 +21,7 @@ public class Character {
 	private boolean up, right, left, down, jump, punch, block;
 	
 	//these are for the physics engine.
-	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc;
+	private double mass, inv_mass, x, y, dx, dy, maxdx, maxdy, acc;
 	
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -38,13 +38,14 @@ public class Character {
 		new Character(default_mass, new Point2D.Double(0.0, 0.0), default_radius, Heading.N);
 	}
 	
-	public Character(double mass, Point2D position, Double radius, Heading facing) {
+	public Character(double mass, Point2D position, Double radius, Heading facing){
+		inv_mass = 1.0/mass;
 		new Character(false, false, false, false, false, false, false, // control flags
 				mass, 
 				0.0, // speed_x 
 				0.0, // speed_y 
-				default_max_speed_x,
-				default_max_speed_y, 
+				default_max_speed_x * inv_mass,
+				default_max_speed_y * inv_mass, 
 				1.0, // acceleration (TODO: calculate this)
 				position, radius, facing);
 	}
@@ -80,7 +81,7 @@ public class Character {
 		this.inv_mass = 1.0/mass;
 		
 		this.dx = speed_x;
-		this.dy= speed_y;
+		this.dy = speed_y;
 		this.maxdx= max_speed_x;
 		this.maxdy= max_speed_y;
 		this.acc= acceleration;
@@ -148,6 +149,12 @@ public class Character {
 		this.mass = mass;
 		inv_mass = 1.0/mass;
 	}
+	public void x(double x) {
+		this.x = x;
+	}
+	public void y(double y) {
+		this.y = y;
+	}
 	public void dx(double speed_x) {
 		this.dx = speed_x;
 	}
@@ -178,6 +185,12 @@ public class Character {
 	}
 	public double inv_mass() {
 		return inv_mass;
+	}
+	public double x() {
+		return x;
+	}
+	public double y() {
+		return y;
 	}
 	public double dx() {
 		return dx;
