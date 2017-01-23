@@ -1,8 +1,8 @@
 package graphics;
 
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Observable;
 
 import graphics.sprites.SpriteSheet;
 import resources.Character;
@@ -14,18 +14,20 @@ import resources.Character;
  *
  */
 
-public class CharacterModel extends Observable {
+public class CharacterModel {
 
 	private Character character;
 	private SpriteSheet spriteSheet;
 	private ArrayList<BufferedImage> rollingSprites;
 	private int rollingFrame;
-	private boolean up, down, left, right;
-	private int velX, velY, posX, posY;
-	private static final int SPEED = 3;
+	private boolean up, down, left, right = false;
+	private int velX, velY;
+	private static final int SPEED = 10;
+	private Direction dir = Direction.E;
+	private boolean moving;
 
 	public static enum Direction {
-		U, D, L, R
+		N, NE, E, SE, S, SW, W, NW
 	};
 
 	/**
@@ -39,6 +41,8 @@ public class CharacterModel extends Observable {
 
 		super();
 		this.character = character;
+
+		this.moving = false;
 
 		this.spriteSheet = spriteSheet;
 		rollingSprites = new ArrayList<BufferedImage>();
@@ -96,6 +100,14 @@ public class CharacterModel extends Observable {
 		this.character.y(y);
 	}
 
+	public boolean isMoving() {
+		return this.moving;
+	}
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
+
 	/**
 	 * Get the current rolling frame
 	 * 
@@ -104,10 +116,26 @@ public class CharacterModel extends Observable {
 
 	public BufferedImage getRollingFrame() {
 
-		if (rollingFrame != 7) {
+		if(isMoving()){
+		switch (dir) {
+		case W:
+		case NW:
+		case SW:
+		case N:
+			rollingFrame--;
+			break;
+		case E:
+		case NE:
+		case SE:
+		case S:
 			rollingFrame++;
-		} else {
+			break;
+		}
+		if (rollingFrame == 8)
 			rollingFrame = 0;
+
+		if (rollingFrame == -1)
+			rollingFrame = 7;
 		}
 		return this.rollingSprites.get(rollingFrame);
 	}
@@ -117,35 +145,105 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void move() {
-		posX += velX;
-		posY += velY;
+		character.x(character.x() + velX);
+		character.y(character.y() + velY);
 	}
 
-	/**
-	 * Update the character's position
-	 * 
-	 * @param up
-	 *            up?
-	 * @param down
-	 *            down?
-	 * @param left
-	 *            left?
-	 * @param right
-	 *            right?
-	 */
+	private void setDirection() {
 
-	public void update(boolean up, boolean down, boolean left, boolean right) {
+		if (up) {
+			if (left) {
+				dir = Direction.NW;
+			}
+
+			else if (right) {
+				dir = Direction.NE;
+			}
+
+			else {
+				dir = Direction.N;
+			}
+		} else if (down) {
+			if (left) {
+				dir = Direction.SW;
+			}
+
+			else if (right) {
+				dir = Direction.SE;
+			}
+
+			else {
+				dir = Direction.S;
+			}
+		} else if (left) {
+			dir = Direction.W;
+		} else if (right) {
+			dir = Direction.E;
+		}
+	}
+
+	private void update() {
 		velX = 0;
 		velY = 0;
 
-		if (up)
-			velY = -SPEED;
 		if (down)
 			velY = SPEED;
+		if (up)
+			velY = -SPEED;
 		if (left)
 			velX = -SPEED;
 		if (right)
 			velX = SPEED;
+		
+		if(velX != 0 || velY !=0){
+			setMoving(true);
+		}else{
+			setMoving(false);
+		}
+	}
+
+	public void keyPressed(KeyEvent e) {
+
+		switch (e.getKeyCode()) {
+		
+		case KeyEvent.VK_A:
+			left = true;
+			break;
+		case KeyEvent.VK_D:
+			right = true;
+			break;
+		case KeyEvent.VK_S:
+			down = true;
+			break;
+		case KeyEvent.VK_W:
+			up = true;
+			break;
+		
+		}
+		
+		setDirection();
+		
+		update();
+
+	}
+
+	public void keyReleased(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_W:
+			up = false;
+			break;
+		case KeyEvent.VK_A:
+			left = false;
+			break;
+		case KeyEvent.VK_S:
+			down = false;
+			break;
+		case KeyEvent.VK_D:
+			right = false;
+			break;
+		}
+
+		update();
 
 	}
 

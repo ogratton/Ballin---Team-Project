@@ -1,88 +1,68 @@
 package graphics;
 
 import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Observable;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
-public class MapView extends JPanel implements KeyListener {
+public class MapView extends JPanel implements ActionListener {
 
 	private CharacterModel character;
-	private boolean up, down, left, right = false;
-
+	private Timer timer;
+	private final int DELAY = 30;
+	
 	public MapView(CharacterModel character) {
 		super();
 		this.character = character;
-		
+
 		repaint();
+		
+		addKeyListener(new TAdapter());
 		setFocusable(true);
-		addKeyListener(this);
+		timer = new Timer(DELAY, this);
+		timer.start();
+		
+		
 
 	}
 
 	public void paintComponent(Graphics g) {
 
-		g.clearRect(0, 0, this.getWidth(), this.getHeight());
+		super.paintComponent(g);
 		
-		// Graphics2D g2 = (Graphics2D)g;
-		g.drawImage(character.getRollingFrame(), (int)character.getX(), (int)character.getY(), this);
+		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
+		// Graphics2D g2 = (Graphics2D)g;
+		g.drawImage(character.getRollingFrame(), (int) character.getX(), (int) character.getY(), this);
+
+		Toolkit.getDefaultToolkit().sync();
+		
 	}
 
-	public void update(Observable arg0, Object arg1) {
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		character.move();
 		repaint();
 
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-		switch(e.getKeyCode()){
-		case KeyEvent.VK_W:
-			up = true;
-			break;
-		case KeyEvent.VK_A:
-			left = true;
-			break;
-		case KeyEvent.VK_S:
-			down = true;
-			break;
-		case KeyEvent.VK_D:
-			right = true;
-			break;
+	private class TAdapter extends KeyAdapter {
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+
+			character.keyReleased(e);
 		}
 
-		character.update(up, down, left, right);
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		switch(e.getKeyCode()){
-		case KeyEvent.VK_W:
-			up = false;
-			break;
-		case KeyEvent.VK_A:
-			left = false;
-			break;
-		case KeyEvent.VK_S:
-			down = false;
-			break;
-		case KeyEvent.VK_D:
-			right = false;
-			break;
+		@Override
+		public void keyPressed(KeyEvent e) {
+			character.keyPressed(e);
 		}
-
-		character.update(up, down, left, right);
-
 	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
