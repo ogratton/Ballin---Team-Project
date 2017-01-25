@@ -9,6 +9,6 @@ public class Resources {
 	// what number player am I?
 	public static int me = -1;
 	public static Character[] players = {};
-	public static Map map;
+	public static Map map = new Map(500, 500);
 	
 }

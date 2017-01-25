@@ -13,10 +13,11 @@ import resources.Wall;
 public class Physics extends Thread implements ActionListener {
 	//
 	private Timer timer;
-	private final int DELAY = 16; //~1000ms /60 = 1/60 seconds
-	private Map map;
+	private final int DELAY = 10; //~1000ms /60 = 1/60 seconds
 	
+	@Override
 	public void run() {
+		System.out.println("start");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -39,37 +40,44 @@ public class Physics extends Thread implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// loop
-		for(int i = 0; i < Resources.players.length; i++){
-			update(Resources.players[i]);
+		for(Character c: Resources.players){
+			update(c);
 		}
 	}
 	
 	private void update(Character c) {
 		// calculate speed, calculate location 
-		
+		//if(c.left()) System.out.println(c.dx());
 		if(c.left() && c.dx() > -c.maxdx()) {
+			System.out.println("l");
 			c.dx(c.dx() - c.acc());
 		}
 		if(c.right() && c.dx() < c.maxdx()) {
+			System.out.println("r"+c.mass());
 			c.dx(c.dx() + c.acc());
 		}
-		if(c.down() && c.dy() > -c.maxdy()) {
+		if(c.up() && c.dy() > -c.maxdy()) {
+			System.out.println("u");
 			c.dy(c.dy() - c.acc());
 		}
-		if(c.up() && c.dy() < c.maxdy()) {
-			c.dx(c.dy() + c.acc());
+		if(c.down() && c.dy() < c.maxdy()) {
+			System.out.println("d");
+			c.dy(c.dy() + c.acc());
 		}
 		if(!c.left() && !c.right()) {
-			// if problems arise, we can remove the mass bit.
-			c.dx(c.dx() * map.friction() * c.mass());
+			c.dx(c.dx() * Resources.map.friction());
 		}
 		if(!c.up() && !c.down()) {
-			c.dy(c.dy() * map.friction() * c.mass());
+			c.dy(c.dy() * Resources.map.friction());
 		}
 		// TODO calculate collisions
 		
-		c.x(c.x() + c.dx());
-		c.y(c.y() + c.dy());
+		double x = c.x() + c.dx();
+		double y = c.y() + c.dy();
+		System.out.println(c.x());
+		c.x(x);
+		c.y(y);
+		
 	}
 	
 	private void collide(Character c1, Character c2) {
