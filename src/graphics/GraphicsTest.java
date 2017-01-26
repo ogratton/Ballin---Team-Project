@@ -5,7 +5,6 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
-import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Map;
 
@@ -18,8 +17,6 @@ import resources.Map;
 public class GraphicsTest {
 
 	public static void main(String[] args){
-		
-		System.out.println(SheetDeets.CHAR_WIZ_ROLLING);
 		
 		JFrame frame = new JFrame();							// make a new frame
 		
@@ -41,6 +38,9 @@ public class GraphicsTest {
 				
 		frame.add(comp);										// add component to frame
 		frame.setVisible(true);									// make everything visible (took me ages to remember this)
+	
+	
 	}
+	
 	
 }

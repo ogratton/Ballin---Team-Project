@@ -3,6 +3,7 @@ package graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import graphics.sprites.SpriteSheet;
 import resources.Character;
@@ -14,7 +15,7 @@ import resources.Character;
  *
  */
 
-public class CharacterModel {
+public class CharacterModel extends Observable {
 
 	private Character character;
 	private SpriteSheet spriteSheet;
@@ -87,6 +88,8 @@ public class CharacterModel {
 
 	public void setX(double x) {
 		this.character.x(x);
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -97,14 +100,29 @@ public class CharacterModel {
 	 */
 
 	public void setY(double y) {
+		
+		System.out.println("y changed");
 		this.character.y(y);
+		setChanged();
+		notifyObservers();
 	}
 
+	/**
+	 * Get if the character is moving
+	 * @return moving?
+	 */
+	
 	public boolean isMoving() {
 		return this.moving;
 	}
 
+	/**
+	 * Set if the character is moving
+	 * @param moving moving?
+	 */
+	
 	public void setMoving(boolean moving) {
+		System.out.println("moved " + moving);
 		this.moving = moving;
 	}
 
@@ -114,28 +132,33 @@ public class CharacterModel {
 	 * @return the frame
 	 */
 
-	public BufferedImage getRollingFrame() {
+	public BufferedImage getNextFrame() {
+		
+		System.out.println("frame");
+		System.out.println(moving);
+		
+		if (isMoving()) {
+			
+			System.out.println("move");
+			switch (dir) {
+			case W:
+			case NW:
+			case SW:
+			case N:
+				rollingFrame--;
+				break;
+			case E:
+			case NE:
+			case SE:
+			case S:
+				rollingFrame++;
+				break;
+			}
+			if (rollingFrame == 8)
+				rollingFrame = 0;
 
-		if(isMoving()){
-		switch (dir) {
-		case W:
-		case NW:
-		case SW:
-		case N:
-			rollingFrame--;
-			break;
-		case E:
-		case NE:
-		case SE:
-		case S:
-			rollingFrame++;
-			break;
-		}
-		if (rollingFrame == 8)
-			rollingFrame = 0;
-
-		if (rollingFrame == -1)
-			rollingFrame = 7;
+			if (rollingFrame == -1)
+				rollingFrame = 7;
 		}
 		return this.rollingSprites.get(rollingFrame);
 	}
@@ -149,6 +172,86 @@ public class CharacterModel {
 		character.y(character.y() + velY);
 	}
 
+	/**
+	 * Is an up command being received?
+	 * @return up?
+	 */
+	
+	public boolean isUp() {
+		return up;
+	}
+
+	/**
+	 * Set if an up command is being received
+	 * @param up up?
+	 */
+	
+	public void setUp(boolean up) {
+		this.up = up;
+		setDirection();
+	}
+
+	/**
+	 * Is a down command being received?
+	 * @return down?
+	 */
+	
+	public boolean isDown() {
+		return down;
+	}
+
+	/**
+	 * Set if a down command is being received
+	 * @param down down?
+	 */
+	
+	public void setDown(boolean down) {
+		this.down = down;
+		setDirection();
+	}
+
+	/**
+	 * Is a left command being received?
+	 * @return left?
+	 */
+	
+	public boolean isLeft() {
+		return left;
+	}
+	
+	/**
+	 * Set if a left command is being received
+	 * @param left left?
+	 */
+
+	public void setLeft(boolean left) {
+		this.left = left;
+		setDirection();
+	}
+
+	/**
+	 * Is a right command being received?
+	 * @return right?
+	 */
+	
+	public boolean isRight() {
+		return right;
+	}
+
+	/**
+	 * Set if a right command is being received
+ 	 * @param right right?
+	 */
+	
+	public void setRight(boolean right) {
+		this.right = right;
+		setDirection();
+	}
+
+	/**
+	 * Set the direction of the character based on the commands it is currently receiving
+	 */
+	
 	private void setDirection() {
 
 		if (up) {
@@ -182,6 +285,11 @@ public class CharacterModel {
 		}
 	}
 
+	/**
+	 * Legacy methods from when I did graphics tests
+	 * Now direction, speed and distance should all be modified using the appropriate setters
+	 */
+	
 	private void update() {
 		velX = 0;
 		velY = 0;
@@ -194,10 +302,10 @@ public class CharacterModel {
 			velX = -SPEED;
 		if (right)
 			velX = SPEED;
-		
-		if(velX != 0 || velY !=0){
+
+		if (velX != 0 || velY != 0) {
 			setMoving(true);
-		}else{
+		} else {
 			setMoving(false);
 		}
 	}
@@ -205,7 +313,7 @@ public class CharacterModel {
 	public void keyPressed(KeyEvent e) {
 
 		switch (e.getKeyCode()) {
-		
+
 		case KeyEvent.VK_A:
 			left = true;
 			break;
@@ -218,15 +326,18 @@ public class CharacterModel {
 		case KeyEvent.VK_W:
 			up = true;
 			break;
-		
+		case KeyEvent.VK_ESCAPE:
+			System.exit(0);
+			break;
+
 		}
-		
+
 		setDirection();
-		
+
 		update();
 
 	}
-
+	
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_W:

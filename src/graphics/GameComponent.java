@@ -3,7 +3,6 @@ package graphics;
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
@@ -12,6 +11,8 @@ import resources.Map;
 
 public class GameComponent extends JPanel {
 
+	private CharacterModel model;
+	
 	public GameComponent(Character character, Map map){
 		
 		setLayout(new BorderLayout());
@@ -20,14 +21,25 @@ public class GameComponent extends JPanel {
 		button.addActionListener(e -> System.exit(0));
 		add(button, BorderLayout.SOUTH);
 		
-		CharacterModel model = new CharacterModel(SheetDeets.CHAR_WIZ, character, Character.Class.DEFAULT);
-		MapView arena = new MapView(model);	
+		model = new CharacterModel(SheetDeets.CHAR_WIZ, character, Character.Class.DEFAULT);
+		//MapView arena = new MapView(model);	
 		
-		arena.setFocusable(true);
+		PlayerView player = new PlayerView(model);
+		model.addObserver(player);
 		
-		add(arena, BorderLayout.CENTER);
+		JButton button1 = new JButton("left");
+		button1.addActionListener(e -> demo());
+		
+		add(button1, BorderLayout.NORTH);
+		add(player, BorderLayout.CENTER);
 			
 		setVisible(true);
+		
+	}
+	
+	public void demo(){
+		
+		
 		
 	}
 	

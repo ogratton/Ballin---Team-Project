@@ -10,5 +10,5 @@ public class Resources {
 	public static int me = -1;
 	public static Character[] players = {};
 	public static Map map;
-	
+		
 }

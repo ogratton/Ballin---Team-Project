@@ -50,7 +50,6 @@ public class Sprite {
 		String address = "src/graphics/sprites/" + sheetType + spriteName + "/sheet.png";
 
 		try {
-			System.out.println(address);
 			sprite = ImageIO.read(new File(address));
 		} catch (IOException e) {
 			System.err.println("sprite sheet not found!");
@@ -92,7 +91,6 @@ public class Sprite {
 	 */
 
 	public static BufferedImage getSprite(BufferedImage spriteSheet, int x, int y, int size) {
-		System.out.println(x + ", " + y);
 		return spriteSheet.getSubimage(x * size, y * size, size, size);
 	}
 
