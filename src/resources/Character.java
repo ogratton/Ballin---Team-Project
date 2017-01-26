@@ -2,10 +2,10 @@ package resources;
 
 public class Character {
 	private static final double default_mass = 1.0;
-	private static final int default_radius = 10; //pixels
-	private static final double default_max_speed_x = 10;
-	private static final double default_max_speed_y = 10;
-	private static final double default_acc = 2.0;
+	private static final int default_radius = 20; //pixels
+	private static final double default_max_speed_x = 5;
+	private static final double default_max_speed_y = 5;
+	private static final double default_acc = 0.2;
 	
 	public enum Heading{N,E,S,W,NE,NW,SE,SW};
 	
@@ -17,7 +17,8 @@ public class Character {
 	// jump is currently not being used, but is there if we need it.
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	//   which does an action based on the class of the character.
-	private boolean up, right, left, down, jump, punch, block = false;
+	// Collided flag added to help with collision calculations
+	private boolean up, right, left, down, jump, punch, block, collided = false;
 	
 	//these are for the physics engine.
 	private double mass, inv_mass,  dx, dy, maxdx, maxdy, acc = 0.0;
@@ -211,5 +212,13 @@ public class Character {
 	}
 	public Heading getFacing() {
 		return facing;
+	}
+
+	public boolean collided() {
+		return collided;
+	}
+
+	public void setCollided(boolean collided) {
+		this.collided = collided;
 	}
 }

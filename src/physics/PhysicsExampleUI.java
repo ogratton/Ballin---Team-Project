@@ -35,10 +35,16 @@ public class PhysicsExampleUI extends JFrame {
 	}
 	public static void main(String[] args) {
 		// init character and map
-		Resources.players = new Character[1];
+		Resources.players = new Character[2];
 		Resources.players[0] = Character.character(Character.Class.DEFAULT);
 		Resources.players[0].x(40);
 		Resources.players[0].y(60);
+		
+		Resources.players[1] = Character.character(Character.Class.DEFAULT);
+		Resources.players[1].x(500);
+		Resources.players[1].y(500);
+		Resources.players[1].radius(30);
+		Resources.players[1].mass(2);
 		Resources.map = new Map(1000, 600);
 		// create physics thread
 		Physics p = new Physics();
@@ -80,8 +86,12 @@ class Panel extends JPanel implements ActionListener {
 	private void doDrawing(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		//System.out.println(Resources.players[0].x() + ", " + Resources.players[0].y());
-		g2d.drawOval((int) (Resources.players[0].x()), (int) (Resources.players[0].y()), 20, 20);
-		g2d.fillOval((int) (Resources.players[0].x()), (int) (Resources.players[0].y()), 20, 20);
+		g2d.setColor(Color.RED);
+		for (Character player : Resources.players) {
+			g2d.drawOval((int) (player.x()-player.radius()), (int) (player.y()-player.radius()), player.radius()*2, player.radius()*2);
+			g2d.fillOval((int) (player.x()-player.radius()), (int) (player.y()-player.radius()), player.radius()*2, player.radius()*2);
+			g2d.setColor(Color.GREEN);
+		}
 	}
 
 	@Override
@@ -105,6 +115,18 @@ class Panel extends JPanel implements ActionListener {
 			if (key == KeyEvent.VK_S) {
 				Resources.players[0].setDown(false);
 			}		
+			if (key == KeyEvent.VK_LEFT) {
+				Resources.players[1].setLeft(false);
+			}
+			if (key == KeyEvent.VK_RIGHT) {
+				Resources.players[1].setRight(false);
+			}
+			if (key == KeyEvent.VK_UP) {
+				Resources.players[1].setUp(false);
+			}
+			if (key == KeyEvent.VK_DOWN) {
+				Resources.players[1].setDown(false);
+			}
 		}
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -121,7 +143,18 @@ class Panel extends JPanel implements ActionListener {
 			if (key == KeyEvent.VK_S) {
 				Resources.players[0].setDown(true);
 			}	
-
+			if (key == KeyEvent.VK_LEFT) {
+				Resources.players[1].setLeft(true);
+			}
+			if (key == KeyEvent.VK_RIGHT) {
+				Resources.players[1].setRight(true);
+			}
+			if (key == KeyEvent.VK_UP) {
+				Resources.players[1].setUp(true);
+			}
+			if (key == KeyEvent.VK_DOWN) {
+				Resources.players[1].setDown(true);
+			}
 		}
 	}
 }

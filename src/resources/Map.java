@@ -36,7 +36,7 @@ public class Map {
 			new Point2D.Double(0,0),
 			width,
 			height,
-			0.9,
+			0.99,
 			0.0,
 			new ArrayList<Map>(),
 			new ArrayList<Wall>()
