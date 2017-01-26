@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Map {
-	private double width, height;
+	private int width, height;
 	private Point2D origin;
 	
 	// friction = 1.0 / deceleration
@@ -31,7 +31,19 @@ public class Map {
 	//private ArrayList<PowerUp> powerups;
 	
 	// TODO getters/setters/constructors
-	public Map(Point2D origin, double width, double height, double friction, double gravity, ArrayList<Map> terrains, ArrayList<Wall> walls) {
+	public Map(int width, int height) {
+		this(
+			new Point2D.Double(0,0),
+			width,
+			height,
+			0.9,
+			0.0,
+			new ArrayList<Map>(),
+			new ArrayList<Wall>()
+		);
+	}
+	
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Map> terrains, ArrayList<Wall> walls) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
