@@ -1,5 +1,7 @@
 import java.awt.event.KeyEvent;
 
+import audio.AudioFile;
+
 public class Ball {
 
 	private double dx;
@@ -15,6 +17,9 @@ public class Ball {
 	private boolean accDown;
 	private int WIDTH;
 	private int HEIGHT;
+	
+	private AudioFile dong = new AudioFile("src/audio/audio/dong.wav");
+	private AudioFile ding = new AudioFile("src/audio/audio/ding.wav");
 
 	public Ball(int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
@@ -94,9 +99,11 @@ public class Ball {
 	private void checkWallCollision() {
 		if (x < 0 || x > WIDTH) {
 			dx = -dx;
+			dong.play();
 		}
 		if (y < 0 || y > HEIGHT) {
 			dy = -dy;
+			ding.play();
 		}
 	}
 }

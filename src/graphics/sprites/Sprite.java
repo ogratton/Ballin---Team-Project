@@ -47,7 +47,7 @@ public class Sprite {
 			break;
 		}
 
-		String address = "src/graphics/sprites/" + sheetType + spriteName + "/sheet.png";
+		String address = "./resources/sprites/" + sheetType + spriteName + "/sheet.png";
 
 		try {
 			sprite = ImageIO.read(new File(address));
