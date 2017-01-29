@@ -56,22 +56,22 @@ public class Map {
 	public Point2D origin() {
 		return origin;
 	}
-	public double width() {
+	public double getWidth() {
 		return width;
 	}
-	public double height() {
+	public double getHeight() {
 		return height;
 	}
-	public double friction() {
+	public double getFriction() {
 		return friction;
 	}
-	public double gravity() {
+	public double getGravity() {
 		return gravity;
 	}
-	public ArrayList<Map> terrains(){
+	public ArrayList<Map> getTerrains(){
 		return terrains;
 	}
-	public ArrayList<Wall> walls() {
+	public ArrayList<Wall> getWalls() {
 		return walls;
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import graphics.sprites.SheetDeets;
 import graphics.sprites.SpriteSheet;
 import resources.Character;
 
@@ -38,14 +39,14 @@ public class CharacterModel extends Observable {
 	 *            the character
 	 */
 
-	public CharacterModel(SpriteSheet spriteSheet, Character character, Character.Class classType) {
+	public CharacterModel(Character character) {
 
 		super();
 		this.character = character;
 
+		spriteSheet = SheetDeets.getClassSpriteSheet(character);
+		
 		this.moving = false;
-
-		this.spriteSheet = spriteSheet;
 		rollingSprites = new ArrayList<BufferedImage>();
 
 		ArrayList<int[][]> sections = spriteSheet.getSections();

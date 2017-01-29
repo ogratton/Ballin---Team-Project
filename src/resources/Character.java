@@ -7,6 +7,7 @@ public class Character {
 	private static final double default_max_speed_y = 5;
 	private static final double default_acc = 0.2;
 	
+	
 	public enum Heading{N,E,S,W,NE,NW,SE,SW};
 	
 	// this will have all the Character classes in use.
@@ -33,12 +34,14 @@ public class Character {
 	private double x,y = 0.0;
 	private int radius = 0;
 	private Heading facing = Heading.N;
+	private Class classType = Class.DEFAULT;
+	
 	
 	public Character() {
-		this(default_mass, 0, 0, default_radius, Heading.N);
+		this(default_mass, 0, 0, default_radius, Heading.N, Class.DEFAULT);
 	}
 	
-	public Character(double mass, double x, double y, int radius, Heading facing){
+	public Character(double mass, double x, double y, int radius, Heading facing, Class classType){
 		this(false, false, false, false, false, false, false, // control flags
 				mass, 
 				x,   // x
@@ -48,7 +51,7 @@ public class Character {
 				default_max_speed_x * (1/mass),
 				default_max_speed_y * (1/mass), 
 				default_acc, // acceleration (TODO: calculate this)
-				radius, facing);
+				radius, facing, classType);
 	}
 	
 	/** 
@@ -68,7 +71,7 @@ public class Character {
 	(
 	boolean up, boolean right, boolean left, boolean down, boolean jump, 
 	boolean punch, boolean block, double mass, double x, double y, double speed_x, double speed_y,
-	double max_speed_x, double max_speed_y, double acceleration, int radius, Heading facing
+	double max_speed_x, double max_speed_y, double acceleration, int radius, Heading facing, Class classType
 	) {
 		//new Character();
 		this.up = up;
@@ -91,6 +94,7 @@ public class Character {
 		this.acc = acceleration;
 		this.radius = radius;
 		this.facing = facing;
+		this.classType = classType;
 	}
 	
 	
@@ -220,5 +224,9 @@ public class Character {
 
 	public void setCollided(boolean collided) {
 		this.collided = collided;
+	}
+	
+	public Class getClassType(){
+		return this.classType;
 	}
 }

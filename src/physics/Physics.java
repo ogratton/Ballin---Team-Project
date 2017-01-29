@@ -74,10 +74,10 @@ public class Physics extends Thread implements ActionListener {
 			c.setDy(c.getDy() + c.getAcc());
 		}
 		if (!c.isLeft() && !c.isRight()) {
-			c.setDx(c.getDx() * Resources.map.friction());
+			c.setDx(c.getDx() * Resources.map.getFriction());
 		}
 		if (!c.isUp() && !c.isDown()) {
-			c.setDy(c.getDy() * Resources.map.friction());
+			c.setDy(c.getDy() * Resources.map.getFriction());
 		}
 		// TODO calculate collisions
 

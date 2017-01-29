@@ -1,46 +1,49 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Map;
 
 public class GameComponent extends JPanel {
 
-	private CharacterModel model;
-	
-	public GameComponent(Character character, Map map){
-		
+	private ArrayList<Character> characters;
+	private ArrayList<CharacterModel> characterModels;
+	private Map map;
+	private MapModel mapModel;
+
+	public GameComponent(ArrayList<Character> characters, Map map) {
+
 		setLayout(new BorderLayout());
-		
+
+		mapModel = new MapModel(map);
+
 		JButton button = new JButton("exit");
 		button.addActionListener(e -> System.exit(0));
 		add(button, BorderLayout.SOUTH);
-		
-		model = new CharacterModel(SheetDeets.CHAR_WIZ, character, Character.Class.DEFAULT);
-		//MapView arena = new MapView(model);	
-		
-		CharacterView player = new CharacterView(model);
-		model.addObserver(player);
-		
-		JButton button1 = new JButton("left");
-		button1.addActionListener(e -> demo());
-		
-		add(button1, BorderLayout.NORTH);
-		add(player, BorderLayout.CENTER);
-			
+
+		characterModels = new ArrayList<CharacterModel>();
+
+		for (Character character : characters) {
+
+			CharacterModel model = new CharacterModel(character);
+			characterModels.add(model);
+
+		}
+
+		GameView view = new GameView(characterModels, mapModel);
+
+		add(view, BorderLayout.CENTER);
 		setVisible(true);
-		
+
 	}
-	
-	public void demo(){
-		
-		
-		
+
+	public void demo() {
+
 	}
-	
+
 }

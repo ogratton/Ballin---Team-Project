@@ -29,7 +29,14 @@ public class SheetDeets {
 	
 	public static SpriteSheet getClassSpriteSheet(Character character){
 		
-		Character.Class classType = character.getClass();
+		Character.Class classType = character.getClassType();
+		
+		switch(classType){
+		case DEFAULT:
+			return CHAR_WIZ;
+		}
+		
+		return null;
 		
 	}
 	
