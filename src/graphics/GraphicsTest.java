@@ -38,15 +38,15 @@ public class GraphicsTest {
 
 		frame.setTitle("Ballin'");
 
-		Character player = new Character(); // default character
+		Character player = new Character(Character.Class.WIZARD);
 
-		player.setX(20);
-		player.setY(5);
+		player.setX(45);
+		player.setY(45);
 
-		Character player1 = new Character(); // default character
+		Character player1 = new Character(Character.Class.ELF);
 
-		player1.setX(12);
-		player1.setY(2);
+		player1.setX(534);
+		player1.setY(424);
 
 		ArrayList<Character> players = new ArrayList<Character>();
 		players.add(player);

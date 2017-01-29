@@ -45,7 +45,7 @@ public class CharacterModel extends Observable {
 		this.character = character;
 
 		spriteSheet = SheetDeets.getClassSpriteSheet(character);
-		
+
 		this.moving = false;
 		rollingSprites = new ArrayList<BufferedImage>();
 
@@ -101,8 +101,7 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setY(double y) {
-		
-		System.out.println("y changed");
+
 		this.character.setY(y);
 		setChanged();
 		notifyObservers();
@@ -110,20 +109,23 @@ public class CharacterModel extends Observable {
 
 	/**
 	 * Get if the character is moving
+	 * 
 	 * @return moving?
 	 */
-	
+
 	public boolean isMoving() {
 		return this.moving;
 	}
 
 	/**
 	 * Set if the character is moving
-	 * @param moving moving?
+	 * 
+	 * @param moving
+	 *            moving?
 	 */
-	
+
 	public void setMoving(boolean moving) {
-		System.out.println("moved " + moving);
+		System.out.println("move");
 		this.moving = moving;
 	}
 
@@ -133,14 +135,11 @@ public class CharacterModel extends Observable {
 	 * @return the frame
 	 */
 
-	public BufferedImage getNextFrame() {
-		
-		System.out.println("frame");
-		System.out.println(moving);
-		
-		if (isMoving()) {
-			
-			System.out.println("move");
+	public BufferedImage getNextFrame(boolean moving) {
+
+		if (moving) {
+
+			System.out.println("nextFrame");
 			switch (dir) {
 			case W:
 			case NW:
@@ -155,13 +154,15 @@ public class CharacterModel extends Observable {
 				rollingFrame++;
 				break;
 			}
-			if (rollingFrame == 8)
+			if (rollingFrame == 16)
 				rollingFrame = 0;
 
 			if (rollingFrame == -1)
-				rollingFrame = 7;
+				rollingFrame = 15;
+
+			System.out.println(rollingFrame % 8);
 		}
-		return this.rollingSprites.get(rollingFrame);
+		return this.rollingSprites.get(rollingFrame % 8);
 	}
 
 	/**
@@ -175,18 +176,21 @@ public class CharacterModel extends Observable {
 
 	/**
 	 * Is an up command being received?
+	 * 
 	 * @return up?
 	 */
-	
+
 	public boolean isUp() {
 		return up;
 	}
 
 	/**
 	 * Set if an up command is being received
-	 * @param up up?
+	 * 
+	 * @param up
+	 *            up?
 	 */
-	
+
 	public void setUp(boolean up) {
 		this.up = up;
 		setDirection();
@@ -194,18 +198,21 @@ public class CharacterModel extends Observable {
 
 	/**
 	 * Is a down command being received?
+	 * 
 	 * @return down?
 	 */
-	
+
 	public boolean isDown() {
 		return down;
 	}
 
 	/**
 	 * Set if a down command is being received
-	 * @param down down?
+	 * 
+	 * @param down
+	 *            down?
 	 */
-	
+
 	public void setDown(boolean down) {
 		this.down = down;
 		setDirection();
@@ -213,16 +220,19 @@ public class CharacterModel extends Observable {
 
 	/**
 	 * Is a left command being received?
+	 * 
 	 * @return left?
 	 */
-	
+
 	public boolean isLeft() {
 		return left;
 	}
-	
+
 	/**
 	 * Set if a left command is being received
-	 * @param left left?
+	 * 
+	 * @param left
+	 *            left?
 	 */
 
 	public void setLeft(boolean left) {
@@ -232,27 +242,31 @@ public class CharacterModel extends Observable {
 
 	/**
 	 * Is a right command being received?
+	 * 
 	 * @return right?
 	 */
-	
+
 	public boolean isRight() {
 		return right;
 	}
 
 	/**
 	 * Set if a right command is being received
- 	 * @param right right?
+	 * 
+	 * @param right
+	 *            right?
 	 */
-	
+
 	public void setRight(boolean right) {
 		this.right = right;
 		setDirection();
 	}
 
 	/**
-	 * Set the direction of the character based on the commands it is currently receiving
+	 * Set the direction of the character based on the commands it is currently
+	 * receiving
 	 */
-	
+
 	private void setDirection() {
 
 		if (up) {
@@ -287,10 +301,10 @@ public class CharacterModel extends Observable {
 	}
 
 	/**
-	 * Legacy methods from when I did graphics tests
-	 * Now direction, speed and distance should all be modified using the appropriate setters
+	 * Legacy methods from when I did graphics tests Now direction, speed and
+	 * distance should all be modified using the appropriate setters
 	 */
-	
+
 	private void update() {
 		velX = 0;
 		velY = 0;
@@ -338,7 +352,7 @@ public class CharacterModel extends Observable {
 		update();
 
 	}
-	
+
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_W:

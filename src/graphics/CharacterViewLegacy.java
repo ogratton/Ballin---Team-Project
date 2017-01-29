@@ -38,7 +38,7 @@ public class CharacterViewLegacy extends JPanel implements ActionListener {
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
 		// Graphics2D g2 = (Graphics2D)g;
-		g.drawImage(character.getNextFrame(), (int) character.getX(), (int) character.getY(), this);
+		g.drawImage(character.getNextFrame(true), (int) character.getX(), (int) character.getY(), this);
 
 		Toolkit.getDefaultToolkit().sync();
 		

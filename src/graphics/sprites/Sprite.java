@@ -70,6 +70,10 @@ public class Sprite {
 		switch (classType) {
 		case DEFAULT:
 			return "wizard";
+		case ELF:
+			return "elf";
+		case WIZARD:
+			return "wizard";
 		}
 		
 		return "";

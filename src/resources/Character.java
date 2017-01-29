@@ -11,7 +11,7 @@ public class Character {
 	public enum Heading{N,E,S,W,NE,NW,SE,SW};
 	
 	// this will have all the Character classes in use.
-	public enum Class{DEFAULT}; // add to this as we develop more classes.
+	public enum Class{DEFAULT, WIZARD, ELF}; // add to this as we develop more classes.
 	
 	// flags for keys pressed. 
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -36,9 +36,21 @@ public class Character {
 	private Heading facing = Heading.N;
 	private Class classType = Class.DEFAULT;
 	
+	/**
+	 * Default character with default sprite
+	 */
 	
 	public Character() {
 		this(default_mass, 0, 0, default_radius, Heading.N, Class.DEFAULT);
+	}
+	
+	/**
+	 * Default character with a given class
+	 * @param c the class
+	 */
+	
+	public Character(Class c) {
+		this(default_mass, 0, 0, default_radius, Heading.N, c);
 	}
 	
 	public Character(double mass, double x, double y, int radius, Heading facing, Class classType){
@@ -52,18 +64,6 @@ public class Character {
 				default_max_speed_y * (1/mass), 
 				default_acc, // acceleration (TODO: calculate this)
 				radius, facing, classType);
-	}
-	
-	/** 
-	 * create character based on it's class.
-	 * @param c the class of the character
-	 */
-	public static Character character(Class c) {
-		switch(c) {
-		case DEFAULT:
-			return new Character();
-		}
-		return new Character();
 	}
 	
 	// master constructor. Any other constructors should eventually call this.
