@@ -41,11 +41,11 @@ public class Physics extends Thread implements ActionListener {
 		for(Character c : Resources.players){
 			update(c);
 			for (Character d : Resources.players) {
-				if (c != d && distanceBetween(c, d) <= (c.radius() + d.radius()) && !c.collided() && !d.collided()) {
+				if (c != d && distanceBetween(c, d) <= (c.getRadius() + d.getRadius()) && !c.isCollided() && !d.isCollided()) {
 					collide(c,d);
 					System.out.println("Collision!");
-					System.out.println("x1: " + c.x() + ", y1: " + c.y());
-					System.out.println("x2: " + d.x() + ", y2: " + d.y());
+					System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
+					System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
 				}
 			}
 		}
@@ -57,45 +57,45 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		// calculate speed, calculate location
 		// if(c.left()) System.out.println(c.dx());
-		if (c.left() && c.dx() > -c.maxdx()) {
+		if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 			// System.out.println("l");
-			c.dx(c.dx() - c.acc());
+			c.setDx(c.getDx() - c.getAcc());
 		}
-		if (c.right() && c.dx() < c.maxdx()) {
+		if (c.isRight() && c.getDx() < c.getMaxDx()) {
 			// System.out.println("r" + c.mass());
-			c.dx(c.dx() + c.acc());
+			c.setDx(c.getDx() + c.getAcc());
 		}
-		if (c.up() && c.dy() > -c.maxdy()) {
+		if (c.isUp() && c.getDy() > -c.getMaxDy()) {
 			// System.out.println("u");
-			c.dy(c.dy() - c.acc());
+			c.setDy(c.getDy() - c.getAcc());
 		}
-		if (c.down() && c.dy() < c.maxdy()) {
+		if (c.isDown() && c.getDy() < c.getMaxDy()) {
 			// System.out.println("d");
-			c.dy(c.dy() + c.acc());
+			c.setDy(c.getDy() + c.getAcc());
 		}
-		if (!c.left() && !c.right()) {
-			c.dx(c.dx() * Resources.map.friction());
+		if (!c.isLeft() && !c.isRight()) {
+			c.setDx(c.getDx() * Resources.map.friction());
 		}
-		if (!c.up() && !c.down()) {
-			c.dy(c.dy() * Resources.map.friction());
+		if (!c.isUp() && !c.isDown()) {
+			c.setDy(c.getDy() * Resources.map.friction());
 		}
 		// TODO calculate collisions
 
-		double x = c.x() + c.dx();
-		double y = c.y() + c.dy();
+		double x = c.getX() + c.getDx();
+		double y = c.getY() + c.getDy();
 		// System.out.println(c.x());
-		c.x(x);
-		c.y(y);
+		c.setX(x);
+		c.setY(y);
 
 	}
 
 	private void collide(Character c1, Character c2) {
-		double dx1 = c1.dx();
-		double dx2 = c2.dx();
-		double dy1 = c1.dy();
-		double dy2 = c2.dy();
-		double m1 = c1.mass();
-		double m2 = c2.mass();
+		double dx1 = c1.getDx();
+		double dx2 = c2.getDx();
+		double dy1 = c1.getDy();
+		double dy2 = c2.getDy();
+		double m1 = c1.getMass();
+		double m2 = c2.getMass();
 
 		double newDX1 = ((m1 - m2) / (m1 + m2)) * dx1 + ((2 * m2) / (m1 + m2)) * dx2;
 		double newDX2 = ((2 * m1) / (m1 + m2)) * dx1 + ((m2 - m1) / (m1 + m2)) * dx2;
@@ -103,10 +103,10 @@ public class Physics extends Thread implements ActionListener {
 		double newDY1 = ((m1 - m2) / (m1 + m2)) * dy1 + ((2 * m2) / (m1 + m2)) * dy2;
 		double newDY2 = ((2 * m1) / (m1 + m2)) * dy1 + ((m2 - m1) / (m1 + m2)) * dy2;
 
-		c1.dx(newDX1);
-		c1.dy(newDY1);
-		c2.dx(newDX2);
-		c2.dy(newDY2);
+		c1.setDx(newDX1);
+		c1.setDy(newDY1);
+		c2.setDx(newDX2);
+		c2.setDy(newDY2);
 		
 		c1.setCollided(true);
 		c2.setCollided(true);
@@ -117,7 +117,7 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	private double distanceBetween(Character c1, Character c2) {
-		double distance = Math.sqrt(Math.pow((c1.x() - c2.x()), 2) + Math.pow((c1.y() - c2.y()), 2));
+		double distance = Math.sqrt(Math.pow((c1.getX() - c2.getX()), 2) + Math.pow((c1.getY() - c2.getY()), 2));
 		return distance;
 	}
 }

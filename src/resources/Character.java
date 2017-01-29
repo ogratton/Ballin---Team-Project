@@ -126,95 +126,95 @@ public class Character {
 		this.block = block;
 	}
 	//getters
-	public boolean up() {
+	public boolean isUp() {
 		return up;
 	}
-	public boolean down() {
+	public boolean isDown() {
 		return down;
 	}
-	public boolean left() {
+	public boolean isLeft() {
 		return left;
 	}
-	public boolean right() {
+	public boolean isRight() {
 		return right;
 	}
-	public boolean jump() {
+	public boolean isJump() {
 		return jump;
 	}
-	public boolean punch() {
+	public boolean isPunch() {
 		return punch;
 	}
-	public boolean block() {
+	public boolean isBlock() {
 		return block;
 	}
 	//setters
-	public void mass(double mass) {
+	public void setMass(double mass) {
 		this.mass = mass;
 		inv_mass = 1.0/mass;
 	}
-	public void x(double x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public void y(double y) {
+	public void setY(double y) {
 		this.y = y;
 	}
-	public void dx(double speed_x) {
+	public void setDx(double speed_x) {
 		this.dx = speed_x;
 	}
-	public void dy(double speed_y) {
+	public void setDy(double speed_y) {
 		this.dy = speed_y;
 	}
-	public void maxdx(double max_speed_x) {
+	public void setMaxDx(double max_speed_x) {
 		this.maxdx = max_speed_x;
 	}
-	public void maxdy(double max_speed_y) {
+	public void setMaxDy(double max_speed_y) {
 		this.maxdy = max_speed_y;
 	}
-	public void acc(double acceleration) {
+	public void setAcc(double acceleration) {
 		this.acc = acceleration;
 	}
-	public void radius(int radius) {
+	public void setRadius(int radius) {
 		this.radius = radius;
 	}
 	public void setFacing(Heading facing) {
 		this.facing = facing;
 	}
 	//getters
-	public double mass() {
+	public double getMass() {
 		return mass;
 	}
-	public double inv_mass() {
+	public double getInvMass() {
 		return inv_mass;
 	}
-	public double x() {
+	public double getX() {
 		return x;
 	}
-	public double y() {
+	public double getY() {
 		return y;
 	}
-	public double dx() {
+	public double getDx() {
 		return dx;
 	}
-	public double dy() {
+	public double getDy() {
 		return dy;
 	}
-	public double maxdx() {
+	public double getMaxDx() {
 		return maxdx;
 	}
-	public double maxdy() {
+	public double getMaxDy() {
 		return maxdy;
 	}
-	public double acc() {
+	public double getAcc() {
 		return acc;
 	}
-	public int radius() {
+	public int getRadius() {
 		return radius;
 	}
 	public Heading getFacing() {
 		return facing;
 	}
 
-	public boolean collided() {
+	public boolean isCollided() {
 		return collided;
 	}
 

@@ -10,13 +10,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class MapView extends JPanel implements ActionListener {
+public class CharacterViewLegacy extends JPanel implements ActionListener {
 
 	private CharacterModel character;
 	private Timer timer;
 	private final int DELAY = 30;
 	
-	public MapView(CharacterModel character) {
+	public CharacterViewLegacy(CharacterModel character) {
 		super();
 		this.character = character;
 

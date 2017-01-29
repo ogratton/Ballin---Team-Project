@@ -24,7 +24,7 @@ public class GameComponent extends JPanel {
 		model = new CharacterModel(SheetDeets.CHAR_WIZ, character, Character.Class.DEFAULT);
 		//MapView arena = new MapView(model);	
 		
-		PlayerView player = new PlayerView(model);
+		CharacterView player = new CharacterView(model);
 		model.addObserver(player);
 		
 		JButton button1 = new JButton("left");

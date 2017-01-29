@@ -8,11 +8,11 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-public class PlayerView extends JPanel implements Observer {
+public class CharacterView extends JPanel implements Observer {
 
 	private CharacterModel model;
 
-	public PlayerView(CharacterModel model) {
+	public CharacterView(CharacterModel model) {
 		super();
 		this.model = model;
 		repaint();

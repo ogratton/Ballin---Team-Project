@@ -37,14 +37,14 @@ public class PhysicsExampleUI extends JFrame {
 		// init character and map
 		Resources.players = new Character[2];
 		Resources.players[0] = Character.character(Character.Class.DEFAULT);
-		Resources.players[0].x(40);
-		Resources.players[0].y(60);
+		Resources.players[0].setX(40);
+		Resources.players[0].setY(60);
 		
 		Resources.players[1] = Character.character(Character.Class.DEFAULT);
-		Resources.players[1].x(500);
-		Resources.players[1].y(500);
-		Resources.players[1].radius(30);
-		Resources.players[1].mass(2);
+		Resources.players[1].setX(500);
+		Resources.players[1].setY(500);
+		Resources.players[1].setRadius(30);
+		Resources.players[1].setMass(2);
 		Resources.map = new Map(1000, 600);
 		// create physics thread
 		Physics p = new Physics();
@@ -88,8 +88,8 @@ class Panel extends JPanel implements ActionListener {
 		//System.out.println(Resources.players[0].x() + ", " + Resources.players[0].y());
 		g2d.setColor(Color.RED);
 		for (Character player : Resources.players) {
-			g2d.drawOval((int) (player.x()-player.radius()), (int) (player.y()-player.radius()), player.radius()*2, player.radius()*2);
-			g2d.fillOval((int) (player.x()-player.radius()), (int) (player.y()-player.radius()), player.radius()*2, player.radius()*2);
+			g2d.drawOval((int) (player.getX()-player.getRadius()), (int) (player.getY()-player.getRadius()), player.getRadius()*2, player.getRadius()*2);
+			g2d.fillOval((int) (player.getX()-player.getRadius()), (int) (player.getY()-player.getRadius()), player.getRadius()*2, player.getRadius()*2);
 			g2d.setColor(Color.GREEN);
 		}
 	}

@@ -1,6 +1,7 @@
 package graphics.sprites;
 
 import java.util.ArrayList;
+import resources.Character;
 
 public class SheetDeets {
 	
@@ -25,5 +26,12 @@ public class SheetDeets {
 	public static ArrayList<int[][]> sections = new ArrayList<int[][]>() {{add(CHAR_WIZ_ROLLING);}};
 	
 	public static final SpriteSheet CHAR_WIZ = new SpriteSheet(Sprite.SheetType.CHARACTER, CHAR_WIZ_NAME, CHAR_WIZ_ROWS, CHAR_WIZ_COLS, CHAR_WIZ_SIZE, sections);
+	
+	public static SpriteSheet getClassSpriteSheet(Character character){
+		
+		Character.Class classType = character.getClass();
+		
+	}
+	
 	
 }

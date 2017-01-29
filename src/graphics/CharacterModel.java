@@ -66,7 +66,7 @@ public class CharacterModel extends Observable {
 	 */
 
 	public double getX() {
-		return this.character.x();
+		return this.character.getX();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class CharacterModel extends Observable {
 	 */
 
 	public double getY() {
-		return this.character.y();
+		return this.character.getY();
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setX(double x) {
-		this.character.x(x);
+		this.character.setX(x);
 		setChanged();
 		notifyObservers();
 	}
@@ -102,7 +102,7 @@ public class CharacterModel extends Observable {
 	public void setY(double y) {
 		
 		System.out.println("y changed");
-		this.character.y(y);
+		this.character.setY(y);
 		setChanged();
 		notifyObservers();
 	}
@@ -168,8 +168,8 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void move() {
-		character.x(character.x() + velX);
-		character.y(character.y() + velY);
+		character.setX(character.getX() + velX);
+		character.setY(character.getY() + velY);
 	}
 
 	/**
