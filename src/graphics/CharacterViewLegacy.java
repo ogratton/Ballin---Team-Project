@@ -10,6 +10,12 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/**
+ * An old class I used, could still be useful for reference
+ * @author George Kaye
+ *
+ */
+
 public class CharacterViewLegacy extends JPanel implements ActionListener {
 
 	private CharacterModel character;
@@ -24,7 +30,7 @@ public class CharacterViewLegacy extends JPanel implements ActionListener {
 		
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		timer = new Timer(DELAY, this);
+		timer = new Timer(30, this);
 		timer.start();
 		
 		

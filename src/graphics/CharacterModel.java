@@ -21,7 +21,7 @@ public class CharacterModel extends Observable {
 	private Character character;
 	private SpriteSheet spriteSheet;
 	private ArrayList<BufferedImage> rollingSprites;
-	private int rollingFrame;
+	private int rollingFrame, frameDelay;
 	private boolean up, down, left, right = false;
 	private int velX, velY;
 	private static final int SPEED = 10;
@@ -57,6 +57,7 @@ public class CharacterModel extends Observable {
 		}
 
 		rollingFrame = 0;
+		frameDelay = 0;
 
 	}
 
@@ -125,7 +126,7 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setMoving(boolean moving) {
-		System.out.println("move");
+
 		this.moving = moving;
 	}
 
@@ -138,8 +139,6 @@ public class CharacterModel extends Observable {
 	public BufferedImage getNextFrame(boolean moving) {
 
 		if (moving) {
-
-			System.out.println("nextFrame");
 			switch (dir) {
 			case W:
 			case NW:
@@ -154,15 +153,13 @@ public class CharacterModel extends Observable {
 				rollingFrame++;
 				break;
 			}
-			if (rollingFrame == 16)
+			if (rollingFrame == 8)
 				rollingFrame = 0;
 
 			if (rollingFrame == -1)
-				rollingFrame = 15;
-
-			System.out.println(rollingFrame % 8);
+				rollingFrame = 7;
 		}
-		return this.rollingSprites.get(rollingFrame % 8);
+		return this.rollingSprites.get(rollingFrame);
 	}
 
 	/**
@@ -170,8 +167,9 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void move() {
-		character.setX(character.getX() + velX);
-		character.setY(character.getY() + velY);
+
+		setX(getX() + velX);
+		setY(getY() + velY);
 	}
 
 	/**
@@ -298,11 +296,13 @@ public class CharacterModel extends Observable {
 		} else if (right) {
 			dir = Direction.E;
 		}
+
+		update();
 	}
 
-	/**
-	 * Legacy methods from when I did graphics tests Now direction, speed and
-	 * distance should all be modified using the appropriate setters
+	/*
+	 * Testing methods
+	 * Should not be used in the final demo
 	 */
 
 	private void update() {
@@ -323,6 +323,7 @@ public class CharacterModel extends Observable {
 		} else {
 			setMoving(false);
 		}
+
 	}
 
 	public void keyPressed(KeyEvent e) {

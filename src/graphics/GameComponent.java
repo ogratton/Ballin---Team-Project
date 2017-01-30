@@ -1,36 +1,65 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.Timer;
 
 import resources.Character;
 import resources.Map;
 
-public class GameComponent extends JPanel {
+/**
+ * Contains everything on the screen that the player can see
+ * @author George Kaye
+ *
+ */
+
+public class GameComponent extends JPanel implements ActionListener{
 
 	private ArrayList<Character> characters;
 	private ArrayList<CharacterModel> characterModels;
 	private Map map;
 	private MapModel mapModel;
-
+	private Timer timer;
+	private GameView view;
+	
+	private boolean fullScreen = true;
+	
 	int oldValueX, newValueX, oldValueY, newValueY;
+
+	/**
+	 * Create a new game component (which comprises everything the player can see!)
+	 * @param characters an ArrayList of characters on the board
+	 * @param map the map the board is displaying
+	 */
 	
 	public GameComponent(ArrayList<Character> characters, Map map) {
 
 		setLayout(new BorderLayout());
 
+		// This code block below is just for testing!
+		
+		addKeyListener(new TAdapter());
+		setFocusable(true);
+		timer = new Timer(30, this);
+		timer.start();
+		
+		// End test code block
+		
+		this.map = map;
 		mapModel = new MapModel(map);
 
 		JButton button = new JButton("exit");
 		button.addActionListener(e -> System.exit(0));
 		add(button, BorderLayout.SOUTH);
 
-		
-		
 		characterModels = new ArrayList<CharacterModel>();
 
 		for (Character character : characters) {
@@ -40,68 +69,102 @@ public class GameComponent extends JPanel {
 
 		}
 
-		JSlider sliderX = new JSlider(0, 1920, 45);
-		JSlider sliderY = new JSlider(JSlider.VERTICAL, 0, 1200, 1155);
-		
-		oldValueX = 45;
-		newValueX = 45;
-		oldValueY = 45;
-		newValueY = 45;
-		
-		sliderX.addChangeListener(e -> sliderChangedX(sliderX));
-		add(sliderX, BorderLayout.NORTH);
-		sliderY.addChangeListener(e -> sliderChangedY(sliderY));
-		add(sliderY, BorderLayout.WEST);
-		
-		GameView view = new GameView(characterModels, mapModel);
-		
-		for(CharacterModel model : characterModels){
+		view = new GameView(characterModels, mapModel);
+
+		for (CharacterModel model : characterModels) {
 			model.addObserver(view);
 		}
-		
+
 		add(view, BorderLayout.CENTER);
 		setVisible(true);
 
 	}
 
-	public void sliderChangedX(JSlider slider){
-		CharacterModel model = characterModels.get(0);
+	// All code below here is for testing
+	
+	/**
+	 * Testing keyboard inputs
+	 */
+	
+	public void actionPerformed(ActionEvent arg0) {
 		
-		oldValueX = newValueX;
-		newValueX = slider.getValue();
-		
-		if(oldValueX < newValueX){
-			model.setRight(true);
-		} else {
-			model.setLeft(true);
+		for(CharacterModel character : characterModels){
+		character.move();
 		}
 		
-
-		model.setX(slider.getValue());
+		repaint();
 		
-		model.setLeft(false);
-		model.setRight(false);
 
 	}
 	
-	public void sliderChangedY(JSlider slider){
-		CharacterModel model = characterModels.get(0);
-		
-		oldValueY = newValueY;
-		newValueY = slider.getValue();
-		
-		if(oldValueY < newValueY){
-			model.setUp(true);
-		} else {
-			model.setDown(true);
-		}
-		
-
-		model.setY(1200 - slider.getValue());
-		
-		model.setUp(false);
-		model.setDown(false);
-
+	public void setMultiplier(double mult){
+		this.view.setMultiplier(mult);
 	}
 	
+	private class TAdapter extends KeyAdapter {
+		@Override
+		public void keyReleased(KeyEvent e) {
+			int key = e.getKeyCode();
+			switch (key) {
+			case KeyEvent.VK_A:
+				characterModels.get(0).setLeft(false);
+				break;
+			case KeyEvent.VK_D:
+				characterModels.get(0).setRight(false);
+				break;
+			case KeyEvent.VK_W:
+				characterModels.get(0).setUp(false);
+				break;
+			case KeyEvent.VK_S:
+				characterModels.get(0).setDown(false);
+				break;
+			case KeyEvent.VK_UP:
+				characterModels.get(1).setUp(false);
+				break;
+			case KeyEvent.VK_DOWN:
+				characterModels.get(1).setDown(false);
+				break;
+			case KeyEvent.VK_LEFT:
+				characterModels.get(1).setLeft(false);
+				break;
+			case KeyEvent.VK_RIGHT:
+				characterModels.get(1).setRight(false);
+				break;
+			case KeyEvent.VK_CONTROL:
+			}
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			int key = e.getKeyCode();
+			switch (key) {
+			case KeyEvent.VK_A:
+				characterModels.get(0).setLeft(true);
+				break;
+			case KeyEvent.VK_D:
+				characterModels.get(0).setRight(true);
+				break;
+			case KeyEvent.VK_W:
+				characterModels.get(0).setUp(true);
+				break;
+			case KeyEvent.VK_S:
+				characterModels.get(0).setDown(true);
+				break;
+			case KeyEvent.VK_UP:
+				characterModels.get(1).setUp(true);
+				break;
+			case KeyEvent.VK_DOWN:
+				characterModels.get(1).setDown(true);
+				break;
+			case KeyEvent.VK_LEFT:
+				characterModels.get(1).setLeft(true);
+				System.out.println("kek");
+				break;
+			case KeyEvent.VK_RIGHT:
+				characterModels.get(1).setRight(true);
+				break;
+			}
+		}
+	}
+
 }

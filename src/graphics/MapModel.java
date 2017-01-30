@@ -6,8 +6,10 @@ import resources.Map;
 
 public class MapModel extends Observable {
 
+	private Map map;
+	
 	public MapModel(Map map) {
-		// TODO Auto-generated constructor stub
+		this.map = map;
 	}
 
 }
