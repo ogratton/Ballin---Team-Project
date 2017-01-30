@@ -22,32 +22,9 @@ import resources.Map;
 public class GraphicsTest {
 
 	public static boolean fullScreen = true;
-	public static JFrame frame;
 	public static GameComponent comp;
-	
+
 	public static void main(String[] args) {
-
-		frame = new JFrame(); // make a new frame
-
-		// code I shamelessly nicked off stack overflow to get screen dimensions
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-
-		frame.setSize((int) width, (int) height); // set the size to be full
-													// screen
-		frame.setUndecorated(true); // set the window as undecorated (to look
-									// full screen)
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // set the close
-																// operation to
-																// end program
-
-		frame.setTitle("Ballin'");
-		frame.setLayout(new BorderLayout());
-		
-		JButton button = new JButton("fullscreen");
-		button.addActionListener(e -> toggleFullscreen());
-		frame.add(button, BorderLayout.SOUTH);
 
 		Character player = new Character(Character.Class.WIZARD);
 
@@ -59,44 +36,21 @@ public class GraphicsTest {
 		player1.setX(534);
 		player1.setY(424);
 
+		Character player2 = new Character(Character.Class.WIZARD);
+
+		player2.setX(999);
+		player2.setY(234);
+
 		ArrayList<Character> players = new ArrayList<Character>();
 		players.add(player);
 		players.add(player1);
+		players.add(player2);
 
 		Map map = new Map(null, 0, 0, 0, 0, null, null);
 
-		comp = new GameComponent(players, map);
-
-		/*comp.setOpaque(true);
-		frame.setContentPane(comp);*/
-		frame.add(comp, BorderLayout.CENTER);
+		Graphics g = new Graphics(players, map);
+		g.run();
 		
-		frame.setVisible(true);
-
-	}
-
-	/**
-	 * Toggles fullscreen - dodgy
-	 */
-	
-	public static void toggleFullscreen() {
-
-		if (fullScreen) {
-			frame.setSize(1000, 625);
-			fullScreen = false;
-			comp.setMultiplier(1);
-		} else {
-			
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			int width = gd.getDisplayMode().getWidth();
-			int height = gd.getDisplayMode().getHeight();
-			frame.setSize(width, height);
-			fullScreen = true;
-			comp.setMultiplier(1.5);
-		}
 		
-		comp.setFocusable(true);
-
 	}
-
 }

@@ -16,8 +16,7 @@ public class GameView extends JPanel implements Observer {
 	private ArrayList<CharacterModel> characterModels;
 	private MapModel mapModel;
 	private HashMap<CharacterModel, Point> points;
-	private double sizeMultiplier = 1.92;
-	private double positionMultiplier = 1;
+	private double multiplier = 1;
 	
 	/**
 	 * Create a new game view
@@ -65,13 +64,13 @@ public class GameView extends JPanel implements Observer {
 				frame = model.getNextFrame(false);
 			}
 			
-			int actualX = (int)(newX * positionMultiplier);
-			int actualY = (int)(newY * positionMultiplier);
+			int actualX = (int)(newX * multiplier);
+			int actualY = (int)(newY * multiplier);
 			
-			int sizeX = (int)(frame.getWidth() * sizeMultiplier);
-			int sizeY = (int)(frame.getHeight() * sizeMultiplier);
+			int sizeX = (int)(frame.getWidth() * multiplier);
+			int sizeY = (int)(frame.getHeight() * multiplier);
 			
-			g.drawImage(frame, actualX, actualY, sizeX, sizeY, this);
+			g.drawImage(frame, actualX, actualY, 2 * sizeX, 2 * sizeY, this);
 
 			Toolkit.getDefaultToolkit().sync();
 
@@ -85,8 +84,7 @@ public class GameView extends JPanel implements Observer {
 	 */
 	
 	public void setMultiplier(double mult){
-		this.sizeMultiplier = mult;
-		this.positionMultiplier = mult / 1.92;
+		this.multiplier = mult;
 		repaint();
 	}
 	
