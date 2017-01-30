@@ -19,7 +19,7 @@ import resources.Map;
  *
  */
 
-public class GraphicsTest implements Observer {
+public class GraphicsTest {
 
 	public static boolean fullScreen = true;
 	public static JFrame frame;
