@@ -1,11 +1,12 @@
 package resources;
 
-public class Character {
+public class Character implements Collidable {
 	private static final double default_mass = 1.0;
-	private static final int default_radius = 20; //pixels
+	private static final int default_radius = 20;
 	private static final double default_max_speed_x = 5;
 	private static final double default_max_speed_y = 5;
 	private static final double default_acc = 0.2;
+	private static final double default_restitution = 0.7; // 'bounciness'
 	
 	
 	public enum Heading{N,E,S,W,NE,NW,SE,SW};
@@ -21,8 +22,8 @@ public class Character {
 	// Collided flag added to help with collision calculations
 	private boolean up, right, left, down, jump, punch, block, collided = false;
 	
-	//these are for the physics engine.
-	private double mass, inv_mass,  dx, dy, maxdx, maxdy, acc = 0.0;
+	//these are for the physics engine. Restitution is 'bounciness'.
+	private double mass, inv_mass,  dx, dy, maxdx, maxdy, acc, restitution = 0.0;
 	
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -63,6 +64,7 @@ public class Character {
 				default_max_speed_x * (1/mass),
 				default_max_speed_y * (1/mass), 
 				default_acc, // acceleration (TODO: calculate this)
+				default_restitution,
 				radius, facing, classType);
 	}
 	
@@ -71,7 +73,7 @@ public class Character {
 	(
 	boolean up, boolean right, boolean left, boolean down, boolean jump, 
 	boolean punch, boolean block, double mass, double x, double y, double speed_x, double speed_y,
-	double max_speed_x, double max_speed_y, double acceleration, int radius, Heading facing, Class classType
+	double max_speed_x, double max_speed_y, double acceleration, double restitution, int radius, Heading facing, Class classType
 	) {
 		//new Character();
 		this.up = up;
@@ -83,7 +85,8 @@ public class Character {
 		this.block = block;
 		
 		this.mass = mass;
-		this.inv_mass = 1.0/mass;
+		if(mass == 0) this.inv_mass = 0; // a mass of 0 makes an object infinitely massive
+		else this.inv_mass = 1.0/mass;
 		
 		this.x = x;
 		this.y = y;
@@ -92,6 +95,7 @@ public class Character {
 		this.maxdx = max_speed_x;
 		this.maxdy = max_speed_y;
 		this.acc = acceleration;
+		this.restitution = restitution; // bounciness
 		this.radius = radius;
 		this.facing = facing;
 		this.classType = classType;
@@ -177,6 +181,9 @@ public class Character {
 	public void setAcc(double acceleration) {
 		this.acc = acceleration;
 	}
+	public void setRestitution(double restitution) {
+		this.restitution = restitution;
+	}
 	public void setRadius(int radius) {
 		this.radius = radius;
 	}
@@ -210,6 +217,9 @@ public class Character {
 	}
 	public double getAcc() {
 		return acc;
+	}
+	public double getRestitution() {
+		return restitution;
 	}
 	public int getRadius() {
 		return radius;

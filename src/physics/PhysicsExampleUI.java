@@ -17,8 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-/*
- * Literally just the GameTest.java thing converted to run using Character instead of Ball
+/**
+ * Physics playtest. Fairly self explanatory.
  */
 
 public class PhysicsExampleUI extends JFrame {
@@ -33,22 +33,34 @@ public class PhysicsExampleUI extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
 	public static void main(String[] args) {
 		// init character and map
-		Resources.players = new Character[2];
-		Resources.players[0] = Character.character(Character.Class.DEFAULT);
-		Resources.players[0].setX(40);
-		Resources.players[0].setY(60);
+		Resources.players = new Character[3];
+		Resources.players[0] = new Character(Character.Class.DEFAULT);
+		Resources.players[0].setX(535);
+		Resources.players[0].setY(600);
+		//Resources.players[0].setMass(1000); // very fun. Game mode?
 		
-		Resources.players[1] = Character.character(Character.Class.DEFAULT);
+		Resources.players[1] = new Character(Character.Class.DEFAULT);
 		Resources.players[1].setX(500);
 		Resources.players[1].setY(500);
 		Resources.players[1].setRadius(30);
 		Resources.players[1].setMass(2);
+		
+		Resources.players[2] = new Character(Character.Class.DEFAULT);
+		Resources.players[2].setX(570);
+		Resources.players[2].setY(500);
+		Resources.players[2].setRadius(30);
+		Resources.players[2].setMass(2);
+		
 		Resources.map = new Map(1000, 600);
+		
 		// create physics thread
 		Physics p = new Physics();
 		p.start();
+		
+		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {

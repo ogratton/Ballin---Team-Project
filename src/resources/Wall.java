@@ -2,12 +2,14 @@ package resources;
 
 import java.awt.geom.Point2D;
 
-public class Wall {
+public class Wall implements Collidable{
 	private Point2D origin;
 	private double width, height;
-	private double heading; //degrees from north, anticlockwise
+	private double heading; //angle from north, anticlockwise. 
+	//0 is default orientation. 1 and -1 are rotated 180 degrees.
 	
-	// TODO getters/setters/constructors
+	private double inv_mass = 0; // infinite mass
+	
 	public Wall(Point2D origin, double width, double height, double heading) {
 		this.origin = origin;
 		this.width = width;
@@ -45,5 +47,35 @@ public class Wall {
 	
 	public void heading(double heading) {
 		this.heading = heading;
+	}
+
+	@Override
+	public double getInvMass() {
+		return inv_mass;
+	}
+
+	@Override
+	public double getRestitution() {
+		return 0;
+	}
+
+	@Override
+	public double getDx() {
+		return 0;
+	}
+
+	@Override
+	public double getDy() {
+		return 0;
+	}
+
+	@Override
+	public void setDx(double dx) {
+		return;
+	}
+
+	@Override
+	public void setDy(double dx) {
+		return;
 	}
 }
