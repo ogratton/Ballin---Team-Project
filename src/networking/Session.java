@@ -1,19 +1,20 @@
 package networking;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
 public class Session {
 	
 	private int id;
-	private List<Integer> clientIds;
-	private Game game;
+	private ConcurrentMap<Integer, ClientInformation> clients;
 	
-	public Session(int id, List<Integer> clientIds, Game game) {
+	public Session(int id, ConcurrentMap<Integer, ClientInformation> clients) {
 		this.id = id;
-		this.clientIds = clientIds;
-		this.game = game;
+		this.clients = clients;
 	}
 
 	public int getId() {
@@ -24,19 +25,26 @@ public class Session {
 		this.id = id;
 	}
 	
-	public List<Integer> getClientIds() {
-		return clientIds;
+	public ClientInformation getClient(int id) {
+		return clients.get(id);
 	}
 	
-	public void setClientIds() {
-		clientIds = new ArrayList<Integer>();
+	public void addClient(int id, ClientInformation client) {
+		clients.put(id, client);
 	}
-
-	public Game getGame() {
-		return game;
+	
+	public void removeClient(int id) {
+		clients.remove(id);
 	}
-
-	public void setGame(Game game) {
-		this.game = game;
+	
+	public List<ClientInformation> getAllClients() {
+		Iterator<Entry<Integer, ClientInformation>> it = clients.entrySet().iterator();
+		ArrayList<ClientInformation> clientList = new ArrayList<ClientInformation>();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        clientList.add((ClientInformation) pair.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	    return clientList;
 	}
 }

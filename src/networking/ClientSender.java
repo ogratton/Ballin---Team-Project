@@ -13,7 +13,7 @@ import java.util.Observer;
 public class ClientSender extends Thread implements Observer {
 
   private String nickname;
-  private PrintStream server;
+  private ObjectOutputStream server;
   private GameSharing gs;
   private String commandType = "";
   private String command = "";
@@ -26,7 +26,7 @@ public class ClientSender extends Thread implements Observer {
    * @param server The server to which the client is sending the messages to.
    * @param gs The game sharing object which contains the model of the Noughts And Crosses game
    */
-  ClientSender(String nickname, PrintStream server, GameSharing gs) {
+  ClientSender(String nickname, ObjectOutputStream server, GameSharing gs) {
     this.nickname = nickname;
     this.server = server;
     this.gs = gs;
@@ -34,10 +34,10 @@ public class ClientSender extends Thread implements Observer {
 
   public void run() {
     // So that we can use the method readLine:
-    BufferedReader user = new BufferedReader(new InputStreamReader(System.in));
+	  BufferedReader user = new BufferedReader(new InputStreamReader(System.in));
 
     // Tell the server what my nickname is:
-      server.println(nickname);
+      //server.println(nickname);
       boolean notObserver = true;
 
       // Then loop forever sending messages to recipients via the server:

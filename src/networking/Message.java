@@ -2,27 +2,47 @@ package networking;
 
 public class Message {
 	
-	private String type;
-	private String data;
+	private Command command;
+	private String message;
+	private int myId;
+	private int targetId;
 	
-	public Message(String type, String data) {
-		this.type = type;
-		this.data = data;
+	public Message(Command command, String message, int myId, int targetId) {
+		this.command = command;
+		this.message = message;
+		this.myId = myId;
+		this.targetId = targetId;
 	}
 
-	public String getType() {
-		return type;
+	public Command getCommand() {
+		return command;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCommand(Command command) {
+		this.command = command;
 	}
 
-	public String getData() {
-		return data;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getMyId() {
+		return myId;
+	}
+
+	public void setMyId(int myId) {
+		this.myId = myId;
+	}
+
+	public int getTargetId() {
+		return targetId;
+	}
+
+	public void setTargetId(int targetId) {
+		this.targetId = targetId;
 	}
 }

@@ -9,12 +9,12 @@ import java.net.*;
 
 public class ClientReceiver extends Thread {
 
-  private BufferedReader server;
+  private ObjectInputStream server;
   private int i = -1;
   private int j = -1;
   private GameSharing gs;
   private ConnectionDataModel cModel;
-  private PrintStream toServer;
+  private ObjectOutputStream toServer;
 
   /**
    * Creates a Client Receiver Thread which receives messages from the server.
@@ -25,7 +25,7 @@ public class ClientReceiver extends Thread {
    * @param cModel The Client Data Model which contains the information about the client.
    * @param toServer The output stream to the server receiver to which messages are printed to.
    */
-  ClientReceiver(BufferedReader server, GameSharing gs, ConnectionDataModel cModel, PrintStream toServer) {
+  ClientReceiver(ObjectInputStream server, GameSharing gs, ConnectionDataModel cModel, ObjectOutputStream toServer) {
     this.server = server;
     this.gs = gs;
     this.cModel = cModel;

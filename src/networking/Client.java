@@ -35,8 +35,8 @@ class Client {
     String port = args[1];
 
     // Open sockets:
-    PrintStream toServer = null;
-    BufferedReader fromServer = null;
+    ObjectOutputStream toServer = null;
+    ObjectInputStream fromServer = null;
     Socket server = null;
     
     // Create an object to store the data of a Tic Tac Toe game when it is created.
@@ -51,8 +51,8 @@ class Client {
 
     try {
       server = new Socket(hostname, Integer.parseInt(port));
-      toServer = new PrintStream(server.getOutputStream());
-      fromServer = new BufferedReader(new InputStreamReader(server.getInputStream()));
+      toServer = new ObjectOutputStream(server.getOutputStream());
+      fromServer = new ObjectInputStream(server.getInputStream());
     } 
     catch (UnknownHostException e) {
       System.err.println("Unknown host: " + hostname);
@@ -68,12 +68,12 @@ class Client {
     ClientReceiver receiver = new ClientReceiver(fromServer, gs, cModel, toServer);
     
     // Create a thread for the GUI:
-    //ClientGUI gui = new ClientGUI(cModel, nickname, toServer);
+    ClientGUI gui = new ClientGUI(cModel, nickname, toServer);
 
     // Run them in parallel:
     sender.start();
     receiver.start();
-    //gui.start();
+    gui.start();
     
     // Wait for them to end and close sockets.
     try {
@@ -81,6 +81,7 @@ class Client {
       toServer.close();
       receiver.join();
       fromServer.close();
+      gui.join();
       server.close();
     }
     catch (IOException e) {
