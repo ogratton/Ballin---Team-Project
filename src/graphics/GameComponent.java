@@ -15,6 +15,7 @@ import javax.swing.Timer;
 
 import resources.Character;
 import resources.Map;
+import resources.Resources;
 
 /**
  * Contains everything on the screen that the player can see
@@ -75,6 +76,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		for (Character character : characters) {
 
 			CharacterModel model = new CharacterModel(character);
+			Resources.models.add(model);
 			characterModels.add(model);
 
 		}
@@ -105,9 +107,18 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
+	/**
+	 * Set the mulitplier
+	 * @param mult the multiplier
+	 */
+	
 	public void setMultiplier(double mult) {
 		this.view.setMultiplier(mult);
 	}
+	
+	/**
+	 * Switch between fullscreen and windowed
+	 */
 	
 	public void toggleFullscreen() {
 

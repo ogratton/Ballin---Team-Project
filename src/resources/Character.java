@@ -1,5 +1,7 @@
 package resources;
 
+import graphics.sprites.SheetDeets;
+
 public class Character implements Collidable {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 20;
@@ -51,7 +53,7 @@ public class Character implements Collidable {
 	 */
 	
 	public Character(Class c) {
-		this(default_mass, 0, 0, default_radius, Heading.N, c);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.N, c);
 	}
 	
 	public Character(double mass, double x, double y, int radius, Heading facing, Class classType){

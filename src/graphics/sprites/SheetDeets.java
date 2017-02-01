@@ -54,15 +54,29 @@ public class SheetDeets {
 
 	/**
 	 * Return the correct sprite sheet for a given character
-	 * @param character the character
+	 * 
+	 * @param character
+	 *            the character
+	 * @return the sprite sheet
+	 */
+
+	public static SpriteSheet getSpriteSheetFromCharacter(Character character) {
+
+		Character.Class c = character.getClassType();
+
+		return getSpriteSheetFromClass(c);
+
+	}
+
+	/**
+	 * Return the correct sprite sheet for a given class
+	 * @param c the class
 	 * @return the sprite sheet
 	 */
 	
-	public static SpriteSheet getClassSpriteSheet(Character character) {
-
-		Character.Class classType = character.getClassType();
-
-		switch (classType) {
+	public static SpriteSheet getSpriteSheetFromClass(Character.Class c) {
+		
+		switch (c) {
 		case DEFAULT:
 			return CHAR_WIZ;
 		case WIZARD:
@@ -72,7 +86,19 @@ public class SheetDeets {
 		}
 
 		return null;
+	}
 
+	/**
+	 * Get the radius of a character from their sprite
+	 * @param c
+	 * @return
+	 */
+	
+	public static int getRadiusFromSprite(Character.Class c) {
+
+		SpriteSheet sheet = getSpriteSheetFromClass(c);
+		return (int) (sheet.getSize());
+		
 	}
 
 }

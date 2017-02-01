@@ -1,13 +1,6 @@
 package graphics;
 
-import java.awt.BorderLayout;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
-import java.util.Observer;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
 
 import resources.Character;
 import resources.Map;

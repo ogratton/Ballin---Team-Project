@@ -1,6 +1,5 @@
 package graphics;
 
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -8,6 +7,7 @@ import java.util.Observable;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.SpriteSheet;
 import resources.Character;
+import resources.Collidable;
 
 /**
  * Class to model a character
@@ -16,21 +16,16 @@ import resources.Character;
  *
  */
 
-public class CharacterModel extends Observable {
+public class CharacterModel extends Observable implements Collidable {
 
 	private Character character;
 	private SpriteSheet spriteSheet;
 	private ArrayList<BufferedImage> rollingSprites;
-	private int rollingFrame, frameDelay;
-	private boolean up, down, left, right = false;
+	private int rollingFrame;
 	private int velX, velY;
 	private static final int SPEED = 10;
-	private Direction dir = Direction.E;
+	private Character.Heading direction;
 	private boolean moving;
-
-	public static enum Direction {
-		N, NE, E, SE, S, SW, W, NW
-	};
 
 	/**
 	 * Create a new model of a character
@@ -44,9 +39,10 @@ public class CharacterModel extends Observable {
 		super();
 		this.character = character;
 
-		spriteSheet = SheetDeets.getClassSpriteSheet(character);
+		this.spriteSheet = SheetDeets.getSpriteSheetFromCharacter(character);
 
 		this.moving = false;
+		this.direction = character.getFacing();
 		rollingSprites = new ArrayList<BufferedImage>();
 
 		ArrayList<int[][]> sections = spriteSheet.getSections();
@@ -57,77 +53,7 @@ public class CharacterModel extends Observable {
 		}
 
 		rollingFrame = 0;
-		frameDelay = 0;
 
-	}
-
-	/**
-	 * Get the x coordinate of a player
-	 * 
-	 * @return the x coordinate
-	 */
-
-	public double getX() {
-		return this.character.getX();
-	}
-
-	/**
-	 * Get the y coordinate of a player
-	 * 
-	 * @return the y coordinate
-	 */
-
-	public double getY() {
-		return this.character.getY();
-	}
-
-	/**
-	 * Set the x coordinate of a player
-	 * 
-	 * @param x
-	 *            the x coordinate
-	 */
-
-	public void setX(double x) {
-		this.character.setX(x);
-		setChanged();
-		notifyObservers();
-	}
-
-	/**
-	 * Set the y coordinate of a player
-	 * 
-	 * @param y
-	 *            the y coordinate
-	 */
-
-	public void setY(double y) {
-
-		this.character.setY(y);
-		setChanged();
-		notifyObservers();
-	}
-
-	/**
-	 * Get if the character is moving
-	 * 
-	 * @return moving?
-	 */
-
-	public boolean isMoving() {
-		return this.moving;
-	}
-
-	/**
-	 * Set if the character is moving
-	 * 
-	 * @param moving
-	 *            moving?
-	 */
-
-	public void setMoving(boolean moving) {
-
-		this.moving = moving;
 	}
 
 	/**
@@ -139,7 +65,7 @@ public class CharacterModel extends Observable {
 	public BufferedImage getNextFrame(boolean moving) {
 
 		if (moving) {
-			switch (dir) {
+			switch (direction) {
 			case W:
 			case NW:
 			case SW:
@@ -162,15 +88,38 @@ public class CharacterModel extends Observable {
 		return this.rollingSprites.get(rollingFrame);
 	}
 
-	/**
-	 * Move the character
+	/*
+	 * Testing methods Should not be used in the final demo
 	 */
 
-	public void move() {
+	private void update() {
+		velX = 0;
+		velY = 0;
 
+		if (character.isDown())
+			velY = SPEED;
+		if (character.isUp())
+			velY = -SPEED;
+		if (character.isLeft())
+			velX = -SPEED;
+		if (character.isRight())
+			velX = SPEED;
+
+	}
+
+	/**
+	 * Move the character (TESTING)
+	 */
+	
+	public void move(){
 		setX(getX() + velX);
 		setY(getY() + velY);
 	}
+	
+	/*
+	 * Getters and setters for controls: this is mportant for determining which
+	 * frame of the sprite to use next
+	 */
 
 	/**
 	 * Is an up command being received?
@@ -179,7 +128,67 @@ public class CharacterModel extends Observable {
 	 */
 
 	public boolean isUp() {
-		return up;
+		return this.character.isUp();
+	}
+
+	/**
+	 * Is a down command being received?
+	 * 
+	 * @return down?
+	 */
+
+	public boolean isDown() {
+		return this.character.isDown();
+	}
+
+	/**
+	 * Is a left command being received?
+	 * 
+	 * @return left?
+	 */
+
+	public boolean isLeft() {
+		return this.character.isLeft();
+	}
+
+	/**
+	 * Is a right command being received?
+	 * 
+	 * @return right?
+	 */
+
+	public boolean isRight() {
+		return this.character.isRight();
+	}
+
+	/**
+	 * Is the character jumping?
+	 * 
+	 * @return is the character jumping?
+	 */
+
+	public boolean isJump() {
+		return this.character.isJump();
+	}
+
+	/**
+	 * Is the character punching?
+	 * 
+	 * @return is the character punching?
+	 */
+
+	public boolean isPunch() {
+		return this.character.isPunch();
+	}
+
+	/**
+	 * Is the character blocking?
+	 * 
+	 * @return is the character blocking?
+	 */
+
+	public boolean isBlock() {
+		return this.character.isBlock();
 	}
 
 	/**
@@ -190,18 +199,8 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setUp(boolean up) {
-		this.up = up;
+		character.setUp(up);
 		setDirection();
-	}
-
-	/**
-	 * Is a down command being received?
-	 * 
-	 * @return down?
-	 */
-
-	public boolean isDown() {
-		return down;
 	}
 
 	/**
@@ -212,18 +211,8 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setDown(boolean down) {
-		this.down = down;
+		character.setDown(down);
 		setDirection();
-	}
-
-	/**
-	 * Is a left command being received?
-	 * 
-	 * @return left?
-	 */
-
-	public boolean isLeft() {
-		return left;
 	}
 
 	/**
@@ -234,18 +223,8 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setLeft(boolean left) {
-		this.left = left;
+		character.setLeft(left);
 		setDirection();
-	}
-
-	/**
-	 * Is a right command being received?
-	 * 
-	 * @return right?
-	 */
-
-	public boolean isRight() {
-		return right;
 	}
 
 	/**
@@ -256,8 +235,42 @@ public class CharacterModel extends Observable {
 	 */
 
 	public void setRight(boolean right) {
-		this.right = right;
+		character.setRight(right);
 		setDirection();
+	}
+
+	/**
+	 * Set if a jump command is being received
+	 * 
+	 * @param jump
+	 *            is a jump command being received?
+	 */
+
+	public void setJump(boolean jump) {
+		this.character.setJump(jump);
+
+	}
+
+	/**
+	 * Set if a punch command is being received
+	 * 
+	 * @param punch
+	 *            is a punch command being received?
+	 */
+
+	public void setPunch(boolean punch) {
+		this.character.setPunch(punch);
+	}
+
+	/**
+	 * Set if a block command is being received
+	 * 
+	 * @param block
+	 *            is a block command being received?
+	 */
+
+	public void setBlock(boolean block) {
+		this.character.setBlock(block);
 	}
 
 	/**
@@ -267,111 +280,366 @@ public class CharacterModel extends Observable {
 
 	private void setDirection() {
 
-		if (up) {
-			if (left) {
-				dir = Direction.NW;
+		if (character.isUp()) {
+			if (character.isLeft()) {
+				direction = Character.Heading.NW;
 			}
 
-			else if (right) {
-				dir = Direction.NE;
-			}
-
-			else {
-				dir = Direction.N;
-			}
-		} else if (down) {
-			if (left) {
-				dir = Direction.SW;
-			}
-
-			else if (right) {
-				dir = Direction.SE;
+			else if (character.isRight()) {
+				direction = Character.Heading.NE;
 			}
 
 			else {
-				dir = Direction.S;
+				direction = Character.Heading.N;
 			}
-		} else if (left) {
-			dir = Direction.W;
-		} else if (right) {
-			dir = Direction.E;
+		} else if (character.isDown()) {
+			if (character.isLeft()) {
+				direction = Character.Heading.SW;
+			}
+
+			else if (character.isRight()) {
+				direction = Character.Heading.SE;
+			}
+
+			else {
+				direction = Character.Heading.S;
+			}
+		} else if (character.isLeft()) {
+			direction = Character.Heading.W;
+		} else if (character.isRight()) {
+			direction = Character.Heading.E;
 		}
 
-		update();
-	}
-
-	/*
-	 * Testing methods
-	 * Should not be used in the final demo
-	 */
-
-	private void update() {
-		velX = 0;
-		velY = 0;
-
-		if (down)
-			velY = SPEED;
-		if (up)
-			velY = -SPEED;
-		if (left)
-			velX = -SPEED;
-		if (right)
-			velX = SPEED;
-
-		if (velX != 0 || velY != 0) {
+		if (getDx() != 0 || getDy() != 0) {
 			setMoving(true);
 		} else {
 			setMoving(false);
 		}
-
+		
+		setFacing(direction);
+		
+		update();
+		
+		setChanged();
+		notifyObservers();
 	}
 
-	public void keyPressed(KeyEvent e) {
+	/*
+	 * Moving getters and setters: used for knowing when to generate the next
+	 * frame of the sprite
+	 */
 
-		switch (e.getKeyCode()) {
+	/**
+	 * Set if the character is moving
+	 * 
+	 * @param moving
+	 *            moving?
+	 */
 
-		case KeyEvent.VK_A:
-			left = true;
-			break;
-		case KeyEvent.VK_D:
-			right = true;
-			break;
-		case KeyEvent.VK_S:
-			down = true;
-			break;
-		case KeyEvent.VK_W:
-			up = true;
-			break;
-		case KeyEvent.VK_ESCAPE:
-			System.exit(0);
-			break;
+	public void setMoving(boolean moving) {
 
-		}
-
-		setDirection();
-
-		update();
-
+		this.moving = moving;
 	}
 
-	public void keyReleased(KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_W:
-			up = false;
-			break;
-		case KeyEvent.VK_A:
-			left = false;
-			break;
-		case KeyEvent.VK_S:
-			down = false;
-			break;
-		case KeyEvent.VK_D:
-			right = false;
-			break;
-		}
+	/**
+	 * Get if the character is moving
+	 * 
+	 * @return moving?
+	 */
 
-		update();
+	public boolean isMoving() {
+		return this.moving;
+	}
 
+	/*
+	 * Setters and getters for position: these are important for knowing where
+	 * to draw the character
+	 */
+
+	/**
+	 * Get the x coordinate of a character
+	 * 
+	 * @return the x coordinate
+	 */
+
+	public double getX() {
+		return this.character.getX();
+	}
+
+	/**
+	 * Get the y coordinate of a character
+	 * 
+	 * @return the y coordinate
+	 */
+
+	public double getY() {
+		return this.character.getY();
+	}
+
+	/**
+	 * Has the character collided?
+	 * 
+	 * @return if the character has collided
+	 */
+
+	public boolean isCollided() {
+		return this.character.isCollided();
+	}
+
+	/**
+	 * Get the facing of this character
+	 * 
+	 * @return the facing
+	 */
+
+	public Character.Heading getFacing() {
+		return this.character.getFacing();
+	}
+
+	/**
+	 * Set the x coordinate of the character
+	 * 
+	 * @param x
+	 *            the x coordinate
+	 */
+
+	public void setX(double x) {
+		this.character.setX(x);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the y coordinate of the character
+	 * 
+	 * @param y
+	 *            the y coordinate
+	 */
+
+	public void setY(double y) {
+
+		this.character.setY(y);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set if the character has collided
+	 * 
+	 * @param collided
+	 *            if the character has collided
+	 */
+
+	public void setCollided(boolean collided) {
+		this.character.setCollided(collided);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the facing of the character
+	 * 
+	 * @param facing
+	 */
+
+	public void setFacing(Character.Heading facing) {
+		this.character.setFacing(facing);
+	}
+
+	/*
+	 * Setters and getters for character physics: may be important later on
+	 */
+
+	/**
+	 * Get the mass of the character
+	 * 
+	 * @return the mass
+	 */
+
+	public double getMass() {
+		return this.character.getMass();
+	}
+
+	/**
+	 * Get the 'inv mass' of the character
+	 * 
+	 * @return the inv mass
+	 */
+
+	public double getInvMass() {
+		return this.character.getInvMass();
+	}
+
+	/**
+	 * Get the dx of the character
+	 * 
+	 * @return the dx
+	 */
+
+	public double getDx() {
+		return this.character.getDx();
+	}
+
+	/**
+	 * Get the dy of the character
+	 * 
+	 * @return
+	 */
+
+	public double getDy() {
+		return this.character.getDy();
+	}
+
+	/**
+	 * Get the max dx of the character
+	 * 
+	 * @return the max dx
+	 */
+
+	public double getMaxDx() {
+		return this.character.getMaxDx();
+	}
+
+	/**
+	 * Get the max dy of the character
+	 * 
+	 * @return the max dy
+	 */
+
+	public double getMaxDy() {
+		return this.character.getMaxDy();
+	}
+
+	/**
+	 * Get the acceleration of the character
+	 * 
+	 * @return the acceleration
+	 */
+
+	public double getAcc() {
+		return this.character.getAcc();
+	}
+
+	/**
+	 * Get the restitution of the character
+	 * 
+	 * @return the restitution
+	 */
+
+	public double getRestitution() {
+		return this.character.getRestitution();
+	}
+
+	/**
+	 * Get the radius of the character
+	 * 
+	 * @return the radius
+	 */
+
+	public int getRadius() {
+		return this.character.getRadius();
+	}
+
+	/**
+	 * Set the mass of a character
+	 * 
+	 * @param mass
+	 *            the mass
+	 */
+
+	public void setMass(double mass) {
+		this.character.setMass(mass);
+	}
+
+	/**
+	 * Set the dx of a character
+	 * 
+	 * @param dx
+	 *            the dx
+	 */
+
+	public void setDx(double dx) {
+		this.character.setDx(dx);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the dy of a character
+	 * 
+	 * @param dy
+	 *            the dy
+	 */
+
+	public void setDy(double dy) {
+		this.character.setDy(dy);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the max dx of a character
+	 * 
+	 * @param maxDx
+	 *            the max dx
+	 */
+
+	public void setMaxDx(double maxDx) {
+		this.character.setMaxDx(maxDx);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the max dy of a character
+	 * 
+	 * @param maxDy
+	 *            the max dy
+	 */
+
+	public void setMaxDy(double maxDy) {
+		this.character.setMaxDy(maxDy);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the acceleration of a character
+	 * 
+	 * @param acceleration
+	 *            the acceleration
+	 */
+
+	public void setAcc(double acceleration) {
+		this.character.setAcc(acceleration);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the restitution of a character
+	 * 
+	 * @param restitution
+	 *            the restitution
+	 */
+
+	public void setRestitution(double restitution) {
+		this.character.setRestitution(restitution);
+		setChanged();
+		notifyObservers();
+	}
+
+	/**
+	 * Set the radius of a character
+	 * 
+	 * @param radius
+	 *            the radius
+	 */
+
+	public void setRadius(int radius) {
+		this.character.setRadius(radius);
+		setChanged();
+		notifyObservers();
 	}
 
 }
