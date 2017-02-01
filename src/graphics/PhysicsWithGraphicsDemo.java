@@ -2,8 +2,6 @@ package graphics;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-
 import physics.PhysicsWithModels;
 import resources.Character;
 import resources.Map;
@@ -13,7 +11,7 @@ import resources.Resources;
  * I try and smash graphics with physics. It works ish
  */
 
-public class PhysicsWithGraphicsDemo extends JFrame {
+public class PhysicsWithGraphicsDemo {
 
 	public static void main(String[] args) {
 

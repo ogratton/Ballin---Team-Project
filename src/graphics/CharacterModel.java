@@ -49,7 +49,9 @@ public class CharacterModel extends Observable implements Collidable {
 		int[][] rollingSpriteLocs = sections.get(0);
 
 		for (int i = 0; i < rollingSpriteLocs.length; i++) {
-			rollingSprites.add(spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]));
+			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
+			rollingSprites.add(sprite);
+			rollingSprites.add(sprite);
 		}
 
 		rollingFrame = 0;
@@ -79,12 +81,13 @@ public class CharacterModel extends Observable implements Collidable {
 				rollingFrame++;
 				break;
 			}
-			if (rollingFrame == 8)
+			if (rollingFrame == 16)
 				rollingFrame = 0;
 
 			if (rollingFrame == -1)
-				rollingFrame = 7;
+				rollingFrame = 15;
 		}
+		
 		return this.rollingSprites.get(rollingFrame);
 	}
 
@@ -92,7 +95,7 @@ public class CharacterModel extends Observable implements Collidable {
 	 * Testing methods Should not be used in the final demo
 	 */
 
-	private void update() {
+	/*private void update() {
 		velX = 0;
 		velY = 0;
 
@@ -105,16 +108,16 @@ public class CharacterModel extends Observable implements Collidable {
 		if (character.isRight())
 			velX = SPEED;
 
-	}
+	}*/
 
 	/**
 	 * Move the character (TESTING)
 	 */
 	
-	public void move(){
-		setX(getX() + velX);
-		setY(getY() + velY);
-	}
+	//public void move(){
+	//	setX(getX() + velX);
+	//	/setY(getY() + velY);
+	//}
 	
 	/*
 	 * Getters and setters for controls: this is mportant for determining which
@@ -318,7 +321,7 @@ public class CharacterModel extends Observable implements Collidable {
 		
 		setFacing(direction);
 		
-		update();
+		//update();
 		
 		setChanged();
 		notifyObservers();

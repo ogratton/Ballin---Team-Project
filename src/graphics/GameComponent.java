@@ -24,7 +24,7 @@ import resources.Resources;
  *
  */
 
-public class GameComponent extends JFrame implements ActionListener {
+public class GameComponent extends JFrame implements ActionListener{
 
 	private ArrayList<Character> characters;
 	private ArrayList<CharacterModel> characterModels;
@@ -98,10 +98,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-
-		for (CharacterModel character : characterModels) {
-			character.move();
-		}
 
 		repaint();
 
