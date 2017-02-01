@@ -38,9 +38,9 @@ public class Physics extends Thread implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		for(Character c : Resources.players){
+		for(Character c : Resources.playerList){
 			update(c);
-			for (Character d : Resources.players) {
+			for (Character d : Resources.playerList) {
 				// check collisions
 				if (c != d) {
 					CND cnd = detectCollision(c,d);
@@ -74,7 +74,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 */
 	private void update(Character c) {
-		// calculate speed, calculate location
+		// calculate speed
 		if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 			c.setDx(c.getDx() - c.getAcc());
 		}
@@ -87,6 +87,7 @@ public class Physics extends Thread implements ActionListener {
 		if (c.isDown() && c.getDy() < c.getMaxDy()) {
 			c.setDy(c.getDy() + c.getAcc());
 		}
+		//apply friction
 		if (!c.isLeft() && !c.isRight()) {
 			c.setDx(c.getDx() * Resources.map.getFriction());
 		}
@@ -94,9 +95,10 @@ public class Physics extends Thread implements ActionListener {
 			c.setDy(c.getDy() * Resources.map.getFriction());
 		}
 
+		//calculate location
 		double x = c.getX() + c.getDx();
 		double y = c.getY() + c.getDy();
-		// System.out.println(c.x());
+
 		c.setX(x);
 		c.setY(y);
 
@@ -178,7 +180,7 @@ public class Physics extends Thread implements ActionListener {
 		double dy = c.getY() - d.getY(); // difference in y
 		double dx2 = Math.pow(dx, 2);
 		double dy2 = Math.pow(dy, 2);
-		if((dx2 + dy2) <= r && (!c.isCollided() || !d.isCollided())) {
+		if((dx2 + dy2) <= r) {
 			double distance = Math.sqrt(dx2 + dy2);
 			if (distance != 0) {
 				cnd.collided = true;

@@ -42,7 +42,7 @@ public class CharacterModel extends Observable implements Collidable {
 		this.spriteSheet = SheetDeets.getSpriteSheetFromCharacter(character);
 
 		this.moving = false;
-		this.direction = character.getFacing();
+		this.direction = character.getDirection();
 		rollingSprites = new ArrayList<BufferedImage>();
 
 		ArrayList<int[][]> sections = spriteSheet.getSections();
@@ -319,7 +319,7 @@ public class CharacterModel extends Observable implements Collidable {
 			setMoving(false);
 		}
 		
-		setFacing(direction);
+		setDirection(direction);
 		
 		//update();
 		
@@ -395,8 +395,8 @@ public class CharacterModel extends Observable implements Collidable {
 	 * @return the facing
 	 */
 
-	public Character.Heading getFacing() {
-		return this.character.getFacing();
+	public Character.Heading getDirection() {
+		return this.character.getDirection();
 	}
 
 	/**
@@ -445,8 +445,8 @@ public class CharacterModel extends Observable implements Collidable {
 	 * @param facing
 	 */
 
-	public void setFacing(Character.Heading facing) {
-		this.character.setFacing(facing);
+	public void setDirection(Character.Heading facing) {
+		this.character.setDirection(facing);
 	}
 
 	/*

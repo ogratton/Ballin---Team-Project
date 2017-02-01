@@ -123,7 +123,7 @@ public class PhysicsWithModels extends Thread implements ActionListener {
 		// Calculate restitution (bounciness)
 		double e = Math.min(c.getRestitution(), d.getRestitution());
 		 
-		// Calculate impulse scalar
+		// Calculate impulse value
 		double j = -(1 + e) * normalVelocity; 
 		j /= c.getInvMass() + d.getInvMass();
 		

@@ -49,12 +49,13 @@ public class PhysicsExampleUI extends JFrame {
 		Resources.players[1].setMass(2);
 		
 		Resources.players[2] = new Character(Character.Class.DEFAULT);
-		Resources.players[2].setX(570);
+		Resources.players[2].setX(570); // for clipping test, set to ~540, else 570 is out of range of it's twin.
 		Resources.players[2].setY(500);
 		Resources.players[2].setRadius(30);
 		Resources.players[2].setMass(2);
 		
-		Resources.map = new Map(1000, 600);
+		Resources.map = new Map(950, 550); // smaller than screen (this will allow for falling off the edge)
+		Resources.map.origin().setLocation(50.0, 50.0);
 		
 		// create physics thread
 		Physics p = new Physics();
