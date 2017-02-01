@@ -1,3 +1,5 @@
+package networking;
+
 // We use https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/BlockingQueue.html
 
 import java.util.concurrent.*;

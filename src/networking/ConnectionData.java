@@ -27,6 +27,14 @@ public class ConnectionData {
 		myClient = client;
 	}
 	
+	public ConcurrentMap<Integer, Session> getSessionsTable() {
+		return sessions;
+	}
+	
+	public void setSessionsTable(ConcurrentMap<Integer, Session> sessions) {
+		this.sessions = sessions;
+	}
+	
 	public int getSessionId() {
 		return sessionId;
 	}

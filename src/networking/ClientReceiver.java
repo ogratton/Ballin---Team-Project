@@ -3,6 +3,7 @@ package networking;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ConcurrentMap;
 
 // Gets messages from other clients via the server (by the
 // ServerSender thread).
@@ -35,10 +36,22 @@ public class ClientReceiver extends Thread {
   /**
    * Runs the thread.
    */
-  public void run() {
-    // Print to the user whatever we get from the server:
+  @SuppressWarnings("unchecked")
+public void run() {
+    Message message = new Message();
     try {
-      
+    	while(message.getCommand() != Command.QUIT) {
+    		message = (Message)server.readObject();
+    		switch(message.getCommand()) {
+    		case SESSION:
+    			switch(message.getMessage()) {
+    			case("allSessions"):
+    				cModel.setSessionsTable((ConcurrentMap<Integer, Session>)message.getObject());
+    			}
+			default:
+				break;
+    		}
+    	}  
     }
     catch (Exception e) {
       System.out.println("Server seems to have died " + e.getMessage());

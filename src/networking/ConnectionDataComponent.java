@@ -21,8 +21,7 @@ public class ConnectionDataComponent extends JPanel {
 		SessionButtons sessionButtons = new SessionButtons(model, toServer);
 		ReceivedMessageBox receivedMessages = new ReceivedMessageBox(model);
 		MessageBox messageBox = new MessageBox(model, toServer);
-		SessionListView sessionList = new SessionListView(model);
-		ClientListView clientList = new ClientListView(model);
+		ListView lists = new ListView(model);
 		SessionView sessionView = new SessionView(model);
 		ControlButtons controls = new ControlButtons(model, toServer);
 		
@@ -39,14 +38,11 @@ public class ConnectionDataComponent extends JPanel {
 		
 		JPanel listPanel = new JPanel();
 		listPanel.setLayout(new BorderLayout());
-		listPanel.add(sessionList, BorderLayout.WEST);
-		listPanel.add(clientList, BorderLayout.EAST);
+		listPanel.add(lists, BorderLayout.CENTER);
 		
 		model.addObserver(sessionButtons);
 		model.addObserver(messageBox);
-		model.addObserver(messageButton);
-		model.addObserver(sessionList);
-		model.addObserver(clientList);
+		model.addObserver(lists);
 		model.addObserver(sessionView);
 		model.addObserver(controls);
 		

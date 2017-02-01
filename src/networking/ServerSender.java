@@ -1,6 +1,7 @@
 package networking;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.io.*;
 
 // Continuously reads from message queue for a particular client,
@@ -8,9 +9,9 @@ import java.io.*;
 
 public class ServerSender extends Thread {
   private MessageQueue queue;
-  private PrintStream client;
-  private Map<Integer, Session> sessions;
-  private Map<Integer, ClientInformation> clients;
+  private ObjectOutputStream toClient;
+  private ConcurrentMap<Integer, Session> sessions;
+  private ConcurrentMap<Integer, ClientInformation> clients;
 
   /**
    * Sends a message to the client based on what it reads from the blocking queue of the client.
@@ -18,9 +19,9 @@ public class ServerSender extends Thread {
    * @param c The output stream which the Server Sends sends messages to the client
    * @param t The client table which contains the information about the client on the server.
    */
-  public ServerSender(MessageQueue q, PrintStream c, Map<Integer, Session> sessions, Map<Integer, ClientInformation> clients) {
+  public ServerSender(MessageQueue q, ObjectOutputStream c, ConcurrentMap<Integer, Session> sessions, ConcurrentMap<Integer, ClientInformation> clients) {
     queue = q;   
-    client = c;
+    toClient = c;
     this.sessions = sessions;
     this.clients = clients;
   }
@@ -31,9 +32,13 @@ public class ServerSender extends Thread {
    */
   public void run() {
 	  Message msg = queue.take();
-	  while (!msg.getType().equals("quit")) {
-		
+	  while (!msg.getCommand().equals(Command.QUIT)) {
 		msg = queue.take();
+		try {
+			toClient.writeObject(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	  }
   }
 }

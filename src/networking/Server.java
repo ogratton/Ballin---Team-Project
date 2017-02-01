@@ -1,3 +1,5 @@
+package networking;
+
 // Usage:
 //        java Server
 //
@@ -9,6 +11,8 @@ import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.io.*;
 
 public class Server {
@@ -21,10 +25,10 @@ public class Server {
 	    }  
 	
     // This will be shared by the server threads:
-    Map<Integer, Session> sessions = new HashMap<Integer, Session>();
+    ConcurrentMap<Integer, Session> sessions = new ConcurrentHashMap<Integer, Session>();
     
     // Initialise the client information table.
-    Map<Integer, ClientInformation> clients = new HashMap<Integer, ClientInformation>();
+    ConcurrentMap<Integer, ClientInformation> clients = new ConcurrentHashMap<Integer, ClientInformation>();
     
     String port = args[0];
 
@@ -49,22 +53,30 @@ public class Server {
         Socket socket = serverSocket.accept();
 
         // This is so that we can use readLine():
-        BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
 
         // We ask the client what its name is:
-        String clientName = fromClient.readLine();
+        Message clientName = null;
+		try {
+			clientName = (Message)fromClient.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // For debugging:
-        System.out.println(clientName + " connected");
+        System.out.println(clientName.getMessage() + " connected");
 
         // Edited Code
         Integer id = generateID(clients);
+        
+        clients.put(id, new ClientInformation(id, clientName.getMessage()));
 
         // We create and start a new thread to read from the client:
-        (new ServerReceiver(id, fromClient, sessions, clients)).start();
+        (new ServerReceiver(fromClient, sessions, clients)).start();
 
         // We create and start a new thread to write to the client:
-        PrintStream toClient = new PrintStream(socket.getOutputStream());
+        ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());
         (new ServerSender(clients.get(id).getQueue(), toClient, sessions, clients)).start();
       }
     } 

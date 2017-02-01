@@ -8,16 +8,16 @@ import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-public class SessionButtons extends JPanel implements Observer {
+public class SessionView extends JPanel implements Observer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
-	private JButton joinSession;
-	private JButton leaveSession;
+	private JTextField text;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -26,40 +26,12 @@ public class SessionButtons extends JPanel implements Observer {
  * @param toServer The output stream to the Server Reciever.
  */
 	
-	public SessionButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	public SessionView(ConnectionDataModel cModel) {
 		super();
 		
 		this.cModel = cModel;
+		text = new JTextField(cModel.getSessionId());
 		
-		joinSession = new JButton("Join Session");
-		joinSession.addActionListener(e -> {
-			Message joinMessage = new Message(Command.SESSION, "joinSession", cModel.getMyId(), cModel.getHighlightedSessionId());
-			try {
-				toServer.writeObject(joinMessage);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-
-	    Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), -1);
-	    try {
-			toServer.writeObject(message);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		leaveSession = new JButton("Leave Session");
-		leaveSession.addActionListener(e -> {
-			Message leaveMessage = new Message(Command.SESSION, "leaveSession", cModel.getMyId(), cModel.getHighlightedSessionId());
-			try {
-				toServer.writeObject(leaveMessage);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-		
-		add(joinSession);
-		add(leaveSession);
 	}
 
 /**
@@ -71,8 +43,10 @@ public class SessionButtons extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
+		text.setText("Session ID: " + Integer.toString(cModel.getSessionId()));
 		repaint();
 	}
 
 }
+
 

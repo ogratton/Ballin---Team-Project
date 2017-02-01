@@ -2,6 +2,7 @@ package networking;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionDataModel extends Observable {
 
@@ -21,6 +22,14 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setClientInformation(ClientInformation client) {
 		data.setClientInformatin(client);
+	}
+	
+	public ConcurrentMap<Integer, Session> getSessionsTable() {
+		return data.getSessionsTable();
+	}
+	
+	public void setSessionsTable(ConcurrentMap<Integer, Session> sessions) {
+		data.setSessionsTable(sessions);
 	}
 	
 	public int getSessionId() {
@@ -57,6 +66,14 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setHighlightedSessionId(int id) {
 		this.data.setHiglightedSessionId(id);
+	}
+	
+	public synchronized int getHighlightedClientId() {
+		return this.data.getHighlightedClientId();
+	}
+	
+	public synchronized void setHighlightedClientId(int id) {
+		this.data.setHighlightedClientId(id);
 	}
 	
 	public synchronized String getReceivedMessage() {
