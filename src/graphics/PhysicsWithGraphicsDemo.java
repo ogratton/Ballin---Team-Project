@@ -16,7 +16,7 @@ public class PhysicsWithGraphicsDemo {
 
 	public static void main(String[] args) {
 
-		Character player = new Character(Character.Class.WIZARD);
+		Character player = new Character(Character.Class.TEST);
 
 		player.setX(46);
 		player.setY(46);

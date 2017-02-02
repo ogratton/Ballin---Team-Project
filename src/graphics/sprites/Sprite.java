@@ -67,16 +67,7 @@ public class Sprite {
 	
 	public static String determineSpriteSheetName(Character.Class classType) {
 
-		switch (classType) {
-		case DEFAULT:
-			return "wizard";
-		case ELF:
-			return "elf";
-		case WIZARD:
-			return "wizard";
-		}
-		
-		return "";
+		return SheetDeets.getSpriteSheetFromClass(classType).getName();
 
 	}
 

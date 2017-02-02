@@ -25,17 +25,17 @@ import resources.Resources;
  *
  */
 
-public class GameComponent extends JFrame implements ActionListener{
+public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
-	//private ArrayList<CharacterModel> characterModels;
+	// private ArrayList<CharacterModel> characterModels;
 	private Map map;
 	private MapModel mapModel;
 	private Timer timer;
 	private GameView view;
 
-	private boolean fullScreen = true;
-	
+	private boolean fullScreen = false;
+
 	int width, height;
 	int oldValueX, newValueX, oldValueY, newValueY;
 
@@ -50,9 +50,9 @@ public class GameComponent extends JFrame implements ActionListener{
 	 */
 
 	public GameComponent(ArrayList<Character> characters, Map map, int width, int height) {
-		
+
 		setLayout(new BorderLayout());
-		
+
 		// This code block below is just for testing!
 
 		addKeyListener(new TAdapter());
@@ -62,17 +62,12 @@ public class GameComponent extends JFrame implements ActionListener{
 
 		// End test code block
 		this.characters = characters;
-		
+
 		this.width = width;
 		this.height = height;
-		
+
 		this.map = map;
 		mapModel = new MapModel(map);
-
-		JButton button = new JButton("exit");
-		button.addActionListener(e -> System.exit(0));
-		add(button, BorderLayout.SOUTH);
-
 
 		view = new GameView(characters, mapModel);
 
@@ -98,39 +93,46 @@ public class GameComponent extends JFrame implements ActionListener{
 
 	/**
 	 * Set the mulitplier
-	 * @param mult the multiplier
+	 * 
+	 * @param mult
+	 *            the multiplier
 	 */
-	
-	public void setMultiplier(double mult) {
+
+	public void setMultiplier(double newWidth, double newHeight) {
+
+		double mult = newWidth / width;
+		System.out.println(mult);
 		this.view.setMultiplier(mult);
 	}
-	
+
 	/**
 	 * Switch between fullscreen and windowed
 	 */
-	
+
 	public void toggleFullscreen() {
 
 		if (fullScreen) {
+
+			int newWidth = (int) (1200);
+			int newHeight = (int) (675);
 			
-			double screenChange = 0.5;
-			
-			int newWidth = (int)(width * screenChange);
-			int newHeight = (int)(height * screenChange);
-			
+			setMultiplier(newWidth, newHeight);
 			setSize(newWidth, newHeight);
+			setLocationRelativeTo(null);
 			fullScreen = false;
-			setMultiplier(screenChange);
+
 		} else {
-			
+
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
+			setLocation(0,0);
+			setMultiplier(width, height);
 			setSize(width, height);
 			fullScreen = true;
-			setMultiplier(1);
+
 		}
-		
+
 		setFocusable(true);
 		requestFocus();
 
@@ -202,7 +204,7 @@ public class GameComponent extends JFrame implements ActionListener{
 				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
-			
+
 			}
 		}
 	}

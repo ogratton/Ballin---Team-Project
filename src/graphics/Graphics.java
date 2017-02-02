@@ -23,17 +23,13 @@ public class Graphics extends Thread {
 	
 	public void run() {
 	
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
 		
-		GameComponent comp = new GameComponent(players, map, width, height);
+		GameComponent comp = new GameComponent(players, map, 1200, 675);
 	
 		comp.setUndecorated(true);
-		comp.setSize(width, height);
-		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // set the close
-																// operation to
-																// end program
+		comp.setSize(1200, 675);
+		comp.setLocationRelativeTo(null);
+		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program
 		comp.setTitle("Ballin'");
 		comp.setVisible(true);
 		

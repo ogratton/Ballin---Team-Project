@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -54,12 +55,25 @@ public class GameView extends JPanel implements Observer {
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
 		for (Character model : characters) {
-
+			
 			BufferedImage frame = null;
+			
+			double screenWidth = getWidth();
+			double screenHeight = getHeight();
+			double offset = 0;
+			
+			if(screenWidth / screenHeight < (16.0/9.0)){
+				
+				offset = 0.5 * (screenHeight - (screenWidth * (9.0/16.0)));
+				
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, (int)screenWidth, (int)offset);
+				g.fillRect(0, (int)(screenHeight - offset), (int)screenWidth, (int)offset);
+			}
 
 			int newX = (int) model.getX();
 			int newY = (int) model.getY();
-
+			
 			if (newX != points.get(model).getX() || newY != points.get(model).getY()) {
 				frame = model.getNextFrame(true);
 				points.put(model, new Point(newX, newY));
@@ -73,7 +87,7 @@ public class GameView extends JPanel implements Observer {
 			int sizeX = (int)(frame.getWidth() * multiplier);
 			int sizeY = (int)(frame.getHeight() * multiplier);
 			
-			g.drawImage(frame, actualX, actualY, 2 * sizeX, 2 * sizeY, this);
+			g.drawImage(frame, (int)(actualX + offset), (int)(actualY + offset), sizeX, sizeY, this);
 
 			Toolkit.getDefaultToolkit().sync();
 

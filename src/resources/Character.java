@@ -14,95 +14,96 @@ public class Character extends Observable implements Collidable {
 	private static final double default_max_speed_y = 5;
 	private static final double default_acc = 0.2;
 	private static final double default_restitution = 0.7; // 'bounciness'
-	
-	
-	public enum Heading{N,E,S,W,NE,NW,SE,SW};
-	
+
+	public enum Heading {
+		N, E, S, W, NE, NW, SE, SW
+	};
+
 	// this will have all the Character classes in use.
-	public enum Class{DEFAULT, WIZARD, ELF}; // add to this as we develop more classes.
-	
-	// flags for keys pressed. 
+	public enum Class {
+		DEFAULT, WIZARD, ELF, TEST
+	}; // add to this as we develop more classes.
+
+	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
 	// jump is currently not being used, but is there if we need it.
 	// jump punch and/or block may be replaced by a single 'special' flag,
-	//   which does an action based on the class of the character.
+	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
 	private boolean up, right, left, down, jump, punch, block, collided = false;
-	
-	//these are for the physics engine. Restitution is 'bounciness'.
+
+	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
-	
+
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
 	// x and y are the coordinates of the centre of the circle, relative to the
-	//   top-left of the arena.
+	// top-left of the arena.
 	// radius is the radius of the circle, in arbitrary units.
 	// direction is the direction that the character's facing
-	//   (this is entirely for graphics)
-	private double x,y = 0.0;
+	// (this is entirely for graphics)
+	private double x, y = 0.0;
 	private int radius = 0;
 	private Heading direction = Heading.N;
 	private Class classType = Class.DEFAULT;
-	
-	//variables imported from CharacterModel
+
+	// variables imported from CharacterModel
 	private SpriteSheet spriteSheet;
-	private ArrayList<BufferedImage> rollingSprites;
-	private int rollingFrame;
+	private ArrayList<BufferedImage> rollingSprites, directionSprites;
+	private int rollingFrame, directionFrame;
 	private boolean moving;
 
-	
 	/**
 	 * Default character with default sprite
 	 */
-	
+
 	public Character() {
 		this(default_mass, 0, 0, default_radius, Heading.N, Class.DEFAULT);
 	}
-	
+
 	/**
 	 * Default character with a given class
-	 * @param c the class
+	 * 
+	 * @param c
+	 *            the class
 	 */
-	
+
 	public Character(Class c) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.N, c);
 	}
-	
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType){
+
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType) {
 		this(false, false, false, false, false, false, false, // control flags
-				mass, 
-				x,   // x
-				y,   // y
-				0.0, // speed_x 
-				0.0, // speed_y 
-				default_max_speed_x * (1/mass),
-				default_max_speed_y * (1/mass), 
-				default_acc, // acceleration (TODO: calculate this)
-				default_restitution,
-				radius, direction, classType);
+				mass, x, // x
+				y, // y
+				0.0, // speed_x
+				0.0, // speed_y
+				default_max_speed_x * (1 / mass), default_max_speed_y * (1 / mass), default_acc, // acceleration
+																									// (TODO:
+																									// calculate
+																									// this)
+				default_restitution, radius, direction, classType);
 	}
-	
+
 	// master constructor. Any other constructors should eventually call this.
-	private Character
-	(
-	boolean up, boolean right, boolean left, boolean down, boolean jump, 
-	boolean punch, boolean block, double mass, double x, double y, double speed_x, double speed_y,
-	double max_speed_x, double max_speed_y, double acceleration, double restitution, int radius, 
-	Heading direction, Class classType
-	) {
-		//new Character();
+	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
+			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
+			double acceleration, double restitution, int radius, Heading direction, Class classType) {
+		// new Character();
 		this.up = up;
-		this.right = right; 
+		this.right = right;
 		this.left = left;
 		this.down = down;
 		this.jump = jump;
 		this.punch = punch;
 		this.block = block;
-		
+
 		this.mass = mass;
-		if(mass == 0) this.inv_mass = 0; // a mass of 0 makes an object infinitely massive
-		else this.inv_mass = 1.0/mass;
-		
+		if (mass == 0)
+			this.inv_mass = 0; // a mass of 0 makes an object infinitely massive
+		else
+			this.inv_mass = 1.0 / mass;
+
 		this.x = x;
 		this.y = y;
 		this.dx = speed_x;
@@ -114,15 +115,17 @@ public class Character extends Observable implements Collidable {
 		this.radius = radius;
 		this.direction = direction;
 		this.classType = classType;
-		
-		//imported from graphics. 
+
+		// imported from graphics.
 		this.spriteSheet = SheetDeets.getSpriteSheetFromCharacter(this);
 		this.moving = false;
-		
-		rollingSprites = new ArrayList<BufferedImage>();
 
+		rollingSprites = new ArrayList<BufferedImage>();
+		directionSprites = new ArrayList<BufferedImage>();
+		
 		ArrayList<int[][]> sections = spriteSheet.getSections();
 		int[][] rollingSpriteLocs = sections.get(0);
+		int[][] directionSpriteLocs = sections.get(1);
 
 		for (int i = 0; i < rollingSpriteLocs.length; i++) {
 			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
@@ -130,10 +133,17 @@ public class Character extends Observable implements Collidable {
 			rollingSprites.add(sprite);
 		}
 
+		for (int i = 0; i < directionSpriteLocs.length; i++) {
+			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], rollingSpriteLocs[i][1]);
+			directionSprites.add(sprite);
+			directionSprites.add(sprite);
+		}
+
 		rollingFrame = 0;
+		directionFrame = 0;
 
 	}
-	
+
 	/**
 	 * Get the current rolling frame
 	 * 
@@ -141,60 +151,93 @@ public class Character extends Observable implements Collidable {
 	 */
 
 	public BufferedImage getNextFrame(boolean moving) {
-
-		if (moving) {
-			switch (direction) {
-			case W:
-			case NW:
-			case SW:
-			case N:
-				rollingFrame--;
-				break;
-			case E:
-			case NE:
-			case SE:
-			case S:
-				rollingFrame++;
-				break;
+		switch (classType) {
+		case TEST:
+			if (moving) {
+				switch (direction) {
+				case N:
+					directionFrame = 0;
+					break;
+				case NE:
+					directionFrame = 1;
+					break;
+				case E:
+					directionFrame = 2;
+					break;
+				case SE:
+					directionFrame = 3;
+					break;
+				case S:
+					directionFrame = 4;
+					break;
+				case SW:
+					directionFrame = 5;
+					break;
+				case W:
+					directionFrame = 6;
+					break;
+				case NW:
+					directionFrame = 7;
+					break;
+				}
 			}
-			if (rollingFrame == 16)
-				rollingFrame = 0;
 
-			if (rollingFrame == -1)
-				rollingFrame = 15;
+			return this.directionSprites.get(directionFrame);
+
+		case ELF:
+		case WIZARD:
+		case DEFAULT:
+			if (moving) {
+				switch (direction) {
+				case W:
+				case NW:
+				case SW:
+				case N:
+					rollingFrame--;
+					break;
+				case E:
+				case NE:
+				case SE:
+				case S:
+					rollingFrame++;
+					break;
+				}
+				if (rollingFrame == 16)
+					rollingFrame = 0;
+
+				if (rollingFrame == -1)
+					rollingFrame = 15;
+			}
+
+			return this.rollingSprites.get(rollingFrame);
 		}
-		
-		return this.rollingSprites.get(rollingFrame);
+
+		return null;
 	}
 
 	/*
 	 * Testing methods Should not be used in the final demo
 	 */
 
-	/*private void update() {
-		velX = 0;
-		velY = 0;
-
-		if (character.isDown())
-			velY = SPEED;
-		if (character.isUp())
-			velY = -SPEED;
-		if (character.isLeft())
-			velX = -SPEED;
-		if (character.isRight())
-			velX = SPEED;
-
-	}*/
+	/*
+	 * private void update() { velX = 0; velY = 0;
+	 * 
+	 * if (character.isDown()) velY = SPEED; if (character.isUp()) velY =
+	 * -SPEED; if (character.isLeft()) velX = -SPEED; if (character.isRight())
+	 * velX = SPEED;
+	 * 
+	 * }
+	 */
 
 	/**
 	 * Move the character (TESTING)
 	 */
-	
-	//public void move(){
-	//	setX(getX() + velX);
-	//	/setY(getY() + velY);
-	//}
-	
+
+	// public void move(){
+	// setX(getX() + velX);
+	// /setY(getY() + velY);
+	// }
+
 	/*
 	 * Getters and setters for controls: this is mportant for determining which
 	 * frame of the sprite to use next
@@ -394,11 +437,11 @@ public class Character extends Observable implements Collidable {
 		} else {
 			setMoving(false);
 		}
-		
+
 		setDirection(direction);
-		
-		//update();
-		
+
+		// update();
+
 		setChanged();
 		notifyObservers();
 	}
@@ -720,11 +763,11 @@ public class Character extends Observable implements Collidable {
 		setChanged();
 		notifyObservers();
 	}
-	
-	
+
 	// setters/getters for control flags
 	/**
 	 * Set all of the control flags at once.
+	 * 
 	 * @param up
 	 * @param down
 	 * @param left
@@ -733,7 +776,8 @@ public class Character extends Observable implements Collidable {
 	 * @param punch
 	 * @param block
 	 */
-	public void setControls(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean punch, boolean block) {
+	public void setControls(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean punch,
+			boolean block) {
 		this.up = up;
 		this.down = down;
 		this.left = left;
@@ -747,10 +791,11 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Get the class type of this character.
+	 * 
 	 * @return
 	 */
-	public Class getClassType(){
+	public Class getClassType() {
 		return this.classType;
 	}
-	
+
 }
