@@ -28,9 +28,7 @@ import resources.Resources;
 public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
-	// private ArrayList<CharacterModel> characterModels;
 	private Map map;
-	private MapModel mapModel;
 	private Timer timer;
 	private GameView view;
 
@@ -67,9 +65,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		this.map = map;
-		mapModel = new MapModel(map);
 
-		view = new GameView(characters, mapModel);
+		view = new GameView(characters, map);
 
 		for (Character model : characters) {
 			model.addObserver(view);

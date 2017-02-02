@@ -1,7 +1,10 @@
 package graphics.sprites;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 import resources.Character;
+import resources.Map;
 
 public class SheetDeets {
 
@@ -126,6 +129,19 @@ public class SheetDeets {
 		}
 
 		return null;
+	}
+	
+	public static BufferedImage getSpriteFromTile(Map.Tile t){
+		
+		switch(t){
+		case TEST:
+			return TILE_TEST.getSprite(0, 0);
+		case DEFAULT:
+			return TILE_TEST.getSprite(0, 0);
+		}
+		
+		return null;
+		
 	}
 
 	/**

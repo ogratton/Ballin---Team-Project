@@ -40,12 +40,12 @@ public class PhysicsWithGraphicsDemo {
 			Random r = new Random();
 			
 			Character playa = new Character(Character.Class.WIZARD);
-			playa.setX(r.nextInt(1920));
-			playa.setY(r.nextInt(1080));
+			playa.setX(r.nextInt(1200));
+			playa.setY(r.nextInt(675));
 			Resources.playerList.add(playa);
 		}
 		
-		Resources.map = new Map(1920, 1200);
+		Resources.map = new Map(1200, 675);
 
 		// create physics thread
 		Physics p = new Physics();

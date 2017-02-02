@@ -27,7 +27,7 @@ public class Graphics extends Thread {
 		GameComponent comp = new GameComponent(players, map, 1200, 675);
 	
 		comp.setUndecorated(true);
-		comp.setSize(1200, 675);
+		comp.setSize(1184, 675);
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program
 		comp.setTitle("Ballin'");

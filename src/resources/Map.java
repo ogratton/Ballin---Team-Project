@@ -1,7 +1,10 @@
 package resources;
 
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import graphics.sprites.SheetDeets;
 
 public class Map {
 	private int width, height;
@@ -27,11 +30,20 @@ public class Map {
 	// keep walls to the top-most map; lower level ones are 
 	//   not guaranteed to be accounted for in calculations.
 	private ArrayList<Wall> walls;
+
 	// powerups
 	//private ArrayList<PowerUp> powerups;
 	
+	public enum Tile{
+		TEST,
+		DEFAULT,
+	};
+	
+	private ArrayList<Tile[]> tiles;
+	
 	// TODO getters/setters/constructors
 	public Map(int width, int height) {
+		
 		this(
 			new Point2D.Double(0,0),
 			width,
@@ -51,6 +63,32 @@ public class Map {
 		this.gravity = gravity;
 		this.terrains = terrains;
 		this.walls = walls;
+
+		tiles = new ArrayList<Tile[]>();
+		
+		for(int i = 0; i < 9; i++){
+			
+			Tile[] array = new Tile[16 + i%2];
+			
+			for(int j = 0; j < array.length; j++){
+				array[j] = Tile.TEST;
+			}
+			
+			tiles.add(array);
+			
+		}
+	}
+	
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Map> terrains, ArrayList<Wall> walls, ArrayList<Tile[]> tiles) {
+		this.origin = origin;
+		this.width = width;
+		this.height = height;
+		this.friction = friction;
+		this.gravity = gravity;
+		this.terrains = terrains;
+		this.walls = walls;
+
+		this.tiles = tiles;
 	}
 	
 	public Point2D origin() {
@@ -73,5 +111,16 @@ public class Map {
 	}
 	public ArrayList<Wall> getWalls() {
 		return walls;
+	}
+	
+	public ArrayList<Tile[]> getTiles(){
+		return this.tiles;
+	}
+	
+	public BufferedImage getTileSprite(int x, int y){
+		
+		BufferedImage sprite = SheetDeets.getSpriteFromTile(tiles.get(y)[x]);
+		return sprite;
+		
 	}
 }
