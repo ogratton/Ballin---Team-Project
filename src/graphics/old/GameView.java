@@ -1,4 +1,4 @@
-package graphics;
+package graphics.old;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -11,32 +11,30 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import resources.Character;
+public class GameView extends JPanel implements Observer {
 
-public class GameViewWithoutCharacterModel extends JPanel implements Observer {
-
-	private ArrayList<Character> characters;
+	private ArrayList<CharacterModel> characterModels;
 	private MapModel mapModel;
-	private HashMap<Character, Point> points;
+	private HashMap<CharacterModel, Point> points;
 	private double multiplier = 1;
 	
 	/**
 	 * Create a new game view
 	 * 
-	 * @param characters
+	 * @param characterModels
 	 *            an ArrayList of all character models on the view
 	 * @param mapModel
 	 *            the model of the map on the view
 	 */
 
-	public GameViewWithoutCharacterModel(ArrayList<Character> characters, MapModel mapModel) {
+	public GameView(ArrayList<CharacterModel> characterModels, MapModel mapModel) {
 		super();
-		this.characters = characters;
+		this.characterModels = characterModels;
 		this.mapModel = mapModel;
 
-		points = new HashMap<Character, Point>();
+		points = new HashMap<CharacterModel, Point>();
 
-		for (Character model : characters) {
+		for (CharacterModel model : characterModels) {
 			points.put(model, new Point((int) model.getX(), (int) model.getY()));
 		}
 
@@ -52,7 +50,7 @@ public class GameViewWithoutCharacterModel extends JPanel implements Observer {
 		super.paintComponent(g);
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-		for (Character model : characters) {
+		for (CharacterModel model : characterModels) {
 
 			BufferedImage frame = null;
 

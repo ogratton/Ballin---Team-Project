@@ -1,4 +1,4 @@
-package graphics;
+package graphics.old;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -9,13 +9,13 @@ import javax.swing.JFrame;
 import resources.Map;
 import resources.Character;
 
-public class GraphicsWithoutCharacterModel extends Thread {
+public class Graphics extends Thread {
 
 
 	private ArrayList<Character> players;
 	private Map map;
 	
-	public GraphicsWithoutCharacterModel(ArrayList<Character> players, Map map){
+	public Graphics(ArrayList<Character> players, Map map){
 		this.players = players;
 		this.map = map;
 		
@@ -27,7 +27,7 @@ public class GraphicsWithoutCharacterModel extends Thread {
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
 		
-		GameComponentWithoutCharacterModel comp = new GameComponentWithoutCharacterModel(players, map, width, height);
+		GameComponent comp = new GameComponent(players, map, width, height);
 	
 		comp.setUndecorated(true);
 		comp.setSize(width, height);

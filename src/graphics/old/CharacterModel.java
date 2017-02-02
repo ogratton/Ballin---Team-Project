@@ -1,4 +1,4 @@
-package graphics;
+package graphics.old;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -90,34 +90,6 @@ public class CharacterModel extends Observable implements Collidable {
 		
 		return this.rollingSprites.get(rollingFrame);
 	}
-
-	/*
-	 * Testing methods Should not be used in the final demo
-	 */
-
-	/*private void update() {
-		velX = 0;
-		velY = 0;
-
-		if (character.isDown())
-			velY = SPEED;
-		if (character.isUp())
-			velY = -SPEED;
-		if (character.isLeft())
-			velX = -SPEED;
-		if (character.isRight())
-			velX = SPEED;
-
-	}*/
-
-	/**
-	 * Move the character (TESTING)
-	 */
-	
-	//public void move(){
-	//	setX(getX() + velX);
-	//	/setY(getY() + velY);
-	//}
 	
 	/*
 	 * Getters and setters for controls: this is mportant for determining which

@@ -1,4 +1,4 @@
-package graphics;
+package graphics.old;
 
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
@@ -24,14 +24,14 @@ import resources.Resources;
  *
  */
 
-public class GameComponentWithoutCharacterModel extends JFrame implements ActionListener{
+public class GameComponent extends JFrame implements ActionListener{
 
 	private ArrayList<Character> characters;
-	//private ArrayList<CharacterModel> characterModels;
+	private ArrayList<CharacterModel> characterModels;
 	private Map map;
 	private MapModel mapModel;
 	private Timer timer;
-	private GameViewWithoutCharacterModel view;
+	private GameView view;
 
 	private boolean fullScreen = true;
 	
@@ -48,7 +48,7 @@ public class GameComponentWithoutCharacterModel extends JFrame implements Action
 	 *            the map the board is displaying
 	 */
 
-	public GameComponentWithoutCharacterModel(ArrayList<Character> characters, Map map, int width, int height) {
+	public GameComponent(ArrayList<Character> characters, Map map, int width, int height) {
 		
 		setLayout(new BorderLayout());
 		
@@ -60,7 +60,6 @@ public class GameComponentWithoutCharacterModel extends JFrame implements Action
 		timer.start();
 
 		// End test code block
-		this.characters = characters;
 		
 		this.width = width;
 		this.height = height;
@@ -72,10 +71,19 @@ public class GameComponentWithoutCharacterModel extends JFrame implements Action
 		button.addActionListener(e -> System.exit(0));
 		add(button, BorderLayout.SOUTH);
 
+		characterModels = new ArrayList<CharacterModel>();
 
-		view = new GameViewWithoutCharacterModel(characters, mapModel);
+		for (Character character : characters) {
 
-		for (Character model : characters) {
+			CharacterModel model = new CharacterModel(character);
+			Resources.models.add(model);
+			characterModels.add(model);
+
+		}
+
+		view = new GameView(characterModels, mapModel);
+
+		for (CharacterModel model : characterModels) {
 			model.addObserver(view);
 		}
 
@@ -141,29 +149,28 @@ public class GameComponentWithoutCharacterModel extends JFrame implements Action
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characters.get(0).setLeft(false);
+				characterModels.get(0).setLeft(false);
 				break;
 			case KeyEvent.VK_D:
-				characters.get(0).setRight(false);
+				characterModels.get(0).setRight(false);
 				break;
 			case KeyEvent.VK_W:
-				characters.get(0).setUp(false);
+				characterModels.get(0).setUp(false);
 				break;
 			case KeyEvent.VK_S:
-				System.out.println("test");
-				characters.get(0).setDown(false);
+				characterModels.get(0).setDown(false);
 				break;
 			case KeyEvent.VK_UP:
-				characters.get(1).setUp(false);
+				characterModels.get(1).setUp(false);
 				break;
 			case KeyEvent.VK_DOWN:
-				characters.get(1).setDown(false);
+				characterModels.get(1).setDown(false);
 				break;
 			case KeyEvent.VK_LEFT:
-				characters.get(1).setLeft(false);
+				characterModels.get(1).setLeft(false);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characters.get(1).setRight(false);
+				characterModels.get(1).setRight(false);
 				break;
 			case KeyEvent.VK_ENTER:
 				toggleFullscreen();
@@ -176,28 +183,28 @@ public class GameComponentWithoutCharacterModel extends JFrame implements Action
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characters.get(0).setLeft(true);
+				characterModels.get(0).setLeft(true);
 				break;
 			case KeyEvent.VK_D:
-				characters.get(0).setRight(true);
+				characterModels.get(0).setRight(true);
 				break;
 			case KeyEvent.VK_W:
-				characters.get(0).setUp(true);
+				characterModels.get(0).setUp(true);
 				break;
 			case KeyEvent.VK_S:
-				characters.get(0).setDown(true);
+				characterModels.get(0).setDown(true);
 				break;
 			case KeyEvent.VK_UP:
-				characters.get(1).setUp(true);
+				characterModels.get(1).setUp(true);
 				break;
 			case KeyEvent.VK_DOWN:
-				characters.get(1).setDown(true);
+				characterModels.get(1).setDown(true);
 				break;
 			case KeyEvent.VK_LEFT:
-				characters.get(1).setLeft(true);
+				characterModels.get(1).setLeft(true);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characters.get(1).setRight(true);
+				characterModels.get(1).setRight(true);
 				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);

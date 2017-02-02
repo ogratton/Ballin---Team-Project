@@ -2,7 +2,7 @@ package resources;
 
 import java.util.ArrayList;
 
-import graphics.CharacterModel;
+import graphics.old.CharacterModel;
 
 /*
  * These things are needed by UI, Physics and Graphics, and possibly Networking,

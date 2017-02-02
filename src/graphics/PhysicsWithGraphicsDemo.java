@@ -1,8 +1,9 @@
 package graphics;
 
 import java.awt.EventQueue;
+import java.util.Random;
 
-import physics.PhysicsWithModels;
+import physics.Physics;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
@@ -34,9 +35,20 @@ public class PhysicsWithGraphicsDemo {
 		Resources.playerList.add(player1);
 		Resources.playerList.add(player2);
 
+		for(int i = 0; i < 6; i++){
+			
+			Random r = new Random();
+			
+			Character playa = new Character(Character.Class.WIZARD);
+			playa.setX(r.nextInt(1920));
+			playa.setY(r.nextInt(1080));
+			Resources.playerList.add(playa);
+		}
+		
 		Resources.map = new Map(1920, 1200);
+
 		// create physics thread
-		PhysicsWithModels p = new PhysicsWithModels();
+		Physics p = new Physics();
 		p.start();
 
 		// create ui thread

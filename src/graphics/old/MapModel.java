@@ -1,4 +1,4 @@
-package graphics;
+package graphics.old;
 
 import java.util.Observable;
 

@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import graphics.old.MapModel;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
@@ -27,7 +28,7 @@ import resources.Resources;
 public class GameComponent extends JFrame implements ActionListener{
 
 	private ArrayList<Character> characters;
-	private ArrayList<CharacterModel> characterModels;
+	//private ArrayList<CharacterModel> characterModels;
 	private Map map;
 	private MapModel mapModel;
 	private Timer timer;
@@ -60,6 +61,7 @@ public class GameComponent extends JFrame implements ActionListener{
 		timer.start();
 
 		// End test code block
+		this.characters = characters;
 		
 		this.width = width;
 		this.height = height;
@@ -71,19 +73,10 @@ public class GameComponent extends JFrame implements ActionListener{
 		button.addActionListener(e -> System.exit(0));
 		add(button, BorderLayout.SOUTH);
 
-		characterModels = new ArrayList<CharacterModel>();
 
-		for (Character character : characters) {
+		view = new GameView(characters, mapModel);
 
-			CharacterModel model = new CharacterModel(character);
-			Resources.models.add(model);
-			characterModels.add(model);
-
-		}
-
-		view = new GameView(characterModels, mapModel);
-
-		for (CharacterModel model : characterModels) {
+		for (Character model : characters) {
 			model.addObserver(view);
 		}
 
@@ -149,28 +142,29 @@ public class GameComponent extends JFrame implements ActionListener{
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characterModels.get(0).setLeft(false);
+				characters.get(0).setLeft(false);
 				break;
 			case KeyEvent.VK_D:
-				characterModels.get(0).setRight(false);
+				characters.get(0).setRight(false);
 				break;
 			case KeyEvent.VK_W:
-				characterModels.get(0).setUp(false);
+				characters.get(0).setUp(false);
 				break;
 			case KeyEvent.VK_S:
-				characterModels.get(0).setDown(false);
+				System.out.println("test");
+				characters.get(0).setDown(false);
 				break;
 			case KeyEvent.VK_UP:
-				characterModels.get(1).setUp(false);
+				characters.get(1).setUp(false);
 				break;
 			case KeyEvent.VK_DOWN:
-				characterModels.get(1).setDown(false);
+				characters.get(1).setDown(false);
 				break;
 			case KeyEvent.VK_LEFT:
-				characterModels.get(1).setLeft(false);
+				characters.get(1).setLeft(false);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characterModels.get(1).setRight(false);
+				characters.get(1).setRight(false);
 				break;
 			case KeyEvent.VK_ENTER:
 				toggleFullscreen();
@@ -183,28 +177,28 @@ public class GameComponent extends JFrame implements ActionListener{
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characterModels.get(0).setLeft(true);
+				characters.get(0).setLeft(true);
 				break;
 			case KeyEvent.VK_D:
-				characterModels.get(0).setRight(true);
+				characters.get(0).setRight(true);
 				break;
 			case KeyEvent.VK_W:
-				characterModels.get(0).setUp(true);
+				characters.get(0).setUp(true);
 				break;
 			case KeyEvent.VK_S:
-				characterModels.get(0).setDown(true);
+				characters.get(0).setDown(true);
 				break;
 			case KeyEvent.VK_UP:
-				characterModels.get(1).setUp(true);
+				characters.get(1).setUp(true);
 				break;
 			case KeyEvent.VK_DOWN:
-				characterModels.get(1).setDown(true);
+				characters.get(1).setDown(true);
 				break;
 			case KeyEvent.VK_LEFT:
-				characterModels.get(1).setLeft(true);
+				characters.get(1).setLeft(true);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characterModels.get(1).setRight(true);
+				characters.get(1).setRight(true);
 				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);

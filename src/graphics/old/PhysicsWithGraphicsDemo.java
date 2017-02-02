@@ -1,8 +1,8 @@
-package graphics;
+package graphics.old;
 
 import java.awt.EventQueue;
 
-import physics.Physics;
+import physics.PhysicsWithModels;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
@@ -11,7 +11,7 @@ import resources.Resources;
  * I try and smash graphics with physics. It works ish
  */
 
-public class PhysicsWithGraphicsDemoWithoutCharacterModel {
+public class PhysicsWithGraphicsDemo {
 
 	public static void main(String[] args) {
 
@@ -35,16 +35,15 @@ public class PhysicsWithGraphicsDemoWithoutCharacterModel {
 		Resources.playerList.add(player2);
 
 		Resources.map = new Map(1920, 1200);
-
 		// create physics thread
-		Physics p = new Physics();
+		PhysicsWithModels p = new PhysicsWithModels();
 		p.start();
 
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				GraphicsWithoutCharacterModel g = new GraphicsWithoutCharacterModel(Resources.playerList, Resources.map);
+				Graphics g = new Graphics(Resources.playerList, Resources.map);
 				g.start();
 			}
 		});

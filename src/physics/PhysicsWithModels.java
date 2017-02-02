@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import graphics.CharacterModel;
+import graphics.old.CharacterModel;
 
 import resources.Collidable;
 import resources.Resources;
