@@ -22,12 +22,17 @@ import javax.sound.sampled.LineListener;
 public class AudioFile implements LineListener
 {
 	private File soundFile;
+	private String title;
 	private AudioInputStream ais;
 	private AudioFormat format;
 	private DataLine.Info info;
 	private Clip clip;
 	private FloatControl gainControl;
-	private volatile boolean playing;
+	/**
+	 * Represents the 3 states the clip could be in
+	 */
+	private enum PlayState{PLAYING, PAUSED, STOPPED};
+	private volatile PlayState playState;
 
 	/**
 	 * Make a new audio file object
@@ -35,11 +40,12 @@ public class AudioFile implements LineListener
 	 * @param filename fully qualified filename/path of the audio file for this
 	 * object
 	 */
-	public AudioFile(String filename)
+	public AudioFile(String filename, String title)
 	{
 		try
 		{
 			soundFile = new File(filename);
+			this.title = title;
 			ais = AudioSystem.getAudioInputStream(soundFile);
 			format = ais.getFormat();
 			info = new DataLine.Info(Clip.class, format);
@@ -54,6 +60,14 @@ public class AudioFile implements LineListener
 			System.exit(1);
 		}
 	}
+	
+	/**
+	 * @return the title of the audio clip
+	 */
+	public String getTitle()
+	{
+		return title;
+	}
 
 	/**
 	 * Default to playing with normal gain
@@ -61,6 +75,11 @@ public class AudioFile implements LineListener
 	public void play()
 	{
 		play(0);
+	}
+	
+	public void stop()
+	{
+		clip.stop();
 	}
 
 	/**
@@ -71,11 +90,12 @@ public class AudioFile implements LineListener
 	 */
 	public void play(float gain)
 	{
-		if (!playing)
+		if (playState != PlayState.PLAYING)
 		{
 			gainControl.setValue(gain);
 			clip.start();
-			playing = true;
+			//playing = true;
+			playState = PlayState.PLAYING;
 		}
 	}
 
@@ -84,7 +104,79 @@ public class AudioFile implements LineListener
 	 */
 	public boolean isPlaying()
 	{
-		return playing;
+		return (playState == PlayState.PLAYING);
+	}
+	
+	/**
+	 * @return Is the clip currently paused
+	 */
+	public boolean isPaused()
+	{
+		return (playState == PlayState.PAUSED);
+	}
+	
+	/**
+	 * Is the clip currently stopped (i.e. not playing but not paused)
+	 * @return
+	 */
+	public boolean isStopped()
+	{
+		return (playState == PlayState.STOPPED);
+	}
+	
+	/**
+	 * set absolute gain on the fly
+	 * @param gain +ve number for louder,  -ve for lower
+	 */
+	public void setGain(float gain)
+	{
+		gainControl.setValue(gain);
+	}
+	
+	public float getGain()
+	{
+		return gainControl.getValue();
+	}
+	
+	/**
+	 * Pause the clip 
+	 * @return return the current position in the clip
+	 */
+	public int pause()
+	{
+		if (playState == PlayState.PLAYING)
+		{
+			playState = PlayState.PAUSED;
+			clip.stop();
+			clip.flush();
+		}
+		return clip.getFramePosition();
+	}
+	
+	/**
+	 * resume where we left
+	 */
+	public void resume(int pos)
+	{
+		// for a wav file at 44100hz, this sets it back a second
+		// but seems to actually set it back where it really was
+		// TODO check this isn't platform specific
+		int clip_length = clip.getFrameLength();
+		int res_pos = pos-44100;
+		
+		// accounting for a bug that can only be replicated with near-millisecond precision
+		// pausing *ON* the last second of the clip
+		// or something
+		// replicate by pausing and resuming "grandma" alternately every second
+		if (clip_length - res_pos <= 44100)
+		{
+			clip.stop();
+			playState = PlayState.STOPPED;
+			return;
+		}
+		clip.setFramePosition(res_pos);
+		clip.start();
+		playState = PlayState.PLAYING;
 	}
 
 	/**
@@ -95,14 +187,19 @@ public class AudioFile implements LineListener
 	{
 		if (event.getType() == LineEvent.Type.START)
 		{
-			playing = true;
+			// gets called every time the clip starts again
+			playState = PlayState.PLAYING;
 		}
 		else if (event.getType() == LineEvent.Type.STOP)
 		{
-			clip.stop();
-			clip.flush();
-			clip.setFramePosition(0);
-			playing = false;
+			// gets called every time the clip is stopped/ends
+			if (playState != PlayState.PAUSED)
+			{
+				clip.stop();
+				clip.flush();
+				clip.setFramePosition(0);
+				playState = PlayState.STOPPED;
+			}
 		}
 	}
 }

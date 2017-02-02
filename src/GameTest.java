@@ -26,6 +26,28 @@ public class GameTest extends JFrame {
 				ex.setVisible(true);
 			}
 		});
-		new Thread(new MusicPlayer("grandma")).start();
+		
+		//new Thread(new MusicPlayer("grandma")).start();
+		MusicPlayer mp = new MusicPlayer("guile", "pokemon");
+		Thread mp_thread = new Thread(mp);
+		mp_thread.start();
+		
+		try
+		{
+			while (true)
+			{
+
+				Thread.sleep(2000);
+				mp.pause();
+
+				Thread.sleep(2000);
+				mp.resume();
+			}
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -18,8 +18,10 @@ public class Ball {
 	private int WIDTH;
 	private int HEIGHT;
 	
-	private AudioFile dong = new AudioFile("src/audio/audio/dong.wav");
-	private AudioFile ding = new AudioFile("src/audio/audio/ding.wav");
+	private final String audioPath = "./resources/audio/";
+	
+	private AudioFile dong = new AudioFile(audioPath + "dong.wav", "dong sfx");
+	private AudioFile ding = new AudioFile(audioPath + "ding.wav", "ding sfx");
 
 	public Ball(int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
