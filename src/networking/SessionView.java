@@ -1,5 +1,6 @@
 package networking;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
@@ -31,7 +32,7 @@ public class SessionView extends JPanel implements Observer {
 		
 		this.cModel = cModel;
 		text = new JTextField(cModel.getSessionId());
-		
+		add(text);
 	}
 
 /**

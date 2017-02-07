@@ -2,6 +2,8 @@ package networking;
 
 import java.net.*;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.io.*;
 
@@ -26,34 +28,62 @@ public class ServerReceiver extends Thread {
   }
 
   public void run() {
-	  Command command = null;
 	  Message message = new Message();
 	  
-	  while(command != Command.QUIT) {
+	  while(message.getCommand() != Command.QUIT) {
 		  try {
 			  message = (Message)myClient.readObject();
-		  } 
-		  catch (ClassNotFoundException e) {
-			  e.printStackTrace();
-		  } 
-		  catch (IOException e) {
-			  e.printStackTrace();
-		  }
-		  
-		  ClientInformation client = clients.get(message.getTargetId());
-		  
-		  switch(message.getCommand()) {
-		  case SESSION:
-			  switch(message.getMessage()) {
-			  case("getSessions"):
-				  Message response = new Message(Command.SESSION, "allSessions", client.getId(), client.getId(), sessions);
-				  client.getQueue().offer(response);
+			  ClientInformation client = clients.get(message.getTargetId());
+			  Message response = null;
+			  
+			  switch(message.getCommand()) {
+			  case SESSION:
+				  switch(message.getMessage()) {
+				  case("getSessions"):
+					  response = new Message(Command.SESSION, "allSessions", client.getId(), client.getId(), sessions);
+					  client.getQueue().offer(response);
+					  break;
+				  case("createSession"):
+					  int id = generateID(sessions);
+				  	  ConcurrentMap<Integer, ClientInformation> clients = new ConcurrentHashMap<Integer, ClientInformation>();
+				  	  ClientInformation clientInfo = (ClientInformation)message.getObject();
+				  	  clients.put(client.getId(), clientInfo);
+					  sessions.put(id, new Session(id, clients));
+					  response = new Message(Command.SESSION, "allSessions", client.getId(), client.getId(), sessions);
+					  client.getQueue().offer(response);
+					  break;
+				  }
+			  default:
+				  break;
 			  }
-		  default:
-			  break;
 		  }
+		  catch(ClassNotFoundException e) {
+			  e.printStackTrace();
+		  }
+		  catch(IOException e) {
+			  e.printStackTrace();
+		  }
+		  
+		  
 	  }
       // No point in trying to close sockets. Just give up.
       // We end this thread (we don't do System.exit(1)).
+  }
+  
+  private static boolean any(Integer i, Set<Integer> s) {
+	  for (Integer ID: s) {
+          if (i.equals(ID)) {
+        	  return true;
+          }
+      }
+	  return false;
+  }
+  
+  private static Integer generateID(ConcurrentMap<Integer, Session> sessions) {
+	  Integer id = 1000000;
+	  while (any(id, sessions.keySet()) == true) {
+		  id += 1;
+	  }
+	  return id;
   }
 }

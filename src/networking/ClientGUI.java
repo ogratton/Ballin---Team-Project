@@ -1,3 +1,5 @@
+package networking;
+
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 

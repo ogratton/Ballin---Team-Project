@@ -40,20 +40,32 @@ public class Server {
       serverSocket = new ServerSocket(Integer.parseInt(port));
     } 
     catch (IOException e) {
-      System.err.println("Couldn't listen on port " + Port.number);
+      System.err.println("Couldn't listen on port " + port);
       System.exit(1); // Give up.
     }
+    
+    System.out.println("trying to connect.");
 
     // Good. We succeeded. But we must try again for the same reason:
     try { 
       // We loop for ever, as servers usually do:
 
       while (true) {
+    	System.out.println("still trying.");
         // Listen to the socket, accepting connections from new clients:
         Socket socket = serverSocket.accept();
+        
+        System.out.println("server connected");
 
+        // We create and start a new thread to write to the client:
+        ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());	
+        
+        System.out.println("Got");
+        
         // This is so that we can use readLine():
         ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
+        
+        System.out.println("Got Here");
 
         // We ask the client what its name is:
         Message clientName = null;
@@ -71,12 +83,16 @@ public class Server {
         Integer id = generateID(clients);
         
         clients.put(id, new ClientInformation(id, clientName.getMessage()));
+        
+        Message idMessage = new Message();
+        idMessage.setCommand(Command.SEND_ID);
+        idMessage.setMyId(id);
+        idMessage.setMessage(clientName.getMessage());
+        toClient.writeObject(idMessage);
 
         // We create and start a new thread to read from the client:
         (new ServerReceiver(fromClient, sessions, clients)).start();
-
-        // We create and start a new thread to write to the client:
-        ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());
+        
         (new ServerSender(clients.get(id).getQueue(), toClient, sessions, clients)).start();
       }
     } 

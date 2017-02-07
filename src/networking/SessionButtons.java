@@ -18,6 +18,7 @@ public class SessionButtons extends JPanel implements Observer {
 	private ConnectionDataModel  cModel;
 	private JButton joinSession;
 	private JButton leaveSession;
+	private JButton createSession;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -40,13 +41,23 @@ public class SessionButtons extends JPanel implements Observer {
 				e1.printStackTrace();
 			}
 		});
+		
+		createSession = new JButton("Create Session");
+		createSession.addActionListener(e -> {
+			Message createMessage = new Message(Command.SESSION, "createSession", cModel.getMyId(), cModel.getMyId());
+			try {
+				toServer.writeObject(createMessage);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
 
-	    Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), -1);
-	    try {
-			toServer.writeObject(message);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+//	    Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), -1);
+//	    try {
+//			toServer.writeObject(message);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 		
 		leaveSession = new JButton("Leave Session");
 		leaveSession.addActionListener(e -> {
@@ -60,6 +71,7 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		add(joinSession);
 		add(leaveSession);
+		add(createSession);
 	}
 
 /**

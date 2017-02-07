@@ -16,6 +16,10 @@ public class ConnectionDataModel extends Observable {
 		return data.getClientInformation().getId();
 	}
 	
+	public void setMyId(int id) {
+		data.getClientInformation().setId(id);
+	}
+	
 	public ClientInformation getClientInformation() {
 		return data.getClientInformation();
 	}

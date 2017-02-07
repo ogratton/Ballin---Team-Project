@@ -33,7 +33,7 @@ public class ControlButtons extends JPanel implements Observer {
 		this.cModel = cModel;
 		refresh = new JButton("Refresh");
 		refresh.addActionListener(e -> {
-			Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), -1);
+			Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), cModel.getMyId());
 			try {
 				toServer.writeObject(message);
 			} catch (Exception e1) {
@@ -41,6 +41,7 @@ public class ControlButtons extends JPanel implements Observer {
 			}
 		});
 		
+		add(refresh);
 	}
 
 /**

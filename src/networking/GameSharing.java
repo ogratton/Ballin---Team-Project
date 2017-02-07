@@ -1,6 +1,8 @@
+package networking;
+
 
 public class GameSharing {
-	private NoughtsCrossesModel model;
+	private boolean model;
 	private boolean connected;
 	private boolean sendMove;
 	
@@ -10,7 +12,7 @@ public class GameSharing {
 	 * The model is set to null at the start as a game has not been started.
 	 */
 	public GameSharing() {
-		this.model = null;
+		this.model = false;
 		this.connected = false;
 		this.sendMove = false;
 	}
@@ -19,7 +21,7 @@ public class GameSharing {
 	 * Gets the model which is stored in this object
 	 * @return The Noughts And Crosses Model
 	 */
-	public NoughtsCrossesModel getModel() {
+	public boolean getModel() {
 		return this.model;
 	}
 	
@@ -27,7 +29,7 @@ public class GameSharing {
 	 * Stores the Noughts And Crosses Model
 	 * @param model The game model which is going to be stored
 	 */
-	public synchronized void setModel(NoughtsCrossesModel model) {
+	public synchronized void setModel(boolean model) {
 		this.model = model;
 	}
 	
@@ -61,18 +63,5 @@ public class GameSharing {
 	 */
 	public synchronized void setConnected(boolean bool) {
 		this.connected = bool;
-	}
-	
-	/**
-	 * Prints the object in a certain format.
-	 */
-	public String toString() {
-		String text = "";
-		for (int i = 0; i<3; i++) {
-			for (int j = 0; j<3; j++) {
-				text += " " + model.get(i, j);
-			}
-		}
-		return text;
 	}
 }

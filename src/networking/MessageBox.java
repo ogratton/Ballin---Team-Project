@@ -36,10 +36,11 @@ public class MessageBox extends JPanel implements Observer {
 		
 		this.cModel = cModel;
 		
-		messageBox = new JTextArea(5, 20);
+		messageBox = new JTextArea(5, 10);
 		JScrollPane scrollPane = new JScrollPane(messageBox); 
 		messageBox.setEditable(true);
 		
+		sendMessage = new JButton("Send Message");
 		sendMessage.addActionListener(e -> {
 			String messageString = messageBox.getText();
 			Message message = new Message(Command.MESSAGE, messageString, cModel.getMyId(), cModel.getTargetId());
@@ -50,13 +51,7 @@ public class MessageBox extends JPanel implements Observer {
 			}
 		});
 		
-		List<ClientInformation> clients = cModel.getSession(cModel.getSessionId()).getAllClients();
-		String[] clientNames = new String[clients.size()];
-		for(int i=0; i<clients.size(); i++) {
-			ClientInformation client = clients.get(i);
-			clientNames[i] = "ID: " + client.getId() + ", Name: " + client.getName();
-		}
-		
+		String[] clientNames = new String[0];
 		dropDown = new JComboBox<String>(clientNames);
 		dropDown.addActionListener(e -> {
 			String selection = (String) dropDown.getSelectedItem();
@@ -78,6 +73,20 @@ public class MessageBox extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
+		List<ClientInformation> clients = cModel.getSession(cModel.getSessionId()).getAllClients();
+		String[] clientNames = new String[clients.size()];
+		for(int i=0; i<clients.size(); i++) {
+			ClientInformation client = clients.get(i);
+			clientNames[i] = "ID: " + client.getId() + ", Name: " + client.getName();
+		}
+		
+		dropDown = new JComboBox<String>(clientNames);
+		dropDown.addActionListener(e -> {
+			String selection = (String) dropDown.getSelectedItem();
+			int id = getIdFromSelection(selection);
+			cModel.setTargetId(id);
+		});
+		
 		repaint();
 	}
 	

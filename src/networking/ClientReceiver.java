@@ -39,6 +39,7 @@ public class ClientReceiver extends Thread {
   @SuppressWarnings("unchecked")
 public void run() {
     Message message = new Message();
+    
     try {
     	while(message.getCommand() != Command.QUIT) {
     		message = (Message)server.readObject();
@@ -47,13 +48,18 @@ public void run() {
     			switch(message.getMessage()) {
     			case("allSessions"):
     				cModel.setSessionsTable((ConcurrentMap<Integer, Session>)message.getObject());
+    				break;
     			}
+    		case SEND_ID:
+    			cModel.setClientInformation(new ClientInformation(message.getMyId(), message.getMessage()));
+    			System.out.println(cModel.getMyId());
 			default:
 				break;
     		}
     	}  
     }
     catch (Exception e) {
+      e.printStackTrace();
       System.out.println("Server seems to have died " + e.getMessage());
       System.exit(1); // Give up.
     }

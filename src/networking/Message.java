@@ -1,7 +1,13 @@
 package networking;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5302365975590223550L;
 	private Command command;
 	private String message;
 	private int myId;

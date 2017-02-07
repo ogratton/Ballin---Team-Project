@@ -28,6 +28,8 @@ class Client {
       System.err.println("Usage: java Client user-nickname hostname");
       System.exit(1); // Give up.
     }
+    
+    System.out.println("connected2");
 
     // Initialize information:
     String nickname = args[0];
@@ -48,11 +50,21 @@ class Client {
     // It is created here to allow the Model to be accessed in the GUI, Client Sender and Receiver.
     ConnectionData conn = new ConnectionData();
     ConnectionDataModel cModel = new ConnectionDataModel(conn);
+    
+    System.out.println("connected1");
 
     try {
+      System.out.println("connected3");
       server = new Socket(hostname, Integer.parseInt(port));
+      System.out.println("connected4");
       toServer = new ObjectOutputStream(server.getOutputStream());
+      Message m = new Message();
+      m.setMessage(nickname);
+      m.setCommand(Command.MESSAGE);
+      toServer.writeObject(m);
+      System.out.println("connected5");
       fromServer = new ObjectInputStream(server.getInputStream());
+      System.out.println("connected6");
     } 
     catch (UnknownHostException e) {
       System.err.println("Unknown host: " + hostname);
@@ -74,6 +86,8 @@ class Client {
     sender.start();
     receiver.start();
     gui.start();
+    
+    System.out.println("connected");
     
     // Wait for them to end and close sockets.
     try {
