@@ -14,8 +14,8 @@ public class ConnectionData {
 	private ConcurrentMap<Integer, Session> sessions = new ConcurrentHashMap<Integer, Session>();
 	private ClientInformation myClient;
 	private Display display;
-	private int highlightedSessionId;
-	private int highlightedClientId;
+	private int highlightedSessionId = 0;
+	private int highlightedClientId = 0;
 	private String receivedMessage;
 	private int targetId;
 	
@@ -76,12 +76,9 @@ public class ConnectionData {
 	}
 	
 	public List<Session> getAllSessions() {
-		Iterator<Entry<Integer, Session>> it = sessions.entrySet().iterator();
 		ArrayList<Session> sessionList = new ArrayList<Session>();
-	    while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        sessionList.add((Session) pair.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
+	    for(Session s : sessions.values()) {
+	    	sessionList.add(s);
 	    }
 	    return sessionList;
 	}

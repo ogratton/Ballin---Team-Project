@@ -35,7 +35,7 @@ public class ControlButtons extends JPanel implements Observer {
 		refresh.addActionListener(e -> {
 			Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), cModel.getMyId());
 			try {
-				toServer.writeObject(message);
+				toServer.writeUnshared(message);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

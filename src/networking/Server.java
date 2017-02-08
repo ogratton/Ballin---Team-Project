@@ -86,7 +86,7 @@ public class Server {
         
         Message idMessage = new Message();
         idMessage.setCommand(Command.SEND_ID);
-        idMessage.setMyId(id);
+        idMessage.setSenderId(id);
         idMessage.setMessage(clientName.getMessage());
         toClient.writeObject(idMessage);
 

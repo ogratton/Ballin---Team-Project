@@ -3,6 +3,11 @@ package networking;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
 // Gets messages from other clients via the server (by the
@@ -39,20 +44,52 @@ public class ClientReceiver extends Thread {
   @SuppressWarnings("unchecked")
 public void run() {
     Message message = new Message();
+    ConcurrentMap<Integer, Session> sessions;
     
     try {
     	while(message.getCommand() != Command.QUIT) {
-    		message = (Message)server.readObject();
+    		message = (Message)server.readUnshared();
     		switch(message.getCommand()) {
     		case SESSION:
     			switch(message.getMessage()) {
     			case("allSessions"):
-    				cModel.setSessionsTable((ConcurrentMap<Integer, Session>)message.getObject());
+    				System.out.println("Received sessions from Server");
+    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+    				cModel.setSessionsTable(sessions);
+    				
+    				// Testing
+    				for(int id : sessions.keySet()) {
+    					System.out.println("Session ID: " + id);
+    				}
+    				break;
+    			case("sessionCreated"):
+    				System.out.println("Session created");
+    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+    				cModel.setSessionsTable(sessions);
+    				cModel.setSessionId(message.getSenderId());
+    				//System.out.println("Session ID: " + message.getSenderId());
+    				//System.out.println("Client ID: " + cModel.getMyId());
+    				//System.out.println(sessions.get(message.getSenderId()).getAllClients().size());
+    				//System.out.println(sessions.get(cModel.getSessionId()).getClient(cModel.getMyId()).getName());
+    				break;
+    			case("sessionJoined"):
+    				System.out.println("Session Joined");
+    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+    				cModel.setSessionsTable(sessions);
+    				cModel.setSessionId(message.getSenderId());
+    				break;
+    			case("sessionLeft"):
+    				System.out.println("Session Left");
+    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+    				cModel.setSessionsTable(sessions);
+    				cModel.setSessionId(0);
     				break;
     			}
+    			break;
     		case SEND_ID:
-    			cModel.setClientInformation(new ClientInformation(message.getMyId(), message.getMessage()));
+    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
     			System.out.println(cModel.getMyId());
+    			break;
 			default:
 				break;
     		}

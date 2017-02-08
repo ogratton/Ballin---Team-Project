@@ -1,10 +1,17 @@
 package networking;
 
-public class ClientInformation {
+import java.io.Serializable;
+
+public class ClientInformation implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3087945278365659260L;
 	private int id;
 	private final String name;
 	private MessageQueue queue;
+	private Session session;
 	
 	public ClientInformation(int id, String name) {
 		this.id = id;
@@ -30,5 +37,13 @@ public class ClientInformation {
 	*/
 	public MessageQueue getQueue() {
 		return queue;
+	}
+	
+	public Session getSession() {
+		return session;
+	}
+	
+	public void setSession(Session session) {
+		this.session = session;
 	}
 }

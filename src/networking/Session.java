@@ -1,5 +1,6 @@
 package networking;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
-public class Session {
+public class Session implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -859097128269222813L;
 	private int id;
 	private ConcurrentMap<Integer, ClientInformation> clients;
 	
@@ -38,13 +43,10 @@ public class Session {
 	}
 	
 	public List<ClientInformation> getAllClients() {
-		Iterator<Entry<Integer, ClientInformation>> it = clients.entrySet().iterator();
-		ArrayList<ClientInformation> clientList = new ArrayList<ClientInformation>();
-	    while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        clientList.add((ClientInformation) pair.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
-	    }
+		List<ClientInformation> clientList = new ArrayList<ClientInformation>();
+		for (ClientInformation client : clients.values()) {
+			clientList.add(client);
+		}
 	    return clientList;
 	}
 }

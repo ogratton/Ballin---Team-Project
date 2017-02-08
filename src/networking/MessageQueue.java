@@ -1,12 +1,18 @@
 package networking;
 
+import java.io.Serializable;
+
 // We use https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/BlockingQueue.html
 
 import java.util.concurrent.*;
 
-public class MessageQueue {
+public class MessageQueue implements Serializable {
 
-  // We choose the LinkedBlockingQueue implementation of BlockingQueue:
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = -4889101111303013211L;
+// We choose the LinkedBlockingQueue implementation of BlockingQueue:
   private BlockingQueue<Message> queue = new LinkedBlockingQueue<Message>();
 
   // Inserts the specified message into this queue.

@@ -1,8 +1,11 @@
 package networking;
 
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.io.*;
@@ -29,28 +32,60 @@ public class ServerReceiver extends Thread {
 
   public void run() {
 	  Message message = new Message();
+	  Message response = null;
+	  int sessionId;
 	  
 	  while(message.getCommand() != Command.QUIT) {
 		  try {
-			  message = (Message)myClient.readObject();
-			  ClientInformation client = clients.get(message.getTargetId());
-			  Message response = null;
+			  message = (Message)myClient.readUnshared();
+			  //ClientInformation senderclient = clients.get(message.getReceiverId());
+			  ClientInformation senderClient;
 			  
 			  switch(message.getCommand()) {
 			  case SESSION:
 				  switch(message.getMessage()) {
-				  case("getSessions"):
-					  response = new Message(Command.SESSION, "allSessions", client.getId(), client.getId(), sessions);
-					  client.getQueue().offer(response);
+				  case "getSessions" :
+					  ClientInformation receiverClient = clients.get(message.getReceiverId());
+					  response = new Message(Command.SESSION, "allSessions", receiverClient.getId(), receiverClient.getId(), sessions);
+					  receiverClient.getQueue().offer(response);
 					  break;
-				  case("createSession"):
+				  case "createSession" :
+					  senderClient = clients.get(message.getSenderId());
+					  if(senderClient.getSession() != null) {
+						  senderClient.getSession().removeClient(senderClient.getId());
+					  }
+					  
 					  int id = generateID(sessions);
-				  	  ConcurrentMap<Integer, ClientInformation> clients = new ConcurrentHashMap<Integer, ClientInformation>();
-				  	  ClientInformation clientInfo = (ClientInformation)message.getObject();
-				  	  clients.put(client.getId(), clientInfo);
-					  sessions.put(id, new Session(id, clients));
-					  response = new Message(Command.SESSION, "allSessions", client.getId(), client.getId(), sessions);
-					  client.getQueue().offer(response);
+				  	  ConcurrentMap<Integer, ClientInformation> sessionClients = new ConcurrentHashMap<Integer, ClientInformation>();
+				  	  sessionClients.put(senderClient.getId(), senderClient);
+				  	  Session session = new Session(id, sessionClients);
+					  sessions.put(id, session);
+					  senderClient.setSession(session);
+					  response = new Message(Command.SESSION, "sessionCreated", id, senderClient.getId(), sessions);
+					  senderClient.getQueue().offer(response);
+					  break;
+				  case "joinSession" :
+					  senderClient = clients.get(message.getSenderId());
+					  sessionId = message.getReceiverId();
+					  
+					  if(senderClient.getSession() != null) {
+						  senderClient.getSession().removeClient(senderClient.getId());
+					  }
+					  //System.out.println(sessionId);
+					  //System.out.println(senderClient.getId());
+					  session = sessions.get(sessionId);
+					  session.addClient(senderClient.getId(), senderClient);
+					  senderClient.setSession(session);
+					  response = new Message(Command.SESSION, "sessionJoined", sessionId, senderClient.getId(), sessions);
+					  senderClient.getQueue().offer(response);
+					  break;
+				  case "leaveSession" :
+					  senderClient = clients.get(message.getSenderId());
+					  sessionId = message.getReceiverId();
+					  sessions.get(sessionId).removeClient(senderClient.getId());
+					  senderClient.setSession(null);
+					  response = new Message(Command.SESSION, "sessionLeft", senderClient.getId(), senderClient.getId(), sessions);
+					  senderClient.getQueue().offer(response);
 					  break;
 				  }
 			  default:

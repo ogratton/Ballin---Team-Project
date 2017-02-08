@@ -18,6 +18,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public void setMyId(int id) {
 		data.getClientInformation().setId(id);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public ClientInformation getClientInformation() {
@@ -26,6 +28,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setClientInformation(ClientInformation client) {
 		data.setClientInformatin(client);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public ConcurrentMap<Integer, Session> getSessionsTable() {
@@ -34,6 +38,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public void setSessionsTable(ConcurrentMap<Integer, Session> sessions) {
 		data.setSessionsTable(sessions);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public int getSessionId() {
@@ -42,6 +48,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setSessionId(int id) {
 		this.data.setSessionId(id);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public ConnectionData getConnectionData() {
@@ -49,11 +57,15 @@ public class ConnectionDataModel extends Observable {
 	}
 	
 	public synchronized void addClient(int sessionId, int clientId, ClientInformation client) {
-		this.data.addClient(sessionId, clientId, client);;
+		this.data.addClient(sessionId, clientId, client);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized void removeClient(int sessionId, int clientId) {
 		this.data.removeClient(sessionId, clientId);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized Session getSession(int sessionId) {
@@ -70,6 +82,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setHighlightedSessionId(int id) {
 		this.data.setHiglightedSessionId(id);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized int getHighlightedClientId() {
@@ -78,6 +92,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setHighlightedClientId(int id) {
 		this.data.setHighlightedClientId(id);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized String getReceivedMessage() {
@@ -86,6 +102,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setReceivedMessage(String message) {
 		data.setReceivedMessage(message);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized int getTargetId() {
@@ -94,6 +112,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setTargetId(int id) {
 		data.setTargetId(id);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public synchronized List<Session> getAllSessions() {

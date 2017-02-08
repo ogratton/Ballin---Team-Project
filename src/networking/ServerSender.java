@@ -35,7 +35,8 @@ public class ServerSender extends Thread {
 	  while (!msg.getCommand().equals(Command.QUIT)) {
 		msg = queue.take();
 		try {
-			toClient.writeObject(msg);
+			toClient.reset();
+			toClient.writeUnshared(msg);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

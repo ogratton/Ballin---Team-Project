@@ -10,31 +10,31 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = -5302365975590223550L;
 	private Command command;
 	private String message;
-	private int myId;
-	private int targetId;
+	private int senderId;
+	private int receiverId;
 	private Object object;
 	
 	public Message() {
 		command = Command.NULL;
 		message = "";
-		myId = -1;
-		targetId = -1;
+		senderId = -1;
+		receiverId = -1;
 		object = new Empty();
 	}
 	
-	public Message(Command command, String message, int myId, int targetId) {
+	public Message(Command command, String message, int senderId, int receiverId) {
 		this.command = command;
 		this.message = message;
-		this.myId = myId;
-		this.targetId = targetId;
+		this.senderId = senderId;
+		this.receiverId = receiverId;
 		this.object = new Empty();		
 	}
 	
-	public Message(Command command, String message, int myId, int targetId, Object object) {
+	public Message(Command command, String message, int senderId, int receiverId, Object object) {
 		this.command = command;
 		this.message = message;
-		this.myId = myId;
-		this.targetId = targetId;
+		this.senderId = senderId;
+		this.receiverId = receiverId;
 		this.object = object;		
 	}
 
@@ -54,20 +54,20 @@ public class Message implements Serializable {
 		this.message = message;
 	}
 
-	public int getMyId() {
-		return myId;
+	public int getSenderId() {
+		return senderId;
 	}
 
-	public void setMyId(int myId) {
-		this.myId = myId;
+	public void setSenderId(int senderId) {
+		this.senderId = senderId;
 	}
 
-	public int getTargetId() {
-		return targetId;
+	public int getReceiverId() {
+		return receiverId;
 	}
 
-	public void setTargetId(int targetId) {
-		this.targetId = targetId;
+	public void setReceiverId(int receiverId) {
+		this.receiverId = receiverId;
 	}
 
 	public Object getObject() {

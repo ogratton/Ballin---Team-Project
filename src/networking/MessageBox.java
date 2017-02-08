@@ -3,6 +3,7 @@ package networking;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -73,7 +74,15 @@ public class MessageBox extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
-		List<ClientInformation> clients = cModel.getSession(cModel.getSessionId()).getAllClients();
+		
+		List<ClientInformation> clients;
+		if(cModel.getSessionId() > 0) {
+			clients = cModel.getSession(cModel.getSessionId()).getAllClients();
+		}
+		else {
+			clients = new ArrayList<ClientInformation>();
+		}
+		
 		String[] clientNames = new String[clients.size()];
 		for(int i=0; i<clients.size(); i++) {
 			ClientInformation client = clients.get(i);
