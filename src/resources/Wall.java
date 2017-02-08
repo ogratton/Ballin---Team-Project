@@ -1,53 +1,145 @@
 package resources;
 
-import java.awt.geom.Point2D;
-
 public class Wall implements Collidable{
-	private Point2D origin;
-	private double width, height;
-	private double heading; //angle from north, anticlockwise. 
+	//point1 is the leftmost point (x can be equal to p3, if rectangle)
+	//point2 is the highest point (y can be equal to p1, if rectangle)
+	//point3 is the lowest point (y can be equal to p4, if rectangle)
+	//point4 is the rightmost point (x can be equal to p2, if rectangle)
+	private double x1, x2, x3, x4;
+	private double y1, y2, y3, y4;
+	private double midx, midy; //midpoint
+	//private double width, height;
+	//private double heading; //angle from north, clockwise. 
 	//0 is default orientation. 1 and -1 are rotated 180 degrees.
 	
 	private double inv_mass = 0; // infinite mass
 	
-	public Wall(Point2D origin, double width, double height, double heading) {
-		this.origin = origin;
-		this.width = width;
-		this.height = height;
-		this.heading = heading;
+	public Wall(double x, double y, double width, double height, double heading) {
+		//TODO: calculate rotation properly
+		//create box at origin
+		x1 = 0;
+		y1 = 0;
+		x2 = width;
+		y2 = 0;
+		x3 = 0;
+		y3 = height;
+		x4 = width;
+		y4 = height;
+		//rotate box around point1 (0,0)
+		
+		
+		//translate box to location
+		x1 += x;
+		y1 += y;
+		x2 += x;
+		y2 += y;
+		x3 += x;
+		y3 += y;
+		x4 += x;
+		y4 += y;
+		
+		//calculate midpoint
+		midx = (x4 - x1)/2;
+		midy = (y4 - y1)/2;
+	}
+
+	/**
+	 * returns the x position of point1 of the wall.
+	 * point1.x <= point3.x
+	 * point1.y <  point3.y
+	 * @return
+	 */
+	public double getX1() {
+		return x1;
 	}
 	
-	public Point2D origin() {
-		return origin;
+	/**
+	 * returns the y position of point1 of the wall.
+	 * point1.x <= point3.x
+	 * point1.y <  point3.y
+	 * @return
+	 */
+	public double getY1() {
+		return y1;
+	}
+
+	/**
+	 * returns the x position of point2 of the wall.
+	 * point2.x >= point4.x
+	 * point2.y <  point4.y
+	 * @return
+	 */
+	public double getX2() {
+		return x2;
 	}
 	
-	public void origin(Point2D origin) {
-		this.origin = origin;
+	/**
+	 * returns the y position of point2 of the wall.
+	 * point2.x >= point4.x
+	 * point2.y <  point4.y
+	 * @return
+	 */
+	public double getY2() {
+		return y2;
+	}
+
+	/**
+	 * returns the x position of point3 of the wall.
+	 * point1.x <= point3.x
+	 * point1.y <  point3.y
+	 * @return
+	 */
+	public double getX3() {
+		return x3;
 	}
 	
-	public double width() {
-		return width;
+	/**
+	 * returns the y position of point3 of the wall.
+	 * point1.x <= point3.x
+	 * point1.y <  point3.y
+	 * @return
+	 */
+	public double getY3() {
+		return y3;
+	}
+
+	/**
+	 * returns the x position of point4 of the wall.
+	 * point2.x >= point4.x
+	 * point2.y <  point4.y
+	 * @return
+	 */
+	public double getX4() {
+		return x4;
 	}
 	
-	public double height() {
-		return height;
+	/**
+	 * returns the y position of point4 of the wall.
+	 * point2.x >= point4.x
+	 * point2.y <  point4.y
+	 * @return
+	 */
+	public double getY4() {
+		return y4;
 	}
 	
-	public double heading() {
-		return heading;
+	/**
+	 * returns the middle value of x
+	 * @return
+	 */
+	public double getMidx() {
+		return midx;
 	}
 	
-	public void width(double width) {
-		this.width = width;
+	/**
+	 * returns the middle value of y
+	 * @return
+	 */
+	public double getMidy() {
+		return midy;
 	}
 	
-	public void height(double height) {
-		this.height = height;
-	}
 	
-	public void heading(double heading) {
-		this.heading = heading;
-	}
 
 	@Override
 	public double getInvMass() {

@@ -23,8 +23,6 @@ public class Map {
 	//   if we have a hole inside a patch of ice, 
 	//   create the patch of ice and the hole. If the player is on the hole,
 	//   that effect will override the ice one.
-	// May not be implemented.
-	private ArrayList<Map> terrains;
 	
 	// any walls.
 	// keep walls to the top-most map; lower level ones are 
@@ -50,18 +48,16 @@ public class Map {
 			height,
 			0.99,
 			0.0,
-			new ArrayList<Map>(),
 			new ArrayList<Wall>()
 		);
 	}
 	
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Map> terrains, ArrayList<Wall> walls) {
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
 		this.gravity = gravity;
-		this.terrains = terrains;
 		this.walls = walls;
 
 		tiles = new ArrayList<Tile[]>();
@@ -79,13 +75,12 @@ public class Map {
 		}
 	}
 	
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Map> terrains, ArrayList<Wall> walls, ArrayList<Tile[]> tiles) {
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls, ArrayList<Tile[]> tiles) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
 		this.gravity = gravity;
-		this.terrains = terrains;
 		this.walls = walls;
 
 		this.tiles = tiles;
@@ -105,9 +100,6 @@ public class Map {
 	}
 	public double getGravity() {
 		return gravity;
-	}
-	public ArrayList<Map> getTerrains(){
-		return terrains;
 	}
 	public ArrayList<Wall> getWalls() {
 		return walls;

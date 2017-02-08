@@ -11,7 +11,7 @@ import resources.Resources;
 import resources.Wall;
 
 public class Physics extends Thread implements ActionListener {
-	//
+	// dashing reduces stamina, speed multiplied by stamina.
 	private Timer timer;
 	private final int DELAY = 10; // ~1000ms /60 = 1/60 seconds
 
@@ -164,7 +164,7 @@ public class Physics extends Thread implements ActionListener {
 	
 
 //	void PositionalCorrection( Object A, Object B )
-//	{
+//	{ // copied from an example; needs adapting.
 //	  const float percent = 0.2 // usually 20% to 80%
 //	  const float slop = 0.01 // usually 0.01 to 0.1
 //	  Vec2 correction = max( penetration - k_slop, 0.0f ) / (A.inv_mass + B.inv_mass)) * percent * n
@@ -195,10 +195,32 @@ public class Physics extends Thread implements ActionListener {
 	
 	private CND detectCollision(Character c, Wall w) {
 		CND cnd = new CND();
-		double dx = c.getX() - w.origin().getX(); //difference in x
-		double dy = c.getY() - w.origin().getY(); //difference in y
+		double p1x, p1y;
+		double p2x, p2y;
+		// check whether c is inside w:
+		boolean inside = false;
+		if(inside) // TODO check if c is inside w 
+		{
+			inside = true;
+		}
+		// calculate which points define the line that intersects the 
+		// line joining the middle of c to the middle of w
+		if(c.getX() > w.getMidx()) { // p4 is the farthest to the right
+			p1x = w.getX4();
+			p1y = w.getY4();
+		} else { // p1 is the farthest to the left
+			p1x = w.getX1();
+			p1y = w.getY1();
+		}
+		if(c.getY() > w.getMidy()) { // p3 is the lowest point
+			p2x = w.getX3();
+			p2y = w.getY3();
+		} else { // p2 is the highest point
+			p2x = w.getX2();
+			p2y = w.getY2();
+		}
+		//find closest point on w to c:
 		
-		//TODO implement all of this.
 		
 		return cnd;
 	}
@@ -214,7 +236,7 @@ public class Physics extends Thread implements ActionListener {
 		 */
 		public boolean collided = false;
 		/**
-		 * The normal to the collision, measured in degrees from north.
+		 * The normal to the collision.
 		 */
 		public Vector collisionNormal = new Vector();
 		/**

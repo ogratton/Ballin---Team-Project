@@ -199,8 +199,8 @@ public class PhysicsWithModels extends Thread implements ActionListener {
 	
 	private CND detectCollision(CharacterModel c, Wall w) {
 		CND cnd = new CND();
-		double dx = c.getX() - w.origin().getX(); //difference in x
-		double dy = c.getY() - w.origin().getY(); //difference in y
+		double dx = c.getX() - w.getMidx(); //difference in x
+		double dy = c.getY() - w.getMidy(); //difference in y
 		
 		//TODO implement all of this.
 		
