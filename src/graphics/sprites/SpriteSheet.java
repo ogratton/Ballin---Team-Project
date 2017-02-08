@@ -10,18 +10,20 @@ public class SpriteSheet {
 	private BufferedImage spriteSheet;
 	private int rows;
 	private int cols;
-	private int size;
+	private int sizeX;
+	private int sizeY;
 
 	private ArrayList<int[][]> sections;
 
-	public SpriteSheet(Sprite.SheetType type, String name, int rows, int cols, int size, ArrayList<int[][]> sections) {
+	public SpriteSheet(Sprite.SheetType type, String name, int rows, int cols, int sizeX, int sizeY, ArrayList<int[][]> sections) {
 
 		this.type = type;
 		this.name = name;
 		this.rows = rows;
 		this.cols = cols;
-		this.size = size;
-
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		
 		switch (type) {
 			case CHARACTER:
 				this.sections = sections;
@@ -46,7 +48,7 @@ public class SpriteSheet {
 
 	public BufferedImage getSprite(int x, int y) {
 
-		return Sprite.getSprite(spriteSheet, x, y, size);
+		return Sprite.getSprite(spriteSheet, x, y, sizeX, sizeY);
 	}
 
 	/**
@@ -90,13 +92,23 @@ public class SpriteSheet {
 	}
 
 	/**
-	 * Get the size of a sprite on the sprite sheet
+	 * Get the x size of a sprite on the sprite sheet
 	 * 
-	 * @return the size
+	 * @return the x size
 	 */
 
-	public int getSize() {
-		return size;
+	public int getSizeX() {
+		return sizeX;
+	}
+	
+	/**
+	 * Get the y size of a sprite on the sprite sheet
+	 * 
+	 * @return the y size
+	 */
+
+	public int getSizeY() {
+		return sizeY;
 	}
 
 	/**

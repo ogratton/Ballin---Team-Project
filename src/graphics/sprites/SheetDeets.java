@@ -20,8 +20,9 @@ public class SheetDeets {
 
 	public static final int CHAR_WIZ_COLS = 8;
 	public static final int CHAR_WIZ_ROWS = 1;
-	public static final int CHAR_WIZ_SIZE = 50;
-
+	public static final int CHAR_WIZ_SIZEX = 50;
+	public static final int CHAR_WIZ_SIZEY = 50;
+	
 	public static final int[][] CHAR_WIZ_ROLLING = { { 0, 0 }, { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 },
 			{ 6, 0 }, { 7, 0 } };
 
@@ -34,15 +35,16 @@ public class SheetDeets {
 	};
 
 	public static final SpriteSheet CHAR_WIZ = new SpriteSheet(Sprite.SheetType.CHARACTER, CHAR_WIZ_NAME, CHAR_WIZ_ROWS,
-			CHAR_WIZ_COLS, CHAR_WIZ_SIZE, CHAR_WIZ_SECTIONS);
+			CHAR_WIZ_COLS, CHAR_WIZ_SIZEX, CHAR_WIZ_SIZEY, CHAR_WIZ_SECTIONS);
 
 	// elf
 	public static final String CHAR_ELF_NAME = "elf";
 
 	public static final int CHAR_ELF_COLS = 8;
 	public static final int CHAR_ELF_ROWS = 1;
-	public static final int CHAR_ELF_SIZE = 50;
-
+	public static final int CHAR_ELF_SIZEX = 50;
+	public static final int CHAR_ELF_SIZEY = 50;
+	
 	public static final int[][] CHAR_ELF_ROLLING = { { 0, 0 }, { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 },
 			{ 6, 0 }, { 7, 0 } };
 
@@ -55,15 +57,16 @@ public class SheetDeets {
 	};
 
 	public static final SpriteSheet CHAR_ELF = new SpriteSheet(Sprite.SheetType.CHARACTER, CHAR_ELF_NAME, CHAR_ELF_ROWS,
-			CHAR_ELF_COLS, CHAR_ELF_SIZE, CHAR_ELF_SECTIONS);
+			CHAR_ELF_COLS, CHAR_ELF_SIZEX, CHAR_ELF_SIZEY, CHAR_ELF_SECTIONS);
 
 	// test (with directions)
 	public static final String CHAR_TEST_NAME = "test";
 
 	public static final int CHAR_TEST_COLS = 8;
 	public static final int CHAR_TEST_ROWS = 1;
-	public static final int CHAR_TEST_SIZE = 50;
-
+	public static final int CHAR_TEST_SIZEX = 50;
+	public static final int CHAR_TEST_SIZEY = 50;
+	
 	public static final int[][] CHAR_TEST_DIRS = { { 0, 0 }, { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 },
 			{ 7, 0 } };
 
@@ -76,7 +79,7 @@ public class SheetDeets {
 	};
 
 	public static final SpriteSheet CHAR_TEST = new SpriteSheet(Sprite.SheetType.CHARACTER, CHAR_TEST_NAME,
-			CHAR_TEST_ROWS, CHAR_TEST_COLS, CHAR_TEST_SIZE, CHAR_TEST_SECTIONS);
+			CHAR_TEST_ROWS, CHAR_TEST_COLS, CHAR_TEST_SIZEX, CHAR_TEST_SIZEY, CHAR_TEST_SECTIONS);
 
 	// TILE SPRITE SHEETS
 
@@ -86,10 +89,11 @@ public class SheetDeets {
 
 	public static final int TILE_TEST_COLS = 1;
 	public static final int TILE_TEST_ROWS = 1;
-	public static final int TILE_TEST_SIZE = 74;
+	public static final int TILE_TEST_SIZEX = 74;
+	public static final int TILE_TEST_SIZEY = 64;
 
 	public static final SpriteSheet TILE_TEST = new SpriteSheet(Sprite.SheetType.TILE, TILE_TEST_NAME, TILE_TEST_ROWS,
-			TILE_TEST_COLS, TILE_TEST_SIZE, null);
+			TILE_TEST_COLS, TILE_TEST_SIZEX, TILE_TEST_SIZEY, null);
 
 	/**
 	 * Return the correct sprite sheet for a given character
@@ -154,7 +158,7 @@ public class SheetDeets {
 	public static int getRadiusFromSprite(Character.Class c) {
 
 		SpriteSheet sheet = getSpriteSheetFromClass(c);
-		return (int) (sheet.getSize() / 2);
+		return (int) (sheet.getSizeX() / 2);
 
 	}
 
