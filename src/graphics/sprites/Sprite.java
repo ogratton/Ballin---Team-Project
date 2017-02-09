@@ -1,5 +1,7 @@
 package graphics.sprites;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import resources.Character;
+import resources.Map;
 
 /**
  * Class with functions pertaining to the retrieval and loading of sprites from
@@ -61,10 +64,12 @@ public class Sprite {
 
 	/**
 	 * Determine the name of a sprite sheet for a class
-	 * @param classType the class
+	 * 
+	 * @param classType
+	 *            the class
 	 * @return the name
 	 */
-	
+
 	public static String determineSpriteSheetName(Character.Class classType) {
 
 		return SheetDeets.getSpriteSheetFromClass(classType).getName();
@@ -88,31 +93,39 @@ public class Sprite {
 	public static BufferedImage getSprite(BufferedImage spriteSheet, int x, int y, int sizeX, int sizeY) {
 		return spriteSheet.getSubimage(x * sizeX, y * sizeY, sizeX, sizeY);
 	}
-	
-	    /**
-	     * Draw one big map image from all the individual tiles
-	     */
 
-	    public static BufferedImage createMap(Map map) {
+	/**
+	 * Draw one big map image from all the individual tiles
+	 */
 
-	        //do some calculate first
-	        int offset  = 5;
-	        int wid = img1.getWidth()+img2.getWidth()+offset;
-	        int height = Math.max(img1.getHeight(),img2.getHeight())+offset;
-	        //create a new buffer and draw two image into the new image
-	        BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
-	        Graphics2D g2 = newImage.createGraphics();
-	        Color oldColor = g2.getColor();
-	        //fill background
-	        g2.setPaint(Color.WHITE);
-	        g2.fillRect(0, 0, wid, height);
-	        //draw image
-	        g2.setColor(oldColor);
-	        g2.drawImage(img1, null, 0, 0);
-	        g2.drawImage(img2, null, img1.getWidth()+offset, 0);
-	        g2.dispose();
-	        return newImage;
-	    }
+	public static BufferedImage createMap(Map map) {
+
+		// do some calculate first
+		double width = map.getWidth();
+		double height = map.getHeight();
+
+		Map.Tile[][] tiles = map.getTiles();
+		int tileSize = map.getTileSize();
+
+		// create a new buffer and draw two image into the new image
+		BufferedImage newImage = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = newImage.createGraphics();
+		Color oldColor = g2.getColor();
+		// fill background
+		g2.setPaint(Color.WHITE);
+		g2.fillRect(0, 0, (int) width, (int) height);
+		// draw image
+		g2.setColor(oldColor);
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+
+				g2.drawImage(map.getTileSprite(j, i), null, tileSize * j, tileSize * i);
+
+			}
+		}
+		
+		g2.dispose();
+		return newImage;
 	}
-
 }

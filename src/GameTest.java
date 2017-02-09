@@ -38,10 +38,10 @@ public class GameTest extends JFrame {
 			{
 
 				Thread.sleep(2000);
-				mp.pause();
+				mp.setGain(-10);
 
 				Thread.sleep(2000);
-				mp.resume();
+				mp.setGain(5);
 			}
 		}
 		catch (InterruptedException e)

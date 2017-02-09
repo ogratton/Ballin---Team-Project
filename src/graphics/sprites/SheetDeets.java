@@ -89,8 +89,8 @@ public class SheetDeets {
 
 	public static final int TILE_TEST_COLS = 1;
 	public static final int TILE_TEST_ROWS = 1;
-	public static final int TILE_TEST_SIZEX = 74;
-	public static final int TILE_TEST_SIZEY = 64;
+	public static final int TILE_TEST_SIZEX = 60;
+	public static final int TILE_TEST_SIZEY = 60;
 
 	public static final SpriteSheet TILE_TEST = new SpriteSheet(Sprite.SheetType.TILE, TILE_TEST_NAME, TILE_TEST_ROWS,
 			TILE_TEST_COLS, TILE_TEST_SIZEX, TILE_TEST_SIZEY, null);
