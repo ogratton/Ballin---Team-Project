@@ -35,9 +35,18 @@ public class Map {
 	public enum Tile {
 		TEST, DEFAULT,
 	};
+	
+	/**
+	 * To set the type of tiles used
+	 * Ideally we have sets of tiles for each world type and swap them out
+	 */
+	public enum World {
+		TEST, ICE, LAVA, DESERT,
+	};
 
 	private Tile[][] tiles;
 	private final int TILE_SIZE = 60;
+	private World world;
 
 	// TODO getters/setters/constructors
 	public Map(int width, int height) {
@@ -52,7 +61,8 @@ public class Map {
 		this.friction = friction;
 		this.gravity = gravity;
 		this.walls = walls;
-
+		this.world = World.TEST;
+		
 		tiles = new Tile[height][width];
 
 		for (int i = 0; i < height; i++) {
@@ -73,6 +83,7 @@ public class Map {
 		this.walls = walls;
 
 		this.tiles = tiles;
+		this.world = World.TEST;
 	}
 
 	public Point2D origin() {

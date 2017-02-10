@@ -43,7 +43,7 @@ public class GameView extends JPanel implements Observer {
 		this.map = map;
 
 		mapSprite = Sprite.createMap(map);
-		
+
 		points = new HashMap<Character, Point>();
 
 		for (Character model : characters) {
@@ -66,17 +66,16 @@ public class GameView extends JPanel implements Observer {
 		double screenWidth = getWidth();
 		double screenHeight = getHeight();
 		double offset = 0;
+		boolean notSixteenNine = false;
 
 		if (screenWidth / screenHeight < (16.0 / 9.0)) {
 
 			offset = 0.5 * (screenHeight - (screenWidth * (9.0 / 16.0)));
-
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, cast(screenWidth), cast(offset));
-			g.fillRect(0, cast(screenHeight - offset), cast(screenWidth), cast(offset));
+			notSixteenNine = true;
 		}
 
-		g.drawImage(mapSprite, 0, 0, (int)(mapSprite.getWidth() * multiplier), (int)(mapSprite.getHeight() * multiplier), this);
+		g.drawImage(mapSprite, 0, (int) offset, (int) (mapSprite.getWidth() * multiplier),
+				(int) (mapSprite.getHeight() * multiplier), this);
 
 		for (Character model : characters) {
 
@@ -104,6 +103,12 @@ public class GameView extends JPanel implements Observer {
 
 		}
 
+		if (notSixteenNine) {
+
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, (int) screenWidth, (int) offset);
+			g.fillRect(0, (int) (screenHeight - offset), (int) screenWidth, (int) offset);
+		}
 	}
 
 	/**
