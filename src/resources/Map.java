@@ -49,11 +49,28 @@ public class Map {
 	private World world;
 
 	// TODO getters/setters/constructors
+	
+	/**
+	 * Create a default map with given width and height
+	 * @param width the width
+	 * @param height the height
+	 */
+	
 	public Map(int width, int height) {
 
 		this(new Point2D.Double(0, 0), width, height, 0.99, 0.0, new ArrayList<Wall>());
 	}
 
+	/**
+	 * Create a default map with given physics and size
+	 * @param origin the origin point
+	 * @param width the width
+	 * @param height the height
+	 * @param friction the friction
+	 * @param gravity the gravity
+	 * @param walls the list of walls
+	 */
+	
 	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls) {
 		this.origin = origin;
 		this.width = width;
@@ -73,6 +90,17 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Create a default map with given physics, size and tileset
+	 * @param origin the origin point
+	 * @param width the width
+	 * @param height the height
+	 * @param friction friction
+	 * @param gravity gravity
+	 * @param walls the list of walls
+	 * @param tiles the array of tiles
+	 */
+	
 	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
 			Tile[][] tiles) {
 		this.origin = origin;
@@ -86,7 +114,12 @@ public class Map {
 		this.world = World.TEST;
 	}
 
-	public Point2D origin() {
+	/**
+	 * Get the origin point of this map
+	 * @return the origin point
+	 */
+	
+	public Point2D getOrigin() {
 		return origin;
 	}
 
@@ -118,10 +151,26 @@ public class Map {
 		return this.TILE_SIZE;
 	}
 
+	/**
+	 * Get the tile sprite of a specific tile on the map
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @return the tile sprite
+	 */
+	
 	public BufferedImage getTileSprite(int x, int y) {
 
 		BufferedImage sprite = SheetDeets.getSpriteFromTile(tiles[y][x]);
 		return sprite;
 
+	}
+	
+	/**
+	 * Get the world type of this map
+	 * @return the world type
+	 */
+	
+	public World getWorldType(){
+		return this.world;
 	}
 }

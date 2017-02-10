@@ -55,7 +55,7 @@ public class PhysicsExampleUI extends JFrame {
 		Resources.players[2].setMass(2);
 		
 		Resources.map = new Map(950, 550); // smaller than screen (this will allow for falling off the edge)
-		Resources.map.origin().setLocation(50.0, 50.0);
+		Resources.map.getOrigin().setLocation(50.0, 50.0);
 		
 		// create physics thread
 		Physics p = new Physics();
