@@ -25,9 +25,6 @@ public class GameView extends JPanel implements Observer {
 	private BufferedImage mapSprite;
 	private double multiplier = 1;
 
-	private static final int TILE_SIZEX = 74;
-	private static final int TILE_SIZEY = 64;
-
 	/**
 	 * Create a new game view
 	 * 
