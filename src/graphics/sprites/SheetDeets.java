@@ -83,17 +83,34 @@ public class SheetDeets {
 
 	// TILE SPRITE SHEETS
 
+	/* TILE CONVENTION:
+	 * Row 0:
+	 * 0: Abyss
+	 * 1: Flat
+	 * 2: Edge N
+	 * 3: Edge NE
+	 * 4: Edge E
+	 * 5: Edge SE
+	 * Row 1:
+	 * 0: Edge S
+	 * 1: Edge SW
+	 * 2: Edge W
+	 * 3: Edge NW
+	 * 4: Edge S Abyss
+	 * 5: Test
+	 */
+	
 	// test hex
 
-	public static final String TILE_TEST_NAME = "test";
+	public static final String TILES_NAME = "tiles";
 
-	public static final int TILE_TEST_COLS = 1;
-	public static final int TILE_TEST_ROWS = 1;
-	public static final int TILE_TEST_SIZEX = 60;
-	public static final int TILE_TEST_SIZEY = 60;
+	public static final int TILES_COLS = 6;
+	public static final int TILES_ROWS = 2;
+	public static final int TILES_SIZEX = 75;
+	public static final int TILES_SIZEY = 75;
 
-	public static final SpriteSheet TILE_TEST = new SpriteSheet(Sprite.SheetType.TILE, TILE_TEST_NAME, TILE_TEST_ROWS,
-			TILE_TEST_COLS, TILE_TEST_SIZEX, TILE_TEST_SIZEY, null);
+	public static final SpriteSheet TILES = new SpriteSheet(Sprite.SheetType.TILE, TILES_NAME, TILES_ROWS,
+			TILES_COLS, TILES_SIZEX, TILES_SIZEY, null);
 
 	/**
 	 * Return the correct sprite sheet for a given character
@@ -135,17 +152,32 @@ public class SheetDeets {
 		return null;
 	}
 	
-	public static BufferedImage getSpriteFromTile(Map.Tile t){
+	/**
+	 * Get the sprite sheet for a given world type
+	 * @param w the world type
+	 * @return the sprite sheet
+	 */
+	
+	public static BufferedImage getTileSetFromWorld(Map.World w){
 		
-		switch(t){
-		case TEST:
-			return TILE_TEST.getSprite(0, 0);
-		case DEFAULT:
-			return TILE_TEST.getSprite(0, 0);
+		int x = 0;
+		
+		switch(w){
+		case CAVE:
+			x = 0;
+			break;
+		case LAVA:
+			x = 0;
+			break;
+		case ICE:
+			x = 0;
+			break;
+		case DESERT:
+			x = 0;
+			break;
 		}
 		
-		return null;
-		
+		return Sprite.getSprite(TILES.getSpriteSheet(), 0, TILES_SIZEY * x, TILES_SIZEX * 6 , TILES_SIZEY * 2);
 	}
 
 	/**

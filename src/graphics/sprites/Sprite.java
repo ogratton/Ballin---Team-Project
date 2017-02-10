@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -104,7 +105,6 @@ public class Sprite {
 		double width = map.getWidth();
 		double height = map.getHeight();
 
-		Map.Tile[][] tiles = map.getTiles();
 		int tileSize = map.getTileSize();
 
 		// create a new buffer and draw two image into the new image
@@ -117,8 +117,8 @@ public class Sprite {
 		// draw image
 		g2.setColor(oldColor);
 
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
+		for (int i = 0; i < height/tileSize;i++) {
+			for (int j = 0; j < width/tileSize; j++) {
 
 				g2.drawImage(map.getTileSprite(j, i), null, tileSize * j, tileSize * i);
 
@@ -128,4 +128,5 @@ public class Sprite {
 		g2.dispose();
 		return newImage;
 	}
+
 }

@@ -45,7 +45,9 @@ public class PhysicsWithGraphicsDemo {
 			Resources.playerList.add(playa);
 		}
 		
-		Resources.map = new Map(1200, 675);
+		Map.Tile[][] tiles = Resources.map1;
+		
+		Resources.map = new Map(1200, 675, tiles, Map.World.CAVE);
 
 		// create physics thread
 		Physics p = new Physics();
