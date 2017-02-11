@@ -3,11 +3,15 @@ package ui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,17 +20,34 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import audio.AudioFile;
+import audio.MusicPlayer;
+
 public class MainMenu extends JFrame {
 
 	MainMenu() {
-
+		JFrame frame = new JFrame();
+		frame.setName("Main Menu");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setUndecorated(false);
+		frame.setSize(400, 600);
+		frame.setLocation((getScreenWorkingWidth() - frame.getWidth()) / 2,
+				(getScreenWorkingHeight() - frame.getHeight()) / 2);
+		frame.add(mainMenuPanel());
+		frame.setVisible(true);
+		musicPlayer = new MusicPlayer("pokemon");
+		musicPlayer.run();
 	}
+
+	static MusicPlayer musicPlayer;
+	static AudioFile audioPlayer;
+	static boolean isPressed;
+	private static ViewState viewState = ViewState.MAINMENU_STATE;
+	final static Font font = makeFont(20);
 
 	public enum ViewState {
 		MAINMENU_STATE, OPTIONS_STATE;
 	}
-
-	private static ViewState viewState = ViewState.MAINMENU_STATE;
 
 	public static int getScreenWorkingWidth() {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
@@ -36,28 +57,46 @@ public class MainMenu extends JFrame {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 
+	private static Font makeFont(int size) {
+		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
+		try {
+			// create the font to use. Specify the size!
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf")).deriveFont((float)size);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			// register the font
+			ge.registerFont(customFont);
+			//return customFont;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return customFont;
+	}
+
 	private static void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				isPressed = true;
 				button.addKeyListener(new KeyListener() {
-
 					@Override
 					public void keyPressed(KeyEvent e) {
-						if (e.getKeyCode() == KeyEvent.VK_UP)
-							button.setText("up arrow");
-						else if (e.getKeyCode() == KeyEvent.VK_DOWN)
-							button.setText("down arrow");
-						else if (e.getKeyCode() == KeyEvent.VK_LEFT)
-							button.setText("left arrow");
-						else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-							button.setText("right arrow");
-						else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
-								|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9')))
-							button.setText("" + Character.toUpperCase(e.getKeyChar()));
+						if (isPressed) {
+							if (e.getKeyCode() == KeyEvent.VK_UP)
+								button.setText("up arrow");
+							else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+								button.setText("down arrow");
+							else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+								button.setText("left arrow");
+							else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+								button.setText("right arrow");
+							else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
+									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9')))
+								button.setText("" + Character.toUpperCase(e.getKeyChar()));
+							isPressed = false;
 
+						}
 					}
 
 					@Override
@@ -69,7 +108,6 @@ public class MainMenu extends JFrame {
 					public void keyTyped(KeyEvent e) {
 
 					}
-
 				});
 
 			}
@@ -120,23 +158,21 @@ public class MainMenu extends JFrame {
 
 	public static JPanel mainMenuPanel() {
 
-		
-		Dimension buttonSize = new Dimension(200,75);
-		Font buttonFont = new Font("Comic Sans MS", Font.PLAIN, 16);
-		
+		Dimension buttonSize = new Dimension(250, 100);
+
 		JPanel panel = new JPanel();
 
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
-		
+
 		JLabel gameTitle = new JLabel("Insert game name!");
-		gameTitle.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
+		gameTitle.setFont(font.deriveFont((float) 28));
 		gameTitle.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		JButton startButton = new JButton("Start Game");
 		startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		startButton.setMaximumSize(buttonSize);
-		startButton.setFont(buttonFont);
+		startButton.setFont(font);
 
 		JButton optionsButton = new JButton("Options");
 		optionsButton.addActionListener(e -> {
@@ -145,7 +181,7 @@ public class MainMenu extends JFrame {
 		});
 		optionsButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		optionsButton.setMaximumSize(buttonSize);
-		optionsButton.setFont(buttonFont);
+		optionsButton.setFont(font);
 
 		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(e -> {
@@ -153,8 +189,8 @@ public class MainMenu extends JFrame {
 		});
 		exitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		exitButton.setMaximumSize(buttonSize);
-		exitButton.setFont(buttonFont);
-		
+		exitButton.setFont(font);
+
 		JPanel empty = new JPanel();
 		empty.setSize(500, 100);
 
@@ -167,7 +203,6 @@ public class MainMenu extends JFrame {
 		panel.add(Box.createRigidArea(new Dimension(0, 10)));
 		panel.add(exitButton);
 
-
 		return panel;
 
 	}
@@ -175,9 +210,6 @@ public class MainMenu extends JFrame {
 	private static JPanel optionPanel() {
 		final int VOL_MAX = 100;
 		final int VOL_MIN = 0;
-		final int VOL_INIT = 50;
-		
-		Font font = new Font("Comic Sans MS", Font.PLAIN, 16);
 
 		JPanel panel = new JPanel();
 
@@ -185,34 +217,48 @@ public class MainMenu extends JFrame {
 		panel.setLayout(box);
 
 		JButton back = new JButton("Back to Main Menu");
-		back.addActionListener(e ->{
+		back.addActionListener(e -> {
 			viewState = ViewState.MAINMENU_STATE;
 			changeState(panel);
 		});
 		back.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		back.setFont(font);
-		
+
 		JLabel soundLabel = new JLabel("Sounds Volume", BoxLayout.X_AXIS);
 		soundLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		soundLabel.setFont(font);
-		
-		JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_INIT);
+
+		JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		soundSlider.setMajorTickSpacing(20);
 		soundSlider.setMinorTickSpacing(10);
 		soundSlider.setPaintTicks(true);
 		soundSlider.setPaintLabels(true);
-		soundSlider.setFont(font);
+		soundSlider.setFont(font.deriveFont((float) 16));
+		soundSlider.addChangeListener(e ->{
+	        int volume = soundSlider.getValue();
+	        if(volume == 0)
+	        	audioPlayer.setGain(-80);
+	        else
+	        	audioPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
+		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
 		musicLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		musicLabel.setFont(font);
 
-		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_INIT);
+		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		musicSlider.setMajorTickSpacing(20);
 		musicSlider.setMinorTickSpacing(10);
 		musicSlider.setPaintTicks(true);
 		musicSlider.setPaintLabels(true);
-		musicSlider.setFont(font);
+		musicSlider.setFont(font.deriveFont((float) 16));
+		musicSlider.addChangeListener(e ->{
+		        int volume = musicSlider.getValue();
+		        if(volume == 0)
+		        	musicPlayer.mute();
+		        else
+		        	musicPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
+		});
 		
 		JLabel controlsLabel = new JLabel("Controls");
 		controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -224,32 +270,32 @@ public class MainMenu extends JFrame {
 
 		JLabel up = new JLabel("Move up: ");
 		up.setFont(font);
-		
+
 		JButton moveUp = new JButton("W");
 		moveUp.setFont(font);
 		setKeyRebindable(moveUp);
 
 		JLabel down = new JLabel("Move down: ");
 		down.setFont(font);
-		
+
 		JButton moveDown = new JButton("S");
 		moveDown.setFont(font);
 		setKeyRebindable(moveDown);
 
 		JLabel left = new JLabel("Move left: ");
 		left.setFont(font);
-		
+
 		JButton moveLeft = new JButton("A");
 		moveLeft.setFont(font);
 		setKeyRebindable(moveLeft);
 
 		JLabel right = new JLabel("Move right: ");
 		right.setFont(font);
-		
+
 		JButton moveRight = new JButton("D");
 		moveRight.setFont(font);
 		setKeyRebindable(moveRight);
-		
+
 		controlsPanel.setLayout(controlsGrid);
 		controlsPanel.add(up);
 		controlsPanel.add(moveUp);
@@ -259,7 +305,7 @@ public class MainMenu extends JFrame {
 		controlsPanel.add(moveLeft);
 		controlsPanel.add(right);
 		controlsPanel.add(moveRight);
-		
+
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(new Dimension(0, 10)));
 		panel.add(back);
@@ -281,15 +327,7 @@ public class MainMenu extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		JFrame frame = new JFrame();
-		frame.setName("Main Menu");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(false);
-		frame.setSize(400, 600);
-		frame.setLocation((getScreenWorkingWidth() - frame.getWidth()) / 2,
-				(getScreenWorkingHeight() - frame.getHeight()) / 2);
-		frame.add(mainMenuPanel());
-		frame.setVisible(true);
+		MainMenu menu = new MainMenu();
 	}
 
 }
