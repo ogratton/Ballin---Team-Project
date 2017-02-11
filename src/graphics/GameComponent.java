@@ -98,7 +98,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	public void setMultiplier(double newWidth, double newHeight) {
 
 		double mult = newWidth / width;
-		System.out.println(mult);
 		this.view.setMultiplier(mult);
 	}
 
@@ -150,7 +149,6 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(0).setUp(false);
 				break;
 			case KeyEvent.VK_S:
-				System.out.println("test");
 				characters.get(0).setDown(false);
 				break;
 			case KeyEvent.VK_UP:

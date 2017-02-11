@@ -2,6 +2,7 @@ package resources;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 //import graphics.old.CharacterModel;
 
@@ -30,8 +31,11 @@ public class Resources {
 	public static Character[] players;
 	public static Map map;
 	
+	//public static MapReader mapReader = new MapReader();
+	//public static Map.Tile[][] map1 = mapReader.readMap("./resources/maps/map1.csv");
+	
 	// a painstakingly made map
-	public static Map.Tile[][] map1 =  {{Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS}, 
+	public static Map.Tile[][] default_map =  {{Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS}, 
 										{Map.Tile.ABYSS, Map.Tile.EDGE_NW, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_N, Map.Tile.EDGE_NE, Map.Tile.ABYSS}, 
 										{Map.Tile.ABYSS, Map.Tile.EDGE_W, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.EDGE_E, Map.Tile.ABYSS}, 
 										{Map.Tile.ABYSS, Map.Tile.EDGE_W, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.FLAT, Map.Tile.EDGE_E, Map.Tile.ABYSS}, 
@@ -41,5 +45,5 @@ public class Resources {
 										{Map.Tile.ABYSS, Map.Tile.EDGE_SW, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_S, Map.Tile.EDGE_SE, Map.Tile.ABYSS}, 
 										{Map.Tile.ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.EDGE_ABYSS, Map.Tile.ABYSS}, 
 										{Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS, Map.Tile.ABYSS}};
-	
+
 }

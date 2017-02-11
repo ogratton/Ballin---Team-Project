@@ -44,7 +44,7 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		for (Character model : characters) {
-			points.put(model, new Point(cast(model.getX()), cast(model.getY())));
+			points.put(model, new Point((int)model.getX(), (int)model.getY()));
 		}
 
 		repaint();
@@ -78,21 +78,20 @@ public class GameView extends JPanel implements Observer {
 
 			BufferedImage frame = null;
 
-			int newX = cast(model.getX());
-			int newY = cast(model.getY());
+			int oldX = (int)points.get(model).getX();
+			int oldY = (int)points.get(model).getY();
+			
+			int newX = (int)model.getX();
+			int newY = (int)model.getY();
 
-			if (newX != points.get(model).getX() || newY != points.get(model).getY()) {
-				frame = model.getNextFrame(true);
-				points.put(model, new Point(newX, newY));
-			} else {
-				frame = model.getNextFrame(false);
-			}
+			frame = model.getNextFrame(oldX, oldY, newX, newY);
+			points.put(model, new Point(newX, newY));
 
-			int actualX = cast(newX * multiplier);
-			int actualY = cast(newY * multiplier);
+			int actualX = (int)(newX * multiplier);
+			int actualY = (int)(newY * multiplier);
 
-			int sizeX = cast(frame.getWidth() * multiplier);
-			int sizeY = cast(frame.getHeight() * multiplier);
+			int sizeX = (int)(frame.getWidth() * multiplier);
+			int sizeY = (int)(frame.getHeight() * multiplier);
 
 			g.drawImage(frame, cast(actualX), cast(actualY + offset), sizeX, sizeY, this);
 
