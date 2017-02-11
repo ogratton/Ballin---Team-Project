@@ -1,11 +1,13 @@
 package graphics;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 import java.util.Random;
 
 import physics.Physics;
 import resources.Character;
 import resources.Map;
+import resources.MapReader;
 import resources.Resources;
 
 /**
@@ -45,7 +47,20 @@ public class PhysicsWithGraphicsDemo {
 			Resources.playerList.add(playa);
 		}
 		
-		Map.Tile[][] tiles = Resources.map1;
+		// make the map the default just in case the following fails
+		Map.Tile[][] tiles = Resources.default_map;	
+		MapReader mr = new MapReader();	
+		try
+		{
+			tiles = mr.readMap("./resources/maps/map1.csv");
+			System.out.println("I guess it worked then");
+		}
+		catch (IOException e)
+		{
+			System.out.println("File not found");
+			e.printStackTrace();
+			
+		}
 		
 		Resources.map = new Map(1200, 675, tiles, Map.World.CAVE);
 

@@ -13,11 +13,13 @@ import javax.sound.sampled.LineListener;
 
 /**
  * A single audio file
+ * Can be used for sound effects or music
  * 
- * Adapted from an online tutorial by:
- * 
- * @author Matthew Rogers
+ * Adapted from an online tutorial by Matthew Rogers:
  * http://www.github.com/BossLetsPlays
+ * 
+ * @author Oliver Gratton
+ * 
  */
 public class AudioFile implements LineListener
 {
@@ -28,10 +30,15 @@ public class AudioFile implements LineListener
 	private DataLine.Info info;
 	private Clip clip;
 	private FloatControl gainControl;
+
 	/**
 	 * Represents the 3 states the clip could be in
 	 */
-	private enum PlayState{PLAYING, PAUSED, STOPPED};
+	private enum PlayState
+	{
+		PLAYING, PAUSED, STOPPED
+	};
+
 	private volatile PlayState playState;
 
 	/**
@@ -60,7 +67,7 @@ public class AudioFile implements LineListener
 			System.exit(1);
 		}
 	}
-	
+
 	/**
 	 * @return the title of the audio clip
 	 */
@@ -76,7 +83,7 @@ public class AudioFile implements LineListener
 	{
 		play(0);
 	}
-	
+
 	public void stop()
 	{
 		clip.stop();
@@ -106,7 +113,7 @@ public class AudioFile implements LineListener
 	{
 		return (playState == PlayState.PLAYING);
 	}
-	
+
 	/**
 	 * @return Is the clip currently paused
 	 */
@@ -114,32 +121,35 @@ public class AudioFile implements LineListener
 	{
 		return (playState == PlayState.PAUSED);
 	}
-	
+
 	/**
 	 * Is the clip currently stopped (i.e. not playing but not paused)
+	 * 
 	 * @return
 	 */
 	public boolean isStopped()
 	{
 		return (playState == PlayState.STOPPED);
 	}
-	
+
 	/**
 	 * set absolute gain on the fly
-	 * @param gain +ve number for louder,  -ve for lower
+	 * 
+	 * @param gain +ve number for louder, -ve for lower
 	 */
 	public void setGain(float gain)
 	{
 		gainControl.setValue(gain);
 	}
-	
+
 	public float getGain()
 	{
 		return gainControl.getValue();
 	}
-	
+
 	/**
-	 * Pause the clip 
+	 * Pause the clip
+	 * 
 	 * @return return the current position in the clip
 	 */
 	public int pause()
@@ -152,7 +162,7 @@ public class AudioFile implements LineListener
 		}
 		return clip.getFramePosition();
 	}
-	
+
 	/**
 	 * resume where we left
 	 */
@@ -162,8 +172,8 @@ public class AudioFile implements LineListener
 		// but seems to actually set it back where it really was
 		// TODO check this isn't platform specific
 		int clip_length = clip.getFrameLength();
-		int res_pos = pos-44100;
-		
+		int res_pos = pos - 44100;
+
 		// accounting for a bug that can only be replicated with near-millisecond precision
 		// pausing *ON* the last second of the clip
 		// or something
