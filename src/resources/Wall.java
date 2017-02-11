@@ -4,13 +4,12 @@ public class Wall implements Collidable{
 	//point1 is the leftmost point (x can be equal to p3, if rectangle)
 	//point2 is the highest point (y can be equal to p1, if rectangle)
 	//point3 is the lowest point (y can be equal to p4, if rectangle)
-	//point4 is the rightmost point (x can be equal to p2, if rectangle)
+	//point4 is the rightmost point (x can be equal to p2, if )
 	private double x1, x2, x3, x4;
 	private double y1, y2, y3, y4;
 	private double midx, midy; //midpoint
 	//private double width, height;
-	//private double heading; //angle from north, clockwise. 
-	//0 is default orientation. 1 and -1 are rotated 180 degrees.
+	//private double heading; //angle from north, clockwise in rads
 	
 	private double inv_mass = 0; // infinite mass
 	
@@ -26,7 +25,7 @@ public class Wall implements Collidable{
 		x4 = width;
 		y4 = height;
 		//rotate box around point1 (0,0)
-		
+		//Math.cos(a)
 		
 		//translate box to location
 		x1 += x;

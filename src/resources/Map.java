@@ -320,4 +320,24 @@ public class Map {
 	public World getWorldType() {
 		return this.world;
 	}
+
+	/**
+	 * returns the tile at a point x,y.
+	 * If x,y is outside the map, returns null.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public Tile tileAt(double x, double y) {
+		//TODO fix this. (what's wrong with it? AAAAAAH!)
+		int column = (int)x/TILE_SIZE;
+		int row = (int)y/TILE_SIZE;
+		//may crash if tiles not initialised.
+		//check if column,row is in the tile array:
+		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
+			return tiles[column][row];
+		}
+		System.out.println("not in tile array");
+		return null;
+	}
 }

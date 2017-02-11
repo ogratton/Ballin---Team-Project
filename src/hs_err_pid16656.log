@@ -1,0 +1,695 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb664de48, pid=16656, tid=16683
+#
+# JRE version: OpenJDK Runtime Environment (9.0) (build 9-internal+0-2016-04-14-195526.buildd.src)
+# Java VM: OpenJDK Server VM (9-internal+0-2016-04-14-195526.buildd.src, mixed mode, tiered, g1 gc, linux-x86)
+# Problematic frame:
+# C  [libjava.so+0x18e48]  JNU_GetEnv+0x18
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %P" (or dumping to /home/alexander/workspace/f1/src/core.16656)
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: networking.Client Aaquib 4444 localhost
+
+Host: Intel(R) Core(TM) i3 CPU       M 370  @ 2.40GHz, 4 cores, 3G, Ubuntu 16.04.1 LTS
+Time: Wed Feb  8 12:11:53 2017 GMT elapsed time: 7 seconds (0d 0h 0m 7s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x697df400):  JavaThread "Thread-2" [_thread_in_native, id=16683, stack(0x68e32000,0x68e83000)]
+
+Stack: [0x68e32000,0x68e83000],  sp=0x68e80fac,  free space=315k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libjava.so+0x18e48]  JNU_GetEnv+0x18
+C  [libfontmanager.so+0x2faf5]
+C  [libfreetype.so.6+0xf4dc]  FT_Stream_Seek+0x1c
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  sun.font.FreetypeFontScaler.initNativeScaler(Lsun/font/Font2D;IIZI)J+0 java.desktop@9-internal
+j  sun.font.FreetypeFontScaler.<init>(Lsun/font/Font2D;IZI)V+26 java.desktop@9-internal
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeConstructorAccessorImpl.newInstance0(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object;+0 java.base@9-internal
+j  sun.reflect.NativeConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+85 java.base@9-internal
+j  sun.reflect.DelegatingConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+5 java.base@9-internal
+j  java.lang.reflect.Constructor.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+65 java.base@9-internal
+j  sun.font.FontScaler.getScaler(Lsun/font/Font2D;IZI)Lsun/font/FontScaler;+39 java.desktop@9-internal
+j  sun.font.TrueTypeFont.getScaler()Lsun/font/FontScaler;+21 java.desktop@9-internal
+j  sun.font.FileFontStrike.<init>(Lsun/font/FileFont;Lsun/font/FontStrikeDesc;)V+204 java.desktop@9-internal
+j  sun.font.FileFont.createStrike(Lsun/font/FontStrikeDesc;)Lsun/font/FontStrike;+18 java.desktop@9-internal
+j  sun.font.Font2D.getStrike(Lsun/font/FontStrikeDesc;Z)Lsun/font/FontStrike;+92 java.desktop@9-internal
+j  sun.font.Font2D.getStrike(Lsun/font/FontStrikeDesc;)Lsun/font/FontStrike;+3 java.desktop@9-internal
+j  sun.font.CompositeStrike.getStrikeForSlot(I)Lsun/font/PhysicalStrike;+23 java.desktop@9-internal
+j  sun.font.CompositeStrike.getFontMetrics()Lsun/font/StrikeMetrics;+31 java.desktop@9-internal
+j  sun.font.FontDesignMetrics.initMatrixAndMetrics()V+28 java.desktop@9-internal
+j  sun.font.FontDesignMetrics.<init>(Ljava/awt/Font;Ljava/awt/font/FontRenderContext;)V+62 java.desktop@9-internal
+j  sun.font.FontDesignMetrics.getMetrics(Ljava/awt/Font;Ljava/awt/font/FontRenderContext;)Lsun/font/FontDesignMetrics;+128 java.desktop@9-internal
+j  sun.swing.SwingUtilities2.getFontMetrics(Ljavax/swing/JComponent;Ljava/awt/Font;)Ljava/awt/FontMetrics;+15 java.desktop@9-internal
+j  javax.swing.JComponent.getFontMetrics(Ljava/awt/Font;)Ljava/awt/FontMetrics;+2 java.desktop@9-internal
+j  javax.swing.plaf.basic.BasicGraphicsUtils.getPreferredButtonSize(Ljavax/swing/AbstractButton;I)Ljava/awt/Dimension;+28 java.desktop@9-internal
+j  javax.swing.plaf.basic.BasicButtonUI.getPreferredSize(Ljavax/swing/JComponent;)Ljava/awt/Dimension;+10 java.desktop@9-internal
+j  javax.swing.JComponent.getPreferredSize()Ljava/awt/Dimension;+26 java.desktop@9-internal
+j  java.awt.FlowLayout.preferredLayoutSize(Ljava/awt/Container;)Ljava/awt/Dimension;+66 java.desktop@9-internal
+j  java.awt.Container.preferredSize()Ljava/awt/Dimension;+43 java.desktop@9-internal
+j  java.awt.Container.getPreferredSize()Ljava/awt/Dimension;+1 java.desktop@9-internal
+j  javax.swing.JComponent.getPreferredSize()Ljava/awt/Dimension;+39 java.desktop@9-internal
+j  java.awt.BorderLayout.layoutContainer(Ljava/awt/Container;)V+89 java.desktop@9-internal
+j  java.awt.Container.layout()V+11 java.desktop@9-internal
+j  java.awt.Container.doLayout()V+1 java.desktop@9-internal
+j  java.awt.Container.validateTree()V+47 java.desktop@9-internal
+j  java.awt.Container.validateTree()V+110 java.desktop@9-internal
+j  java.awt.Container.validateTree()V+110 java.desktop@9-internal
+j  java.awt.Container.validateTree()V+110 java.desktop@9-internal
+j  java.awt.Container.validateTree()V+110 java.desktop@9-internal
+j  java.awt.Container.validate()V+60 java.desktop@9-internal
+j  java.awt.Container.validateUnconditionally()V+14 java.desktop@9-internal
+j  java.awt.Window.show()V+12 java.desktop@9-internal
+j  java.awt.Component.show(Z)V+5 java.desktop@9-internal
+j  java.awt.Component.setVisible(Z)V+2 java.desktop@9-internal
+j  java.awt.Window.setVisible(Z)V+2 java.desktop@9-internal
+j  networking.ClientGUI.run()V+51
+v  ~StubRoutines::call_stub
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x00000000
+
+Register to memory mapping:
+
+EAX=0x00000000 is an unknown value
+EBX=0x68aa6000: <offset 0x000c4000> in /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libfontmanager.so at 0x689e2000
+ECX=0x00010002 is an unknown value
+EDX=0x00000000 is an unknown value
+ESP=0x68e80fac is pointing into the stack for thread: 0x697df400
+EBP=0x68e80fc8 is pointing into the stack for thread: 0x697df400
+ESI=0x00000000 is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Registers:
+EAX=0x00000000, EBX=0x68aa6000, ECX=0x00010002, EDX=0x00000000
+ESP=0x68e80fac, EBP=0x68e80fc8, ESI=0x00000000, EDI=0x00000000
+EIP=0xb664de48, EFLAGS=0x00010246, CR2=0x0000000000000000
+
+Top of Stack: (sp=0x68e80fac)
+0x68e80fac:   00000000 68e80ff8 b77a1f10 689a8c9b
+0x68e80fbc:   8d547d00 00000000 a6ad3d40 68e80ff8
+0x68e80fcc:   68a11af5 00000000 00010002 a6a0003c
+0x68e80fdc:   a6a13bd4 b77b1000 a6ad3ff0 689400b9
+0x68e80fec:   a6a31808 00000000 00000000 a6a142d8
+0x68e80ffc:   689414dc a6a31808 00000000 00000000
+0x68e8100c:   00000000 b7757000 689e1000 a6a31808
+0x68e8101c:   689552b8 a6a31808 00000000 00000001 
+
+Instructions: (pc=0xb664de48)
+0xb664de28:   ff eb f3 90 8d 74 26 00 55 89 e5 83 ec 1c 8b 45
+0xb664de38:   08 65 8b 15 14 00 00 00 89 55 f4 31 d2 8b 4d 0c
+0xb664de48:   8b 10 51 8d 4d f0 51 50 ff 52 18 8b 45 f0 8b 4d
+0xb664de58:   f4 65 33 0d 14 00 00 00 75 02 c9 c3 e8 c7 5b 00 
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x088c6c00 JavaThread "SeedGenerator Thread" daemon [_thread_blocked, id=16712, stack(0x68139000,0x6818a000)]
+  0x67abc800 JavaThread "SeedGenerator Thread" daemon [_thread_in_Java, id=16690, stack(0x6825e000,0x682af000)]
+  0x68634000 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=16689, stack(0x684af000,0x68500000)]
+  0x68633000 JavaThread "AWT-Shutdown" [_thread_blocked, id=16688, stack(0x68714000,0x68765000)]
+  0xa6af4800 JavaThread "AWT-XAWT" daemon [_thread_in_native, id=16687, stack(0x68765000,0x687b6000)]
+  0xa6addc00 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=16686, stack(0x688b6000,0x68907000)]
+=>0x697df400 JavaThread "Thread-2" [_thread_in_native, id=16683, stack(0x68e32000,0x68e83000)]
+  0x697de400 JavaThread "Thread-1" [_thread_in_native, id=16682, stack(0x68e83000,0x68ed4000)]
+  0x697dd800 JavaThread "Thread-0" [_thread_in_Java, id=16681, stack(0x68ed4000,0x68f25000)]
+  0x697b1000 JavaThread "Service Thread" daemon [_thread_blocked, id=16679, stack(0x68fa6000,0x68ff7000)]
+  0x6975c800 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=16678, stack(0x68ff7000,0x69048000)]
+  0x69742400 JavaThread "Sweeper thread" daemon [_thread_blocked, id=16677, stack(0x69209000,0x6925a000)]
+  0x69741000 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=16676, stack(0x6925a000,0x692db000)]
+  0x6973f800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=16675, stack(0x692db000,0x6935c000)]
+  0x6973e000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=16674, stack(0x6935c000,0x693dd000)]
+  0x6973cc00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=16673, stack(0x693dd000,0x6942e000)]
+  0x6973b000 JavaThread "Surrogate Locker Thread (Concurrent GC)" daemon [_thread_blocked, id=16672, stack(0x6942e000,0x6947f000)]
+  0x69728800 JavaThread "Finalizer" daemon [_thread_blocked, id=16671, stack(0x6980d000,0x6985e000)]
+  0x69727000 JavaThread "Reference Handler" daemon [_thread_blocked, id=16670, stack(0xa642c000,0xa647d000)]
+  0xb650b800 JavaThread "main" [_thread_blocked, id=16657, stack(0xb6666000,0xb66b7000)]
+
+Other Threads:
+  0x69722000 VMThread [stack: 0x6967f000,0x69700000] [id=16669]
+  0x697bac00 WatcherThread [stack: 0x68f25000,0x68fa6000] [id=16680]
+
+Threads with active compile tasks:
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ garbage-first heap   total 61440K, used 3574K [0x6c200000, 0x6c3000f0, 0xa6400000)
+  region size 1024K, 3 young (3072K), 1 survivors (1024K)
+ Metaspace       used 9167K, capacity 9619K, committed 9752K, reserved 10544K
+
+Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, A=archive, TS=gc time stamp, AC=allocation context, TAMS=top-at-mark-start (previous, next)
+|   0|0x6c200000, 0x6c300000, 0x6c300000|100%| O|  |TS  1|AC  0|TAMS 0x6c200000, 0x6c200000|
+|   1|0x6c300000, 0x6c37d800, 0x6c400000| 49%| O|  |TS  1|AC  0|TAMS 0x6c300000, 0x6c300000|
+|   2|0x6c400000, 0x6c400000, 0x6c500000|  0%| F|  |TS  0|AC  0|TAMS 0x6c400000, 0x6c400000|
+|   3|0x6c500000, 0x6c500000, 0x6c600000|  0%| F|  |TS  0|AC  0|TAMS 0x6c500000, 0x6c500000|
+|   4|0x6c600000, 0x6c600000, 0x6c700000|  0%| F|  |TS  0|AC  0|TAMS 0x6c600000, 0x6c600000|
+|   5|0x6c700000, 0x6c700000, 0x6c800000|  0%| F|  |TS  0|AC  0|TAMS 0x6c700000, 0x6c700000|
+|   6|0x6c800000, 0x6c800000, 0x6c900000|  0%| F|  |TS  0|AC  0|TAMS 0x6c800000, 0x6c800000|
+|   7|0x6c900000, 0x6c900000, 0x6ca00000|  0%| F|  |TS  0|AC  0|TAMS 0x6c900000, 0x6c900000|
+|   8|0x6ca00000, 0x6ca00000, 0x6cb00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ca00000, 0x6ca00000|
+|   9|0x6cb00000, 0x6cb00000, 0x6cc00000|  0%| F|  |TS  0|AC  0|TAMS 0x6cb00000, 0x6cb00000|
+|  10|0x6cc00000, 0x6cc00000, 0x6cd00000|  0%| F|  |TS  0|AC  0|TAMS 0x6cc00000, 0x6cc00000|
+|  11|0x6cd00000, 0x6cd00000, 0x6ce00000|  0%| F|  |TS  0|AC  0|TAMS 0x6cd00000, 0x6cd00000|
+|  12|0x6ce00000, 0x6ce00000, 0x6cf00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ce00000, 0x6ce00000|
+|  13|0x6cf00000, 0x6cf00000, 0x6d000000|  0%| F|  |TS  0|AC  0|TAMS 0x6cf00000, 0x6cf00000|
+|  14|0x6d000000, 0x6d000000, 0x6d100000|  0%| F|  |TS  0|AC  0|TAMS 0x6d000000, 0x6d000000|
+|  15|0x6d100000, 0x6d100000, 0x6d200000|  0%| F|  |TS  0|AC  0|TAMS 0x6d100000, 0x6d100000|
+|  16|0x6d200000, 0x6d200000, 0x6d300000|  0%| F|  |TS  0|AC  0|TAMS 0x6d200000, 0x6d200000|
+|  17|0x6d300000, 0x6d300000, 0x6d400000|  0%| F|  |TS  0|AC  0|TAMS 0x6d300000, 0x6d300000|
+|  18|0x6d400000, 0x6d400000, 0x6d500000|  0%| F|  |TS  0|AC  0|TAMS 0x6d400000, 0x6d400000|
+|  19|0x6d500000, 0x6d500000, 0x6d600000|  0%| F|  |TS  0|AC  0|TAMS 0x6d500000, 0x6d500000|
+|  20|0x6d600000, 0x6d600000, 0x6d700000|  0%| F|  |TS  0|AC  0|TAMS 0x6d600000, 0x6d600000|
+|  21|0x6d700000, 0x6d700000, 0x6d800000|  0%| F|  |TS  0|AC  0|TAMS 0x6d700000, 0x6d700000|
+|  22|0x6d800000, 0x6d800000, 0x6d900000|  0%| F|  |TS  0|AC  0|TAMS 0x6d800000, 0x6d800000|
+|  23|0x6d900000, 0x6d900000, 0x6da00000|  0%| F|  |TS  0|AC  0|TAMS 0x6d900000, 0x6d900000|
+|  24|0x6da00000, 0x6da00000, 0x6db00000|  0%| F|  |TS  0|AC  0|TAMS 0x6da00000, 0x6da00000|
+|  25|0x6db00000, 0x6db00000, 0x6dc00000|  0%| F|  |TS  0|AC  0|TAMS 0x6db00000, 0x6db00000|
+|  26|0x6dc00000, 0x6dc00000, 0x6dd00000|  0%| F|  |TS  0|AC  0|TAMS 0x6dc00000, 0x6dc00000|
+|  27|0x6dd00000, 0x6dd00000, 0x6de00000|  0%| F|  |TS  0|AC  0|TAMS 0x6dd00000, 0x6dd00000|
+|  28|0x6de00000, 0x6de00000, 0x6df00000|  0%| F|  |TS  0|AC  0|TAMS 0x6de00000, 0x6de00000|
+|  29|0x6df00000, 0x6df00000, 0x6e000000|  0%| F|  |TS  0|AC  0|TAMS 0x6df00000, 0x6df00000|
+|  30|0x6e000000, 0x6e000000, 0x6e100000|  0%| F|  |TS  0|AC  0|TAMS 0x6e000000, 0x6e000000|
+|  31|0x6e100000, 0x6e100000, 0x6e200000|  0%| F|  |TS  0|AC  0|TAMS 0x6e100000, 0x6e100000|
+|  32|0x6e200000, 0x6e200000, 0x6e300000|  0%| F|  |TS  0|AC  0|TAMS 0x6e200000, 0x6e200000|
+|  33|0x6e300000, 0x6e300000, 0x6e400000|  0%| F|  |TS  0|AC  0|TAMS 0x6e300000, 0x6e300000|
+|  34|0x6e400000, 0x6e400000, 0x6e500000|  0%| F|  |TS  0|AC  0|TAMS 0x6e400000, 0x6e400000|
+|  35|0x6e500000, 0x6e500000, 0x6e600000|  0%| F|  |TS  0|AC  0|TAMS 0x6e500000, 0x6e500000|
+|  36|0x6e600000, 0x6e600000, 0x6e700000|  0%| F|  |TS  0|AC  0|TAMS 0x6e600000, 0x6e600000|
+|  37|0x6e700000, 0x6e700000, 0x6e800000|  0%| F|  |TS  0|AC  0|TAMS 0x6e700000, 0x6e700000|
+|  38|0x6e800000, 0x6e800000, 0x6e900000|  0%| F|  |TS  0|AC  0|TAMS 0x6e800000, 0x6e800000|
+|  39|0x6e900000, 0x6e900000, 0x6ea00000|  0%| F|  |TS  0|AC  0|TAMS 0x6e900000, 0x6e900000|
+|  40|0x6ea00000, 0x6ea00000, 0x6eb00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ea00000, 0x6ea00000|
+|  41|0x6eb00000, 0x6eb00000, 0x6ec00000|  0%| F|  |TS  0|AC  0|TAMS 0x6eb00000, 0x6eb00000|
+|  42|0x6ec00000, 0x6ec00000, 0x6ed00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ec00000, 0x6ec00000|
+|  43|0x6ed00000, 0x6ed00000, 0x6ee00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ed00000, 0x6ed00000|
+|  44|0x6ee00000, 0x6ee00000, 0x6ef00000|  0%| F|  |TS  0|AC  0|TAMS 0x6ee00000, 0x6ee00000|
+|  45|0x6ef00000, 0x6ef00000, 0x6f000000|  0%| F|  |TS  0|AC  0|TAMS 0x6ef00000, 0x6ef00000|
+|  46|0x6f000000, 0x6f000000, 0x6f100000|  0%| F|  |TS  0|AC  0|TAMS 0x6f000000, 0x6f000000|
+|  47|0x6f100000, 0x6f100000, 0x6f200000|  0%| F|  |TS  0|AC  0|TAMS 0x6f100000, 0x6f100000|
+|  48|0x6f200000, 0x6f200000, 0x6f300000|  0%| F|  |TS  0|AC  0|TAMS 0x6f200000, 0x6f200000|
+|  49|0x6f300000, 0x6f300000, 0x6f400000|  0%| F|  |TS  0|AC  0|TAMS 0x6f300000, 0x6f300000|
+|  50|0x6f400000, 0x6f400000, 0x6f500000|  0%| F|  |TS  0|AC  0|TAMS 0x6f400000, 0x6f400000|
+|  51|0x6f500000, 0x6f500000, 0x6f600000|  0%| F|  |TS  0|AC  0|TAMS 0x6f500000, 0x6f500000|
+|  52|0x6f600000, 0x6f700000, 0x6f700000|100%| S|CS|TS  1|AC  0|TAMS 0x6f600000, 0x6f600000|
+|  53|0x6f700000, 0x6f700000, 0x6f800000|  0%| F|  |TS  0|AC  0|TAMS 0x6f700000, 0x6f700000|
+|  54|0x6f800000, 0x6f800000, 0x6f900000|  0%| F|  |TS  0|AC  0|TAMS 0x6f800000, 0x6f800000|
+|  55|0x6f900000, 0x6f900000, 0x6fa00000|  0%| F|  |TS  0|AC  0|TAMS 0x6f900000, 0x6f900000|
+|  56|0x6fa00000, 0x6fa00000, 0x6fb00000|  0%| F|  |TS  0|AC  0|TAMS 0x6fa00000, 0x6fa00000|
+|  57|0x6fb00000, 0x6fb00000, 0x6fc00000|  0%| F|  |TS  0|AC  0|TAMS 0x6fb00000, 0x6fb00000|
+|  58|0x6fc00000, 0x6fc5a1a0, 0x6fd00000| 35%| E|  |TS  0|AC  0|TAMS 0x6fc00000, 0x6fc00000|
+|  59|0x6fd00000, 0x6fe00000, 0x6fe00000|100%| E|CS|TS  0|AC  0|TAMS 0x6fd00000, 0x6fd00000|
+
+Card table byte_map: [0x6bc8d000,0x6be5e000] byte_map_base: 0x6b92c000
+
+Marking Bits (Prev, Next): (CMBitMap*) 0xb65736b4, (CMBitMap*) 0xb65736e0
+ Prev Bits: [0x6ac34000, 0x6babc000)
+ Next Bits: [0x69dac000, 0x6ac34000)
+
+Polling page: 0xb7769000
+
+CodeHeap 'non-nmethods': size=5412Kb used=759Kb max_used=774Kb free=4652Kb
+ bounds [0xa7317000, 0xa7557000, 0xa7860000]
+CodeHeap 'profiled nmethods': size=120172Kb used=1028Kb max_used=1028Kb free=119143Kb
+ bounds [0xa7860000, 0xa7aa0000, 0xaedbb000]
+CodeHeap 'non-profiled nmethods': size=120176Kb used=192Kb max_used=192Kb free=119983Kb
+ bounds [0xaedbb000, 0xaeffb000, 0xb6317000]
+ total_blobs=1167 nmethods=726 adapters=192
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 7.826 Thread 0x6973f800 nmethod 723 0xaede7c08 code [0xaede7d00, 0xaede7e10]
+Event: 7.863 Thread 0x6973e000 nmethod 721% 0xaede7e88 code [0xaede82c0, 0xaede9764]
+Event: 7.899 Thread 0x69741000  724       3       java.lang.ref.ReferenceQueue::reallyPoll (65 bytes)
+Event: 7.900 Thread 0x69741000 nmethod 724 0xa7960588 code [0xa79606c0, 0xa7960ae0]
+Event: 7.914 Thread 0x69741000  725       3       java.nio.HeapByteBuffer::_get (7 bytes)
+Event: 7.914 Thread 0x69741000 nmethod 725 0xa7960c08 code [0xa7960d20, 0xa7960e20]
+Event: 7.914 Thread 0x69741000  726       3       java.nio.Buffer::position (55 bytes)
+Event: 7.914 Thread 0x69741000 nmethod 726 0xa7960f08 code [0xa7961020, 0xa796120c]
+Event: 7.930 Thread 0x69741000  727       1       java.lang.reflect.Constructor::getDeclaringClass (5 bytes)
+Event: 7.930 Thread 0x69741000 nmethod 727 0xaedeaf08 code [0xaedeb000, 0xaedeb0a0]
+
+GC Heap History (2 events):
+Event: 7.791 GC heap before
+{Heap before GC invocations=0 (full 0):
+ garbage-first heap   total 61440K, used 7168K [0x6c200000, 0x6c3000f0, 0xa6400000)
+  region size 1024K, 7 young (7168K), 0 survivors (0K)
+ Metaspace       used 9056K, capacity 9513K, committed 9624K, reserved 10544K
+}
+Event: 7.808 GC heap after
+{Heap after GC invocations=1 (full 0):
+ garbage-first heap   total 61440K, used 2550K [0x6c200000, 0x6c3000f0, 0xa6400000)
+  region size 1024K, 1 young (1024K), 1 survivors (1024K)
+ Metaspace       used 9056K, capacity 9513K, committed 9624K, reserved 10544K
+}
+
+Deoptimization events (10 events):
+Event: 0.130 Thread 0xb650b800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xaedc0e8c method=java.util.Collections$UnmodifiableCollection$1.next()Ljava/lang/Object; @ 4
+Event: 1.258 Thread 0x697df400 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaedc28b8 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 181
+Event: 1.399 Thread 0x697df400 Uncommon trap: reason=null_check action=make_not_entrant pc=0xaedc5318 method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
+Event: 1.678 Thread 0x697df400 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaedc46b4 method=java.util.HashMap.hash(Ljava/lang/Object;)I @ 1
+Event: 1.680 Thread 0x697df400 Uncommon trap: reason=unstable_fused_if action=reinterpret pc=0xaedd6344 method=java.util.HashMap.resize()[Ljava/util/HashMap$Node; @ 31
+Event: 1.716 Thread 0x697df400 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaedbed60 method=java.util.HashMap.hash(Ljava/lang/Object;)I @ 1
+Event: 2.182 Thread 0x697df400 Uncommon trap: reason=unstable_fused_if action=reinterpret pc=0xaedcd138 method=jdk.internal.org.objectweb.asm.ByteVector.putUTF8(Ljava/lang/String;)Ljdk/internal/org/objectweb/asm/ByteVector; @ 91
+Event: 2.846 Thread 0x67abc800 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaede2f2c method=sun.security.provider.SeedGenerator$ThreadedSeedGenerator.run()V @ 120
+Event: 7.773 Thread 0x697df400 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaedd0438 method=java.lang.String.equals(Ljava/lang/Object;)Z @ 27
+Event: 7.775 Thread 0x697df400 Uncommon trap: reason=unstable_if action=reinterpret pc=0xaedc4b54 method=java.lang.String.charAt(I)C @ 4
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (9 events):
+Event: 0.542 Thread 0xb650b800 Exception <a 'java/io/FileNotFoundException'> (0x6fc80438) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/prims/jni.cpp, line 605]
+Event: 0.778 Thread 0x697df400 Exception <a 'java/lang/ClassNotFoundException': sun/awt/resources/awtProvider> (0x6fb7b6b0) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 224]
+Event: 0.841 Thread 0x697df400 Exception <a 'java/io/FileNotFoundException'> (0x6fbb6820) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/prims/jni.cpp, line 605]
+Event: 0.842 Thread 0x697df400 Exception <a 'java/io/FileNotFoundException'> (0x6fbbdec0) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/prims/jni.cpp, line 605]
+Event: 1.399 Thread 0x697df400 Implicit null exception at 0xaedc51bf to 0xaedc5309
+Event: 1.593 Thread 0x697df400 Exception <a 'java/lang/ClassNotFoundException': com/sun/swing/internal/plaf/metal/resources/metalProvider> (0x6f95d7f8) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 224]
+Event: 1.614 Thread 0x697df400 Exception <a 'java/lang/ClassNotFoundException': com/sun/swing/internal/plaf/basic/resources/basicProvider> (0x6f960d78) thrown at [/build/openjdk-9-GMfJKp/openjdk-9-9~b114/src/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 224]
+Event: 1.678 Thread 0x697df400 Implicit null exception at 0xaedc463d to 0xaedc46aa
+Event: 1.716 Thread 0x697df400 Implicit null exception at 0xaedbed0b to 0xaedbed50
+
+Events (10 events):
+Event: 7.915 loading class sun/nio/cs/UTF_16$Decoder
+Event: 7.915 loading class sun/nio/cs/UnicodeDecoder
+Event: 7.915 loading class sun/nio/cs/UnicodeDecoder done
+Event: 7.915 loading class sun/nio/cs/UTF_16$Decoder done
+Event: 7.915 loading class sun/font/FileFontStrike
+Event: 7.916 loading class sun/font/FileFontStrike done
+Event: 7.916 loading class sun/font/FontScaler
+Event: 7.916 loading class sun/font/FontScaler done
+Event: 7.916 loading class sun/font/FreetypeFontScaler
+Event: 7.916 loading class sun/font/FreetypeFontScaler done
+
+
+Dynamic libraries:
+08048000-08049000 r-xp 00000000 08:01 2624381    /usr/lib/jvm/java-9-openjdk-i386/bin/java
+08049000-0804a000 r--p 00000000 08:01 2624381    /usr/lib/jvm/java-9-openjdk-i386/bin/java
+0804a000-0804b000 rw-p 00001000 08:01 2624381    /usr/lib/jvm/java-9-openjdk-i386/bin/java
+088be000-088df000 rw-p 00000000 00:00 0          [heap]
+67800000-67822000 rw-p 00000000 00:00 0 
+67822000-67900000 ---p 00000000 00:00 0 
+67900000-679cc000 rw-p 00000000 00:00 0 
+679cc000-67a00000 ---p 00000000 00:00 0 
+67a00000-67afd000 rw-p 00000000 00:00 0 
+67afd000-67b00000 ---p 00000000 00:00 0 
+67b00000-67b40000 rw-p 00000000 00:00 0 
+67b40000-67c00000 ---p 00000000 00:00 0 
+67c00000-67e00000 rw-p 00000000 00:00 0 
+67e00000-68000000 rw-p 00000000 00:00 0 
+68000000-680f3000 rw-p 00000000 00:00 0 
+680f3000-68100000 ---p 00000000 00:00 0 
+68139000-6813d000 ---p 00000000 00:00 0 
+6813d000-6818a000 rw-p 00000000 00:00 0 
+6818a000-6818e000 ---p 00000000 00:00 0 
+6818e000-681db000 rw-p 00000000 00:00 0 
+681db000-681de000 r--s 00000000 08:01 14421672   /var/cache/fontconfig/6aa41aa22e18b8fa06a12da28ea9c28b-le32d4.cache-6
+681de000-681e6000 r--s 00000000 08:01 14419747   /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le32d4.cache-6
+681e6000-681e8000 r--s 00000000 08:01 14428639   /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le32d4.cache-6
+681e8000-681ee000 r--s 00000000 08:01 14428638   /var/cache/fontconfig/a6d8cf8e4ec09cdbc8633c31745a07dd-le32d4.cache-6
+681ee000-681f2000 r--s 00000000 08:01 14425010   /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le32d4.cache-6
+681f2000-68201000 r--s 00000000 08:01 14425007   /var/cache/fontconfig/04aabc0a78ac019cf9454389977116d2-le32d4.cache-6
+68201000-68204000 r--s 00000000 08:01 14424988   /var/cache/fontconfig/385c0604a188198f04d133e54aba7fe7-le32d4.cache-6
+68204000-68208000 r--s 00000000 08:01 14424953   /var/cache/fontconfig/8801497958630a81b71ace7c5f9b32a8-le32d4.cache-6
+68208000-6820e000 r--s 00000000 08:01 14428681   /var/cache/fontconfig/bf3b770c553c462765856025a94f1ce6-le32d4.cache-6
+6820e000-68215000 r--s 00000000 08:01 14428636   /var/cache/fontconfig/52f7bdb7ce746bfd7eaa1985bd9cfa93-le32d4.cache-6
+68215000-68225000 r--s 00000000 08:01 14424939   /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le32d4.cache-6
+68225000-6823c000 r--s 00000000 08:01 14421634   /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le32d4.cache-6
+6825e000-68262000 ---p 00000000 00:00 0 
+68262000-683af000 rw-p 00000000 00:00 0 
+683af000-684af000 rw-p 00000000 00:00 0 
+684af000-684b3000 ---p 00000000 00:00 0 
+684b3000-68600000 rw-p 00000000 00:00 0 
+68600000-686f3000 rw-p 00000000 00:00 0 
+686f3000-68700000 ---p 00000000 00:00 0 
+68701000-6870a000 r--s 00000000 08:01 14419152   /var/cache/fontconfig/d589a48862398ed80a3d6066f4f56f4c-le32d4.cache-6
+6870a000-68714000 r--s 00000000 08:01 14418771   /var/cache/fontconfig/30829fa25452a46451e813d634d7f916-le32d4.cache-6
+68714000-68718000 ---p 00000000 00:00 0 
+68718000-68765000 rw-p 00000000 00:00 0 
+68765000-68769000 ---p 00000000 00:00 0 
+68769000-688b6000 rw-p 00000000 00:00 0 
+688b6000-688ba000 ---p 00000000 00:00 0 
+688ba000-68907000 rw-p 00000000 00:00 0 
+68907000-68930000 r-xp 00000000 08:01 7079363    /lib/i386-linux-gnu/libpng12.so.0.54.0
+68930000-68931000 r--p 00028000 08:01 7079363    /lib/i386-linux-gnu/libpng12.so.0.54.0
+68931000-68932000 rw-p 00029000 08:01 7079363    /lib/i386-linux-gnu/libpng12.so.0.54.0
+68932000-689dd000 r-xp 00000000 08:01 2496529    /usr/lib/i386-linux-gnu/libfreetype.so.6.12.1
+689dd000-689e1000 r--p 000aa000 08:01 2496529    /usr/lib/i386-linux-gnu/libfreetype.so.6.12.1
+689e1000-689e2000 rw-p 000ae000 08:01 2496529    /usr/lib/i386-linux-gnu/libfreetype.so.6.12.1
+689e2000-68aa4000 r-xp 00000000 08:01 2625753    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libfontmanager.so
+68aa4000-68aa6000 r--p 000c1000 08:01 2625753    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libfontmanager.so
+68aa6000-68aa7000 rw-p 000c3000 08:01 2625753    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libfontmanager.so
+68aa7000-68ba7000 rw-p 00000000 00:00 0 
+68ba7000-68bcb000 r-xp 00000000 08:01 2497469    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+68bcb000-68bcc000 r--p 00023000 08:01 2497469    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+68bcc000-68bcd000 rw-p 00024000 08:01 2497469    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+68bcd000-68d13000 r-xp 00000000 08:01 2496094    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+68d13000-68d14000 ---p 00146000 08:01 2496094    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+68d14000-68d15000 r--p 00146000 08:01 2496094    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+68d15000-68d17000 rw-p 00147000 08:01 2496094    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+68d17000-68d18000 rw-p 00000000 00:00 0 
+68d18000-68d6c000 r-xp 00000000 08:01 2625774    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt_xawt.so
+68d6c000-68d6d000 r--p 00053000 08:01 2625774    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt_xawt.so
+68d6d000-68d6f000 rw-p 00054000 08:01 2625774    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt_xawt.so
+68d6f000-68d70000 rw-p 00000000 00:00 0 
+68d70000-68e06000 r-xp 00000000 08:01 2625752    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt.so
+68e06000-68e07000 r--p 00095000 08:01 2625752    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt.so
+68e07000-68e0e000 rw-p 00096000 08:01 2625752    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libawt.so
+68e0e000-68e32000 rw-p 00000000 00:00 0 
+68e32000-68e36000 ---p 00000000 00:00 0 
+68e36000-68e83000 rw-p 00000000 00:00 0 
+68e83000-68e87000 ---p 00000000 00:00 0 
+68e87000-68ed4000 rw-p 00000000 00:00 0 
+68ed4000-68ed8000 ---p 00000000 00:00 0 
+68ed8000-68f25000 rw-p 00000000 00:00 0 
+68f25000-68f26000 ---p 00000000 00:00 0 
+68f26000-68fa6000 rw-p 00000000 00:00 0 
+68fa6000-68faa000 ---p 00000000 00:00 0 
+68faa000-68ff7000 rw-p 00000000 00:00 0 
+68ff7000-68ffb000 ---p 00000000 00:00 0 
+68ffb000-69209000 rw-p 00000000 00:00 0 
+69209000-6920d000 ---p 00000000 00:00 0 
+6920d000-6925a000 rw-p 00000000 00:00 0 
+6925a000-6925e000 ---p 00000000 00:00 0 
+6925e000-692db000 rw-p 00000000 00:00 0 
+692db000-692df000 ---p 00000000 00:00 0 
+692df000-6935c000 rw-p 00000000 00:00 0 
+6935c000-69360000 ---p 00000000 00:00 0 
+69360000-693dd000 rw-p 00000000 00:00 0 
+693dd000-693e1000 ---p 00000000 00:00 0 
+693e1000-6942e000 rw-p 00000000 00:00 0 
+6942e000-69432000 ---p 00000000 00:00 0 
+69432000-6947f000 rw-p 00000000 00:00 0 
+6947f000-6967f000 r--p 00000000 08:01 2490628    /usr/lib/locale/locale-archive
+6967f000-69680000 ---p 00000000 00:00 0 
+69680000-69700000 rw-p 00000000 00:00 0 
+69700000-697f2000 rw-p 00000000 00:00 0 
+697f2000-69800000 ---p 00000000 00:00 0 
+69800000-69805000 r--s 00000000 08:01 14424944   /var/cache/fontconfig/3047814df9a2f067bd2d96a2b9c36e5a-le32d4.cache-6
+69805000-6980d000 r--s 00000000 08:01 14424861   /var/cache/fontconfig/83bf95040141907cd45bb53cf7c1c148-le32d4.cache-6
+6980d000-69811000 ---p 00000000 00:00 0 
+69811000-69ca4000 rw-p 00000000 00:00 0 
+69ca4000-69caa000 ---p 00000000 00:00 0 
+69caa000-69cab000 ---p 00000000 00:00 0 
+69cab000-69d2b000 rw-p 00000000 00:00 0 
+69d2b000-69d2c000 ---p 00000000 00:00 0 
+69d2c000-69e9c000 rw-p 00000000 00:00 0 
+69e9c000-6ac34000 ---p 00000000 00:00 0 
+6ac34000-6ad24000 rw-p 00000000 00:00 0 
+6ad24000-6babc000 ---p 00000000 00:00 0 
+6babc000-6bada000 rw-p 00000000 00:00 0 
+6bada000-6bc8d000 ---p 00000000 00:00 0 
+6bc8d000-6bcab000 rw-p 00000000 00:00 0 
+6bcab000-6c02f000 ---p 00000000 00:00 0 
+6c02f000-6c04d000 rw-p 00000000 00:00 0 
+6c04d000-6c200000 ---p 00000000 00:00 0 
+6c200000-6fe00000 rw-p 00000000 00:00 0 
+6fe00000-a6400000 ---p 00000000 00:00 0 
+a6400000-a6401000 r--s 00000000 08:01 14425009   /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le32d4.cache-6
+a6401000-a640f000 r--s 00000000 08:01 14418240   /var/cache/fontconfig/9b89f8e3dae116d678bbf48e5f21f69b-le32d4.cache-6
+a640f000-a6419000 r--s 00000000 08:01 14685152   /home/alexander/.cache/fontconfig/8f02d4cb045bd6ce15663e43f347c9f8-le32d4.cache-6
+a6419000-a642a000 r-xp 00000000 08:01 2496119    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+a642a000-a642b000 r--p 00010000 08:01 2496119    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+a642b000-a642c000 rw-p 00011000 08:01 2496119    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+a642c000-a6430000 ---p 00000000 00:00 0 
+a6430000-a647d000 rw-p 00000000 00:00 0 
+a647d000-a647e000 ---p 00000000 00:00 0 
+a647e000-a64fe000 rw-p 00000000 00:00 0 
+a64fe000-a64ff000 ---p 00000000 00:00 0 
+a64ff000-a657f000 rw-p 00000000 00:00 0 
+a657f000-a6580000 ---p 00000000 00:00 0 
+a6580000-a6600000 rw-p 00000000 00:00 0 
+a6600000-a6621000 rw-p 00000000 00:00 0 
+a6621000-a6700000 ---p 00000000 00:00 0 
+a6700000-a6704000 r--s 00000000 08:01 14424941   /var/cache/fontconfig/b47c4e1ecd0709278f4910c18777a504-le32d4.cache-6
+a6704000-a670d000 r-xp 00000000 08:01 2496105    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+a670d000-a670e000 r--p 00008000 08:01 2496105    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+a670e000-a670f000 rw-p 00009000 08:01 2496105    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+a670f000-a6722000 r-xp 00000000 08:01 2496111    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+a6722000-a6723000 r--p 00012000 08:01 2496111    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+a6723000-a6724000 rw-p 00013000 08:01 2496111    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+a6724000-a677f000 rw-p 00000000 00:00 0 
+a677f000-a6780000 ---p 00000000 00:00 0 
+a6780000-a6800000 rw-p 00000000 00:00 0 
+a6800000-a68fc000 rw-p 00000000 00:00 0 
+a68fc000-a6900000 ---p 00000000 00:00 0 
+a6900000-a6902000 r--s 00000000 08:01 14424956   /var/cache/fontconfig/767a8244fc0220cfb567a839d0392e0b-le32d4.cache-6
+a6902000-a6907000 r-xp 00000000 08:01 2496113    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+a6907000-a6908000 r--p 00004000 08:01 2496113    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+a6908000-a6909000 rw-p 00005000 08:01 2496113    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+a6909000-a690e000 r-xp 00000000 08:01 2496109    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+a690e000-a690f000 r--p 00004000 08:01 2496109    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+a690f000-a6910000 rw-p 00005000 08:01 2496109    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+a6910000-a6911000 r--s 00000000 08:01 14424997   /var/cache/fontconfig/1ac9eb803944fde146138c791f5cc56a-le32d4.cache-6
+a6911000-a6914000 r--s 00000000 08:01 14424866   /var/cache/fontconfig/75114ca45c98e8a441da0ff356701271-le32d4.cache-6
+a6914000-a692d000 r--s 00000000 08:01 14685146   /home/alexander/.cache/fontconfig/467c019e582ee353435ea5c21d137ef6-le32d4.cache-6
+a692d000-a6942000 r-xp 00000000 08:01 2625754    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnet.so
+a6942000-a6943000 r--p 00014000 08:01 2625754    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnet.so
+a6943000-a6944000 rw-p 00015000 08:01 2625754    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnet.so
+a6944000-a697f000 rw-p 00000000 00:00 0 
+a697f000-a6980000 ---p 00000000 00:00 0 
+a6980000-a6a00000 rw-p 00000000 00:00 0 
+a6a00000-a6afc000 rw-p 00000000 00:00 0 
+a6afc000-a6b00000 ---p 00000000 00:00 0 
+a6b00000-a6c00000 rw-p 00000000 00:00 0 
+a6c00000-a6c01000 r--s 00000000 08:01 14424957   /var/cache/fontconfig/dc05db6664285cc2f12bf69c139ae4c3-le32d4.cache-6
+a6c01000-a6c02000 r--s 00000000 08:01 14424955   /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le32d4.cache-6
+a6c02000-a6c07000 r-xp 00000000 08:01 2496137    /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+a6c07000-a6c08000 r--p 00004000 08:01 2496137    /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+a6c08000-a6c09000 rw-p 00005000 08:01 2496137    /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+a6c09000-a6c7f000 rw-p 00000000 00:00 0 
+a6c7f000-a6c80000 ---p 00000000 00:00 0 
+a6c80000-a6d00000 rw-p 00000000 00:00 0 
+a6d00000-a6d21000 rw-p 00000000 00:00 0 
+a6d21000-a6e00000 ---p 00000000 00:00 0 
+a6e00000-a6e01000 r--s 00000000 08:01 14424952   /var/cache/fontconfig/bab58bb527bb656aaa9f116d68a48d89-le32d4.cache-6
+a6e01000-a6e02000 r--s 00000000 08:01 14424943   /var/cache/fontconfig/56cf4f4769d0f4abc89a4895d7bd3ae1-le32d4.cache-6
+a6e02000-a6e05000 r--s 00000000 08:01 14418811   /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le32d4.cache-6
+a6e05000-a6e0f000 r-xp 00000000 08:01 2496131    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+a6e0f000-a6e10000 r--p 00009000 08:01 2496131    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+a6e10000-a6e11000 rw-p 0000a000 08:01 2496131    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+a6e11000-a6e22000 r-xp 00000000 08:01 2625775    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnio.so
+a6e22000-a6e23000 r--p 00010000 08:01 2625775    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnio.so
+a6e23000-a6e24000 rw-p 00011000 08:01 2625775    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libnio.so
+a6e24000-a6e7f000 rw-p 00000000 00:00 0 
+a6e7f000-a6e80000 ---p 00000000 00:00 0 
+a6e80000-a6f00000 rw-p 00000000 00:00 0 
+a6f00000-a6f21000 rw-p 00000000 00:00 0 
+a6f21000-a7000000 ---p 00000000 00:00 0 
+a7000000-a7001000 r--s 00000000 08:01 14424942   /var/cache/fontconfig/b9d506c9ac06c20b433354fa67a72993-le32d4.cache-6
+a7001000-a7002000 r--s 00000000 08:01 14424938   /var/cache/fontconfig/551ecf3b0e8b0bca0f25c0944f561853-le32d4.cache-6
+a7002000-a7004000 r--s 00000000 08:01 14685154   /home/alexander/.cache/fontconfig/16326683038b281783a0ef8c680e3a10-le32d4.cache-6
+a7004000-a703f000 rw-p 00000000 00:00 0 
+a703f000-a7040000 ---p 00000000 00:00 0 
+a7040000-a70c0000 rw-p 00000000 00:00 0 
+a70c0000-a70c1000 ---p 00000000 00:00 0 
+a70c1000-a7146000 rw-p 00000000 00:00 0 
+a7146000-a722c000 ---p 00000000 00:00 0 
+a722c000-a7231000 rw-p 00000000 00:00 0 
+a7231000-a7317000 ---p 00000000 00:00 0 
+a7317000-a7557000 rwxp 00000000 00:00 0 
+a7557000-a7860000 ---p 00000000 00:00 0 
+a7860000-a7aa0000 rwxp 00000000 00:00 0 
+a7aa0000-aedbb000 ---p 00000000 00:00 0 
+aedbb000-aeffb000 rwxp 00000000 00:00 0 
+aeffb000-b6317000 ---p 00000000 00:00 0 
+b6317000-b64d2000 r--s 00000000 08:01 2625741    /usr/lib/jvm/java-9-openjdk-i386/lib/modules
+b64d2000-b64dd000 r-xp 00000000 08:01 7078250    /lib/i386-linux-gnu/libnss_files-2.23.so
+b64dd000-b64de000 r--p 0000a000 08:01 7078250    /lib/i386-linux-gnu/libnss_files-2.23.so
+b64de000-b64df000 rw-p 0000b000 08:01 7078250    /lib/i386-linux-gnu/libnss_files-2.23.so
+b64df000-b64e5000 rw-p 00000000 00:00 0 
+b64e5000-b64fc000 r-xp 00000000 08:01 7078246    /lib/i386-linux-gnu/libnsl-2.23.so
+b64fc000-b64fd000 r--p 00016000 08:01 7078246    /lib/i386-linux-gnu/libnsl-2.23.so
+b64fd000-b64fe000 rw-p 00017000 08:01 7078246    /lib/i386-linux-gnu/libnsl-2.23.so
+b64fe000-b6500000 rw-p 00000000 00:00 0 
+b6500000-b6600000 rw-p 00000000 00:00 0 
+b6600000-b6605000 rw-p 00000000 00:00 0 
+b6605000-b660b000 ---p 00000000 00:00 0 
+b660b000-b6616000 r-xp 00000000 08:01 7078236    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6616000-b6617000 r--p 0000a000 08:01 7078236    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6617000-b6618000 rw-p 0000b000 08:01 7078236    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6618000-b6619000 r--s 00000000 08:01 14424911   /var/cache/fontconfig/0c9eb80ebd1c36541ebe2852d3bb0c49-le32d4.cache-6
+b6619000-b661b000 r-xp 00000000 08:01 2496098    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b661b000-b661c000 r--p 00001000 08:01 2496098    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b661c000-b661d000 rw-p 00002000 08:01 2496098    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b661d000-b6622000 r-xp 00000000 08:01 2625764    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjimage.so
+b6622000-b6623000 r--p 00004000 08:01 2625764    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjimage.so
+b6623000-b6624000 rw-p 00005000 08:01 2625764    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjimage.so
+b6624000-b662b000 r-xp 00000000 08:01 2625760    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libzip.so
+b662b000-b662c000 r--p 00006000 08:01 2625760    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libzip.so
+b662c000-b662d000 rw-p 00007000 08:01 2625760    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libzip.so
+b662d000-b6635000 rw-s 00000000 08:01 13631512   /tmp/hsperfdata_alexander/16656
+b6635000-b665b000 r-xp 00000000 08:01 2625747    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjava.so
+b665b000-b665c000 r--p 00025000 08:01 2625747    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjava.so
+b665c000-b665d000 rw-p 00026000 08:01 2625747    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libjava.so
+b665d000-b6664000 r-xp 00000000 08:01 7078235    /lib/i386-linux-gnu/librt-2.23.so
+b6664000-b6665000 r--p 00006000 08:01 7078235    /lib/i386-linux-gnu/librt-2.23.so
+b6665000-b6666000 rw-p 00007000 08:01 7078235    /lib/i386-linux-gnu/librt-2.23.so
+b6666000-b666a000 ---p 00000000 00:00 0 
+b666a000-b66b7000 rw-p 00000000 00:00 0 
+b66b7000-b66d3000 r-xp 00000000 08:01 7079262    /lib/i386-linux-gnu/libgcc_s.so.1
+b66d3000-b66d4000 rw-p 0001b000 08:01 7079262    /lib/i386-linux-gnu/libgcc_s.so.1
+b66d4000-b6727000 r-xp 00000000 08:01 7078244    /lib/i386-linux-gnu/libm-2.23.so
+b6727000-b6728000 r--p 00052000 08:01 7078244    /lib/i386-linux-gnu/libm-2.23.so
+b6728000-b6729000 rw-p 00053000 08:01 7078244    /lib/i386-linux-gnu/libm-2.23.so
+b6729000-b6896000 r-xp 00000000 08:01 2492538    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.21
+b6896000-b6897000 ---p 0016d000 08:01 2492538    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.21
+b6897000-b689c000 r--p 0016d000 08:01 2492538    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.21
+b689c000-b689d000 rw-p 00172000 08:01 2492538    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.21
+b689d000-b68a0000 rw-p 00000000 00:00 0 
+b68a0000-b74cc000 r-xp 00000000 08:01 2761163    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/server/libjvm.so
+b74cc000-b7521000 r--p 00c2b000 08:01 2761163    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/server/libjvm.so
+b7521000-b753f000 rw-p 00c80000 08:01 2761163    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/server/libjvm.so
+b753f000-b7568000 rw-p 00000000 00:00 0 
+b7568000-b7581000 r-xp 00000000 08:01 7078245    /lib/i386-linux-gnu/libpthread-2.23.so
+b7581000-b7582000 r--p 00018000 08:01 7078245    /lib/i386-linux-gnu/libpthread-2.23.so
+b7582000-b7583000 rw-p 00019000 08:01 7078245    /lib/i386-linux-gnu/libpthread-2.23.so
+b7583000-b7585000 rw-p 00000000 00:00 0 
+b7585000-b7588000 r-xp 00000000 08:01 7078238    /lib/i386-linux-gnu/libdl-2.23.so
+b7588000-b7589000 r--p 00002000 08:01 7078238    /lib/i386-linux-gnu/libdl-2.23.so
+b7589000-b758a000 rw-p 00003000 08:01 7078238    /lib/i386-linux-gnu/libdl-2.23.so
+b758a000-b75a3000 r-xp 00000000 08:01 7079413    /lib/i386-linux-gnu/libz.so.1.2.8
+b75a3000-b75a4000 r--p 00018000 08:01 7079413    /lib/i386-linux-gnu/libz.so.1.2.8
+b75a4000-b75a5000 rw-p 00019000 08:01 7079413    /lib/i386-linux-gnu/libz.so.1.2.8
+b75a5000-b7754000 r-xp 00000000 08:01 7078239    /lib/i386-linux-gnu/libc-2.23.so
+b7754000-b7755000 ---p 001af000 08:01 7078239    /lib/i386-linux-gnu/libc-2.23.so
+b7755000-b7757000 r--p 001af000 08:01 7078239    /lib/i386-linux-gnu/libc-2.23.so
+b7757000-b7758000 rw-p 001b1000 08:01 7078239    /lib/i386-linux-gnu/libc-2.23.so
+b7758000-b775b000 rw-p 00000000 00:00 0 
+b775b000-b775c000 r--s 00000000 08:01 14685151   /home/alexander/.cache/fontconfig/e0aa53bcfa504e64f87823c16bc01eb6-le32d4.cache-6
+b775c000-b775d000 r--p 00000000 08:01 4329247    /usr/share/locale-langpack/en_GB/LC_MESSAGES/libc.mo
+b775d000-b775e000 r--p 002cc000 08:01 2490628    /usr/lib/locale/locale-archive
+b775e000-b7766000 r-xp 00000000 08:01 7078247    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b7766000-b7767000 r--p 00007000 08:01 7078247    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b7767000-b7768000 rw-p 00008000 08:01 7078247    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b7768000-b7769000 rw-p 00000000 00:00 0 
+b7769000-b776a000 r--p 00000000 00:00 0 
+b776a000-b7775000 r-xp 00000000 08:01 2625748    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libverify.so
+b7775000-b7776000 ---p 0000b000 08:01 2625748    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libverify.so
+b7776000-b7777000 r--p 0000b000 08:01 2625748    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libverify.so
+b7777000-b7778000 rw-p 0000c000 08:01 2625748    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/libverify.so
+b7778000-b7786000 r-xp 00000000 08:01 2761171    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/jli/libjli.so
+b7786000-b7787000 r--p 0000d000 08:01 2761171    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/jli/libjli.so
+b7787000-b7788000 rw-p 0000e000 08:01 2761171    /usr/lib/jvm/java-9-openjdk-i386/lib/i386/jli/libjli.so
+b7788000-b778a000 rw-p 00000000 00:00 0 
+b778a000-b778c000 r--p 00000000 00:00 0          [vvar]
+b778c000-b778d000 r-xp 00000000 00:00 0          [vdso]
+b778d000-b77af000 r-xp 00000000 08:01 7078229    /lib/i386-linux-gnu/ld-2.23.so
+b77af000-b77b0000 rw-p 00000000 00:00 0 
+b77b0000-b77b1000 r--p 00022000 08:01 7078229    /lib/i386-linux-gnu/ld-2.23.so
+b77b1000-b77b2000 rw-p 00023000 08:01 7078229    /lib/i386-linux-gnu/ld-2.23.so
+bf97b000-bf97c000 rwxp 00000000 00:00 0 
+bf9af000-bf9d0000 rw-p 00000000 00:00 0          [stack]
+
+VM Arguments:
+java_command: networking.Client Aaquib 4444 localhost
+java_class_path (initial): .
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/home/alexander/.cabal/bin:/opt/cabal/1.22/bin:/opt/ghc/8.0.1/bin:/home/alexander/bin:/home/alexander/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x9e08a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0x9e08a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x9e08a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x832630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x832630], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x9e08a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR2: [libjvm.so+0x832460], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x8328a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x8328a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x8328a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x8328a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.1 LTS"
+uname:Linux 4.4.0-62-generic #83-Ubuntu SMP Wed Jan 18 14:09:55 UTC 2017 i686
+libc:glibc 2.23 NPTL 2.23 
+rlimit: STACK 8192k, CORE 0k, NPROC 29411, NOFILE 65536, AS infinity
+load average:0.97 0.54 0.48
+
+/proc/meminfo:
+MemTotal:        3801784 kB
+MemFree:          225468 kB
+MemAvailable:    1106740 kB
+Buffers:          184652 kB
+Cached:          1221384 kB
+SwapCached:         2160 kB
+Active:          2303624 kB
+Inactive:        1111084 kB
+Active(anon):    1632412 kB
+Inactive(anon):   616120 kB
+Active(file):     671212 kB
+Inactive(file):   494964 kB
+Unevictable:          32 kB
+Mlocked:              32 kB
+HighTotal:       2944104 kB
+HighFree:          60208 kB
+LowTotal:         857680 kB
+LowFree:          165260 kB
+SwapTotal:       3855356 kB
+SwapFree:        3847132 kB
+Dirty:               124 kB
+Writeback:             0 kB
+AnonPages:       2006472 kB
+Mapped:           342304 kB
+Shmem:            239788 kB
+Slab:             112876 kB
+SReclaimable:      89240 kB
+SUnreclaim:        23636 kB
+KernelStack:        5312 kB
+PageTables:        14508 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     5756248 kB
+Committed_AS:    6410468 kB
+VmallocTotal:     122880 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+AnonHugePages:    892928 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       57336 kB
+DirectMap2M:      856064 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 37 stepping 5, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht, tsc, tscinvbit
+
+CPU Model and flags from /proc/cpuinfo:
+model name	: Intel(R) Core(TM) i3 CPU       M 370  @ 2.40GHz
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt lahf_lm tpr_shadow vnmi flexpriority ept vpid dtherm arat
+
+Memory: 4k page, physical 3801784k(225468k free), swap 3855356k(3847132k free)
+
+vm_info: OpenJDK Server VM (9-internal+0-2016-04-14-195526.buildd.src) for linux-x86 JRE (9-internal+0-2016-04-14-195526.buildd.src), built on Apr 14 2016 20:15:09 by "buildd" with gcc 5.3.1 20160413
+
+END.

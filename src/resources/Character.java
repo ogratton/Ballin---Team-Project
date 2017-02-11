@@ -30,7 +30,7 @@ public class Character extends Observable implements Collidable {
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
-	private boolean up, right, left, down, jump, punch, block, collided = false;
+	private boolean up, right, left, down, jump, punch, block, collided, falling, dead = false;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -56,7 +56,6 @@ public class Character extends Observable implements Collidable {
 	/**
 	 * Default character with default sprite
 	 */
-
 	public Character() {
 		this(default_mass, 0, 0, default_radius, Heading.N, Class.DEFAULT);
 	}
@@ -67,7 +66,6 @@ public class Character extends Observable implements Collidable {
 	 * @param c
 	 *            the class
 	 */
-
 	public Character(Class c) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.N, c);
 	}
@@ -141,7 +139,8 @@ public class Character extends Observable implements Collidable {
 
 		rollingFrame = 0;
 		directionFrame = 0;
-
+		falling = false;
+		dead = false;
 	}
 
 	/**
@@ -663,6 +662,22 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
+	 * Find out if character is set to fall.
+	 * @return falling
+	 */
+	public boolean isFalling() {
+		return falling;
+	}
+
+	/**
+	 * find out if character is dead.
+	 * Dead characters don't update. (for now)
+	 * @return
+	 */
+	public boolean isDead() {
+		return dead;
+	}
+	/**
 	 * Set the mass of a character
 	 * 
 	 * @param mass
@@ -797,5 +812,22 @@ public class Character extends Observable implements Collidable {
 	public Class getClassType() {
 		return this.classType;
 	}
+
+	/**
+	 * Change whether or not the character is falling.
+	 * @param falling
+	 */
+	public void setFalling(boolean falling) {
+		this.falling = falling;
+	}
+	
+	/**
+	 * Change whether or not the character is dead.
+	 * @param dead
+	 */
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+
 
 }

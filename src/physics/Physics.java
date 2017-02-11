@@ -7,13 +7,14 @@ import javax.swing.Timer;
 
 import resources.Character;
 import resources.Collidable;
+import resources.Map.Tile;
 import resources.Resources;
 import resources.Wall;
 
 public class Physics extends Thread implements ActionListener {
 	// dashing reduces stamina, speed multiplied by stamina.
 	private Timer timer;
-	private final int DELAY = 10; // ~1000ms /60 = 1/60 seconds
+	private final int DELAY = 10;
 
 	@Override
 	public void run() {
@@ -46,9 +47,9 @@ public class Physics extends Thread implements ActionListener {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
 						collide(c,d,cnd);
-						System.out.println("Collision!");
-						System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
-						System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
+						//System.out.println("Collision!");
+						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
+						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
 					}
 				}
 			}
@@ -60,7 +61,7 @@ public class Physics extends Thread implements ActionListener {
 				}
 				
 				// TODO correct positions (prevent clipping)
-				
+				//positionalCorrection(cnd);
 			}
 			
 		}
@@ -74,6 +75,35 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 */
 	private void update(Character c) {
+		// if dead, don't do anything (yet):
+		if(c.isDead()) {
+			return;
+		}
+		// find terrain type:
+		Tile t = Resources.map.tileAt(c.getX(),c.getY());
+		//check for falling.
+		if(t == null || t == Tile.ABYSS) c.setFalling(true);
+		if(c.isFalling()){
+			Tile t2 = Resources.map.tileAt(c.getX(), c.getY() - c.getRadius());
+			if(!(t2 == null || t2 == Tile.ABYSS)) { // at top of map
+				c.setY(c.getY() + (c.getRadius()/10));
+			}
+			t2 = Resources.map.tileAt(c.getX() - c.getRadius(), c.getY());
+			if(!(t2 == null || t2 == Tile.ABYSS)) { // at right of map
+				c.setX(c.getX() + (c.getRadius()/10));
+			}
+			t2 = Resources.map.tileAt(c.getX() + c.getRadius(), c.getY());
+			if(!(t2 == null || t2 == Tile.ABYSS)) { // at left of map
+				c.setX(c.getX() - (c.getRadius()/10));
+			}
+			t2 = Resources.map.tileAt(c.getX(), c.getY() + c.getRadius());
+			if(!(t2 == null || t2 == Tile.ABYSS)) { // at bottom of map
+				c.setY(c.getY() - (c.getRadius()/10));
+			}
+			//c.setRadius(c.getRadius() - 1);
+			//if(c.getRadius() > 3) c.setDead(true);
+			return; // falling people don't move.
+		}
 		// calculate speed
 		if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 			c.setDx(c.getDx() - c.getAcc());
@@ -94,14 +124,13 @@ public class Physics extends Thread implements ActionListener {
 		if (!c.isUp() && !c.isDown()) {
 			c.setDy(c.getDy() * Resources.map.getFriction());
 		}
-
+		
 		//calculate location
 		double x = c.getX() + c.getDx();
 		double y = c.getY() + c.getDy();
-
+		
 		c.setX(x);
 		c.setY(y);
-
 	}
 
 	private void collide(Collidable c, Collidable d, CND cnd) {
@@ -242,7 +271,7 @@ public class Physics extends Thread implements ActionListener {
 		/**
 		 * The depth of a collision.
 		 */
-		public double collisionDepth = 0;
+		public double collisionDepth = 0; // used for position correction - make sure you aren't sinking into a wall, etc.
 		
 	}
 	private class Vector {
