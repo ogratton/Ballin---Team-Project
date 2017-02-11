@@ -1,13 +1,11 @@
 package graphics;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import resources.Map;
 import resources.Character;
+import resources.Map;
 
 public class Graphics extends Thread {
 

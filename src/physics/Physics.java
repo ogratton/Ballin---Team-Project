@@ -46,9 +46,9 @@ public class Physics extends Thread implements ActionListener {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
 						collide(c,d,cnd);
-						System.out.println("Collision!");
-						System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
-						System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
+						//System.out.println("Collision!");
+						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
+						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
 					}
 				}
 			}

@@ -258,7 +258,6 @@ public class Map {
 			b = 0;
 			break;
 		case FLAT:
-			System.out.println("here!");
 			a = 1;
 			b = 0;
 			break;
@@ -303,9 +302,6 @@ public class Map {
 			b = 1;
 			break;
 		}
-
-		System.out.println(a * TILE_SIZE + TILE_SIZE);
-		System.out.println(tileSet.getWidth());
 
 		return Sprite.getSprite(tileSet, a, b, TILE_SIZE, TILE_SIZE);
 
