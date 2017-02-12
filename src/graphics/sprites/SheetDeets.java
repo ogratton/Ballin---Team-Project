@@ -113,8 +113,8 @@ public class SheetDeets {
 
 	public static final int TILES_COLS = 6;
 	public static final int TILES_ROWS = 3;
-	public static final int TILES_SIZEX = 75;
-	public static final int TILES_SIZEY = 75;
+	public static final int TILES_SIZEX = 25;
+	public static final int TILES_SIZEY = 25;
 
 	public static final SpriteSheet TILES = new SpriteSheet(Sprite.SheetType.TILE, TILES_NAME, TILES_ROWS,
 			TILES_COLS, TILES_SIZEX, TILES_SIZEY, null);

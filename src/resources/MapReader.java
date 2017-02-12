@@ -25,17 +25,24 @@ public class MapReader
 	public MapReader()
 	{
 		tileDict = new Hashtable<String, Map.Tile>();
-		tileDict.put("0", Map.Tile.ABYSS);
-		tileDict.put("1", Map.Tile.FLAT);
-		tileDict.put("2", Map.Tile.EDGE_N);
-		tileDict.put("3", Map.Tile.EDGE_NE);
-		tileDict.put("4", Map.Tile.EDGE_E);
-		tileDict.put("5", Map.Tile.EDGE_SE);
-		tileDict.put("6", Map.Tile.EDGE_S);
-		tileDict.put("7", Map.Tile.EDGE_SW);
-		tileDict.put("8", Map.Tile.EDGE_W);
-		tileDict.put("9", Map.Tile.EDGE_NW);
-		tileDict.put("a", Map.Tile.EDGE_ABYSS);
+		tileDict.put("a", Map.Tile.ABYSS);
+		tileDict.put("b", Map.Tile.FLAT);
+		tileDict.put("c", Map.Tile.EDGE_N);
+		tileDict.put("d", Map.Tile.EDGE_E);
+		tileDict.put("e", Map.Tile.EDGE_S);
+		tileDict.put("f", Map.Tile.EDGE_W);
+		tileDict.put("g", Map.Tile.EDGE_NE);
+		tileDict.put("h", Map.Tile.EDGE_SE);
+		tileDict.put("i", Map.Tile.EDGE_SW);
+		tileDict.put("j", Map.Tile.EDGE_NW);
+		tileDict.put("k", Map.Tile.EDGE_NS);
+		tileDict.put("l", Map.Tile.EDGE_EW);
+		tileDict.put("m", Map.Tile.EDGE_NES);
+		tileDict.put("n", Map.Tile.EDGE_ESW);
+		tileDict.put("o", Map.Tile.EDGE_SWN);
+		tileDict.put("p", Map.Tile.EDGE_WNE);
+		tileDict.put("q", Map.Tile.EDGE_NESW);
+		tileDict.put("r", Map.Tile.EDGE_ABYSS);
 	}
 	
 	/**

@@ -53,7 +53,6 @@ public class Map {
 	};
 
 	private Tile[][] tiles;
-	private final int TILE_SIZE = 75;
 	private World world;
 	private BufferedImage tileSet;
 
@@ -239,7 +238,7 @@ public class Map {
 	 */
 
 	public int getTileSize() {
-		return this.TILE_SIZE;
+		return SheetDeets.TILES_SIZEX;
 	}
 
 	/**
@@ -334,7 +333,7 @@ public class Map {
 			break;	
 		}
 
-		return Sprite.getSprite(tileSet, a, b, TILE_SIZE, TILE_SIZE);
+		return Sprite.getSprite(tileSet, a, b, SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);
 
 	}
 
@@ -357,8 +356,8 @@ public class Map {
 	 */
 	public Tile tileAt(double x, double y) {
 		//TODO fix this. (what's wrong with it? AAAAAAH!)
-		int column = (int)x/TILE_SIZE;
-		int row = (int)y/TILE_SIZE;
+		int column = (int)(x/SheetDeets.TILES_SIZEX);
+		int row = (int)(y/SheetDeets.TILES_SIZEY);
 		//may crash if tiles not initialised.
 		//check if column,row is in the tile array:
 		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {

@@ -52,7 +52,7 @@ public class PhysicsWithGraphicsDemo {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/template.csv");
 			System.out.println("I guess it worked then");
 		}
 		catch (IOException e)
