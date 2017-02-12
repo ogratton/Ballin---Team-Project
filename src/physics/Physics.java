@@ -77,6 +77,7 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		if(c.isDead()) {
+			// System.out.println("DEAD");
 			return;
 		}
 		// find terrain type:
@@ -84,6 +85,7 @@ public class Physics extends Thread implements ActionListener {
 		//check for falling.
 		if(t == null || t == Tile.ABYSS) c.setFalling(true);
 		if(c.isFalling()){
+			// System.out.println("FALLING");
 			Tile t2 = Resources.map.tileAt(c.getX(), c.getY() - c.getRadius());
 			if(!(t2 == null || t2 == Tile.ABYSS)) { // at top of map
 				c.setY(c.getY() + (c.getRadius()/10));
@@ -103,6 +105,18 @@ public class Physics extends Thread implements ActionListener {
 			//c.setRadius(c.getRadius() - 1);
 			//if(c.getRadius() > 3) c.setDead(true);
 			return; // falling people don't move.
+		}
+		if (c.isDashing() && !c.isBlocking()) {
+			dash(c);
+			move(c);
+			// don't allow any other inputs
+			return;
+		}
+		if (c.isBlocking() && !c.isDashing()) {
+			block(c);
+			move(c);
+			// don't allow any other inputs
+			return;
 		}
 		// calculate speed
 		if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
@@ -124,7 +138,10 @@ public class Physics extends Thread implements ActionListener {
 		if (!c.isUp() && !c.isDown()) {
 			c.setDy(c.getDy() * Resources.map.getFriction());
 		}
-		
+		move(c);
+	}
+	
+	private void move(Character c) {
 		//calculate location
 		double x = c.getX() + c.getDx();
 		double y = c.getY() + c.getDy();
@@ -252,6 +269,54 @@ public class Physics extends Thread implements ActionListener {
 		
 		
 		return cnd;
+	}
+	
+	private void dash(Character c) {
+		/*
+		if (c.getDashTimer() == 0) {
+			System.out.println("DASHING");
+			System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
+		}
+		*/
+		double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
+		double velInc = (2 * c.getMaxDx()) / maxDxDy;
+		c.setDx(c.getDx() * velInc);
+		c.setDy(c.getDy() * velInc);
+		//System.out.println(maxDxDy);
+		c.incrementDashTimer();
+		
+		if (c.getDashTimer() >= 25) {
+			//System.out.println("DONE DASHING");
+			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
+			maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
+			velInc = (c.getMaxDx()) / maxDxDy;
+			c.setDx(c.getDx() * velInc);
+			c.setDy(c.getDy() * velInc);
+			//System.out.println("Reducing speed to: " + c.getDx() + ", " + c.getDy());
+			c.setDashing(false);
+			c.resetDashTimer();
+		}
+	}
+	
+	private void block(Character c) {
+		// Start blocking - increase mass
+		if (c.getBlockTimer() == 0) {
+			//System.out.println("BLOCKING");
+			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
+			c.setMass(c.getMass() * 10);
+		}
+		c.incrementBlockTimer();
+		// Decrease speed - should instantly stop to avoid abuse of blocking?
+		c.setDx(c.getDx() * 0.95 * Resources.map.getFriction());
+		c.setDy(c.getDy() * 0.95 * Resources.map.getFriction());
+		// Stop blocking - revert changes to mass
+		if (c.getBlockTimer() >= 25) {
+			//System.out.println("DONE BLOCKING");
+			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
+			c.setBlocking(false);
+			c.resetBlockTimer();
+			c.setMass(c.getMass() / 10);
+		}
 	}
 	
 	/**

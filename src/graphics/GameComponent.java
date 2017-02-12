@@ -197,9 +197,22 @@ public class GameComponent extends JFrame implements ActionListener {
 			case KeyEvent.VK_RIGHT:
 				characters.get(1).setRight(true);
 				break;
+			case KeyEvent.VK_SHIFT:
+				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+					characters.get(0).setDashing(true);
+				} else {
+					characters.get(1).setDashing(true);
+				}
+				break;
+			case KeyEvent.VK_CONTROL:
+				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+					characters.get(0).setBlocking(true);
+				} else {
+					characters.get(1).setBlocking(true);
+				}
+				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
-
 			}
 		}
 	}

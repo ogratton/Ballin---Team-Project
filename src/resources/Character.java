@@ -30,7 +30,7 @@ public class Character extends Observable implements Collidable {
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
-	private boolean up, right, left, down, jump, punch, block, collided, falling, dead = false;
+	private boolean up, right, left, down, jump, punch, block, collided, falling, dead, dashing, blocking = false;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -52,6 +52,9 @@ public class Character extends Observable implements Collidable {
 	private ArrayList<BufferedImage> rollingSprites, directionSprites;
 	private int rollingFrame, directionFrame;
 	private boolean moving;
+	
+	// So we can control how long a character dashes/blocks for
+	private int dashTimer, blockTimer = 0;
 
 	/**
 	 * Default character with default sprite
@@ -674,6 +677,7 @@ public class Character extends Observable implements Collidable {
 
 	public void setMass(double mass) {
 		this.mass = mass;
+		this.inv_mass = 1 / mass;
 	}
 
 	/**
@@ -817,5 +821,83 @@ public class Character extends Observable implements Collidable {
 		this.dead = dead;
 	}
 
+	/**
+	 * Change whether or not the character is dashing.
+	 * @param dashing
+	 */
+	public void setDashing(boolean dashing) {
+		this.dashing = dashing;
+	}
+	
+	/**
+	 * Returns true if the character is dashing.
+	 * 
+	 * @return dashing
+	 */
+	public boolean isDashing() {
+		return this.dashing;
+	}
 
+	/**
+	 * Returns the current dash timer for this character.
+	 * 
+	 * @return dashTimer
+	 */
+	public int getDashTimer() {
+		return dashTimer;
+	}
+
+	/**
+	 * Increments the dash timer by 1.
+	 */
+	public void incrementDashTimer() {
+		this.dashTimer += 1;
+	}
+	
+	/**
+	 * Resets the dash timer to 0;
+	 */
+	public void resetDashTimer() {
+		this.dashTimer = 0;
+	}
+	
+	/**
+	 * Change whether or not the character is blocking.
+	 * @param blocking
+	 */
+	public void setBlocking(boolean blocking) {
+		this.blocking = blocking;
+	}
+	
+	/**
+	 * Returns true if the character is blocking.
+	 * 
+	 * @return blocking
+	 */
+	public boolean isBlocking() {
+		return this.blocking;
+	}
+
+	/**
+	 * Returns the current blocking timer for this character.
+	 * 
+	 * @return blockTimer
+	 */
+	public int getBlockTimer() {
+		return blockTimer;
+	}
+
+	/**
+	 * Increments the block timer by 1.
+	 */
+	public void incrementBlockTimer() {
+		this.blockTimer += 1;
+	}
+	
+	/**
+	 * Resets the block timer to 0;
+	 */
+	public void resetBlockTimer() {
+		this.blockTimer = 0;
+	}
 }

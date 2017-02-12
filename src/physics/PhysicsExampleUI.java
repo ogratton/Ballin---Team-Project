@@ -36,23 +36,25 @@ public class PhysicsExampleUI extends JFrame {
 	
 	public static void main(String[] args) {
 		// init character and map
-		Resources.players = new Character[3];
-		Resources.players[0] = new Character(Character.Class.DEFAULT);
-		Resources.players[0].setX(535);
-		Resources.players[0].setY(600);
-		//Resources.players[0].setMass(1000); // very fun. Game mode?
+		Character A = new Character(Character.Class.DEFAULT);
+		A.setX(535);
+		A.setY(600);
 		
-		Resources.players[1] = new Character(Character.Class.DEFAULT);
-		Resources.players[1].setX(500);
-		Resources.players[1].setY(500);
-		Resources.players[1].setRadius(30);
-		Resources.players[1].setMass(2);
+		Character B = new Character(Character.Class.DEFAULT);
+		B.setX(500);
+		B.setY(500);
+		B.setRadius(30);
+		B.setMass(2);
 		
-		Resources.players[2] = new Character(Character.Class.DEFAULT);
-		Resources.players[2].setX(570); // for clipping test, set to ~540, else 570 is out of range of it's twin.
-		Resources.players[2].setY(500);
-		Resources.players[2].setRadius(30);
-		Resources.players[2].setMass(2);
+		Character C = new Character(Character.Class.DEFAULT);
+		C.setX(570); // for clipping test, set to ~540, else 570 is out of range of its twin.
+		C.setY(500);
+		C.setRadius(30);
+		C.setMass(2);
+		
+		Resources.playerList.add(A);
+		Resources.playerList.add(B);
+		Resources.playerList.add(C);
 		
 		Resources.map = new Map(950, 550); // smaller than screen (this will allow for falling off the edge)
 		Resources.map.getOrigin().setLocation(50.0, 50.0);
@@ -100,7 +102,7 @@ class Panel extends JPanel implements ActionListener {
 		Graphics2D g2d = (Graphics2D) g;
 		//System.out.println(Resources.players[0].x() + ", " + Resources.players[0].y());
 		g2d.setColor(Color.RED);
-		for (Character player : Resources.players) {
+		for (Character player : Resources.playerList) {
 			g2d.drawOval((int) (player.getX()-player.getRadius()), (int) (player.getY()-player.getRadius()), player.getRadius()*2, player.getRadius()*2);
 			g2d.fillOval((int) (player.getX()-player.getRadius()), (int) (player.getY()-player.getRadius()), player.getRadius()*2, player.getRadius()*2);
 			g2d.setColor(Color.GREEN);
@@ -117,56 +119,68 @@ class Panel extends JPanel implements ActionListener {
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_A) {
-				Resources.players[0].setLeft(false);
+				Resources.playerList.get(0).setLeft(false);
 			}
 			if (key == KeyEvent.VK_D) {
-				Resources.players[0].setRight(false);
+				Resources.playerList.get(0).setRight(false);
 			}
 			if (key == KeyEvent.VK_W) {
-				Resources.players[0].setUp(false);
+				Resources.playerList.get(0).setUp(false);
 			}
 			if (key == KeyEvent.VK_S) {
-				Resources.players[0].setDown(false);
+				Resources.playerList.get(0).setDown(false);
 			}		
 			if (key == KeyEvent.VK_LEFT) {
-				Resources.players[1].setLeft(false);
+				Resources.playerList.get(1).setLeft(false);
 			}
 			if (key == KeyEvent.VK_RIGHT) {
-				Resources.players[1].setRight(false);
+				Resources.playerList.get(1).setRight(false);
 			}
 			if (key == KeyEvent.VK_UP) {
-				Resources.players[1].setUp(false);
+				Resources.playerList.get(1).setUp(false);
 			}
 			if (key == KeyEvent.VK_DOWN) {
-				Resources.players[1].setDown(false);
+				Resources.playerList.get(1).setDown(false);
 			}
 		}
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_A) {
-				Resources.players[0].setLeft(true);
+				Resources.playerList.get(0).setLeft(true);
 			}
 			if (key == KeyEvent.VK_D) {
-				Resources.players[0].setRight(true);
+				Resources.playerList.get(0).setRight(true);
 			}
 			if (key == KeyEvent.VK_W) {
-				Resources.players[0].setUp(true);
+				Resources.playerList.get(0).setUp(true);
 			}
 			if (key == KeyEvent.VK_S) {
-				Resources.players[0].setDown(true);
-			}	
+				Resources.playerList.get(0).setDown(true);
+			}		
 			if (key == KeyEvent.VK_LEFT) {
-				Resources.players[1].setLeft(true);
+				Resources.playerList.get(1).setLeft(true);
 			}
 			if (key == KeyEvent.VK_RIGHT) {
-				Resources.players[1].setRight(true);
+				Resources.playerList.get(1).setRight(true);
 			}
 			if (key == KeyEvent.VK_UP) {
-				Resources.players[1].setUp(true);
+				Resources.playerList.get(1).setUp(true);
 			}
 			if (key == KeyEvent.VK_DOWN) {
-				Resources.players[1].setDown(true);
+				Resources.playerList.get(1).setDown(true);
+			}
+			if (key == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+				Resources.playerList.get(0).setDashing(true);
+			}
+			if (key == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
+				Resources.playerList.get(1).setDashing(true);
+			}
+			if (key == KeyEvent.VK_CONTROL && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+				Resources.playerList.get(0).setBlocking(true);
+			}
+			if (key == KeyEvent.VK_CONTROL && e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
+				Resources.playerList.get(1).setBlocking(true);
 			}
 		}
 	}
