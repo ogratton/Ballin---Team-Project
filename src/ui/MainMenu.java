@@ -236,6 +236,7 @@ public class MainMenu extends JFrame {
 		soundSlider.setFont(font.deriveFont((float) 16));
 		soundSlider.addChangeListener(e ->{
 	        int volume = soundSlider.getValue();
+	     // TODO: set Resources.sfx_gain instead of this --Oliver
 	        if(volume == 0)
 	        	audioPlayer.setGain(-80);
 	        else

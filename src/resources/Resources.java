@@ -22,6 +22,11 @@ public class Resources {
 	public static int left = KeyEvent.VK_A;
 	public static int right = KeyEvent.VK_D;
 
+	// sound effect "volume" (0 is normal)
+	// can be as negative as you like but no larger than about 10 I think
+	// let's just agree to have 0 as the max
+	public static int sfx_gain = 0;
+	
 	// what number player am I?
 	public static int me = -1;
 	

@@ -10,6 +10,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import resources.Resources;
 
 /**
  * A single audio file
@@ -99,9 +100,9 @@ public class AudioFile implements LineListener
 	{
 		if (playState != PlayState.PLAYING)
 		{
-			gainControl.setValue(gain);
+			int offset = Resources.sfx_gain < 0 ? Resources.sfx_gain : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+			gainControl.setValue(gain + offset); 
 			clip.start();
-			//playing = true;
 			playState = PlayState.PLAYING;
 		}
 	}
