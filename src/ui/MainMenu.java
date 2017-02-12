@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 
 import audio.AudioFile;
 import audio.MusicPlayer;
+import resources.Resources;
 
 public class MainMenu extends JFrame {
 
@@ -38,11 +39,11 @@ public class MainMenu extends JFrame {
 		frame.setVisible(true);
 		musicPlayer = new MusicPlayer("pokemon");
 		musicPlayer.run();
-		audioPlayer = new AudioFile(".resources/audio/ding.wav", "Ding");
+		//audioPlayer = new AudioFile(".resources/audio/ding.wav", "Ding");
 	}
 
 	private static MusicPlayer musicPlayer;
-	private static AudioFile audioPlayer;
+	//private AudioFile audioPlayer;
 	private static boolean isPressed;
 	private static ViewState viewState = ViewState.USERNAME_STATE;
 	private final static Font font = makeFont(20);
@@ -189,7 +190,9 @@ public class MainMenu extends JFrame {
 		button.addActionListener(e ->{
 			username = textField.getText();
 			viewState = ViewState.MAINMENU_STATE;
+			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
 			audioPlayer.play();
+			audioPlayer.setGain(Resources.sfx_gain);
 			changeState(panel);
 		});
 		
@@ -302,11 +305,10 @@ public class MainMenu extends JFrame {
 		soundSlider.setFont(font.deriveFont((float) 16));
 		soundSlider.addChangeListener(e ->{
 	        int volume = soundSlider.getValue();
-	     // TODO: set Resources.sfx_gain instead of this --Oliver
 	        if(volume == 0)
-	        	audioPlayer.setGain(-80);
+	        	Resources.sfx_gain = -80;
 	        else
-	        	audioPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
+	        	Resources.sfx_gain = (int) ((VOL_MAX - volume) * (-0.33));
 		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
