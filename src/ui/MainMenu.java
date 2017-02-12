@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
+import java.net.InetAddress;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 
 import audio.AudioFile;
 import audio.MusicPlayer;
@@ -30,23 +31,29 @@ public class MainMenu extends JFrame {
 		frame.setName("Main Menu");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(false);
-		frame.setSize(400, 600);
+		frame.setSize(frameSize);
 		frame.setLocation((getScreenWorkingWidth() - frame.getWidth()) / 2,
 				(getScreenWorkingHeight() - frame.getHeight()) / 2);
-		frame.add(mainMenuPanel());
+		frame.add(getUsername());
 		frame.setVisible(true);
 		musicPlayer = new MusicPlayer("pokemon");
 		musicPlayer.run();
+		audioPlayer = new AudioFile(".resources/audio/ding.wav", "Ding");
 	}
 
-	static MusicPlayer musicPlayer;
-	static AudioFile audioPlayer;
-	static boolean isPressed;
-	private static ViewState viewState = ViewState.MAINMENU_STATE;
-	final static Font font = makeFont(20);
+	private static MusicPlayer musicPlayer;
+	private static AudioFile audioPlayer;
+	private static boolean isPressed;
+	private static ViewState viewState = ViewState.USERNAME_STATE;
+	private final static Font font = makeFont(20);
+	public static String username;
+	private static Dimension frameSize = new Dimension(500, 700);
+	public static InetAddress hostname;
+	public static int port;
+	
 
 	public enum ViewState {
-		MAINMENU_STATE, OPTIONS_STATE;
+		MAINMENU_STATE, OPTIONS_STATE, USERNAME_STATE;
 	}
 
 	public static int getScreenWorkingWidth() {
@@ -60,12 +67,9 @@ public class MainMenu extends JFrame {
 	private static Font makeFont(int size) {
 		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
 		try {
-			// create the font to use. Specify the size!
 			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf")).deriveFont((float)size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			// register the font
 			ge.registerFont(customFont);
-			//return customFont;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -150,15 +154,59 @@ public class MainMenu extends JFrame {
 			panel.revalidate();
 			panel.repaint();
 			break;
+		case USERNAME_STATE:
+			panel.removeAll();
+			panel.add(getUsername());
+			panel.revalidate();
+			panel.repaint();
+			break;
 		default:
 			System.out.println("UNKNOWN STATE!");
 			break;
 		}
 	}
 
+	public static JPanel getUsername(){
+		JPanel panel = new JPanel();
+		
+		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
+		panel.setLayout(box);
+		
+		JLabel label = new JLabel("Insert your username:");
+		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		label.setFont(font.deriveFont((float) 25));
+		
+		
+		JTextField textField = new JTextField();
+		textField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+		textField.setMaximumSize(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
+		textField.setFont(font);
+		
+		JButton button = new JButton("Ok");
+		button.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		button.setFont(font);
+		button.setMaximumSize(new Dimension((int)(frameSize.getWidth()*0.6), (int)(frameSize.getHeight()*0.1)));
+		button.addActionListener(e ->{
+			username = textField.getText();
+			viewState = ViewState.MAINMENU_STATE;
+			audioPlayer.play();
+			changeState(panel);
+		});
+		
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.2))));
+		panel.add(label);
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
+		panel.add(textField);
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(button);
+		
+		return panel;
+	}
+	
 	public static JPanel mainMenuPanel() {
+		System.out.println(username);
 
-		Dimension buttonSize = new Dimension(250, 100);
+		Dimension buttonSize = new Dimension(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
 
 		JPanel panel = new JPanel();
 
@@ -173,6 +221,22 @@ public class MainMenu extends JFrame {
 		startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
+		startButton.addActionListener(e ->{
+			try {
+				hostname = InetAddress.getLocalHost();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		
+		JButton changeUsername = new JButton("Change Username");
+		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		changeUsername.setMaximumSize(buttonSize);
+		changeUsername.setFont(font);
+		changeUsername.addActionListener(e ->{
+			viewState = ViewState.USERNAME_STATE;
+			changeState(panel);
+		});
 
 		JButton optionsButton = new JButton("Options");
 		optionsButton.addActionListener(e -> {
@@ -194,13 +258,15 @@ public class MainMenu extends JFrame {
 		JPanel empty = new JPanel();
 		empty.setSize(500, 100);
 
-		panel.add(Box.createRigidArea(new Dimension(0, 50)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.1))));
 		panel.add(gameTitle);
-		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.1))));
 		panel.add(startButton);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(changeUsername);
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(optionsButton);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(exitButton);
 
 		return panel;
@@ -236,6 +302,7 @@ public class MainMenu extends JFrame {
 		soundSlider.setFont(font.deriveFont((float) 16));
 		soundSlider.addChangeListener(e ->{
 	        int volume = soundSlider.getValue();
+	     // TODO: set Resources.sfx_gain instead of this --Oliver
 	        if(volume == 0)
 	        	audioPlayer.setGain(-80);
 	        else
@@ -307,19 +374,19 @@ public class MainMenu extends JFrame {
 		controlsPanel.add(moveRight);
 
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(back);
-		panel.add(Box.createRigidArea(new Dimension(0, 20)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
 		panel.add(soundLabel);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(soundSlider);
-		panel.add(Box.createRigidArea(new Dimension(0, 20)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
 		panel.add(musicLabel);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(musicSlider);
-		panel.add(Box.createRigidArea(new Dimension(0, 20)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
 		panel.add(controlsLabel);
-		panel.add(Box.createRigidArea(new Dimension(0, 10)));
+		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
 		panel.add(controlsPanel);
 
 		return panel;
