@@ -88,16 +88,23 @@ public class SheetDeets {
 	 * 0: Abyss
 	 * 1: Flat
 	 * 2: Edge N
-	 * 3: Edge NE
-	 * 4: Edge E
-	 * 5: Edge SE
+	 * 3: Edge E
+	 * 4: Edge S
+	 * 5: Edge W
 	 * Row 1:
-	 * 0: Edge S
-	 * 1: Edge SW
-	 * 2: Edge W
+	 * 0: Edge NE
+	 * 1: Edge SE
+	 * 2: Edge SW
 	 * 3: Edge NW
-	 * 4: Edge S Abyss
-	 * 5: Test
+	 * 4: Edge NS
+	 * 5: Edge EW
+	 * Row 2:
+	 * 0: Edge NES
+	 * 1: Edge ESW
+	 * 2: Edge SWN
+	 * 3: Edge WNE
+	 * 4: Edge NESW
+	 * 5: Edge Abyss
 	 */
 	
 	// test hex
@@ -105,7 +112,7 @@ public class SheetDeets {
 	public static final String TILES_NAME = "tiles";
 
 	public static final int TILES_COLS = 6;
-	public static final int TILES_ROWS = 2;
+	public static final int TILES_ROWS = 3;
 	public static final int TILES_SIZEX = 75;
 	public static final int TILES_SIZEY = 75;
 

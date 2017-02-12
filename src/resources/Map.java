@@ -34,7 +34,14 @@ public class Map {
 	// private ArrayList<PowerUp> powerups;
 
 	public enum Tile {
-		ABYSS, FLAT, EDGE_N, EDGE_NE, EDGE_E, EDGE_SE, EDGE_S, EDGE_SW, EDGE_W, EDGE_NW, EDGE_ABYSS, TEST,
+		ABYSS, 									// tile players can fall in
+		FLAT, 									// normal tile
+		EDGE_N, EDGE_E, EDGE_S, EDGE_W, 		// tiles with one edge
+		EDGE_NE, EDGE_SE, EDGE_SW, EDGE_NW, 	// tiles with two edges, continuous
+		EDGE_NS, EDGE_EW, 						// tiles with two edges, opposite
+		EDGE_NES, EDGE_ESW, EDGE_SWN, EDGE_WNE, // tiles with three edges
+		EDGE_NESW, 								// tiles with four edges
+		EDGE_ABYSS, 							// tile representing the 'front' on the arena
 	};
 
 	/**
@@ -265,27 +272,27 @@ public class Map {
 			a = 2;
 			b = 0;
 			break;
-		case EDGE_NE:
+		case EDGE_E:
 			a = 3;
 			b = 0;
 			break;
-		case EDGE_E:
+		case EDGE_S:
 			a = 4;
 			b = 0;
 			break;
-		case EDGE_SE:
+		case EDGE_W:
 			a = 5;
 			b = 0;
 			break;
-		case EDGE_S:
-			a = 1;
-			b = 0;
+		case EDGE_NE:
+			a = 0;
+			b = 1;
 			break;
-		case EDGE_SW:
+		case EDGE_SE:
 			a = 1;
 			b = 1;
 			break;
-		case EDGE_W:
+		case EDGE_SW:
 			a = 2;
 			b = 1;
 			break;
@@ -293,14 +300,38 @@ public class Map {
 			a = 3;
 			b = 1;
 			break;
-		case EDGE_ABYSS:
+		case EDGE_NS:
 			a = 4;
 			b = 1;
 			break;
-		case TEST:
+		case EDGE_EW:
 			a = 5;
 			b = 1;
 			break;
+		case EDGE_NES:
+			a = 0;
+			b = 2;
+			break;
+		case EDGE_ESW:
+			a = 1;
+			b = 2;
+			break;
+		case EDGE_SWN:
+			a = 2;
+			b = 2;
+			break;
+		case EDGE_WNE:
+			a = 3;
+			b = 2;
+			break;
+		case EDGE_NESW:
+			a = 4;
+			b = 2;
+			break;
+		case EDGE_ABYSS:
+			a = 5;
+			b = 2;
+			break;	
 		}
 
 		return Sprite.getSprite(tileSet, a, b, TILE_SIZE, TILE_SIZE);
@@ -333,7 +364,7 @@ public class Map {
 		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
 			return tiles[column][row];
 		}
-		System.out.println("not in tile array");
+		//System.out.println("not in tile array");
 		return null;
 	}
 }

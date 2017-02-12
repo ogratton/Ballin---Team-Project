@@ -36,7 +36,6 @@ public class MapReader
 		tileDict.put("8", Map.Tile.EDGE_W);
 		tileDict.put("9", Map.Tile.EDGE_NW);
 		tileDict.put("a", Map.Tile.EDGE_ABYSS);
-		tileDict.put("b", Map.Tile.TEST);
 	}
 	
 	/**

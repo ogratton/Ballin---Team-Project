@@ -181,7 +181,6 @@ public class Character extends Observable implements Collidable {
 		
 		switch (classType) {
 		case TEST:
-			System.out.println(directionFrame);
 			return this.directionSprites.get(directionFrame);
 
 		case ELF:
@@ -398,8 +397,6 @@ public class Character extends Observable implements Collidable {
 		} else {
 			setMoving(false);
 		}
-
-		System.out.println(direction);
 
 		setChanged();
 		notifyObservers();
