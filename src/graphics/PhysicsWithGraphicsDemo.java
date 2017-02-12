@@ -26,7 +26,7 @@ public class PhysicsWithGraphicsDemo {
 		Character player1 = new Character(Character.Class.ELF);
 
 		player1.setX(534);
-		player1.setY(424);
+		player1.setY(454);
 
 		Character player2 = new Character(Character.Class.WIZARD);
 

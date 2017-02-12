@@ -355,15 +355,14 @@ public class Map {
 	 * @return
 	 */
 	public Tile tileAt(double x, double y) {
-		//TODO fix this. (what's wrong with it? AAAAAAH!)
-		int column = (int)(x/SheetDeets.TILES_SIZEX);
-		int row = (int)(y/SheetDeets.TILES_SIZEY);
+		int row = (int)(x/SheetDeets.TILES_SIZEX);
+		int column = (int)(y/SheetDeets.TILES_SIZEY);
 		//may crash if tiles not initialised.
 		//check if column,row is in the tile array:
 		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
 			return tiles[column][row];
 		}
-		//System.out.println("not in tile array");
+		// if not in map
 		return null;
 	}
 }
