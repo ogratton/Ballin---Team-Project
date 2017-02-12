@@ -184,7 +184,7 @@ public class SheetDeets {
 			break;
 		}
 		
-		return Sprite.getSprite(TILES.getSpriteSheet(), 0, TILES_SIZEY * x, TILES_SIZEX * 6 , TILES_SIZEY * 2);
+		return Sprite.getSprite(TILES.getSpriteSheet(), 0, TILES_SIZEY * x, TILES_SIZEX * 6 , TILES_SIZEY * 3);
 	}
 
 	/**

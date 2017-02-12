@@ -1,22 +1,41 @@
-# 0=ABYSS
-# 1=FLAT
-# 2=EDGE_N
-# 3=EDGE_NE
-# 4=EDGE_E
-# 5=EDGE_SE
-# 6=EDGE_S
-# 7=EDGE_SW
-# 8=EDGE_W
-# 9=EDGE_NW
-# a=EDGE_ABYSS
-# b=TEST
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-0,9,2,2,2,2,2,2,2,2,2,2,2,2,3,0
-0,8,1,1,1,1,1,1,1,1,1,1,1,1,4,0
-0,8,1,1,1,1,1,1,1,1,1,1,1,1,4,0
-0,8,1,1,1,1,0,1,1,1,1,1,1,1,4,0
-0,8,1,1,1,1,1,1,1,1,1,1,1,1,4,0
-0,8,1,1,1,1,1,1,1,1,1,1,1,1,4,0
-0,7,6,6,6,6,6,6,6,6,6,6,6,6,5,0
-0,a,a,a,a,a,a,a,a,a,a,a,a,a,a,0
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+# TILE KEYS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# RAW TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# a = ABYSS,,# b = FLAT,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER ONE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# c = EDGE_N,,# d = EDGE_E,,# e = EDGE_S,,# f = EDGE_W,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER TWO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# g = EDGE_NE,,# h = EDGE_SE,,# i = EDGE_SW,,# j = EDGE_NW,,# k = EDGE_NS,,# l = EDGE_EW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER THREE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# m = EDGE_NES,,# n = EDGE_ESW,,# o = EDGE_SWN,,# p = EDGE_WNE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER FOUR,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# q = EDGE_NESW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# TRANSITION TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# r = EDGE_ABYSS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# 48 x 27 MAP FOLLOWS,,,# 1200 x 675,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,j,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,g,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,e,e,e,e,e,e,e,e,e,e,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,r,r,r,r,r,r,r,r,r,r,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,a,p,a,a,a,a,a,a,p,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,a,f,g,a,a,a,a,a,l,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,a,i,e,m,a,a,a,a,n,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,d,a,r,r,r,a,a,a,a,r,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,c,c,c,g,a,a,q,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,r,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,c,c,c,c,c,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,i,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,h,a,a,a
+a,a,a,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
