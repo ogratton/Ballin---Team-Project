@@ -92,7 +92,6 @@ public class Sprite {
 	 */
 
 	public static BufferedImage getSprite(BufferedImage spriteSheet, int x, int y, int sizeX, int sizeY) {
-		System.out.println(x + ", " + y);
 		return spriteSheet.getSubimage(x * sizeX, y * sizeY, sizeX, sizeY);
 	}
 
