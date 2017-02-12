@@ -29,39 +29,43 @@ public class MainMenu extends JFrame {
 
 	MainMenu() {
 		JFrame frame = new JFrame();
+		mPanel = new JPanel();
 		frame.setName("Main Menu");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(false);
 		frame.setSize(frameSize);
-		frame.setLocation((getScreenWorkingWidth() - frame.getWidth()) / 2,
-				(getScreenWorkingHeight() - frame.getHeight()) / 2);
-		frame.add(getUsername());
+		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2,(getScreenHeight() - frame.getHeight()) / 2);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setUndecorated(true);
+		//frame.setLayout(new BoxLayout(frame, BoxLayout.X_AXIS));
+		changeState(defaultState);
+		mPanel.setPreferredSize(frameSize);
+		frame.add(mPanel);
 		frame.setVisible(true);
 		musicPlayer = new MusicPlayer("pokemon");
 		musicPlayer.run();
-		//audioPlayer = new AudioFile(".resources/audio/ding.wav", "Ding");
 	}
 
 	private static MusicPlayer musicPlayer;
-	//private AudioFile audioPlayer;
 	private static boolean isPressed;
-	private static ViewState viewState = ViewState.USERNAME_STATE;
+	private static ViewState defaultState = ViewState.USERNAME_STATE;
 	private final static Font font = makeFont(20);
 	public static String username;
 	private static Dimension frameSize = new Dimension(500, 700);
 	public static InetAddress hostname;
 	public static int port;
-	
+	private static JPanel mainMenuPanel = mainMenuPanel();
+	private static JPanel usernamePanel = getUsername();
+	private static JPanel optionsPanel = optionPanel();
+	private static JPanel mPanel;
 
 	public enum ViewState {
 		MAINMENU_STATE, OPTIONS_STATE, USERNAME_STATE;
 	}
 
-	public static int getScreenWorkingWidth() {
+	public static int getScreenWidth() {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	}
 
-	public static int getScreenWorkingHeight() {
+	public static int getScreenHeight() {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 
@@ -140,26 +144,26 @@ public class MainMenu extends JFrame {
 		});
 	}
 
-	public static void changeState(JPanel panel) {
+	public static void changeState(ViewState viewState) {
 
 		switch (viewState) {
 		case MAINMENU_STATE:
-			panel.removeAll();
-			panel.add(mainMenuPanel());
-			panel.revalidate();
-			panel.repaint();
+			mPanel.removeAll();
+			mPanel.add(mainMenuPanel);
+			mPanel.revalidate();
+			mPanel.repaint();
 			break;
 		case OPTIONS_STATE:
-			panel.removeAll();
-			panel.add(optionPanel());
-			panel.revalidate();
-			panel.repaint();
+			mPanel.removeAll();
+			mPanel.add(optionsPanel);
+			mPanel.revalidate();
+			mPanel.repaint();
 			break;
 		case USERNAME_STATE:
-			panel.removeAll();
-			panel.add(getUsername());
-			panel.revalidate();
-			panel.repaint();
+			mPanel.removeAll();
+			mPanel.add(usernamePanel);
+			mPanel.revalidate();
+			mPanel.repaint();
 			break;
 		default:
 			System.out.println("UNKNOWN STATE!");
@@ -189,11 +193,11 @@ public class MainMenu extends JFrame {
 		button.setMaximumSize(new Dimension((int)(frameSize.getWidth()*0.6), (int)(frameSize.getHeight()*0.1)));
 		button.addActionListener(e ->{
 			username = textField.getText();
-			viewState = ViewState.MAINMENU_STATE;
+			textField.setText("");
 			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
 			audioPlayer.play();
 			audioPlayer.setGain(Resources.sfx_gain);
-			changeState(panel);
+			changeState(ViewState.MAINMENU_STATE);
 		});
 		
 		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.2))));
@@ -207,7 +211,6 @@ public class MainMenu extends JFrame {
 	}
 	
 	public static JPanel mainMenuPanel() {
-		System.out.println(username);
 
 		Dimension buttonSize = new Dimension(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
 
@@ -224,27 +227,25 @@ public class MainMenu extends JFrame {
 		startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
-		startButton.addActionListener(e ->{
-			try {
-				hostname = InetAddress.getLocalHost();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
+//		startButton.addActionListener(e ->{
+//			try {
+//				hostname = InetAddress.getLocalHost();
+//			} catch (Exception e1) {
+//				e1.printStackTrace();
+//			}
+//		});
 		
 		JButton changeUsername = new JButton("Change Username");
 		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		changeUsername.setMaximumSize(buttonSize);
 		changeUsername.setFont(font);
 		changeUsername.addActionListener(e ->{
-			viewState = ViewState.USERNAME_STATE;
-			changeState(panel);
+			changeState(ViewState.USERNAME_STATE);
 		});
 
 		JButton optionsButton = new JButton("Options");
 		optionsButton.addActionListener(e -> {
-			viewState = ViewState.OPTIONS_STATE;
-			changeState(panel);
+			changeState(ViewState.OPTIONS_STATE);
 		});
 		optionsButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		optionsButton.setMaximumSize(buttonSize);
@@ -287,8 +288,7 @@ public class MainMenu extends JFrame {
 
 		JButton back = new JButton("Back to Main Menu");
 		back.addActionListener(e -> {
-			viewState = ViewState.MAINMENU_STATE;
-			changeState(panel);
+			changeState(ViewState.MAINMENU_STATE);
 		});
 		back.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		back.setFont(font);
