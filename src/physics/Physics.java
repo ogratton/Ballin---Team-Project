@@ -106,16 +106,10 @@ public class Physics extends Thread implements ActionListener {
 			//if(c.getRadius() > 3) c.setDead(true);
 			return; // falling people don't move.
 		}
-		if (c.isDashing() && !c.isBlocking()) {
-			dash(c);
-			move(c);
-			// don't allow any other inputs
-			return;
-		}
-		if (c.isBlocking() && !c.isDashing()) {
-			block(c);
-			move(c);
-			// don't allow any other inputs
+		// Recharge stamina
+		c.incrementStamina();
+		// If a special button has been pressed, perform the ability if possible
+		if (special(c)){
 			return;
 		}
 		// calculate speed
@@ -139,6 +133,48 @@ public class Physics extends Thread implements ActionListener {
 			c.setDy(c.getDy() * Resources.map.getFriction());
 		}
 		move(c);
+	}
+	
+	/**
+	 * Returns true if a special is being performed, false otherwise.
+	 */
+	private boolean special(Character c) {
+		int stam = c.getStamina();
+		// Just pressed dash button
+		if (c.isDashing() && c.getDashTimer() == 0 && !c.isBlocking()) {
+			int dashStam = c.getDashStamina();
+			if (stam >= dashStam) {
+				// If you can dash, drain the amount of stamina
+				c.setStamina(stam - dashStam);
+			} else {
+				// Otherwise give up on dashing
+				c.setDashing(false);
+			}
+		}
+		// Just pressed block button
+		if (c.isBlocking() && c.getBlockTimer() == 0 && !c.isDashing()) {
+			int blockStam = c.getBlockStamina();
+			if (stam >= blockStam) {
+				// If you can block, drain the amount of stamina
+				c.setStamina(stam - blockStam);
+			} else {
+				// Otherwise give up on blocking
+				c.setBlocking(false);
+			}
+		}
+		if (c.isDashing() && !c.isBlocking()) {
+			dash(c);
+			move(c);
+			// Don't allow any other inputs
+			return true;
+		}
+		if (c.isBlocking() && !c.isDashing()) {
+			block(c);
+			move(c);
+			// Don't allow any other inputs
+			return true;
+		}
+		return false;
 	}
 	
 	private void move(Character c) {
@@ -274,11 +310,18 @@ public class Physics extends Thread implements ActionListener {
 	private void dash(Character c) {
 		/*
 		if (c.getDashTimer() == 0) {
-			System.out.println("DASHING");
-			System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
+			//System.out.println("DASHING");
+			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
 		}
 		*/
 		double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
+		// Can't dash if standing still
+		if (maxDxDy == 0) {
+			c.setDashing(false);
+			// Refund stamina
+			c.setStamina(c.getStamina() + c.getDashStamina());
+			return;
+		}
 		double velInc = (2 * c.getMaxDx()) / maxDxDy;
 		c.setDx(c.getDx() * velInc);
 		c.setDy(c.getDy() * velInc);
@@ -307,6 +350,8 @@ public class Physics extends Thread implements ActionListener {
 		}
 		c.incrementBlockTimer();
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
+		//System.out.println(c.getStamina());
+		//System.out.println(c.getDx() + ", " + c.getDy());
 		c.setDx(c.getDx() * 0.95 * Resources.map.getFriction());
 		c.setDy(c.getDy() * 0.95 * Resources.map.getFriction());
 		// Stop blocking - revert changes to mass

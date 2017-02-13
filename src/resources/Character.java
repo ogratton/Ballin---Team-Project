@@ -10,9 +10,9 @@ import graphics.sprites.SpriteSheet;
 public class Character extends Observable implements Collidable {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 20;
-	private static final double default_max_speed_x = 5;
-	private static final double default_max_speed_y = 5;
-	private static final double default_acc = 0.2;
+	private static final double default_max_speed_x = 3;
+	private static final double default_max_speed_y = 3;
+	private static final double default_acc = 0.1;
 	private static final double default_restitution = 0.7; // 'bounciness'
 
 	public enum Heading {
@@ -55,6 +55,13 @@ public class Character extends Observable implements Collidable {
 	
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
+	// Stamina recharges until this maximum value
+	private int maxStamina = 150;
+	// 0 is empty
+	private int stamina = maxStamina;
+	// Stamina used when dashing/blocking
+	private int dashStamina = 150;
+	private int blockStamina = 75;
 
 	/**
 	 * Default character with default sprite
@@ -911,9 +918,91 @@ public class Character extends Observable implements Collidable {
 	}
 	
 	/**
-	 * Resets the block timer to 0;
+	 * Resets the block timer to 0.
 	 */
 	public void resetBlockTimer() {
 		this.blockTimer = 0;
+	}
+	
+	/**
+	 * Returns the current stamina for this character.
+	 * 
+	 * @return stamina
+	 */
+	public int getStamina() {
+		return stamina;
+	}
+
+	/**
+	 * Set the current stamina value.
+	 */
+	public void setStamina(int stamina) {
+		this.stamina = stamina;
+	}
+	
+	/**
+	 * Increments the character's stamina by 1 if it is less that the maximum stamina.
+	 * Used to recharge stamina.
+	 */
+	public void incrementStamina() {
+		if (this.stamina < this.maxStamina) {
+			this.stamina += 1;
+		}
+	}
+	
+	/**
+	 * Resets the stamina to maximum value.
+	 */
+	public void resetStamina() {
+		this.stamina = maxStamina;
+	}
+	
+	/**
+	 * Sets the maximum stamina value. 
+	 * Can use for giving different classes different max stams.
+	 */
+	public void setMaxStamina(int maxStamina) {
+		this.maxStamina = maxStamina;
+	}
+	
+	/**
+	 * Returns the maximum stamina value.
+	 * 
+	 * @return maxStamina
+	 */
+	public int getMaxStamina() {
+		return maxStamina;
+	}
+	
+	/**
+	 * Gets the amount of stamina that is used when dashing.
+	 * 
+	 * @return dashStamina
+	 */
+	public int getDashStamina() {
+		return dashStamina;
+	}
+
+	/**
+	 * Sets a new value for the amount of stamina drained when dashing.
+	 */
+	public void setDashStamina(int dashStamina) {
+		this.dashStamina = dashStamina;
+	}
+
+	/**
+	 * Gets the amount of stamina that is used when blocking.
+	 * 
+	 * @return blockStamina
+	 */
+	public int getBlockStamina() {
+		return blockStamina;
+	}
+
+	/**
+	 * Sets a new value for the amount of stamina drained when blocking.
+	 */
+	public void setBlockStamina(int blockStamina) {
+		this.blockStamina = blockStamina;
 	}
 }
