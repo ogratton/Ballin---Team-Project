@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.Random;
 
+import ai.RunRight;
+import audio.MusicPlayer;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
@@ -30,8 +32,8 @@ public class PhysicsWithGraphicsDemo {
 
 		Character player2 = new Character(Character.Class.WIZARD);
 
-		player2.setX(999);
-		player2.setY(234);
+		player2.setX(500);
+		player2.setY(100);
 
 		Resources.playerList.add(player);
 		Resources.playerList.add(player1);
@@ -48,7 +50,7 @@ public class PhysicsWithGraphicsDemo {
 		}
 		
 		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = Resources.default_map;	
+		Map.Tile[][] tiles = null;	
 		MapReader mr = new MapReader();	
 		try
 		{
@@ -68,6 +70,9 @@ public class PhysicsWithGraphicsDemo {
 		Physics p = new Physics();
 		p.start();
 
+		RunRight run = new RunRight(player2);
+		run.start();
+		
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
 			@Override

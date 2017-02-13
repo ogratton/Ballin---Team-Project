@@ -39,7 +39,7 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer("pokemon");
+		musicPlayer = new MusicPlayer("frog");
 		musicPlayer.run();
 	}
 
