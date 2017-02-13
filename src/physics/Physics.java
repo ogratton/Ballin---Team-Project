@@ -76,35 +76,12 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
-		if(c.isDead()) {
-			// System.out.println("DEAD");
-			return;
-		}
 		// find terrain type:
 		Tile t = Resources.map.tileAt(c.getX(),c.getY());
 		//check for falling.
-		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) c.setFalling(true);
-		if(c.isFalling()){
-			// System.out.println("FALLING");
-			Tile t2 = Resources.map.tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at top of map
-				c.setY(c.getY() + (c.getRadius()/10));
-			}
-			t2 = Resources.map.tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at right of map
-				c.setX(c.getX() + (c.getRadius()/10));
-			}
-			t2 = Resources.map.tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at left of map
-				c.setX(c.getX() - (c.getRadius()/10));
-			}
-			t2 = Resources.map.tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at bottom of map
-				c.setY(c.getY() - (c.getRadius()/10));
-			}
-			//c.setRadius(c.getRadius() - 1);
-			//if(c.getRadius() > 3) c.setDead(true);
-			return; // falling people don't move.
+		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) {
+			c.setFalling(true);
+			c.setDead(true);
 		}
 		// Recharge stamina
 		c.incrementStamina();
@@ -112,25 +89,34 @@ public class Physics extends Thread implements ActionListener {
 		if (special(c)){
 			return;
 		}
-		// calculate speed
-		if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
-			c.setDx(c.getDx() - c.getAcc());
-		}
-		if (c.isRight() && c.getDx() < c.getMaxDx()) {
-			c.setDx(c.getDx() + c.getAcc());
-		}
-		if (c.isUp() && c.getDy() > -c.getMaxDy()) {
-			c.setDy(c.getDy() - c.getAcc());
-		}
-		if (c.isDown() && c.getDy() < c.getMaxDy()) {
-			c.setDy(c.getDy() + c.getAcc());
-		}
-		//apply friction
-		if (!c.isLeft() && !c.isRight()) {
-			c.setDx(c.getDx() * Resources.map.getFriction());
-		}
-		if (!c.isUp() && !c.isDown()) {
-			c.setDy(c.getDy() * Resources.map.getFriction());
+		if(!c.isDead()) {
+			// calculate speed
+			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
+				c.setDx(c.getDx() - c.getAcc());
+			}
+			if (c.isRight() && c.getDx() < c.getMaxDx()) {
+				c.setDx(c.getDx() + c.getAcc());
+			}
+			if (c.isUp() && c.getDy() > -c.getMaxDy()) {
+				c.setDy(c.getDy() - c.getAcc());
+			}
+			if (c.isDown() && c.getDy() < c.getMaxDy()) {
+				c.setDy(c.getDy() + c.getAcc());
+			}
+			//apply friction
+			if (!c.isLeft() && !c.isRight()) {
+				c.setDx(c.getDx() * Resources.map.getFriction());
+			}
+			if (!c.isUp() && !c.isDown()) {
+				c.setDy(c.getDy() * Resources.map.getFriction());
+			}
+		} else if(Resources.map.onMap(c.getX(),c.getY())){
+			if(Math.abs(c.getDx()) < 0.5 && Double.compare(c.getDx(),0.0) != 0){
+				c.setDx(c.getDx() * 2);
+			}
+			if(Math.abs(c.getDy()) < 0.5 && Double.compare(c.getDy(),0.0) != 0){
+				c.setDy(c.getDy() * 2);
+			}
 		}
 		move(c);
 	}
