@@ -119,6 +119,9 @@ public class SheetDeets {
 	public static final SpriteSheet TILES = new SpriteSheet(Sprite.SheetType.TILE, TILES_NAME, TILES_ROWS,
 			TILES_COLS, TILES_SIZEX, TILES_SIZEY, null);
 
+	// speed lines
+	public static final SpriteSheet MISC = new SpriteSheet(Sprite.SheetType.MISC, "misc", 1, 1, 50, 50, null);
+	
 	/**
 	 * Return the correct sprite sheet for a given character
 	 * 

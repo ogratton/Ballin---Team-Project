@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import audio.MusicPlayer;
 import graphics.old.MapModel;
 import resources.Character;
 import resources.Map;
@@ -25,6 +26,7 @@ import resources.Resources;
  *
  */
 
+@SuppressWarnings("serial")
 public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
@@ -71,7 +73,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		for (Character model : characters) {
 			model.addObserver(view);
 		}
-
+		
 		add(view, BorderLayout.CENTER);
 
 	}

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class SpriteSheet {
 
 	private String name;
-	private Sprite.SheetType type;
 	private BufferedImage spriteSheet;
 	private int rows;
 	private int cols;
@@ -16,8 +15,7 @@ public class SpriteSheet {
 	private ArrayList<int[][]> sections;
 
 	public SpriteSheet(Sprite.SheetType type, String name, int rows, int cols, int sizeX, int sizeY, ArrayList<int[][]> sections) {
-
-		this.type = type;
+		
 		this.name = name;
 		this.rows = rows;
 		this.cols = cols;
@@ -29,6 +27,8 @@ public class SpriteSheet {
 				this.sections = sections;
 				break;
 			case TILE:
+				break;
+			case MISC:
 				break;
 		}
 

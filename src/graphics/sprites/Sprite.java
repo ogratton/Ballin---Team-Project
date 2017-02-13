@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -24,7 +23,7 @@ public class Sprite {
 
 	// enum for the different types of sprite
 	public static enum SheetType {
-		CHARACTER, TILE
+		CHARACTER, TILE, MISC
 	};
 
 	/**
@@ -49,6 +48,8 @@ public class Sprite {
 		case TILE:
 			sheetType = "tiles/";
 			break;
+		case MISC:
+			sheetType = "misc/";
 		}
 
 		String address = "./resources/sprites/" + sheetType + spriteName + "/sheet.png";

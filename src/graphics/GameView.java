@@ -2,7 +2,6 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -13,10 +12,12 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Map;
 
+@SuppressWarnings("serial")
 public class GameView extends JPanel implements Observer {
 
 	private ArrayList<Character> characters;
@@ -95,6 +96,52 @@ public class GameView extends JPanel implements Observer {
 
 			g.drawImage(frame, cast(actualX), cast(actualY + offset), sizeX, sizeY, this);
 
+			if(model.isDashing()){
+				
+				int dashX = 0;
+				int dashY = 0;
+				
+				switch(model.getDirection()){
+				case N:
+					dashX = newX;
+					dashY = newY + 50;
+					break;
+				case NE:
+					dashX = newX - 50;
+					dashY = newY + 50;
+					break;
+				case E:
+					dashX = newX - 50;
+					dashY = newY;
+					break;
+				case SE:
+					dashX = newX - 50;
+					dashY = newY - 50;
+					break;
+				case S:
+					dashX = newX;
+					dashY = newY - 50;
+					break;
+				case SW:
+					dashX = newX - 50;
+					dashY = newY - 50;
+					break;
+				case W:
+					dashX = newX + 50;
+					dashY = newY;
+					break;
+				case NW:
+					dashX = newX + 50;
+					dashY = newY + 50;
+					break;
+				case STILL:
+					break;
+					
+				}
+				
+				g.drawImage(Sprite.getSprite(SheetDeets.MISC.getSpriteSheet(), 0, 0, 50, 50), (int)((dashX * multiplier) + offset), (int)((dashY * multiplier) + offset), (int)(50 * multiplier), (int)(50 * multiplier), this);
+			}
+			
 			Toolkit.getDefaultToolkit().sync();
 
 		}
