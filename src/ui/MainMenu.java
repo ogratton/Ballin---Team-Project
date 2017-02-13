@@ -35,9 +35,7 @@ public class MainMenu extends JFrame {
 		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2,(getScreenHeight() - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		//frame.setLayout(new BoxLayout(frame, BoxLayout.X_AXIS));
 		changeState(defaultState);
-		mPanel.setPreferredSize(frameSize);
 		frame.add(mPanel);
 		frame.setVisible(true);
 		musicPlayer = new MusicPlayer("pokemon");
@@ -149,6 +147,7 @@ public class MainMenu extends JFrame {
 		switch (viewState) {
 		case MAINMENU_STATE:
 			mPanel.removeAll();
+			mainMenuPanel.setPreferredSize(frameSize);
 			mPanel.add(mainMenuPanel);
 			mPanel.revalidate();
 			mPanel.repaint();
@@ -156,12 +155,14 @@ public class MainMenu extends JFrame {
 		case OPTIONS_STATE:
 			mPanel.removeAll();
 			mPanel.add(optionsPanel);
+			optionsPanel.setPreferredSize(frameSize);
 			mPanel.revalidate();
 			mPanel.repaint();
 			break;
 		case USERNAME_STATE:
 			mPanel.removeAll();
 			mPanel.add(usernamePanel);
+			usernamePanel.setPreferredSize(frameSize);
 			mPanel.revalidate();
 			mPanel.repaint();
 			break;
