@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 
 import audio.AudioFile;
 import audio.MusicPlayer;
+import graphics.PhysicsWithGraphicsDemo;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
@@ -228,6 +229,9 @@ public class MainMenu extends JFrame {
 		startButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
+		startButton.addActionListener(e -> {
+			PhysicsWithGraphicsDemo.main(null);
+		});
 //		startButton.addActionListener(e ->{
 //			try {
 //				hostname = InetAddress.getLocalHost();

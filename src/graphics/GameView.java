@@ -88,8 +88,8 @@ public class GameView extends JPanel implements Observer {
 			frame = model.getNextFrame(oldX, oldY, newX, newY);
 			points.put(model, new Point(newX, newY));
 
-			int actualX = (int)(newX * multiplier);
-			int actualY = (int)(newY * multiplier);
+			int actualX = (int)((newX - model.getRadius()) * multiplier);
+			int actualY = (int)((newY - model.getRadius()) * multiplier);
 
 			int sizeX = (int)(frame.getWidth() * multiplier);
 			int sizeY = (int)(frame.getHeight() * multiplier);
@@ -101,38 +101,40 @@ public class GameView extends JPanel implements Observer {
 				int dashX = 0;
 				int dashY = 0;
 				
+				int dashMult = 50;
+				
 				switch(model.getDirection()){
 				case N:
-					dashX = newX;
-					dashY = newY + 50;
+					dashX = newX - model.getRadius();
+					dashY = newY - model.getRadius() + dashMult;
 					break;
 				case NE:
-					dashX = newX - 50;
-					dashY = newY + 50;
+					dashX = newX - model.getRadius() - dashMult;
+					dashY = newY - model.getRadius() + dashMult;
 					break;
 				case E:
-					dashX = newX - 50;
-					dashY = newY;
+					dashX = newX - model.getRadius() - dashMult;
+					dashY = newY - model.getRadius();
 					break;
 				case SE:
-					dashX = newX - 50;
-					dashY = newY - 50;
+					dashX = newX - model.getRadius() - dashMult;
+					dashY = newY - model.getRadius() - dashMult;
 					break;
 				case S:
-					dashX = newX;
-					dashY = newY - 50;
+					dashX = newX - model.getRadius();
+					dashY = newY - model.getRadius() - dashMult;
 					break;
 				case SW:
-					dashX = newX - 50;
-					dashY = newY - 50;
+					dashX = newX - model.getRadius() - dashMult;
+					dashY = newY - model.getRadius() - dashMult;
 					break;
 				case W:
-					dashX = newX + 50;
-					dashY = newY;
+					dashX = newX - model.getRadius() + dashMult;
+					dashY = newY - model.getRadius();
 					break;
 				case NW:
-					dashX = newX + 50;
-					dashY = newY + 50;
+					dashX = newX - model.getRadius() + dashMult;
+					dashY = newY - model.getRadius() + dashMult;
 					break;
 				case STILL:
 					break;

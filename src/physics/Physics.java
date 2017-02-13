@@ -83,23 +83,23 @@ public class Physics extends Thread implements ActionListener {
 		// find terrain type:
 		Tile t = Resources.map.tileAt(c.getX(),c.getY());
 		//check for falling.
-		if(t == null || t == Tile.ABYSS) c.setFalling(true);
+		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) c.setFalling(true);
 		if(c.isFalling()){
 			// System.out.println("FALLING");
 			Tile t2 = Resources.map.tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!(t2 == null || t2 == Tile.ABYSS)) { // at top of map
+			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at top of map
 				c.setY(c.getY() + (c.getRadius()/10));
 			}
 			t2 = Resources.map.tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!(t2 == null || t2 == Tile.ABYSS)) { // at right of map
+			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at right of map
 				c.setX(c.getX() + (c.getRadius()/10));
 			}
 			t2 = Resources.map.tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!(t2 == null || t2 == Tile.ABYSS)) { // at left of map
+			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at left of map
 				c.setX(c.getX() - (c.getRadius()/10));
 			}
 			t2 = Resources.map.tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!(t2 == null || t2 == Tile.ABYSS)) { // at bottom of map
+			if(!(t2 == null || t2 == Tile.ABYSS || t2 == Tile.EDGE_ABYSS)) { // at bottom of map
 				c.setY(c.getY() - (c.getRadius()/10));
 			}
 			//c.setRadius(c.getRadius() - 1);
