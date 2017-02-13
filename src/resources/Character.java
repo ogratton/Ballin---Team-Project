@@ -49,8 +49,8 @@ public class Character extends Observable implements Collidable {
 
 	// variables imported from CharacterModel
 	private SpriteSheet spriteSheet;
-	private ArrayList<BufferedImage> rollingSprites, directionSprites;
-	private int rollingFrame, directionFrame;
+	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
+	private int rollingFrame, directionFrame, dyingFrame;
 	private boolean moving;
 	
 	// So we can control how long a character dashes/blocks for
@@ -123,11 +123,13 @@ public class Character extends Observable implements Collidable {
 
 		rollingSprites = new ArrayList<BufferedImage>();
 		directionSprites = new ArrayList<BufferedImage>();
-
+		dyingSprites = new ArrayList<BufferedImage>();
+		
 		ArrayList<int[][]> sections = spriteSheet.getSections();
 		int[][] rollingSpriteLocs = sections.get(0);
 		int[][] directionSpriteLocs = sections.get(1);
-
+		int[][] deathSpriteLocs = sections.get(2);
+		
 		for (int i = 0; i < rollingSpriteLocs.length; i++) {
 			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
 			rollingSprites.add(sprite);
@@ -135,12 +137,18 @@ public class Character extends Observable implements Collidable {
 		}
 
 		for (int i = 0; i < directionSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], rollingSpriteLocs[i][1]);
+			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], directionSpriteLocs[i][1]);
 			directionSprites.add(sprite);
+		}
+		
+		for(int i = 0; i < deathSpriteLocs.length; i++){
+			BufferedImage sprite = spriteSheet.getSprite(deathSpriteLocs[i][0], deathSpriteLocs[i][1]);
+			dyingSprites.add(sprite);
 		}
 
 		rollingFrame = 0;
 		directionFrame = 0;
+		dyingFrame = 0;
 		falling = false;
 		dead = false;
 	}
@@ -152,6 +160,14 @@ public class Character extends Observable implements Collidable {
 	 */
 
 	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
+		
+		if(isDead()){
+			if(dyingFrame != 7){
+			dyingFrame++;
+			}
+			
+			return this.dyingSprites.get(dyingFrame);
+		}
 		
 		int delx = newX - oldX;
 		int dely = newY - oldY;

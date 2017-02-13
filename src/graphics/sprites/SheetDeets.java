@@ -31,6 +31,7 @@ public class SheetDeets {
 		{
 			add(CHAR_WIZ_ROLLING);
 			add(new int[8][2]);
+			add(CHAR_WIZ_ROLLING);
 		}
 	};
 
@@ -53,6 +54,7 @@ public class SheetDeets {
 		{
 			add(CHAR_WIZ_ROLLING);
 			add(new int[8][2]);
+			add(CHAR_WIZ_ROLLING);
 		}
 	};
 
@@ -75,6 +77,7 @@ public class SheetDeets {
 		{
 			add(new int[8][2]); // rolling
 			add(CHAR_TEST_DIRS); // directions (wip)
+			add(CHAR_TEST_DIRS); // death
 		}
 	};
 
