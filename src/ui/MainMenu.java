@@ -10,8 +10,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.net.InetAddress;
-
+import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -20,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
@@ -33,7 +31,7 @@ public class MainMenu extends JFrame {
 		mPanel = new JPanel();
 		frame.setName("Main Menu");
 		frame.setSize(frameSize);
-		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2,(getScreenHeight() - frame.getHeight()) / 2);
+		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		changeState(defaultState);
@@ -48,13 +46,12 @@ public class MainMenu extends JFrame {
 	private static ViewState defaultState = ViewState.USERNAME_STATE;
 	private final static Font font = makeFont(20);
 	public static String username;
-	private static Dimension frameSize = new Dimension(500, 700);
-	public static InetAddress hostname;
-	public static int port;
+	private static Dimension frameSize = new Dimension(600, 800);
 	private static JPanel mainMenuPanel = mainMenuPanel();
 	private static JPanel usernamePanel = getUsername();
 	private static JPanel optionsPanel = optionPanel();
 	private static JPanel mPanel;
+	private static ArrayList<JButton> controlsList;
 
 	public enum ViewState {
 		MAINMENU_STATE, OPTIONS_STATE, USERNAME_STATE;
@@ -71,7 +68,8 @@ public class MainMenu extends JFrame {
 	private static Font makeFont(int size) {
 		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf")).deriveFont((float)size);
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf"))
+					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
 		} catch (Exception e) {
@@ -104,7 +102,30 @@ public class MainMenu extends JFrame {
 								button.setText("" + Character.toUpperCase(e.getKeyChar()));
 							isPressed = false;
 
+							if (button.getName().equals("up"))
+								Resources.up = e.getKeyCode();
+							else if (button.getName().equals("down"))
+								Resources.down = e.getKeyCode();
+							else if (button.getName().equals("left"))
+								Resources.left = e.getKeyCode();
+							else if (button.getName().equals("right"))
+								Resources.right = e.getKeyCode();
+
+							for (int i = 0; i < controlsList.size(); i++) {
+								if (button.getText().equals(controlsList.get(i).getText())) {
+									controlsList.get(i).setText("");
+								}
+								if (controlsList.get(i).getName().equals("up"))
+									Resources.up = -1;
+								else if (controlsList.get(i).getName().equals("down"))
+									Resources.down = -1;
+								else if (controlsList.get(i).getName().equals("left"))
+									Resources.left = -1;
+								else if (controlsList.get(i).getName().equals("right"))
+									Resources.right = -1;
+							}
 						}
+
 					}
 
 					@Override
@@ -143,6 +164,22 @@ public class MainMenu extends JFrame {
 		});
 	}
 
+	public static void resetButton(JButton button) {
+		if (button.getName().equals("up")) {
+			Resources.up = Resources.default_up;
+			button.setText("" + Character.toUpperCase((char) Resources.default_up));
+		} else if (button.getName().equals("down")) {
+			Resources.down = Resources.default_down;
+			button.setText("" + Character.toUpperCase((char) Resources.default_down));
+		} else if (button.getName().equals("left")) {
+			Resources.left = Resources.default_left;
+			button.setText("" + Character.toUpperCase((char) Resources.default_left));
+		} else if (button.getName().equals("right")) {
+			Resources.right = Resources.default_right;
+			button.setText("" + Character.toUpperCase((char) Resources.default_right));
+		}
+	}
+
 	public static void changeState(ViewState viewState) {
 
 		switch (viewState) {
@@ -173,27 +210,27 @@ public class MainMenu extends JFrame {
 		}
 	}
 
-	public static JPanel getUsername(){
+	public static JPanel getUsername() {
 		JPanel panel = new JPanel();
-		
+
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
-		
+
 		JLabel label = new JLabel("Insert your username:");
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		label.setFont(font.deriveFont((float) 25));
-		
-		
+
 		JTextField textField = new JTextField();
 		textField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		textField.setMaximumSize(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
+		textField
+				.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
 		textField.setFont(font);
-		
+
 		JButton button = new JButton("Ok");
 		button.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		button.setFont(font);
-		button.setMaximumSize(new Dimension((int)(frameSize.getWidth()*0.6), (int)(frameSize.getHeight()*0.1)));
-		button.addActionListener(e ->{
+		button.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.6), (int) (frameSize.getHeight() * 0.1)));
+		button.addActionListener(e -> {
 			username = textField.getText();
 			textField.setText("");
 			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
@@ -201,20 +238,24 @@ public class MainMenu extends JFrame {
 			audioPlayer.setGain(Resources.sfx_gain);
 			changeState(ViewState.MAINMENU_STATE);
 		});
-		
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.2))));
+
+		panel.add(Box
+				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.2))));
 		panel.add(label);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.05))));
 		panel.add(textField);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(button);
-		
+
 		return panel;
 	}
-	
+
 	public static JPanel mainMenuPanel() {
 
-		Dimension buttonSize = new Dimension(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
+		Dimension buttonSize = new Dimension(
+				new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
 
 		JPanel panel = new JPanel();
 
@@ -232,19 +273,19 @@ public class MainMenu extends JFrame {
 		startButton.addActionListener(e -> {
 			PhysicsWithGraphicsDemo.main(null);
 		});
-//		startButton.addActionListener(e ->{
-//			try {
-//				hostname = InetAddress.getLocalHost();
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
-//		});
-		
+		// startButton.addActionListener(e ->{
+		// try {
+		// hostname = InetAddress.getLocalHost();
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// }
+		// });
+
 		JButton changeUsername = new JButton("Change Username");
 		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		changeUsername.setMaximumSize(buttonSize);
 		changeUsername.setFont(font);
-		changeUsername.addActionListener(e ->{
+		changeUsername.addActionListener(e -> {
 			changeState(ViewState.USERNAME_STATE);
 		});
 
@@ -267,15 +308,20 @@ public class MainMenu extends JFrame {
 		JPanel empty = new JPanel();
 		empty.setSize(500, 100);
 
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.1))));
+		panel.add(Box
+				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.1))));
 		panel.add(gameTitle);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.1))));
+		panel.add(Box
+				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.1))));
 		panel.add(startButton);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(changeUsername);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(optionsButton);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(exitButton);
 
 		return panel;
@@ -285,6 +331,8 @@ public class MainMenu extends JFrame {
 	private static JPanel optionPanel() {
 		final int VOL_MAX = 100;
 		final int VOL_MIN = 0;
+
+		controlsList = new ArrayList<JButton>();
 
 		JPanel panel = new JPanel();
 
@@ -308,12 +356,12 @@ public class MainMenu extends JFrame {
 		soundSlider.setPaintTicks(true);
 		soundSlider.setPaintLabels(true);
 		soundSlider.setFont(font.deriveFont((float) 16));
-		soundSlider.addChangeListener(e ->{
-	        int volume = soundSlider.getValue();
-	        if(volume == 0)
-	        	Resources.sfx_gain = -80;
-	        else
-	        	Resources.sfx_gain = (int) ((VOL_MAX - volume) * (-0.33));
+		soundSlider.addChangeListener(e -> {
+			int volume = soundSlider.getValue();
+			if (volume == 0)
+				Resources.sfx_gain = -80;
+			else
+				Resources.sfx_gain = (int) ((VOL_MAX - volume) * (-0.33));
 		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
@@ -326,14 +374,14 @@ public class MainMenu extends JFrame {
 		musicSlider.setPaintTicks(true);
 		musicSlider.setPaintLabels(true);
 		musicSlider.setFont(font.deriveFont((float) 16));
-		musicSlider.addChangeListener(e ->{
-		        int volume = musicSlider.getValue();
-		        if(volume == 0)
-		        	musicPlayer.mute();
-		        else
-		        	musicPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
+		musicSlider.addChangeListener(e -> {
+			int volume = musicSlider.getValue();
+			if (volume == 0)
+				musicPlayer.mute();
+			else
+				musicPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
 		});
-		
+
 		JLabel controlsLabel = new JLabel("Controls");
 		controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		controlsLabel.setFont(font);
@@ -347,28 +395,46 @@ public class MainMenu extends JFrame {
 
 		JButton moveUp = new JButton("W");
 		moveUp.setFont(font);
+		moveUp.setName("up");
 		setKeyRebindable(moveUp);
+		controlsList.add(moveUp);
 
 		JLabel down = new JLabel("Move down: ");
 		down.setFont(font);
 
 		JButton moveDown = new JButton("S");
 		moveDown.setFont(font);
+		moveDown.setName("down");
 		setKeyRebindable(moveDown);
+		controlsList.add(moveDown);
 
 		JLabel left = new JLabel("Move left: ");
 		left.setFont(font);
 
 		JButton moveLeft = new JButton("A");
 		moveLeft.setFont(font);
+		moveLeft.setName("left");
 		setKeyRebindable(moveLeft);
+		controlsList.add(moveLeft);
 
 		JLabel right = new JLabel("Move right: ");
 		right.setFont(font);
 
 		JButton moveRight = new JButton("D");
 		moveRight.setFont(font);
+		moveRight.setName("right");
 		setKeyRebindable(moveRight);
+		controlsList.add(moveRight);
+
+		JButton resetControls = new JButton("Reset controls to default");
+		resetControls.setFont(font);
+		resetControls.addActionListener(e -> {
+			resetButton(moveUp);
+			resetButton(moveDown);
+			resetButton(moveLeft);
+			resetButton(moveRight);
+		});
+		resetControls.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
 		controlsPanel.setLayout(controlsGrid);
 		controlsPanel.add(up);
@@ -381,20 +447,32 @@ public class MainMenu extends JFrame {
 		controlsPanel.add(moveRight);
 
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(back);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.05))));
 		panel.add(soundLabel);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(soundSlider);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.05))));
 		panel.add(musicLabel);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(musicSlider);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.05))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.05))));
 		panel.add(controlsLabel);
-		panel.add(Box.createRigidArea(new Dimension((int)(frameSize.getWidth()*0), (int)(frameSize.getHeight()*0.01))));
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 		panel.add(controlsPanel);
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
+		panel.add(resetControls);
+		panel.add(Box.createRigidArea(
+				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
 
 		return panel;
 
