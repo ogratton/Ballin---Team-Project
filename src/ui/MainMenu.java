@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -25,7 +26,7 @@ import graphics.PhysicsWithGraphicsDemo;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
-	
+
 	MainMenu() {
 		JFrame frame = new JFrame();
 		resources = new Resources();
@@ -38,7 +39,7 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer(resources, "frog");
+		musicPlayer = new MusicPlayer(resources, "pokemon");
 		musicPlayer.run();
 	}
 
@@ -48,11 +49,14 @@ public class MainMenu extends JFrame {
 	private final static Font font = makeFont(20);
 	public static String username;
 	private static Dimension frameSize = new Dimension(600, 800);
-	private static JPanel mainMenuPanel = mainMenuPanel();
-	private static JPanel usernamePanel = getUsername();
-	private static JPanel optionsPanel = optionPanel();
-	private static JPanel mPanel;
-	private static ArrayList<JButton> controlsList;
+	private JPanel mainMenuPanel = mainMenuPanel();
+	private JPanel usernamePanel = getUsername();
+	private JPanel optionsPanel = optionPanel();
+	private JPanel mPanel;
+	private static ArrayList<String> controlsList;
+	// private JOptionPane keyError = new JOptionPane(mPanel, "This key is
+	// already assigned for another control. Please assign another key!","Key
+	// already assigned!", JOptionPane.ERROR_MESSAGE);
 	private static Resources resources;
 
 	public enum ViewState {
@@ -91,41 +95,36 @@ public class MainMenu extends JFrame {
 					@Override
 					public void keyPressed(KeyEvent e) {
 						if (isPressed) {
-							if (e.getKeyCode() == KeyEvent.VK_UP)
-								button.setText("up arrow");
-							else if (e.getKeyCode() == KeyEvent.VK_DOWN)
-								button.setText("down arrow");
-							else if (e.getKeyCode() == KeyEvent.VK_LEFT)
-								button.setText("left arrow");
-							else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-								button.setText("right arrow");
-							else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
-									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9')))
-								button.setText("" + Character.toUpperCase(e.getKeyChar()));
+							controlsList.remove(button.getText());
+							System.out.println(controlsList);
+							if (e.getKeyCode() == KeyEvent.VK_UP) {
+								if (!checkKey("up arrow"))
+									button.setText("up arrow");
+							} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+								if (!checkKey("down arrow"))
+									button.setText("down arrow");
+							} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+								if (!checkKey("left arrow"))
+									button.setText("left arrow");
+							} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+								if (!checkKey("right arrow"))
+									button.setText("right arrow");
+							} else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
+									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9'))) {
+								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
+									button.setText("" + Character.toUpperCase(e.getKeyChar()));
+							}
 							isPressed = false;
+							controlsList.add(button.getText());
 
 							if (button.getName().equals("up"))
-								Resources.setUp(e.getKeyCode());
+								resources.setUp(e.getKeyCode());
 							else if (button.getName().equals("down"))
-								Resources.setDown(e.getKeyCode());
+								resources.setDown(e.getKeyCode());
 							else if (button.getName().equals("left"))
-								Resources.setLeft(e.getKeyCode());
+								resources.setLeft(e.getKeyCode());
 							else if (button.getName().equals("right"))
-								Resources.setRight(e.getKeyCode());
-
-							for (int i = 0; i < controlsList.size(); i++) {
-								if (button.getText().equals(controlsList.get(i).getText())) {
-									controlsList.get(i).setText("");
-								}
-								if (controlsList.get(i).getName().equals("up"))
-									Resources.up = -1;
-								else if (controlsList.get(i).getName().equals("down"))
-									Resources.down = -1;
-								else if (controlsList.get(i).getName().equals("left"))
-									Resources.left = -1;
-								else if (controlsList.get(i).getName().equals("right"))
-									Resources.right = -1;
-							}
+								resources.setRight(e.getKeyCode());
 						}
 
 					}
@@ -166,23 +165,38 @@ public class MainMenu extends JFrame {
 		});
 	}
 
-	public static void resetButton(JButton button) {
-		if (button.getName().equals("up")) {
-			Resources.up = Resources.default_up;
-			button.setText("" + Character.toUpperCase((char) Resources.default_up));
-		} else if (button.getName().equals("down")) {
-			Resources.down = Resources.default_down;
-			button.setText("" + Character.toUpperCase((char) Resources.default_down));
-		} else if (button.getName().equals("left")) {
-			Resources.left = Resources.default_left;
-			button.setText("" + Character.toUpperCase((char) Resources.default_left));
-		} else if (button.getName().equals("right")) {
-			Resources.right = Resources.default_right;
-			button.setText("" + Character.toUpperCase((char) Resources.default_right));
-		}
+	public boolean checkKey(String string) {
+		if (controlsList.contains(string)) {
+			JOptionPane.showMessageDialog(mPanel,
+					"This key is already assigned for another control. Please assign another key!",
+					"Key already assigned!", JOptionPane.ERROR_MESSAGE);
+			return true;
+		} else
+			return false;
 	}
 
-	public static void changeState(ViewState viewState) {
+	public static void resetButton(JButton button) {
+		if (button.getName().equals("up")) {
+			resources.setUp(resources.getDefaultUp());
+			button.setText("" + Character.toUpperCase((char) resources.getDefaultUp()));
+		} else if (button.getName().equals("down")) {
+			resources.setDown(resources.getDefaultDown());
+			button.setText("" + Character.toUpperCase((char) resources.getDefaultDown()));
+		} else if (button.getName().equals("left")) {
+			resources.setLeft(resources.getDefaultLeft());
+			button.setText("" + Character.toUpperCase((char) resources.getDefaultLeft()));
+		} else if (button.getName().equals("right")) {
+			resources.setRight(resources.getDefaultRight());
+			button.setText("" + Character.toUpperCase((char) resources.getDefaultRight()));
+		}
+		controlsList.removeAll(controlsList);
+		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
+		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
+		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultLeft()));
+		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
+	}
+
+	public void changeState(ViewState viewState) {
 
 		switch (viewState) {
 		case MAINMENU_STATE:
@@ -212,7 +226,7 @@ public class MainMenu extends JFrame {
 		}
 	}
 
-	public static JPanel getUsername() {
+	public JPanel getUsername() {
 
 		JPanel panel = new JPanel();
 
@@ -255,7 +269,7 @@ public class MainMenu extends JFrame {
 		return panel;
 	}
 
-	public static JPanel mainMenuPanel() {
+	public JPanel mainMenuPanel() {
 
 		Dimension buttonSize = new Dimension(
 				new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
@@ -331,11 +345,11 @@ public class MainMenu extends JFrame {
 
 	}
 
-	private static JPanel optionPanel() {
+	public JPanel optionPanel() {
 		final int VOL_MAX = 100;
 		final int VOL_MIN = 0;
 
-		controlsList = new ArrayList<JButton>();
+		controlsList = new ArrayList<String>();
 
 		JPanel panel = new JPanel();
 
@@ -401,7 +415,7 @@ public class MainMenu extends JFrame {
 		moveUp.setFont(font);
 		moveUp.setName("up");
 		setKeyRebindable(moveUp);
-		controlsList.add(moveUp);
+		controlsList.add(moveUp.getText());
 
 		JLabel down = new JLabel("Move down: ");
 		down.setFont(font);
@@ -410,7 +424,7 @@ public class MainMenu extends JFrame {
 		moveDown.setFont(font);
 		moveDown.setName("down");
 		setKeyRebindable(moveDown);
-		controlsList.add(moveDown);
+		controlsList.add(moveDown.getText());
 
 		JLabel left = new JLabel("Move left: ");
 		left.setFont(font);
@@ -419,7 +433,7 @@ public class MainMenu extends JFrame {
 		moveLeft.setFont(font);
 		moveLeft.setName("left");
 		setKeyRebindable(moveLeft);
-		controlsList.add(moveLeft);
+		controlsList.add(moveLeft.getText());
 
 		JLabel right = new JLabel("Move right: ");
 		right.setFont(font);
@@ -428,7 +442,7 @@ public class MainMenu extends JFrame {
 		moveRight.setFont(font);
 		moveRight.setName("right");
 		setKeyRebindable(moveRight);
-		controlsList.add(moveRight);
+		controlsList.add(moveRight.getText());
 
 		JButton resetControls = new JButton("Reset controls to default");
 		resetControls.setFont(font);
