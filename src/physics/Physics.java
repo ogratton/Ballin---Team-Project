@@ -17,6 +17,9 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	//checks whether the tile is a 'killing' tile.
+	private static Function<Tile,Boolean> tileCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
+
 	
 	public Physics(Resources resources){
 		this.resources = resources;
@@ -87,7 +90,7 @@ public class Physics extends Thread implements ActionListener {
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
 		//check for falling.
-		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) {
+		if(tileCheck.apply(t)) {
 			c.setFalling(true);
 		}
 		// Recharge stamina
@@ -118,17 +121,31 @@ public class Physics extends Thread implements ActionListener {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
 		} else {
-			Function<Tile,Boolean> deadCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
+			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			dead &= deadCheck.apply(t2);
+			if(!tileCheck.apply(t2)) { // bottom edge
+				dead = false;
+				c.setDx(0 - Math.abs(c.getDx()));
+			}
 			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			dead &= deadCheck.apply(t2);
+			if(!tileCheck.apply(t2)) { // top edge
+				dead = false;
+				c.setDx(Math.abs(c.getDx()));
+			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			dead &= deadCheck.apply(t2);
+			if(!tileCheck.apply(t2)) { // right edge
+				dead = false;
+				c.setDy(0 - Math.abs(c.getDy()));
+			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			dead &= deadCheck.apply(t2);
-			c.setDead(dead);
+			if(!tileCheck.apply(t2)) { // left edge
+				dead = false;
+				c.setDy(Math.abs(c.getDy()));
+			}
+			if(dead) {
+				c.setDead(true);
+			}
 		}
 		move(c);
 	}
