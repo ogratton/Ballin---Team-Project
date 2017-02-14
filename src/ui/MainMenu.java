@@ -235,7 +235,7 @@ public class MainMenu extends JFrame {
 			textField.setText("");
 			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
 			audioPlayer.play();
-			audioPlayer.setGain(Resources.sfx_gain);
+			audioPlayer.setGain(resources.getSFXGain());
 			changeState(ViewState.MAINMENU_STATE);
 		});
 
@@ -359,9 +359,9 @@ public class MainMenu extends JFrame {
 		soundSlider.addChangeListener(e -> {
 			int volume = soundSlider.getValue();
 			if (volume == 0)
-				Resources.sfx_gain = -80;
+				resources.setSFXGain(-80);
 			else
-				Resources.sfx_gain = (int) ((VOL_MAX - volume) * (-0.33));
+				resources.setSFXGain((int) ((VOL_MAX - volume) * (-0.33)));
 		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
