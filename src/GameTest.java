@@ -3,10 +3,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import audio.MusicPlayer;
+import resources.Resources;
 
 public class GameTest extends JFrame {
 
+	private static Resources resources;
+	
 	public GameTest() {
+		
+		resources = null;
+		
 		int WIDTH = 1000;
 		int HEIGHT = 600;
 		add(new Arena	(WIDTH, HEIGHT));
@@ -28,7 +34,7 @@ public class GameTest extends JFrame {
 		});
 		
 		//new Thread(new MusicPlayer("grandma")).start();
-		MusicPlayer mp = new MusicPlayer("guile", "pokemon");
+		MusicPlayer mp = new MusicPlayer(resources, "guile", "pokemon");
 		Thread mp_thread = new Thread(mp);
 		mp_thread.start();
 		
