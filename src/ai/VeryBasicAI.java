@@ -13,17 +13,31 @@ public class VeryBasicAI extends Thread
 	private Character character;
 	private Resources resources;
 
-//	private int raycast_length = 10;
+	//	private int raycast_length = 10;
 	private final double fuzziness = 20;
 
 	private ArrayList<Tile> bad_tiles;
 
 	/*
-	 * TODO Notes:
+	 * Notes:
 	 * 
-	 * AI should ray-cast ahead of it and scan that area for danger
+	 * TODO AI should ray-cast ahead of it and scan that area for danger
 	 * For now change direction randomly to avoid danger
 	 * (This is Coward behaviour)
+	 * 
+	 * TODO If it is about to fall off (i.e. on/heading for danger tile) it
+	 * should try and move
+	 * perpendicularly away from the danger
+	 * 
+	 * TODO Pathfinding (don't run into holes)
+	 * 
+	 * TODO Behaviours (Coward, Bolshy, Gallivant, etc.)
+	 * 
+	 * TODO Stopping (should be a case of 'tapping' in the opposite direction)
+	 * 
+	 * Look at this
+	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
+	 * behaviour-trees.html
 	 * 
 	 */
 
@@ -38,6 +52,12 @@ public class VeryBasicAI extends Thread
 		bad_tiles.add(Tile.EDGE_ABYSS);
 	}
 
+	/**
+	 * The main execution loop of the AI
+	 * How will this work with behaviours?
+	 * Maybe behaviours will all be in a big switch statement in here.
+	 * That's messy but with the structure we have it might be best
+	 */
 	public void run()
 	{
 
@@ -45,36 +65,33 @@ public class VeryBasicAI extends Thread
 		{
 
 			boolean success = false;
-			Point[] xys = new Point[] { new Point(700,300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
+			Point[] xys = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
 			int i = 0;
-			
+
+			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
 			Thread.sleep(1000);
-			
+
 			System.out.println("Target: " + xys[i]);
 
-			while (i < xys.length)
+			while (i < xys.length && !character.isDead())
 			{
-				if (character.isDead())
-				{
-					System.out.println("dead X(");
-					break;
-				}
 				Thread.sleep(10);
 				success = moveTo(xys[i].getX(), xys[i].getY());
 				if (success)
 				{
 					System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
 					i++;
-					if (i < xys.length) System.out.println("Target: " + xys[i]);
-//					Thread.sleep(10);
+					success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
+					if (i < xys.length)
+						System.out.println("Target: " + xys[i]);
 				}
 			}
-			
-			System.out.println("Finished!");
+
+			String message = character.isDead() ? "Dead X(" : "Finished!";
+			System.out.println(message);
 		}
 		catch (InterruptedException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -123,7 +140,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private boolean moveTo(double x, double y)
 	{
-		if (fuzzyEqual(character.getX(), x) && fuzzyEqual(character.getY(),y ))
+		if (fuzzyEqual(character.getX(), x) && fuzzyEqual(character.getY(), y))
 		{
 			brakeChar();
 			return true;
