@@ -15,7 +15,12 @@ public class Physics extends Thread implements ActionListener {
 	// dashing reduces stamina, speed multiplied by stamina.
 	private Timer timer;
 	private final int DELAY = 10;
-
+	private Resources resources;
+	
+	public Physics(Resources resources){
+		this.resources = resources;
+	}
+	
 	@Override
 	public void run() {
 		System.out.println("start");
@@ -39,9 +44,9 @@ public class Physics extends Thread implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		for(Character c : Resources.playerList){
+		for(Character c : resources.getPlayerList()){
 			update(c);
-			for (Character d : Resources.playerList) {
+			for (Character d : resources.getPlayerList()) {
 				// check collisions
 				if (c != d) {
 					CND cnd = detectCollision(c,d);
@@ -53,7 +58,7 @@ public class Physics extends Thread implements ActionListener {
 					}
 				}
 			}
-			for (Wall w : Resources.map.getWalls()) {
+			for (Wall w : resources.getMap().getWalls()) {
 				// check collisions
 				CND cnd = detectCollision(c,w);
 				if(cnd.collided) {
@@ -77,7 +82,7 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		// find terrain type:
-		Tile t = Resources.map.tileAt(c.getX(),c.getY());
+		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
 		//check for falling.
 		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) {
 			c.setFalling(true);
@@ -105,12 +110,12 @@ public class Physics extends Thread implements ActionListener {
 			}
 			//apply friction
 			if (!c.isLeft() && !c.isRight()) {
-				c.setDx(c.getDx() * Resources.map.getFriction());
+				c.setDx(c.getDx() * resources.getMap().getFriction());
 			}
 			if (!c.isUp() && !c.isDown()) {
-				c.setDy(c.getDy() * Resources.map.getFriction());
+				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
-		} else if(Resources.map.onMap(c.getX(),c.getY())){
+		} else if(resources.getMap().onMap(c.getX(),c.getY())){
 			if(Math.abs(c.getDx()) < 0.5 && Double.compare(c.getDx(),0.0) != 0){
 				c.setDx(c.getDx() * 2);
 			}
@@ -338,8 +343,8 @@ public class Physics extends Thread implements ActionListener {
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
 		//System.out.println(c.getStamina());
 		//System.out.println(c.getDx() + ", " + c.getDy());
-		c.setDx(c.getDx() * 0.95 * Resources.map.getFriction());
-		c.setDy(c.getDy() * 0.95 * Resources.map.getFriction());
+		c.setDx(c.getDx() * 0.95 * resources.getMap().getFriction());
+		c.setDy(c.getDy() * 0.95 * resources.getMap().getFriction());
 		// Stop blocking - revert changes to mass
 		if (c.getBlockTimer() >= 25) {
 			//System.out.println("DONE BLOCKING");

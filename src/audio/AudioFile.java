@@ -41,6 +41,8 @@ public class AudioFile implements LineListener
 	};
 
 	private volatile PlayState playState;
+	
+	private Resources resources;
 
 	/**
 	 * Make a new audio file object
@@ -48,10 +50,11 @@ public class AudioFile implements LineListener
 	 * @param filename fully qualified filename/path of the audio file for this
 	 * object
 	 */
-	public AudioFile(String filename, String title)
+	public AudioFile(Resources resources, String filename, String title)
 	{
 		try
-		{
+		{	
+			this.resources = resources;
 			soundFile = new File(filename);
 			this.title = title;
 			ais = AudioSystem.getAudioInputStream(soundFile);
@@ -100,7 +103,7 @@ public class AudioFile implements LineListener
 	{
 		if (playState != PlayState.PLAYING)
 		{
-			int offset = Resources.sfx_gain < 0 ? Resources.sfx_gain : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+			int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
 			gainControl.setValue(gain + offset); 
 			clip.start();
 			playState = PlayState.PLAYING;

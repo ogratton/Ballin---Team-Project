@@ -25,9 +25,10 @@ import graphics.PhysicsWithGraphicsDemo;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
-
+	
 	MainMenu() {
 		JFrame frame = new JFrame();
+		resources = new Resources();
 		mPanel = new JPanel();
 		frame.setName("Main Menu");
 		frame.setSize(frameSize);
@@ -37,7 +38,7 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer("frog");
+		musicPlayer = new MusicPlayer(resources, "frog");
 		musicPlayer.run();
 	}
 
@@ -52,6 +53,7 @@ public class MainMenu extends JFrame {
 	private static JPanel optionsPanel = optionPanel();
 	private static JPanel mPanel;
 	private static ArrayList<JButton> controlsList;
+	private static Resources resources;
 
 	public enum ViewState {
 		MAINMENU_STATE, OPTIONS_STATE, USERNAME_STATE;
@@ -78,7 +80,7 @@ public class MainMenu extends JFrame {
 		return customFont;
 	}
 
-	private static void setKeyRebindable(JButton button) {
+	private void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
 
@@ -103,13 +105,13 @@ public class MainMenu extends JFrame {
 							isPressed = false;
 
 							if (button.getName().equals("up"))
-								Resources.up = e.getKeyCode();
+								Resources.setUp(e.getKeyCode());
 							else if (button.getName().equals("down"))
-								Resources.down = e.getKeyCode();
+								Resources.setDown(e.getKeyCode());
 							else if (button.getName().equals("left"))
-								Resources.left = e.getKeyCode();
+								Resources.setLeft(e.getKeyCode());
 							else if (button.getName().equals("right"))
-								Resources.right = e.getKeyCode();
+								Resources.setRight(e.getKeyCode());
 
 							for (int i = 0; i < controlsList.size(); i++) {
 								if (button.getText().equals(controlsList.get(i).getText())) {
@@ -211,6 +213,7 @@ public class MainMenu extends JFrame {
 	}
 
 	public static JPanel getUsername() {
+
 		JPanel panel = new JPanel();
 
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -233,7 +236,7 @@ public class MainMenu extends JFrame {
 		button.addActionListener(e -> {
 			username = textField.getText();
 			textField.setText("");
-			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
+			AudioFile audioPlayer = new AudioFile(resources, "resources\\audio\\ding.wav", "Ding");
 			audioPlayer.play();
 			audioPlayer.setGain(resources.getSFXGain());
 			changeState(ViewState.MAINMENU_STATE);
@@ -362,6 +365,7 @@ public class MainMenu extends JFrame {
 				resources.setSFXGain(-80);
 			else
 				resources.setSFXGain((int) ((VOL_MAX - volume) * (-0.33)));
+
 		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
