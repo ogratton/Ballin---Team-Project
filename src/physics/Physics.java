@@ -2,6 +2,7 @@ package physics;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Function;
 
 import javax.swing.Timer;
 
@@ -81,12 +82,13 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
+		if(c.isDead()) return;
+		
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
 		//check for falling.
 		if(t == null || t == Tile.ABYSS || t == Tile.EDGE_ABYSS) {
 			c.setFalling(true);
-			c.setDead(true);
 		}
 		// Recharge stamina
 		c.incrementStamina();
@@ -94,7 +96,7 @@ public class Physics extends Thread implements ActionListener {
 		if (special(c)){
 			return;
 		}
-		if(!c.isDead()) {
+		if(!c.isFalling()) {
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -115,13 +117,18 @@ public class Physics extends Thread implements ActionListener {
 			if (!c.isUp() && !c.isDown()) {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
-		} else if(resources.getMap().onMap(c.getX(),c.getY())){
-			if(Math.abs(c.getDx()) < 0.5 && Double.compare(c.getDx(),0.0) != 0){
-				c.setDx(c.getDx() * 2);
-			}
-			if(Math.abs(c.getDy()) < 0.5 && Double.compare(c.getDy(),0.0) != 0){
-				c.setDy(c.getDy() * 2);
-			}
+		} else {
+			Function<Tile,Boolean> deadCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
+			boolean dead = true;
+			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+			dead &= deadCheck.apply(t2);
+			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+			dead &= deadCheck.apply(t2);
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+			dead &= deadCheck.apply(t2);
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+			dead &= deadCheck.apply(t2);
+			c.setDead(dead);
 		}
 		move(c);
 	}
