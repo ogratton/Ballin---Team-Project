@@ -1,6 +1,7 @@
 import java.awt.event.KeyEvent;
 
 import audio.AudioFile;
+import resources.Resources;
 
 public class Ball {
 
@@ -20,8 +21,10 @@ public class Ball {
 	
 	private final String audioPath = "./resources/audio/";
 	
-	private AudioFile dong = new AudioFile(audioPath + "dong.wav", "dong sfx");
-	private AudioFile ding = new AudioFile(audioPath + "ding.wav", "ding sfx");
+	private Resources resources = null;
+	
+	private AudioFile dong = new AudioFile(resources, audioPath + "dong.wav", "dong sfx");
+	private AudioFile ding = new AudioFile(resources, audioPath + "ding.wav", "ding sfx");
 
 	public Ball(int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
