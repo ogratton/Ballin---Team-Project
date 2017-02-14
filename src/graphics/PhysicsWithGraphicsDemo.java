@@ -18,8 +18,16 @@ import resources.Resources;
 
 public class PhysicsWithGraphicsDemo {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args){
+		
+		Resources resources = new Resources();
+		
+		start(resources);
+		
+	}
+	
+	public static void start(Resources resources) {
+		
 		Character player = new Character(Character.Class.TEST);
 
 		player.setX(100);
@@ -35,9 +43,11 @@ public class PhysicsWithGraphicsDemo {
 		player2.setX(500);
 		player2.setY(100);
 
-		Resources.playerList.add(player);
-		Resources.playerList.add(player1);
-		Resources.playerList.add(player2);
+		
+		
+		resources.addPlayerToList(player);
+		resources.addPlayerToList(player1);
+		resources.addPlayerToList(player2);
 
 		for(int i = 0; i < 6; i++){
 			
@@ -46,7 +56,7 @@ public class PhysicsWithGraphicsDemo {
 			Character playa = new Character(Character.Class.WIZARD);
 			playa.setX(r.nextInt(1200));
 			playa.setY(r.nextInt(675));
-			Resources.playerList.add(playa);
+			resources.addPlayerToList(playa);
 		}
 		
 		// make the map the default just in case the following fails
@@ -64,10 +74,10 @@ public class PhysicsWithGraphicsDemo {
 			
 		}
 		
-		Resources.map = new Map(1200, 675, tiles, Map.World.CAVE);
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
 
 		// create physics thread
-		Physics p = new Physics();
+		Physics p = new Physics(resources);
 		p.start();
 
 		RunRight run = new RunRight(player2);
@@ -77,7 +87,7 @@ public class PhysicsWithGraphicsDemo {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(Resources.playerList, Resources.map);
+				Graphics g = new Graphics(resources.getPlayerList(), resources.getMap());
 				g.start();
 			}
 		});

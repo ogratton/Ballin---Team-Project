@@ -2,6 +2,8 @@ package audio;
 
 import java.util.ArrayList;
 
+import resources.Resources;
+
 /**
  * A thread that will loop a playlist of audio files until thread death
  * 
@@ -19,6 +21,7 @@ public class MusicPlayer implements Runnable
 	private boolean running;
 	private boolean paused;
 	private float gain;
+	private Resources resources;
 
 	/**
 	 * the gain before muting
@@ -35,12 +38,15 @@ public class MusicPlayer implements Runnable
 	 * 
 	 * @param files the 'songs' to play
 	 */
-	public MusicPlayer(String... files)
+	public MusicPlayer(Resources resources, String... files)
 	{
+		
+		this.resources = resources;
+		
 		musicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
 		{
-			musicFiles.add(new AudioFile("./resources/audio/" + file + ".wav", file));
+			musicFiles.add(new AudioFile(resources, "./resources/audio/" + file + ".wav", file));
 		}
 
 		currentSongIndex = 0;
@@ -66,7 +72,7 @@ public class MusicPlayer implements Runnable
 		ArrayList<AudioFile> tempMusicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
 		{
-			tempMusicFiles.add(new AudioFile("./resources/audio/" + file + ".wav", file));
+			tempMusicFiles.add(new AudioFile(resources, "./resources/audio/" + file + ".wav", file));
 		}
 
 		musicFiles = tempMusicFiles;

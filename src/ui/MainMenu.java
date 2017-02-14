@@ -27,9 +27,10 @@ import graphics.PhysicsWithGraphicsDemo;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
-
+	
 	MainMenu() {
 		JFrame frame = new JFrame();
+		resources = new Resources();
 		mPanel = new JPanel();
 		frame.setName("Main Menu");
 		frame.setSize(frameSize);
@@ -39,23 +40,25 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer("frog");
+		musicPlayer = new MusicPlayer(resources, "frog");
 		musicPlayer.run();
 	}
 
-	private static MusicPlayer musicPlayer;
-	private static boolean isPressed;
-	private static ViewState defaultState = ViewState.USERNAME_STATE;
-	private final static Font font = makeFont(20);
-	public static String username;
-	private static Dimension frameSize = new Dimension(500, 700);
-	public static InetAddress hostname;
-	public static int port;
-	private static JPanel mainMenuPanel = mainMenuPanel();
-	private static JPanel usernamePanel = getUsername();
-	private static JPanel optionsPanel = optionPanel();
-	private static JPanel mPanel;
+	private MusicPlayer musicPlayer;
+	private boolean isPressed;
+	private ViewState defaultState = ViewState.USERNAME_STATE;
+	private final Font font = makeFont(20);
+	public String username;
+	private Dimension frameSize = new Dimension(500, 700);
+	public InetAddress hostname;
+	public int port;
+	private JPanel mainMenuPanel = mainMenuPanel();
+	private JPanel usernamePanel = getUsername();
+	private JPanel optionsPanel = optionPanel();
+	private JPanel mPanel;
 
+	private Resources resources;
+	
 	public enum ViewState {
 		MAINMENU_STATE, OPTIONS_STATE, USERNAME_STATE;
 	}
@@ -80,7 +83,7 @@ public class MainMenu extends JFrame {
 		return customFont;
 	}
 
-	private static void setKeyRebindable(JButton button) {
+	private void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
 
@@ -143,7 +146,7 @@ public class MainMenu extends JFrame {
 		});
 	}
 
-	public static void changeState(ViewState viewState) {
+	public void changeState(ViewState viewState) {
 
 		switch (viewState) {
 		case MAINMENU_STATE:
@@ -173,7 +176,7 @@ public class MainMenu extends JFrame {
 		}
 	}
 
-	public static JPanel getUsername(){
+	public JPanel getUsername(){
 		JPanel panel = new JPanel();
 		
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -196,9 +199,9 @@ public class MainMenu extends JFrame {
 		button.addActionListener(e ->{
 			username = textField.getText();
 			textField.setText("");
-			AudioFile audioPlayer = new AudioFile("resources\\audio\\ding.wav", "Ding");
+			AudioFile audioPlayer = new AudioFile(resources, "resources\\audio\\ding.wav", "Ding");
 			audioPlayer.play();
-			audioPlayer.setGain(Resources.sfx_gain);
+			audioPlayer.setGain(resources.getSfx_gain());
 			changeState(ViewState.MAINMENU_STATE);
 		});
 		
@@ -212,7 +215,7 @@ public class MainMenu extends JFrame {
 		return panel;
 	}
 	
-	public static JPanel mainMenuPanel() {
+	public JPanel mainMenuPanel() {
 
 		Dimension buttonSize = new Dimension(new Dimension((int)(frameSize.getWidth()*0.8), (int)(frameSize.getHeight()*0.1)));
 
@@ -282,7 +285,7 @@ public class MainMenu extends JFrame {
 
 	}
 
-	private static JPanel optionPanel() {
+	private JPanel optionPanel() {
 		final int VOL_MAX = 100;
 		final int VOL_MIN = 0;
 
@@ -311,9 +314,9 @@ public class MainMenu extends JFrame {
 		soundSlider.addChangeListener(e ->{
 	        int volume = soundSlider.getValue();
 	        if(volume == 0)
-	        	Resources.sfx_gain = -80;
+	        	resources.setSfx_gain(-80);
 	        else
-	        	Resources.sfx_gain = (int) ((VOL_MAX - volume) * (-0.33));
+	        	resources.setSfx_gain((int) ((VOL_MAX - volume) * (-0.33)));
 		});
 
 		JLabel musicLabel = new JLabel("Music Volume");
