@@ -3,6 +3,7 @@ package networking;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -38,18 +39,18 @@ public class ServerReceiver extends Thread {
 	  while(message.getCommand() != Command.QUIT) {
 		  try {
 			  message = (Message)myClient.readUnshared();
-			  //ClientInformation senderclient = clients.get(message.getReceiverId());
 			  ClientInformation senderClient;
 			  
 			  switch(message.getCommand()) {
 			  case SESSION:
-				  switch(message.getMessage()) {
-				  case "getSessions" :
-					  ClientInformation receiverClient = clients.get(message.getReceiverId());
-					  response = new Message(Command.SESSION, "allSessions", receiverClient.getId(), receiverClient.getId(), sessions);
-					  receiverClient.getQueue().offer(response);
+				  switch(message.getNote()) {
+				  case INDEX:
+					  senderClient = clients.get(message.getSenderId());
+					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), -1, -1, -1, sessions);
+					  senderClient.getQueue().offer(response);
 					  break;
-				  case "createSession" :
+				  case CREATE:
+					  System.out.println("Creating Session.");
 					  senderClient = clients.get(message.getSenderId());
 					  if(senderClient.getSession() != null) {
 						  senderClient.getSession().removeClient(senderClient.getId());
@@ -61,31 +62,49 @@ public class ServerReceiver extends Thread {
 				  	  Session session = new Session(id, sessionClients);
 					  sessions.put(id, session);
 					  senderClient.setSession(session);
-					  response = new Message(Command.SESSION, "sessionCreated", id, senderClient.getId(), sessions);
+					  response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), -1, session.getId(), -1, sessions);
 					  senderClient.getQueue().offer(response);
+					  System.out.println("Session created.");
 					  break;
-				  case "joinSession" :
+				  case JOIN:
 					  senderClient = clients.get(message.getSenderId());
-					  sessionId = message.getReceiverId();
+					  sessionId = message.getTargetSessionId();
 					  
 					  if(senderClient.getSession() != null) {
 						  senderClient.getSession().removeClient(senderClient.getId());
 					  }
-					  //System.out.println(sessionId);
-					  //System.out.println(senderClient.getId());
 					  session = sessions.get(sessionId);
 					  session.addClient(senderClient.getId(), senderClient);
 					  senderClient.setSession(session);
-					  response = new Message(Command.SESSION, "sessionJoined", sessionId, senderClient.getId(), sessions);
+					  response = new Message(Command.SESSION, Note.JOINED, senderClient.getId(), -1, session.getId(), -1, sessions);
 					  senderClient.getQueue().offer(response);
 					  break;
-				  case "leaveSession" :
+				  case LEAVE:
 					  senderClient = clients.get(message.getSenderId());
-					  sessionId = message.getReceiverId();
+					  sessionId = message.getTargetSessionId();
 					  sessions.get(sessionId).removeClient(senderClient.getId());
 					  senderClient.setSession(null);
-					  response = new Message(Command.SESSION, "sessionLeft", senderClient.getId(), senderClient.getId(), sessions);
+					  response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), -1, -1, -1, sessions);
 					  senderClient.getQueue().offer(response);
+					  break;
+				  default:
+					  break;
+				  }
+			  case GAME:
+				  switch(message.getNote()) {
+				  case START:
+					  Session session = sessions.get(message.getCurrentSessionId());
+					  session.setGameInProgress(true);
+					  List<ClientInformation> clients = session.getAllClients();
+					  
+					  // Send to all clients in the session.
+					  for(int i=0; i<clients.size(); i++) {
+						  clients.get(i).getQueue().offer(message);
+					  }
+					  break;
+				  case UPDATE:
+					  break;
+				  default:
 					  break;
 				  }
 			  default:

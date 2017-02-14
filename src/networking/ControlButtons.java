@@ -24,7 +24,7 @@ public class ControlButtons extends JPanel implements Observer {
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
  * When a button is clicked it sends a message to the Server Receiver where the message is interpreted.	
  * @param cModel The Client Data Model object. This is where all the information about the client is stored.
- * @param toServer The output stream to the Server Reciever.
+ * @param toServer The output stream to the Server Receiver.
  */
 	
 	public ControlButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
@@ -33,7 +33,7 @@ public class ControlButtons extends JPanel implements Observer {
 		this.cModel = cModel;
 		refresh = new JButton("Refresh");
 		refresh.addActionListener(e -> {
-			Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), cModel.getMyId());
+			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), -1, cModel.getSessionId(), -1);
 			try {
 				toServer.writeUnshared(message);
 			} catch (Exception e1) {

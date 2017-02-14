@@ -1,6 +1,8 @@
 package networking;
 
 import java.util.List;
+import resources.Character;
+import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentMap;
 
@@ -118,5 +120,45 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized List<Session> getAllSessions() {
 		return data.getAllSessions();
+	}
+	
+	public synchronized boolean isGameInProgress() {
+		return data.isGameInProgress();
+	}
+	
+	public synchronized void setGameInProgress(boolean bool) {
+		data.setGameInProgress(bool);
+	}
+	
+	public Map<Integer, Character> getCharacters() {
+		return data.getCharacters();
+	}
+
+	public void setCharacters(Map<Integer, Character> characters) {
+		data.setCharacters(characters);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public Character getCharacter(Integer id) {
+		return data.getCharacter(id);
+	}
+
+	public Character getMyCharacter() {
+		return data.getMyCharacter();
+	}
+
+	public void setMyCharacter(Character myCharacter) {
+		data.setMyCharacter(myCharacter);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public List<CharacterInfo> getCharactersList() {
+		return data.getCharactersList();
+	}
+	
+	public void setCharactersList(List<CharacterInfo> list) {
+		data.setCharactersList(list);
 	}
 }

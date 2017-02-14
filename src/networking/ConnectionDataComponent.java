@@ -24,16 +24,18 @@ public class ConnectionDataComponent extends JPanel {
 		ListView lists = new ListView(model);
 		SessionView sessionView = new SessionView(model);
 		ControlButtons controls = new ControlButtons(model, toServer);
+		GameButtons gameButtons = new GameButtons(model, toServer);
 		
-		JPanel messagePanel = new JPanel();
-		messagePanel.setLayout(new BorderLayout());
-		messagePanel.add(receivedMessages, BorderLayout.NORTH);
-		messagePanel.add(messageBox, BorderLayout.CENTER);
+		//JPanel messagePanel = new JPanel();
+		//messagePanel.setLayout(new BorderLayout());
+		//messagePanel.add(receivedMessages, BorderLayout.NORTH);
+		//messagePanel.add(messageBox, BorderLayout.CENTER);
 		
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
 		bottomPanel.add(sessionView, BorderLayout.WEST);
-		bottomPanel.add(messagePanel, BorderLayout.CENTER);
+		//bottomPanel.add(messagePanel, BorderLayout.CENTER);
+		bottomPanel.add(gameButtons, BorderLayout.SOUTH);
 		bottomPanel.add(sessionButtons, BorderLayout.EAST);
 		
 		JPanel listPanel = new JPanel();

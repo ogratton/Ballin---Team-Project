@@ -51,34 +51,25 @@ public void run() {
     		message = (Message)server.readUnshared();
     		switch(message.getCommand()) {
     		case SESSION:
-    			switch(message.getMessage()) {
-    			case("allSessions"):
+    			switch(message.getNote()) {
+    			case COMPLETED:
     				System.out.println("Received sessions from Server");
     				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
-    				
-    				// Testing
-    				for(int id : sessions.keySet()) {
-    					System.out.println("Session ID: " + id);
-    				}
     				break;
-    			case("sessionCreated"):
+    			case CREATED:
     				System.out.println("Session created");
     				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
-    				cModel.setSessionId(message.getSenderId());
-    				//System.out.println("Session ID: " + message.getSenderId());
-    				//System.out.println("Client ID: " + cModel.getMyId());
-    				//System.out.println(sessions.get(message.getSenderId()).getAllClients().size());
-    				//System.out.println(sessions.get(cModel.getSessionId()).getClient(cModel.getMyId()).getName());
+    				cModel.setSessionId(message.getCurrentSessionId());
     				break;
-    			case("sessionJoined"):
+    			case JOINED:
     				System.out.println("Session Joined");
     				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
-    				cModel.setSessionId(message.getSenderId());
+    				cModel.setSessionId(message.getCurrentSessionId());
     				break;
-    			case("sessionLeft"):
+    			case LEFT:
     				System.out.println("Session Left");
     				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
@@ -89,6 +80,20 @@ public void run() {
     		case SEND_ID:
     			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
     			System.out.println(cModel.getMyId());
+    			break;
+    		case GAME:
+    			switch(message.getNote()) {
+    			case START:
+    				System.out.println("Game Started");
+    				GameData gameData = (GameData)message.getObject();
+    				cModel.setGameInProgress(true);
+    				NetworkingDemo.setGame(cModel, gameData);
+    				break;
+    			case UPDATE:
+    				break;
+    			default:
+    				break;
+    			}
     			break;
 			default:
 				break;

@@ -44,7 +44,7 @@ public class MessageBox extends JPanel implements Observer {
 		sendMessage = new JButton("Send Message");
 		sendMessage.addActionListener(e -> {
 			String messageString = messageBox.getText();
-			Message message = new Message(Command.MESSAGE, messageString, cModel.getMyId(), cModel.getTargetId());
+			Message message = new Message(Command.MESSAGE, Note.MESSAGE, cModel.getMyId(), cModel.getTargetId(), cModel.getSessionId(), cModel.getSessionId(), messageString);
 			try {
 				toServer.writeObject(message);
 			} catch (Exception e1) {

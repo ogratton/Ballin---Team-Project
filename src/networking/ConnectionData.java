@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import resources.Character;
 
 public class ConnectionData {
 
@@ -18,7 +19,38 @@ public class ConnectionData {
 	private int highlightedClientId = 0;
 	private String receivedMessage;
 	private int targetId;
+	private boolean gameInProgress;
+	private Map<Integer, Character> characters = new ConcurrentHashMap<Integer, Character>();
+	private List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 	
+	public List<CharacterInfo> getCharactersList() {
+		return charactersList;
+	}
+
+	public void setCharactersList(List<CharacterInfo> charactersList) {
+		this.charactersList = charactersList;
+	}
+
+	public Map<Integer, Character> getCharacters() {
+		return characters;
+	}
+
+	public void setCharacters(Map<Integer, Character> characters) {
+		this.characters = characters;
+	}
+	
+	public Character getCharacter(Integer id) {
+		return characters.get(id);
+	}
+
+	public Character getMyCharacter() {
+		return characters.get(myClient.getId());
+	}
+
+	public void setMyCharacter(Character myCharacter) {
+		characters.put(myClient.getId(), myCharacter);
+	}
+
 	public ClientInformation getClientInformation() {
 		return myClient;
 	}
@@ -121,5 +153,13 @@ public class ConnectionData {
 	
 	public void setTargetId(int id) {
 		targetId = id;
+	}
+	
+	public boolean isGameInProgress() {
+		return gameInProgress;
+	}
+	
+	public void setGameInProgress(boolean bool) {
+		this.gameInProgress = bool;
 	}
 }

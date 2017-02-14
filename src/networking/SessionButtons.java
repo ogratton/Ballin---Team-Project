@@ -24,7 +24,7 @@ public class SessionButtons extends JPanel implements Observer {
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
  * When a button is clicked it sends a message to the Server Receiver where the message is interpreted.	
  * @param cModel The Client Data Model object. This is where all the information about the client is stored.
- * @param toServer The output stream to the Server Reciever.
+ * @param toServer The output stream to the Server Receiver.
  */
 	
 	public SessionButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
@@ -35,7 +35,7 @@ public class SessionButtons extends JPanel implements Observer {
 		joinSession = new JButton("Join Session");
 		joinSession.addActionListener(e -> {
 			if(cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message joinMessage = new Message(Command.SESSION, "joinSession", cModel.getMyId(), cModel.getHighlightedSessionId());
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), -1, cModel.getSessionId(), cModel.getHighlightedSessionId());
 				try {
 					toServer.reset();
 					toServer.writeUnshared(joinMessage);
@@ -47,7 +47,7 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		createSession = new JButton("Create Session");
 		createSession.addActionListener(e -> {
-			Message createMessage = new Message(Command.SESSION, "createSession", cModel.getMyId(), cModel.getMyId(), cModel.getClientInformation());
+			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), -1, -1, -1, cModel.getClientInformation());
 			try {
 				toServer.reset();
 				toServer.writeUnshared(createMessage);
@@ -55,24 +55,15 @@ public class SessionButtons extends JPanel implements Observer {
 				e1.printStackTrace();
 			}
 		});
-
-//	    Message message = new Message(Command.SESSION, "getSessions", cModel.getMyId(), -1);
-//	    try {
-//			toServer.writeObject(message);
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
 		
 		leaveSession = new JButton("Leave Session");
 		leaveSession.addActionListener(e -> {
-			if(cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message leaveMessage = new Message(Command.SESSION, "leaveSession", cModel.getMyId(), cModel.getHighlightedSessionId());
-				try {
-					toServer.reset();
-					toServer.writeUnshared(leaveMessage);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), -1, cModel.getSessionId(), cModel.getHighlightedSessionId());
+			try {
+				toServer.reset();
+				toServer.writeUnshared(leaveMessage);
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		});
 		
