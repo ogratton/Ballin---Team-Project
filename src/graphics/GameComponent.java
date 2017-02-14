@@ -33,6 +33,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Map map;
 	private Timer timer;
 	private GameView view;
+	private Resources resources;
 
 	private boolean fullScreen = false;
 
@@ -49,7 +50,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	 *            the map the board is displaying
 	 */
 
-	public GameComponent(ArrayList<Character> characters, Map map, int width, int height) {
+	public GameComponent(Resources resources, int width, int height) {
 
 		setLayout(new BorderLayout());
 
@@ -59,18 +60,20 @@ public class GameComponent extends JFrame implements ActionListener {
 		setFocusable(true);
 		timer = new Timer(30, this);
 		timer.start();
+		
 
 		// End test code block
-		this.characters = characters;
+		this.resources= resources;
 
+		characters = resources.getPlayerList();
+		
+		
 		this.width = width;
 		this.height = height;
 
-		this.map = map;
+		view = new GameView(resources);
 
-		view = new GameView(characters, map);
-
-		for (Character model : characters) {
+		for (Character model : resources.getPlayerList()) {
 			model.addObserver(view);
 		}
 		

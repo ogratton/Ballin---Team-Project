@@ -16,16 +16,17 @@ import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Map;
+import resources.Resources;
 
 @SuppressWarnings("serial")
 public class GameView extends JPanel implements Observer {
 
-	private ArrayList<Character> characters;
-	private Map map;
 	private HashMap<Character, Point> points;
 	private BufferedImage mapSprite;
 	private double multiplier = 1;
 
+	private Resources resources;
+	
 	/**
 	 * Create a new game view
 	 * 
@@ -35,16 +36,16 @@ public class GameView extends JPanel implements Observer {
 	 *            the model of the map on the view
 	 */
 
-	public GameView(ArrayList<Character> characters, Map map) {
+	public GameView(Resources resources) {
 		super();
-		this.characters = characters;
-		this.map = map;
+		
+		this.resources = resources;
 
-		mapSprite = Sprite.createMap(map);
+		mapSprite = Sprite.createMap(resources.getMap());
 
 		points = new HashMap<Character, Point>();
 
-		for (Character model : characters) {
+		for (Character model : resources.getPlayerList()) {
 			points.put(model, new Point((int)model.getX(), (int)model.getY()));
 		}
 
@@ -75,7 +76,7 @@ public class GameView extends JPanel implements Observer {
 		g.drawImage(mapSprite, 0, (int) offset, (int) (mapSprite.getWidth() * multiplier),
 				(int) (mapSprite.getHeight() * multiplier), this);
 
-		for (Character model : characters) {
+		for (Character model : resources.getPlayerList()) {
 
 			BufferedImage frame = null;
 

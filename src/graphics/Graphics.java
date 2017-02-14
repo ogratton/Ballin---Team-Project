@@ -6,23 +6,20 @@ import javax.swing.JFrame;
 
 import resources.Character;
 import resources.Map;
+import resources.Resources;
 
 public class Graphics extends Thread {
 
-
-	private ArrayList<Character> players;
-	private Map map;
+	Resources resources;
 	
-	public Graphics(ArrayList<Character> players, Map map){
-		this.players = players;
-		this.map = map;
-		
+	public Graphics(Resources resources){
+		this.resources = resources;
 	}
 	
 	public void run() {
 	
 		
-		GameComponent comp = new GameComponent(players, map, 1200, 675);
+		GameComponent comp = new GameComponent(resources, 1200, 675);
 	
 		comp.setUndecorated(true);
 		comp.setSize(1200, 675);
