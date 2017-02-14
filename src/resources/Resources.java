@@ -12,8 +12,9 @@ import java.util.Hashtable;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	//keybinding things
+
 	
+	// keybindings
 	private int default_up = KeyEvent.VK_W;
 	private int default_down = KeyEvent.VK_S;
 	private int default_left = KeyEvent.VK_A;
@@ -31,33 +32,36 @@ public class Resources {
 	// what number player am I?
 	private int me = -1;
 	
-	// I like arraylists 
-	//public static ArrayList<CharacterModel> models = new ArrayList<CharacterModel>();
+	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
+	
+	// map
 	private Map map;
 	
-	public int getDefault_up() {
+	
+	
+	public int getDefaultUp() {
 		return default_up;
 	}
-	public void setDefault_up(int default_up) {
+	public void setDefaultUp(int default_up) {
 		this.default_up = default_up;
 	}
-	public int getDefault_down() {
+	public int getDefaultDown() {
 		return default_down;
 	}
-	public void setDefault_down(int default_down) {
+	public void setDefaultDown(int default_down) {
 		this.default_down = default_down;
 	}
-	public int getDefault_left() {
+	public int getDefaultLeft() {
 		return default_left;
 	}
-	public void setDefault_left(int default_left) {
+	public void setDefaultLeft(int default_left) {
 		this.default_left = default_left;
 	}
-	public int getDefault_right() {
+	public int getDefaultRight() {
 		return default_right;
 	}
-	public void setDefault_right(int default_right) {
+	public void setDefaultRight(int default_right) {
 		this.default_right = default_right;
 	}
 	public int getUp() {
@@ -84,10 +88,10 @@ public class Resources {
 	public void setRight(int right) {
 		this.right = right;
 	}
-	public int getSfx_gain() {
+	public int getSFXGain() {
 		return sfx_gain;
 	}
-	public void setSfx_gain(int sfx_gain) {
+	public void setSFXGain(int sfx_gain) {
 		this.sfx_gain = sfx_gain;
 	}
 	public int getMe() {

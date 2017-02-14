@@ -103,7 +103,7 @@ public class AudioFile implements LineListener
 	{
 		if (playState != PlayState.PLAYING)
 		{
-			int offset = resources.getSfx_gain() < 0 ? resources.getSfx_gain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+			int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
 			gainControl.setValue(gain + offset); 
 			clip.start();
 			playState = PlayState.PLAYING;
