@@ -44,28 +44,28 @@ public class Server {
       System.exit(1); // Give up.
     }
     
-    System.out.println("trying to connect.");
+    //System.out.println("Trying to connect.");
 
     // Good. We succeeded. But we must try again for the same reason:
     try { 
       // We loop for ever, as servers usually do:
 
       while (true) {
-    	System.out.println("still trying.");
+    	System.out.println("Waiting for connections...");
         // Listen to the socket, accepting connections from new clients:
         Socket socket = serverSocket.accept();
         
-        System.out.println("server connected");
+        //System.out.println("server connected");
 
         // We create and start a new thread to write to the client:
         ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());	
         
-        System.out.println("Got");
+        //System.out.println("Got");
         
         // This is so that we can use readLine():
         ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
         
-        System.out.println("Got Here");
+        //System.out.println("Got Here");
 
         // We ask the client what its name is:
         Message clientName = null;

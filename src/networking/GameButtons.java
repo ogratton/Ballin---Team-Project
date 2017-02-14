@@ -1,6 +1,5 @@
 package networking;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
@@ -11,28 +10,44 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class SessionView extends JPanel implements Observer {
+import resources.Resources;
+
+public class GameButtons extends JPanel implements Observer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
-	private JTextField text;
+	private ObjectOutputStream toServer;
+	private JButton refresh;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
  * When a button is clicked it sends a message to the Server Receiver where the message is interpreted.	
  * @param cModel The Client Data Model object. This is where all the information about the client is stored.
- * @param toServer The output stream to the Server Reciever.
+ * @param toServer The output stream to the Server Receiver.
  */
 	
-	public SessionView(ConnectionDataModel cModel) {
+	public GameButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
 		super();
 		
 		this.cModel = cModel;
-		text = new JTextField(cModel.getSessionId());
-		add(text);
+		refresh = new JButton("Start Game");
+		refresh.addActionListener(e -> {
+			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+				NetworkingDemo.startGame(cModel);
+				GameData gameData = new GameData(cModel.getCharactersList());
+				Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), -1, cModel.getSessionId(), -1, gameData);
+				try {
+					toServer.writeUnshared(message);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		add(refresh);
 	}
 
 /**
@@ -44,10 +59,10 @@ public class SessionView extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
-		text.setText("Session ID: " + Integer.toString(cModel.getSessionId()));
 		repaint();
 	}
 
 }
+
 
 

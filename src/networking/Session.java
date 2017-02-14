@@ -16,10 +16,20 @@ public class Session implements Serializable {
 	private static final long serialVersionUID = -859097128269222813L;
 	private int id;
 	private ConcurrentMap<Integer, ClientInformation> clients;
+	private boolean gameInProgress;
 	
 	public Session(int id, ConcurrentMap<Integer, ClientInformation> clients) {
 		this.id = id;
 		this.clients = clients;
+		this.gameInProgress = false;
+	}
+
+	public boolean isGameInProgress() {
+		return gameInProgress;
+	}
+
+	public void setGameInProgress(boolean gameInProgress) {
+		this.gameInProgress = gameInProgress;
 	}
 
 	public int getId() {
