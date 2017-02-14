@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.Random;
 
-import ai.RunRight;
+import ai.VeryBasicAI;
 import audio.MusicPlayer;
 import physics.Physics;
 import resources.Character;
@@ -40,8 +40,8 @@ public class PhysicsWithGraphicsDemo {
 
 		Character player2 = new Character(Character.Class.WIZARD);
 
-		player2.setX(500);
-		player2.setY(100);
+		player2.setX(850);
+		player2.setY(400);
 
 		
 		
@@ -80,8 +80,8 @@ public class PhysicsWithGraphicsDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		RunRight run = new RunRight(player2);
-		run.start();
+		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
+		ai1.start();
 		
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
