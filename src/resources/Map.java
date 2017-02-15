@@ -1,5 +1,6 @@
 package resources;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -361,6 +362,25 @@ public class Map {
 		//check if column,row is in the tile array:
 		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
 			return tiles[column][row];
+		}
+		// if not in map
+		return null;
+	}
+	
+	/**
+	 * Return the row and column of the tile at point x y
+	 * Used by the AI
+	 * @param x
+	 * @param y
+	 * @return A point with x as column and y as row
+	 */
+	public Point tileCoords(double x, double y)	{
+		int row = (int)(x/SheetDeets.TILES_SIZEX);
+		int column = (int)(y/SheetDeets.TILES_SIZEY);
+		//may crash if tiles not initialised.
+		//check if column,row is in the tile array:
+		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
+			return new Point(column,row);
 		}
 		// if not in map
 		return null;

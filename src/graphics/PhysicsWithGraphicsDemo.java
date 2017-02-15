@@ -40,8 +40,8 @@ public class PhysicsWithGraphicsDemo {
 
 		Character player2 = new Character(Character.Class.WIZARD);
 
-		player2.setX(850);
-		player2.setY(400);
+		player2.setX(800);
+		player2.setY(500);
 
 		
 		
