@@ -36,23 +36,24 @@ public class Sprite {
 	 * @return a BufferedImage of the sprite sheet
 	 */
 
-	public static BufferedImage loadSpriteSheet(String spriteName, SheetType spriteType) {
+	public static BufferedImage loadSpriteSheet(SheetType spriteType) {
 
 		BufferedImage sprite = null;
 		String sheetType = "";
 
 		switch (spriteType) {
 		case CHARACTER:
-			sheetType = "characters/";
+			sheetType = "characters";
 			break;
 		case TILE:
-			sheetType = "tiles/";
+			sheetType = "tiles";
 			break;
 		case MISC:
-			sheetType = "misc/";
+			sheetType = "misc";
+			break;
 		}
 
-		String address = "./resources/sprites/" + sheetType + spriteName + "/sheet.png";
+		String address = "./resources/sprites/" + sheetType + ".png";
 
 		try {
 			sprite = ImageIO.read(new File(address));
@@ -64,19 +65,6 @@ public class Sprite {
 		return sprite;
 	}
 
-	/**
-	 * Determine the name of a sprite sheet for a class
-	 * 
-	 * @param classType
-	 *            the class
-	 * @return the name
-	 */
-
-	public static String determineSpriteSheetName(Character.Class classType) {
-
-		return SheetDeets.getSpriteSheetFromClass(classType).getName();
-
-	}
 
 	/**
 	 * Get an individual sprite from a sprite sheet

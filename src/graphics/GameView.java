@@ -95,14 +95,13 @@ public class GameView extends JPanel implements Observer {
 				int sizeY = (int) (frame.getHeight() * multiplier);
 
 				int modif = 0;
-				
+
 				if (character.isDead()) {
 					int step = character.getDyingStep();
 
-					
 					if (step < sizeX * 4) {
 
-						modif = (int)(step * 0.25);
+						modif = (int) (step * 0.25);
 						sizeX -= modif;
 						sizeY -= modif;
 						character.incDyingStep();
@@ -113,11 +112,10 @@ public class GameView extends JPanel implements Observer {
 					}
 
 				}
-				
-				int actualX = (int) ((newX - character.getRadius() + modif/2) * multiplier);
-				int actualY = (int) ((newY - character.getRadius() + modif/2) * multiplier);
-				
-				
+
+				int actualX = (int) ((newX - character.getRadius() + modif / 2) * multiplier);
+				int actualY = (int) ((newY - character.getRadius() + modif / 2) * multiplier);
+
 				g.drawImage(frame, cast(actualX), cast(actualY + offset), sizeX, sizeY, this);
 
 				if (character.isDashing()) {
@@ -165,8 +163,8 @@ public class GameView extends JPanel implements Observer {
 
 					}
 
-					g.drawImage(Sprite.getSprite(SheetDeets.MISC.getSpriteSheet(), 0, 0, 50, 50),
-							(int) ((dashX * multiplier) + offset), (int) ((dashY * multiplier) + offset), (int)(50 * multiplier), (int)(50 * multiplier),
+					g.drawImage(Sprite.getSprite(SheetDeets.MISC, 0, 0, 50, 50), (int) ((dashX * multiplier) + offset),
+							(int) ((dashY * multiplier) + offset), (int) (50 * multiplier), (int) (50 * multiplier),
 							this);
 				}
 			}

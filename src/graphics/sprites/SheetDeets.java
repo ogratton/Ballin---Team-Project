@@ -16,7 +16,7 @@ public class SheetDeets {
 	// CHARACTER CLASS SHEETS
 
 	// wizard
-	public static final String CHAR_WIZ_NAME = "wizard";
+	/*public static final String CHAR_WIZ_NAME = "wizard";
 
 	public static final int CHAR_WIZ_COLS = 8;
 	public static final int CHAR_WIZ_ROWS = 1;
@@ -83,7 +83,16 @@ public class SheetDeets {
 
 	public static final SpriteSheet CHAR_TEST = new SpriteSheet(Sprite.SheetType.CHARACTER, CHAR_TEST_NAME,
 			CHAR_TEST_ROWS, CHAR_TEST_COLS, CHAR_TEST_SIZEX, CHAR_TEST_SIZEY, CHAR_TEST_SECTIONS);
-
+*/
+	// CHARACTER SPRITE SHEET
+	
+	public static final BufferedImage CHARACTERS = Sprite.loadSpriteSheet(Sprite.SheetType.CHARACTER);
+	
+	public static final int CHARACTERS_COLS = 8;
+	public static final int CHARACTERS_ROWS = 3;
+	public static final int CHARACTERS_SIZEX = 50;
+	public static final int CHARACTERS_SIZEY = 50;
+	
 	// TILE SPRITE SHEETS
 
 	/* TILE CONVENTION:
@@ -112,18 +121,15 @@ public class SheetDeets {
 	
 	// test hex
 
-	public static final String TILES_NAME = "tiles";
-
+	public static final BufferedImage TILES = Sprite.loadSpriteSheet(Sprite.SheetType.TILE);
+	
 	public static final int TILES_COLS = 6;
 	public static final int TILES_ROWS = 3;
 	public static final int TILES_SIZEX = 25;
 	public static final int TILES_SIZEY = 25;
 
-	public static final SpriteSheet TILES = new SpriteSheet(Sprite.SheetType.TILE, TILES_NAME, TILES_ROWS,
-			TILES_COLS, TILES_SIZEX, TILES_SIZEY, null);
-
 	// speed lines
-	public static final SpriteSheet MISC = new SpriteSheet(Sprite.SheetType.MISC, "misc", 1, 1, 50, 50, null);
+	public static final BufferedImage MISC = Sprite.loadSpriteSheet(Sprite.SheetType.MISC);
 	
 	/**
 	 * Return the correct sprite sheet for a given character
@@ -133,36 +139,12 @@ public class SheetDeets {
 	 * @return the sprite sheet
 	 */
 
-	public static SpriteSheet getSpriteSheetFromCharacter(Character character) {
+	public static BufferedImage getSpriteSheetFromCharacter(Character character) {
 
 		Character.Class c = character.getClassType();
 
-		return getSpriteSheetFromClass(c);
+		return getSpriteSetFromClass(c);
 
-	}
-
-	/**
-	 * Return the correct sprite sheet for a given class
-	 * 
-	 * @param c
-	 *            the class
-	 * @return the sprite sheet
-	 */
-
-	public static SpriteSheet getSpriteSheetFromClass(Character.Class c) {
-
-		switch (c) {
-		case DEFAULT:
-			return CHAR_TEST;
-		case WIZARD:
-			return CHAR_WIZ;
-		case ELF:
-			return CHAR_ELF;
-		case TEST:
-			return CHAR_TEST;
-		}
-
-		return null;
 	}
 	
 	/**
@@ -190,7 +172,30 @@ public class SheetDeets {
 			break;
 		}
 		
-		return Sprite.getSprite(TILES.getSpriteSheet(), 0, TILES_SIZEY * x, TILES_SIZEX * 6 , TILES_SIZEY * 3);
+		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6 , TILES_SIZEY * 3);
+	}
+	
+	public static BufferedImage getSpriteSetFromClass(Character.Class c){
+		
+		int x = 0;
+		
+		switch(c){
+		case WIZARD:
+			x = 0;
+			break;
+		case ELF:
+			x = 1;
+			break;
+		case TEST:
+			x = 2;
+			break;
+		case DEFAULT:
+			x = 0;
+			break;
+		}
+		
+		return Sprite.getSprite(CHARACTERS, 0, x, CHARACTERS_SIZEX * 8 , CHARACTERS_SIZEY);
+		
 	}
 
 	/**
@@ -202,8 +207,7 @@ public class SheetDeets {
 
 	public static int getRadiusFromSprite(Character.Class c) {
 
-		SpriteSheet sheet = getSpriteSheetFromClass(c);
-		return (int) (sheet.getSizeX() / 2);
+		return 25;
 
 	}
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import graphics.sprites.SheetDeets;
-import graphics.sprites.SpriteSheet;
+import graphics.sprites.Sprite;
 
 public class Character extends Observable implements Collidable {
 	private static final double default_mass = 1.0;
@@ -48,7 +48,7 @@ public class Character extends Observable implements Collidable {
 	private Class classType = Class.DEFAULT;
 
 	// variables imported from CharacterModel
-	private SpriteSheet spriteSheet;
+	private BufferedImage spriteSheet;
 	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
@@ -132,26 +132,11 @@ public class Character extends Observable implements Collidable {
 
 		rollingSprites = new ArrayList<BufferedImage>();
 		directionSprites = new ArrayList<BufferedImage>();
-		dyingSprites = new ArrayList<BufferedImage>();
 
-		ArrayList<int[][]> sections = spriteSheet.getSections();
-		int[][] rollingSpriteLocs = sections.get(0);
-		int[][] directionSpriteLocs = sections.get(1);
-		int[][] deathSpriteLocs = sections.get(2);
-
-		for (int i = 0; i < rollingSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
+		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(spriteSheet, i, 0, SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEX);
 			rollingSprites.add(sprite);
-		}
-
-		for (int i = 0; i < directionSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], directionSpriteLocs[i][1]);
 			directionSprites.add(sprite);
-		}
-
-		for (int i = 0; i < deathSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(deathSpriteLocs[i][0], deathSpriteLocs[i][1]);
-			dyingSprites.add(sprite);
 		}
 		
 		rollingFrame = 0;
