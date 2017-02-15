@@ -2,6 +2,7 @@ package ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 import resources.Character;
 import resources.Map.Tile;
@@ -27,12 +28,14 @@ public class VeryBasicAI extends Thread
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 20;
-//	private final long reaction_time = 0;
+	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 	
 	private final long tick = 40; // loop every <tick>ms
 
 	private ArrayList<Tile> bad_tiles; // TODO add walls to this when they are implemented
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
+	
+	private Random r;
 
 	/*
 	 * Notes:
@@ -41,13 +44,10 @@ public class VeryBasicAI extends Thread
 	 * For now change direction randomly to avoid danger
 	 * (This is Coward behaviour)
 	 * 
-	 * TODO If it is about to fall off (i.e. on/heading for danger tile) it
-	 * should try and move
-	 * perpendicularly away from the danger
+	 * TODO For moveAwayFromEdge use the ray-cast as the centre, not the player centre
+	 * This will make it look more human, hopefully
 	 * 
 	 * TODO Pathfinding (don't run into holes)
-	 * 
-	 * TODO Behaviours (Coward, Bolshy, Gallivant, etc.)
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -69,6 +69,8 @@ public class VeryBasicAI extends Thread
 		non_edge = new ArrayList<Tile>();
 		non_edge.addAll(bad_tiles);
 		non_edge.add(Tile.FLAT);
+		
+		r = new Random();
 	}
 
 	/**
@@ -99,9 +101,9 @@ public class VeryBasicAI extends Thread
 				// otherwise it's OP
 				while (isEdge(getCurrentTile()))
 				{
+					Thread.sleep(reaction_time);
 					moveAwayFromEdge(getCurrentTileCoords());
 //					System.out.println("Near an edge!");
-					//Thread.sleep(reaction_time);
 				}
 				if (behaviour == Behaviour.DETECTIVE)
 				{
@@ -132,6 +134,13 @@ public class VeryBasicAI extends Thread
 				else if (behaviour == Behaviour.STUBBORN)
 				{
 					brakeChar();
+				}
+				else if (behaviour == Behaviour.AIMLESS)
+				{
+					// Move in random directions
+					// But preferably not off the edge
+					
+					// TODO
 				}
 				else
 				{
