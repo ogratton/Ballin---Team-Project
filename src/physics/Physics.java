@@ -87,18 +87,21 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		if(c.isDead()) {
-			if(c.getDyingStep() < 200) { //this number is "sizeX * 4". TODO find sizeX and read it.
-//				if(!c.isVisible()){
-//					c.incDyingStep();
-//				}
-			} else {
-				//respawn
+			if(c.getDyingStep() >= 200) { //this number is "sizeX * 4". TODO find sizeX and read it.
+				//unset all 'character state' flags
 				c.setDead(false);
 				c.setFalling(false);
 				c.setVisible(true);
 				c.setDyingStep(0);
-				c.setX(500);
-				c.setY(200);
+				//set location
+				double randX = 0.0;
+				double randY = 0.0;
+				do {
+					randX = Math.random() * 1200;
+					randY = Math.random() * 675;
+				} while(tileCheck.apply(resources.getMap().tileAt(randX, randY)));
+				c.setX(randX);
+				c.setY(randY);
 				c.setDx(0);
 				c.setDy(0);
 			}
@@ -138,6 +141,13 @@ public class Physics extends Thread implements ActionListener {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
 		} else {
+			//if too slow, speed up:
+			if(Math.abs(c.getDx()) < 0.5) {
+				c.setDx(c.getDx() * 1.1);
+			}
+			if(Math.abs(c.getDy()) < 0.5) {
+				c.setDy(c.getDy() * 1.1);
+			}
 			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
