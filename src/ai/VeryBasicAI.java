@@ -23,7 +23,7 @@ public class VeryBasicAI extends Thread
 		STUBBORN 	// debug: tries to stop itself moving anywhere
 	};
 	
-	private Behaviour behaviour = Behaviour.STUBBORN; // default
+	private Behaviour behaviour = Behaviour.DETECTIVE; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 20;
@@ -44,8 +44,6 @@ public class VeryBasicAI extends Thread
 	 * TODO Pathfinding (don't run into holes)
 	 * 
 	 * TODO Behaviours (Coward, Bolshy, Gallivant, etc.)
-	 * 
-	 * TODO Stopping (should be a case of 'tapping' in the opposite direction)
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -87,7 +85,7 @@ public class VeryBasicAI extends Thread
 				Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
 				int i = 0;
 
-				System.out.println("Target: " + destinations[i]);
+//				System.out.println("Target: " + destinations[i]);
 
 				while (i < destinations.length && !character.isDead())
 				{
@@ -95,13 +93,13 @@ public class VeryBasicAI extends Thread
 					success = moveTo(destinations[i].getX(), destinations[i].getY());
 					if (success)
 					{
-						System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
-						System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
+//						System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
+//						System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
 						i++;
 						success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
 						if (i < destinations.length)
 						{
-							System.out.println("Target: " + destinations[i]);
+//							System.out.println("Target: " + destinations[i]);
 						}
 					}
 				}
