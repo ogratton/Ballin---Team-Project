@@ -87,10 +87,15 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		if(c.isDead()) {
-			if(c.getDyingStep() >= 200) { //this number is "sizeX * 4". TODO find sizeX and read it.
+			if(c.getDyingStep() < 200) { //this number is "sizeX * 4". TODO find sizeX and read it.
+//				if(!c.isVisible()){
+//					c.incDyingStep();
+//				}
+			} else {
 				//respawn
 				c.setDead(false);
 				c.setFalling(false);
+				c.setVisible(true);
 				c.setDyingStep(0);
 				c.setX(500);
 				c.setY(200);
