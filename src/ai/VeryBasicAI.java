@@ -13,22 +13,26 @@ public class VeryBasicAI extends Thread
 	private Character character;
 	private Resources resources;
 
-	private enum Behaviour 
+	private enum Behaviour
 	{
-		COWARD, 	// runs from all danger
+		COWARD, // runs from all danger
 		AGGRESSIVE, // actively seeks other players
-		DETECTIVE, 	// debug: Follows a list of points
-		AIMLESS, 	// debug: moves randomly
-		PACING, 	// debug: moves up&down/left&right
-		STUBBORN 	// debug: tries to stop itself moving anywhere
+		DETECTIVE, // debug: Follows a list of points
+		AIMLESS, // debug: moves randomly
+		PACING, // debug: moves up&down/left&right
+		STUBBORN // debug: tries to stop itself moving anywhere
 	};
-	
+
 	private Behaviour behaviour = Behaviour.DETECTIVE; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 20;
+//	private final long reaction_time = 0;
+	
+	private final long tick = 40; // loop every <tick>ms
 
 	private ArrayList<Tile> bad_tiles; // TODO add walls to this when they are implemented
+	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
 	/*
 	 * Notes:
@@ -60,6 +64,11 @@ public class VeryBasicAI extends Thread
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
 		bad_tiles.add(Tile.EDGE_ABYSS);
+		//TODO add walls
+
+		non_edge = new ArrayList<Tile>();
+		non_edge.addAll(bad_tiles);
+		non_edge.add(Tile.FLAT);
 	}
 
 	/**
@@ -73,51 +82,62 @@ public class VeryBasicAI extends Thread
 
 		try
 		{
-			if (behaviour == Behaviour.DETECTIVE)
+			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
+			Thread.sleep(1000);
+			
+			// this is setting things up for the debug Detective
+			boolean success = false; // we all start off life as failures
+			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400),
+					new Point(500, 500) };
+			int i = 0;
+			
+			while (!character.isDead())
 			{
-				/*
-				 *  DETECTIVE BEHAVIOUR:
-				 *  Follows a list of clues to a fascinating conclusion
-				 */
-				// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
-				Thread.sleep(1000);
-				boolean success = false; // we all start off life as failures
-				Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
-				int i = 0;
+				// common behaviour should go first
 
-//				System.out.println("Target: " + destinations[i]);
-
-				while (i < destinations.length && !character.isDead())
+				// TODO this should be the predicted future tile, not the one we are actually on
+				// otherwise it's OP
+				while (isEdge(getCurrentTile()))
 				{
-					Thread.sleep(10);
-					success = moveTo(destinations[i].getX(), destinations[i].getY());
-					if (success)
+					moveAwayFromEdge(getCurrentTileCoords());
+//					System.out.println("Near an edge!");
+					//Thread.sleep(reaction_time);
+				}
+				if (behaviour == Behaviour.DETECTIVE)
+				{
+					/*
+					 * DETECTIVE BEHAVIOUR:
+					 * Follows a list of clues to a fascinating conclusion
+					 */
+
+					//System.out.println("Target: " + destinations[i]);
+
+					if (i < destinations.length)
 					{
-//						System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
-//						System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
-						i++;
-						success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
-						if (i < destinations.length)
+						Thread.sleep(10);
+						success = moveTo(destinations[i].getX(), destinations[i].getY());
+						if (success)
 						{
-//							System.out.println("Target: " + destinations[i]);
+							//						System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
+							//						System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
+							i++;
+							success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
+							if (i < destinations.length)
+							{
+								//							System.out.println("Target: " + destinations[i]);
+							}
 						}
 					}
 				}
-
-				String message = character.isDead() ? "Dead X(" : "Finished!";
-				System.out.println(message);
-			}
-			else if (behaviour == Behaviour.STUBBORN)
-			{
-				while(!character.isDead())
+				else if (behaviour == Behaviour.STUBBORN)
 				{
 					brakeChar();
-					Thread.sleep(40);
 				}
-			}
-			else
-			{
-				System.out.println("Behaviour not yet implemented");
+				else
+				{
+					//					System.out.println("Behaviour not yet implemented");
+				}
+				Thread.sleep(tick);
 			}
 
 		}
@@ -131,10 +151,14 @@ public class VeryBasicAI extends Thread
 	/**
 	 * @return The type of tile the AI is standing on
 	 */
-	@SuppressWarnings("unused")
 	private Tile getCurrentTile()
 	{
 		return resources.getMap().tileAt(character.getX(), character.getY());
+	}
+
+	private Point getCurrentTileCoords()
+	{
+		return resources.getMap().tileCoords(character.getX(), character.getY());
 	}
 
 	/**
@@ -168,22 +192,81 @@ public class VeryBasicAI extends Thread
 	 * @param tile
 	 * @return true or false
 	 */
-	@SuppressWarnings("unused")
 	private boolean isWalkable(Tile tile)
 	{
 		return bad_tiles.contains(tile);
 	}
 
-	// are there players in the way?
+	/**
+	 * Is a tile a (walkable) edge tile?
+	 * 
+	 * @param tile
+	 * @return true or false
+	 */
+	private boolean isEdge(Tile tile)
+	{
+		return !non_edge.contains(tile);
+	}
+
+	/**
+	 * Move perpendicularly away from the imminent abyss
+	 * TODO how would we cope if were surrounded on two/four sides?
+	 * - shouldn't happen, hopefully
+	 * TODO do we care about diagonals?
+	 * 
+	 * @param currentTileIndex the index of the current tile
+	 */
+	private void moveAwayFromEdge(Point currentTileIndex) throws InterruptedException
+	{
+
+		//		setAllMovementFalse();
+
+		// TODO I don't get why I have to cast these, but maybe it's a Point thing
+		int column = (int) currentTileIndex.getX();
+		int row = (int) currentTileIndex.getY();
+		// get the surrounding tiles
+		// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning)
+		// They must not use the same +&- conventions as dy and dx
+		// Or I'm being silly
+		// But either way, this works:
+		Tile tile_down = resources.getMap().tileAt(column - 2, row);
+		Tile tile_up = resources.getMap().tileAt(column + 2, row);
+		Tile tile_right = resources.getMap().tileAt(column, row - 2);
+		Tile tile_left = resources.getMap().tileAt(column, row + 2);
+
+		if (!isWalkable(tile_left))
+		{
+			character.setRight(true);
+		}
+		if (!isWalkable(tile_right))
+		{
+			character.setLeft(true);
+		}
+		if (!isWalkable(tile_up))
+		{
+			character.setDown(true);
+		}
+		if (!isWalkable(tile_down))
+		{
+			character.setUp(true);
+		}
+
+		Thread.sleep(10);
+		setAllMovementFalse();
+	}
+
+	// TODO are there players in the way?
 	//private boolean isClear
 
 	/**
-	 * Dumbly move as-the-(drunken-)crow-flies to coords
+	 * Dumbly move as-the-(drunken-)crow-flies to coords.
+	 * <br>
+	 * n.b: This uses coords not tiles
 	 * 
 	 * @param x coord
 	 * @param y coord
 	 * @return are we nearly there yet?
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	private boolean moveTo(double x, double y) throws InterruptedException
 	{
@@ -235,81 +318,91 @@ public class VeryBasicAI extends Thread
 	{
 		return (Math.abs(coord1 - coord2) <= fuzziness);
 	}
-	
+
+	/**
+	 * 'Detach' all keys
+	 */
+	private void setAllMovementFalse()
+	{
+		character.setUp(false);
+		character.setDown(false);
+		character.setLeft(false);
+		character.setRight(false);
+	}
+
 	/**
 	 * Given how fast we are going, for how long should we brake?
 	 * TODO This is a very experimental equation and should be tinkered with
+	 * 
 	 * @param velocity component of dx and dy
 	 * @return the number of milliseconds to spend braking
 	 */
 	private long brakingTime(double velocity)
 	{
-		long bt = (long) (40*velocity);
-//		System.out.println(bt);
+		long bt = (long) (40 * velocity);
+		//		System.out.println(bt);
 		return bt;
 	}
 
 	/**
 	 * Try and slow the character down
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	private void brakeChar() throws InterruptedException
 	{
 		// 'release' all keys
-		character.setUp(false);
-		character.setDown(false);
-		character.setLeft(false);
-		character.setRight(false);
-		
+		setAllMovementFalse();
+
 		double dX = character.getDx();
 		double dY = character.getDy();
-		
+
 		// work out velocity
 		double vel = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
 		// from speed work out how long to stop for
 		long time = brakingTime(vel); // do it for this many milliseconds
-		
+
 		// work out which direction
-		double proportionDx = Math.abs(dX/dY);
+		double proportionDx = Math.abs(dX / dY);
 		double ratioDx = 0.5; // how much of the delay should go to countering dX
 
 		// work out relevant ratios (0 and infinity caught later)
 		if (proportionDx < 1)
 		{
 			// more UP/DOWN than LEFT/RIGHT
-			ratioDx = 1-proportionDx;
+			ratioDx = 1 - proportionDx;
 		}
-		else if (proportionDx >=1)
+		else if (proportionDx >= 1)
 		{
 			// more LEFT/RIGHT than UP/DOWN
-			ratioDx = 1/proportionDx;	
+			ratioDx = 1 / proportionDx;
 		}
-		
+
 		// tap in the opposite direction for a proportional amount of time in each direction
 		if (Math.signum(dX) == -1)
 		{
 			if (Math.signum(dY) == -1)
 			{
 				// UP-LEFT
-				long delayX = (long) (ratioDx*time);
+				long delayX = (long) (ratioDx * time);
 				character.setRight(true);
 				Thread.sleep(delayX);
 				character.setRight(false);
 				character.setDown(true);
-				Thread.sleep(time-delayX);
+				Thread.sleep(time - delayX);
 				character.setDown(false);
-				
+
 			}
 			else if (Math.signum(dY) == 1)
 			{
 				// DOWN-LEFT
-				long delayX = (long) (ratioDx*time);
+				long delayX = (long) (ratioDx * time);
 				character.setRight(true);
 				Thread.sleep(delayX);
 				character.setRight(false);
 				character.setUp(true);
-				Thread.sleep(time-delayX);
+				Thread.sleep(time - delayX);
 				character.setUp(false);
 			}
 			else
@@ -326,23 +419,23 @@ public class VeryBasicAI extends Thread
 			if (Math.signum(dY) == -1)
 			{
 				// UP-RIGHT
-				long delayX = (long) (ratioDx*time);
+				long delayX = (long) (ratioDx * time);
 				character.setLeft(true);
 				Thread.sleep(delayX);
 				character.setLeft(false);
 				character.setDown(true);
-				Thread.sleep(time-delayX);
+				Thread.sleep(time - delayX);
 				character.setDown(false);
 			}
 			else if (Math.signum(dY) == 1)
 			{
 				// DOWN-RIGHT
-				long delayX = (long) (ratioDx*time);
+				long delayX = (long) (ratioDx * time);
 				character.setLeft(true);
 				Thread.sleep(delayX);
 				character.setLeft(false);
 				character.setUp(true);
-				Thread.sleep(time-delayX);
+				Thread.sleep(time - delayX);
 				character.setUp(false);
 			}
 			else

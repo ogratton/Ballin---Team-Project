@@ -360,6 +360,17 @@ public class Map {
 		int column = (int)(y/SheetDeets.TILES_SIZEY);
 		//may crash if tiles not initialised.
 		//check if column,row is in the tile array:
+		return tileAt(column, row);
+	}
+	
+	/**
+	 * returns the tile at given row and column indices
+	 * @param column
+	 * @param row
+	 * @return
+	 */
+	public Tile tileAt(int column, int row)
+	{
 		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
 			return tiles[column][row];
 		}
