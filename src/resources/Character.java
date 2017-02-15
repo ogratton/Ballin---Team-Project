@@ -9,7 +9,7 @@ import graphics.sprites.SpriteSheet;
 
 public class Character extends Observable implements Collidable {
 	private static final double default_mass = 1.0;
-	private static final int default_radius = 20;
+	private static final int default_radius = 25;
 	private static final double default_max_speed_x = 3;
 	private static final double default_max_speed_y = 3;
 	private static final double default_acc = 0.1;
@@ -50,9 +50,11 @@ public class Character extends Observable implements Collidable {
 	// variables imported from CharacterModel
 	private SpriteSheet spriteSheet;
 	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
-	private int rollingFrame, directionFrame, dyingFrame;
+	private int rollingFrame, directionFrame;
+	private int dyingStep = 0;
 	private boolean moving;
-	
+	private boolean visible = true;
+
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
 	// Stamina recharges until this maximum value
@@ -131,15 +133,14 @@ public class Character extends Observable implements Collidable {
 		rollingSprites = new ArrayList<BufferedImage>();
 		directionSprites = new ArrayList<BufferedImage>();
 		dyingSprites = new ArrayList<BufferedImage>();
-		
+
 		ArrayList<int[][]> sections = spriteSheet.getSections();
 		int[][] rollingSpriteLocs = sections.get(0);
 		int[][] directionSpriteLocs = sections.get(1);
 		int[][] deathSpriteLocs = sections.get(2);
-		
+
 		for (int i = 0; i < rollingSpriteLocs.length; i++) {
 			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
-			rollingSprites.add(sprite);
 			rollingSprites.add(sprite);
 		}
 
@@ -147,15 +148,14 @@ public class Character extends Observable implements Collidable {
 			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], directionSpriteLocs[i][1]);
 			directionSprites.add(sprite);
 		}
-		
-		for(int i = 0; i < deathSpriteLocs.length; i++){
+
+		for (int i = 0; i < deathSpriteLocs.length; i++) {
 			BufferedImage sprite = spriteSheet.getSprite(deathSpriteLocs[i][0], deathSpriteLocs[i][1]);
 			dyingSprites.add(sprite);
 		}
-
+		
 		rollingFrame = 0;
 		directionFrame = 0;
-		dyingFrame = 0;
 		falling = false;
 		dead = false;
 	}
@@ -167,44 +167,41 @@ public class Character extends Observable implements Collidable {
 	 */
 
 	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
-		
-		if(isDead()){
-			if(dyingFrame != 7){
-			dyingFrame++;
-			}
-			
-			return this.dyingSprites.get(dyingFrame);
-		}
-		
+
 		int delx = newX - oldX;
 		int dely = newY - oldY;
 		
-		if(delx > 0){
-			if(dely > 0){
+		if(isDead()){
+			dely = 5;
+			delx = 5;
+		}
+
+		if (delx > 0) {
+			if (dely > 0) {
 				directionFrame = 3;
-			}else if(dely < 0){
+			} else if (dely < 0) {
 				directionFrame = 1;
-			} else{
+			} else {
 				directionFrame = 2;
 			}
 			rollingFrame++;
-		} else if (delx < 0){
-			if(dely > 0){
+		} else if (delx < 0) {
+			if (dely > 0) {
 				directionFrame = 5;
-			}else if(dely < 0){
+			} else if (dely < 0) {
 				directionFrame = 7;
-			} else{
+			} else {
 				directionFrame = 6;
 			}
 			rollingFrame--;
-		} else if (dely > 0){
+		} else if (dely > 0) {
 			directionFrame = 4;
 			rollingFrame++;
-		} else if (dely < 0){
+		} else if (dely < 0) {
 			directionFrame = 0;
 			rollingFrame--;
 		}
-		
+
 		switch (classType) {
 		case TEST:
 			return this.directionSprites.get(directionFrame);
@@ -212,17 +209,16 @@ public class Character extends Observable implements Collidable {
 		case ELF:
 		case WIZARD:
 		case DEFAULT:
-	
-				if (rollingFrame == 16)
-					rollingFrame = 0;
 
-				if (rollingFrame == -1)
-					rollingFrame = 15;
-			}
+			if (rollingFrame == 32)
+				rollingFrame = 0;
 
-			return this.rollingSprites.get(rollingFrame);
+			if (rollingFrame == -1)
+				rollingFrame = 31;
 		}
 
+		return this.rollingSprites.get(rollingFrame / 4);
+	}
 
 	/*
 	 * Getters and setters for controls: this is mportant for determining which
@@ -677,6 +673,7 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Find out if character is set to fall.
+	 * 
 	 * @return falling
 	 */
 	public boolean isFalling() {
@@ -684,13 +681,14 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
-	 * find out if character is dead.
-	 * Dead characters don't update. (for now)
+	 * find out if character is dead. Dead characters don't update. (for now)
+	 * 
 	 * @return
 	 */
 	public boolean isDead() {
 		return dead;
 	}
+
 	/**
 	 * Set the mass of a character
 	 * 
@@ -830,14 +828,16 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Change whether or not the character is falling.
+	 * 
 	 * @param falling
 	 */
 	public void setFalling(boolean falling) {
 		this.falling = falling;
 	}
-	
+
 	/**
 	 * Change whether or not the character is dead.
+	 * 
 	 * @param dead
 	 */
 	public void setDead(boolean dead) {
@@ -846,12 +846,13 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Change whether or not the character is dashing.
+	 * 
 	 * @param dashing
 	 */
 	public void setDashing(boolean dashing) {
 		this.dashing = dashing;
 	}
-	
+
 	/**
 	 * Returns true if the character is dashing.
 	 * 
@@ -876,22 +877,23 @@ public class Character extends Observable implements Collidable {
 	public void incrementDashTimer() {
 		this.dashTimer += 1;
 	}
-	
+
 	/**
 	 * Resets the dash timer to 0;
 	 */
 	public void resetDashTimer() {
 		this.dashTimer = 0;
 	}
-	
+
 	/**
 	 * Change whether or not the character is blocking.
+	 * 
 	 * @param blocking
 	 */
 	public void setBlocking(boolean blocking) {
 		this.blocking = blocking;
 	}
-	
+
 	/**
 	 * Returns true if the character is blocking.
 	 * 
@@ -916,14 +918,14 @@ public class Character extends Observable implements Collidable {
 	public void incrementBlockTimer() {
 		this.blockTimer += 1;
 	}
-	
+
 	/**
 	 * Resets the block timer to 0.
 	 */
 	public void resetBlockTimer() {
 		this.blockTimer = 0;
 	}
-	
+
 	/**
 	 * Returns the current stamina for this character.
 	 * 
@@ -939,32 +941,32 @@ public class Character extends Observable implements Collidable {
 	public void setStamina(int stamina) {
 		this.stamina = stamina;
 	}
-	
+
 	/**
-	 * Increments the character's stamina by 1 if it is less that the maximum stamina.
-	 * Used to recharge stamina.
+	 * Increments the character's stamina by 1 if it is less that the maximum
+	 * stamina. Used to recharge stamina.
 	 */
 	public void incrementStamina() {
 		if (this.stamina < this.maxStamina) {
 			this.stamina += 1;
 		}
 	}
-	
+
 	/**
 	 * Resets the stamina to maximum value.
 	 */
 	public void resetStamina() {
 		this.stamina = maxStamina;
 	}
-	
+
 	/**
-	 * Sets the maximum stamina value. 
-	 * Can use for giving different classes different max stams.
+	 * Sets the maximum stamina value. Can use for giving different classes
+	 * different max stams.
 	 */
 	public void setMaxStamina(int maxStamina) {
 		this.maxStamina = maxStamina;
 	}
-	
+
 	/**
 	 * Returns the maximum stamina value.
 	 * 
@@ -973,7 +975,7 @@ public class Character extends Observable implements Collidable {
 	public int getMaxStamina() {
 		return maxStamina;
 	}
-	
+
 	/**
 	 * Gets the amount of stamina that is used when dashing.
 	 * 
@@ -1004,5 +1006,49 @@ public class Character extends Observable implements Collidable {
 	 */
 	public void setBlockStamina(int blockStamina) {
 		this.blockStamina = blockStamina;
+	}
+	
+	/**
+	 * Set the dying step
+	 * @param step the dying step
+	 */
+	
+	public void setDyingStep(int step){
+		this.dyingStep = step;
+	}
+	
+	/**
+	 * Get the dying step 
+	 * @return the dying step
+	 */
+	
+	public int getDyingStep(){
+		return this.dyingStep;
+	}
+	
+	/**
+	 * Increment the dying step
+	 */
+	
+	public void incDyingStep(){
+		this.dyingStep++;
+	}
+	
+	/**
+	 * Is the player visible?
+	 * @return is the player visible?
+	 */
+	
+	public boolean isVisible(){
+		return this.visible;
+	}
+	
+	/**
+	 * Set the player's visibility
+	 * @param visible the state of visibility
+	 */
+	
+	public void setVisible(boolean visible){
+		this.visible = visible;
 	}
 }

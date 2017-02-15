@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import ai.VeryBasicAI;
-import audio.MusicPlayer;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
