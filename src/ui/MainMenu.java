@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
+//import networking.Client;
+import networking.Port;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
@@ -54,9 +56,6 @@ public class MainMenu extends JFrame {
 	private JPanel optionsPanel = optionPanel();
 	private JPanel mPanel;
 	private static ArrayList<String> controlsList;
-	// private JOptionPane keyError = new JOptionPane(mPanel, "This key is
-	// already assigned for another control. Please assign another key!","Key
-	// already assigned!", JOptionPane.ERROR_MESSAGE);
 	private static Resources resources;
 
 	public enum ViewState {
@@ -96,7 +95,6 @@ public class MainMenu extends JFrame {
 					public void keyPressed(KeyEvent e) {
 						if (isPressed) {
 							controlsList.remove(button.getText());
-							System.out.println(controlsList);
 							if (e.getKeyCode() == KeyEvent.VK_UP) {
 								if (!checkKey("up arrow"))
 									button.setText("up arrow");
@@ -289,14 +287,9 @@ public class MainMenu extends JFrame {
 		startButton.setFont(font);
 		startButton.addActionListener(e -> {
 			PhysicsWithGraphicsDemo.main(null);
+//			String[] arguments = new String[] {username, Port.number + "", "localhost"};
+//			 Client.main(arguments);
 		});
-		// startButton.addActionListener(e ->{
-		// try {
-		// hostname = InetAddress.getLocalHost();
-		// } catch (Exception e1) {
-		// e1.printStackTrace();
-		// }
-		// });
 
 		JButton changeUsername = new JButton("Change Username");
 		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
