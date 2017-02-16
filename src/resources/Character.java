@@ -48,12 +48,14 @@ public class Character extends Observable implements Collidable {
 	private Class classType = Class.DEFAULT;
 
 	// variables imported from CharacterModel
-	private BufferedImage spriteSheet;
-	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
+	private BufferedImage characterSheet;
+	private BufferedImage dashSheet;
+	private ArrayList<BufferedImage> rollingSprites, directionSprites, dashSprites;
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
 	private boolean visible = true;
+	private BufferedImage currentFrame;
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -127,18 +129,29 @@ public class Character extends Observable implements Collidable {
 		this.classType = classType;
 
 		// imported from graphics.
-		this.spriteSheet = SheetDeets.getSpriteSheetFromCharacter(this);
+		this.characterSheet = SheetDeets.getSpriteSheetFromCharacter(this);
+		this.dashSheet = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.DASH);
 		this.moving = false;
 
+		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		directionSprites = new ArrayList<BufferedImage>();
+		dashSprites = new ArrayList<BufferedImage>();
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
-			BufferedImage sprite = Sprite.getSprite(spriteSheet, i, 0, SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEX);
+			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
+					SheetDeets.CHARACTERS_SIZEX);
 			rollingSprites.add(sprite);
 			directionSprites.add(sprite);
 		}
-		
+
+		for (int i = 0; i < SheetDeets.MISC_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(dashSheet, i, 0, SheetDeets.MISC_SIZEX, SheetDeets.MISC_SIZEY);
+			dashSprites.add(sprite);
+		}
+
+		this.currentFrame = rollingSprites.get(0);
+
 		rollingFrame = 0;
 		directionFrame = 0;
 		falling = false;
@@ -153,43 +166,63 @@ public class Character extends Observable implements Collidable {
 
 	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
 
-		int delx = newX - oldX;
-		int dely = newY - oldY;
-		
-		if(isDead()){
-			dely = 5;
-			delx = 5;
+		int delX = newX - oldX;
+		int delY = newY - oldY;
+
+		if (isDead()) {
+			delY = 5;
+			delX = 5;
 		}
 
-		if (delx > 0) {
-			if (dely > 0) {
-				directionFrame = 3;
-			} else if (dely < 0) {
-				directionFrame = 1;
-			} else {
-				directionFrame = 2;
-			}
-			rollingFrame++;
-		} else if (delx < 0) {
-			if (dely > 0) {
-				directionFrame = 5;
-			} else if (dely < 0) {
-				directionFrame = 7;
-			} else {
-				directionFrame = 6;
-			}
-			rollingFrame--;
-		} else if (dely > 0) {
-			directionFrame = 4;
-			rollingFrame++;
-		} else if (dely < 0) {
+		if (delX == 0 && delY == 0) {
+			return currentFrame;
+		}
+
+		Heading h = getVisibleDirection(delX, delY);
+
+		switch (h) {
+		case N:
 			directionFrame = 0;
 			rollingFrame--;
+			break;
+		case NE:
+			directionFrame = 1;
+			rollingFrame++;
+			break;
+		case E:
+			directionFrame = 2;
+			rollingFrame++;
+			break;
+		case SE:
+			directionFrame = 3;
+			rollingFrame++;
+			break;
+		case S:
+			directionFrame = 4;
+			rollingFrame++;
+			break;
+		case SW:
+			directionFrame = 5;
+			rollingFrame--;
+			break;
+		case W:
+			directionFrame = 6;
+			rollingFrame--;
+			break;
+		case NW:
+			directionFrame = 7;
+			rollingFrame--;
+			break;
+		case STILL:
+			break;
 		}
 
 		switch (classType) {
 		case TEST:
-			return this.directionSprites.get(directionFrame);
+
+			BufferedImage sprite = this.directionSprites.get(directionFrame);
+			this.currentFrame = sprite;
+			return sprite;
 
 		case ELF:
 		case WIZARD:
@@ -202,7 +235,65 @@ public class Character extends Observable implements Collidable {
 				rollingFrame = 31;
 		}
 
-		return this.rollingSprites.get(rollingFrame / 4);
+		BufferedImage sprite = this.rollingSprites.get(rollingFrame / 4);
+		this.currentFrame = sprite;
+		return sprite;
+	}
+
+	/**
+	 * Get the dash sprite for a character Assumes direction has already been
+	 * set
+	 * 
+	 * @return the dash sprite
+	 */
+
+	public BufferedImage getDashSprite() {
+
+		return this.dashSprites.get(directionFrame);
+
+	}
+
+	/**
+	 * Given a change in x and y positions, return the direction a character is
+	 * visibly moving in This might be identical to another method? I don't know
+	 * 
+	 * @param delX
+	 *            the change in X
+	 * @param delY
+	 *            the change in Y
+	 * @return the direction the character is moving in
+	 */
+
+	public Heading getVisibleDirection(int delX, int delY) {
+
+		if (delX > 0) {
+
+			if (delY > 0) {
+				direction = Heading.SE;
+			} else if (delY < 0) {
+				direction = Heading.NE;
+			} else {
+				direction = Heading.E;
+			}
+		} else {
+			if (delX < 0) {
+
+				if (delY > 0) {
+					direction = Heading.SW;
+				} else if (delY < 0) {
+					direction = Heading.NW;
+				} else {
+					direction = Heading.W;
+				}
+			} else
+
+			if (delY > 0) {
+				direction = Heading.S;
+			} else if (delY < 0) {
+				direction = Heading.N;
+			}
+		}
+		return direction;
 	}
 
 	/*
@@ -992,48 +1083,54 @@ public class Character extends Observable implements Collidable {
 	public void setBlockStamina(int blockStamina) {
 		this.blockStamina = blockStamina;
 	}
-	
+
 	/**
 	 * Set the dying step
-	 * @param step the dying step
+	 * 
+	 * @param step
+	 *            the dying step
 	 */
-	
-	public void setDyingStep(int step){
+
+	public void setDyingStep(int step) {
 		this.dyingStep = step;
 	}
-	
+
 	/**
-	 * Get the dying step 
+	 * Get the dying step
+	 * 
 	 * @return the dying step
 	 */
-	
-	public int getDyingStep(){
+
+	public int getDyingStep() {
 		return this.dyingStep;
 	}
-	
+
 	/**
 	 * Increment the dying step
 	 */
-	
-	public void incDyingStep(){
+
+	public void incDyingStep() {
 		this.dyingStep++;
 	}
-	
+
 	/**
 	 * Is the player visible?
+	 * 
 	 * @return is the player visible?
 	 */
-	
-	public boolean isVisible(){
+
+	public boolean isVisible() {
 		return this.visible;
 	}
-	
+
 	/**
 	 * Set the player's visibility
-	 * @param visible the state of visibility
+	 * 
+	 * @param visible
+	 *            the state of visibility
 	 */
-	
-	public void setVisible(boolean visible){
+
+	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 }

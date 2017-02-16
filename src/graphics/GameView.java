@@ -87,23 +87,23 @@ public class GameView extends JPanel implements Observer {
 
 				int newX = (int) character.getX();
 				int newY = (int) character.getY();
-
+				
 				frame = character.getNextFrame(oldX, oldY, newX, newY);
 				points.put(character, new Point(newX, newY));
 
 				int sizeX = (int) (frame.getWidth() * multiplier);
 				int sizeY = (int) (frame.getHeight() * multiplier);
 
-				int modif = 0;
+				int deathModifier = 0;
 
 				if (character.isDead()) {
 					int step = character.getDyingStep();
 
 					if (step < sizeX * 4) {
 
-						modif = (int) (step * 0.25);
-						sizeX -= modif;
-						sizeY -= modif;
+						deathModifier = (int) (step * 0.25);
+						sizeX -= deathModifier;
+						sizeY -= deathModifier;
 						character.incDyingStep();
 					} else {
 						sizeX = 0;
@@ -113,17 +113,20 @@ public class GameView extends JPanel implements Observer {
 
 				}
 
-				int actualX = (int) ((newX - character.getRadius() + modif / 2) * multiplier);
-				int actualY = (int) ((newY - character.getRadius() + modif / 2) * multiplier);
+				int centreX = (int) (newX - character.getRadius());
+				int centreY = (int) (newY - character.getRadius());
+				
+				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
+				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
 
-				g.drawImage(frame, cast(actualX), cast(actualY + offset), sizeX, sizeY, this);
+				g.drawImage(frame, (int)actualX, (int)(actualY + offset), sizeX, sizeY, this);
 
 				if (character.isDashing()) {
 
 					int dashX = 0;
 					int dashY = 0;
 
-					int dashMult = 50;
+					int dashMult = 30;
 
 					switch (character.getDirection()) {
 					case N:
@@ -147,7 +150,7 @@ public class GameView extends JPanel implements Observer {
 						dashY = newY - character.getRadius() - dashMult;
 						break;
 					case SW:
-						dashX = newX - character.getRadius() - dashMult;
+						dashX = newX - character.getRadius() + dashMult;
 						dashY = newY - character.getRadius() - dashMult;
 						break;
 					case W:
@@ -163,7 +166,7 @@ public class GameView extends JPanel implements Observer {
 
 					}
 
-					g.drawImage(Sprite.getSprite(SheetDeets.MISC, 0, 0, 50, 50), (int) ((dashX * multiplier) + offset),
+					g.drawImage(character.getDashSprite(), (int) (dashX * multiplier),
 							(int) ((dashY * multiplier) + offset), (int) (50 * multiplier), (int) (50 * multiplier),
 							this);
 				}
@@ -203,22 +206,6 @@ public class GameView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		repaint();
 
-	}
-
-	/**
-	 * Actual effective casting of double to int, taking into account rounding
-	 * up
-	 * 
-	 * @param x
-	 * @return
-	 */
-
-	private int cast(double x) {
-		if (x - (int) x > 0.5) {
-			return (int) x + 1;
-		} else {
-			return (int) x;
-		}
 	}
 
 }
