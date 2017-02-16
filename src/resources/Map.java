@@ -35,14 +35,14 @@ public class Map {
 	// private ArrayList<PowerUp> powerups;
 
 	public enum Tile {
-		ABYSS, 									// tile players can fall in
-		FLAT, 									// normal tile
-		EDGE_N, EDGE_E, EDGE_S, EDGE_W, 		// tiles with one edge
-		EDGE_NE, EDGE_SE, EDGE_SW, EDGE_NW, 	// tiles with two edges, continuous
-		EDGE_NS, EDGE_EW, 						// tiles with two edges, opposite
+		ABYSS, // tile players can fall in
+		FLAT, // normal tile
+		EDGE_N, EDGE_E, EDGE_S, EDGE_W, // tiles with one edge
+		EDGE_NE, EDGE_SE, EDGE_SW, EDGE_NW, // tiles with two edges, continuous
+		EDGE_NS, EDGE_EW, // tiles with two edges, opposite
 		EDGE_NES, EDGE_ESW, EDGE_SWN, EDGE_WNE, // tiles with three edges
-		EDGE_NESW, 								// tiles with four edges
-		EDGE_ABYSS, 							// tile representing the 'front' on the arena
+		EDGE_NESW, // tiles with four edges
+		EDGE_ABYSS, // tile representing the 'front' on the arena
 	};
 
 	/**
@@ -331,7 +331,7 @@ public class Map {
 		case EDGE_ABYSS:
 			a = 5;
 			b = 2;
-			break;	
+			break;
 		}
 
 		return Sprite.getSprite(tileSet, a, b, SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);
@@ -349,49 +349,61 @@ public class Map {
 	}
 
 	/**
-	 * returns the tile at a point x,y.
-	 * If x,y is outside the map, returns null.
+	 * Set the world type of this map
+	 * 
+	 * @param world
+	 *            the world type
+	 */
+
+	public void setWorldType(World world) {
+		this.world = world;
+		tileSet = SheetDeets.getTileSetFromWorld(world);
+	}
+
+	/**
+	 * returns the tile at a point x,y. If x,y is outside the map, returns null.
+	 * 
 	 * @param x
 	 * @param y
 	 * @return
 	 */
 	public Tile tileAt(double x, double y) {
-		int row = (int)(x/SheetDeets.TILES_SIZEX);
-		int column = (int)(y/SheetDeets.TILES_SIZEY);
-		//may crash if tiles not initialised.
-		//check if column,row is in the tile array:
+		int row = (int) (x / SheetDeets.TILES_SIZEX);
+		int column = (int) (y / SheetDeets.TILES_SIZEY);
+		// may crash if tiles not initialised.
+		// check if column,row is in the tile array:
 		return tileAt(column, row);
 	}
-	
+
 	/**
 	 * returns the tile at given row and column indices
+	 * 
 	 * @param column
 	 * @param row
 	 * @return
 	 */
-	public Tile tileAt(int column, int row)
-	{
-		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
+	public Tile tileAt(int column, int row) {
+		if (column >= 0 && row >= 0 && column < tiles.length && row < tiles[0].length) {
 			return tiles[column][row];
 		}
 		// if not in map
 		return null;
 	}
-	
+
 	/**
-	 * Return the row and column of the tile at point x y
-	 * Used by the AI
+	 * Return the row and column of the tile at point x y Used by the AI
+	 * 
 	 * @param x
 	 * @param y
 	 * @return A point with x as column and y as row
 	 */
-	public Point tileCoords(double x, double y)	{
-		int row = (int)(x/SheetDeets.TILES_SIZEX);
-		int column = (int)(y/SheetDeets.TILES_SIZEY);
-		//may crash if tiles not initialised.
-		//check if column,row is in the tile array:
-		if(column >= 0 && row >=0 && column < tiles.length && row < tiles[0].length) {
-			return new Point(column,row);
+	public Point tileCoords(double x, double y) {
+		int row = (int) (x / SheetDeets.TILES_SIZEX);
+		int column = (int) (y / SheetDeets.TILES_SIZEY);
+		// may crash if tiles not initialised.
+		// check if column,row is in the tile array:
+		if (column >= 0 && row >= 0 && column < tiles.length && row < tiles[0].length) {
+			return new Point(column, row);
 		}
 		// if not in map
 		return null;
@@ -399,6 +411,7 @@ public class Map {
 
 	/**
 	 * Check whether some coordinates are on the map.
+	 * 
 	 * @param x
 	 * @param y
 	 * @return

@@ -41,7 +41,7 @@ public class GameView extends JPanel implements Observer {
 
 		this.resources = resources;
 
-		mapSprite = Sprite.createMap(resources.getMap());
+		makeMap();
 
 		points = new HashMap<Character, Point>();
 
@@ -49,6 +49,11 @@ public class GameView extends JPanel implements Observer {
 			points.put(model, new Point((int) model.getX(), (int) model.getY()));
 		}
 
+		repaint();
+	}
+	
+	public void makeMap(){
+		mapSprite = Sprite.createMap(resources.getMap());
 		repaint();
 	}
 
