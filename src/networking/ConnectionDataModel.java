@@ -2,6 +2,8 @@ package networking;
 
 import java.util.List;
 import resources.Character;
+import resources.Resources;
+
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentMap;
@@ -160,5 +162,13 @@ public class ConnectionDataModel extends Observable {
 	
 	public void setCharactersList(List<CharacterInfo> list) {
 		data.setCharactersList(list);
+	}
+	
+	public Resources getResources() {
+		return data.getResources();
+	}
+	
+	public synchronized void setResources(Resources res) {
+		data.setResources(res);
 	}
 }

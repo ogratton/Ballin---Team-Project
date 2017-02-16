@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import resources.Character;
+import resources.Resources;
 
 public class ConnectionData {
 
@@ -22,7 +23,16 @@ public class ConnectionData {
 	private boolean gameInProgress;
 	private Map<Integer, Character> characters = new ConcurrentHashMap<Integer, Character>();
 	private List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+	private Resources resources;
 	
+	public Resources getResources() {
+		return resources;
+	}
+
+	public void setResources(Resources resources) {
+		this.resources = resources;
+	}
+
 	public List<CharacterInfo> getCharactersList() {
 		return charactersList;
 	}

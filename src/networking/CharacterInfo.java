@@ -8,13 +8,13 @@ public class CharacterInfo implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5417282971483563559L;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private int id;
 	
-	public CharacterInfo(int id, int x, int y) {
-		this.x = x;
-		this.y = y;
+	public CharacterInfo(int id, double d, double e) {
+		this.x = d;
+		this.y = e;
 		this.id = id;
 	}
 
@@ -26,7 +26,7 @@ public class CharacterInfo implements Serializable {
 		this.id = id;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -34,7 +34,7 @@ public class CharacterInfo implements Serializable {
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 

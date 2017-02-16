@@ -35,6 +35,7 @@ public class ServerReceiver extends Thread {
 	  Message message = new Message();
 	  Message response = null;
 	  int sessionId;
+	  Session session;
 	  
 	  while(message.getCommand() != Command.QUIT) {
 		  try {
@@ -59,7 +60,7 @@ public class ServerReceiver extends Thread {
 					  int id = generateID(sessions);
 				  	  ConcurrentMap<Integer, ClientInformation> sessionClients = new ConcurrentHashMap<Integer, ClientInformation>();
 				  	  sessionClients.put(senderClient.getId(), senderClient);
-				  	  Session session = new Session(id, sessionClients);
+				  	  session = new Session(id, sessionClients);
 					  sessions.put(id, session);
 					  senderClient.setSession(session);
 					  response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), -1, session.getId(), -1, sessions);
@@ -91,18 +92,31 @@ public class ServerReceiver extends Thread {
 					  break;
 				  }
 			  case GAME:
+				  List<ClientInformation> clientList;
 				  switch(message.getNote()) {
 				  case START:
-					  Session session = sessions.get(message.getCurrentSessionId());
+					  session = sessions.get(message.getCurrentSessionId());
 					  session.setGameInProgress(true);
-					  List<ClientInformation> clients = session.getAllClients();
+					  clientList = session.getAllClients();
 					  
 					  // Send to all clients in the session.
-					  for(int i=0; i<clients.size(); i++) {
-						  clients.get(i).getQueue().offer(message);
+					  for(int i=0; i<clientList.size(); i++) {
+						  if(clientList.get(i).getId() != message.getSenderId()) {
+							  clientList.get(i).getQueue().offer(message);
+						  }
 					  }
 					  break;
 				  case UPDATE:
+					  //System.out.println(message.getCurrentSessionId());
+					  session = sessions.get(message.getCurrentSessionId());
+					  clientList = session.getAllClients();
+					  
+					  // Send to all clients in the session.
+					  for(int i=0; i<clientList.size(); i++) {
+						  if(clientList.get(i).getId() != message.getSenderId()) {
+							  clientList.get(i).getQueue().offer(message);
+						  }
+					  }
 					  break;
 				  default:
 					  break;
