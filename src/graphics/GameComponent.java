@@ -9,7 +9,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -18,6 +17,7 @@ import graphics.old.MapModel;
 import networking.Updater;
 import resources.Character;
 import resources.Map;
+import resources.Map.World;
 import resources.Resources;
 
 /**
@@ -153,6 +153,25 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
+	public void cycleWorld(){
+		
+		World world = resources.getMap().getWorldType();
+		World newWorld = null;
+		
+		switch(world){
+		case CAVE:
+			newWorld = Map.World.SPACE;
+			break;
+		case SPACE:
+			newWorld = Map.World.CAVE;
+			break;
+		}
+		
+		resources.getMap().setWorldType(newWorld);
+		view.makeMap();
+		
+	}
+	
 	private class TAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -232,7 +251,13 @@ public class GameComponent extends JFrame implements ActionListener {
 				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
+				break;
+			case KeyEvent.VK_Z:
+				cycleWorld();
+				break;
 			}
+			
+				
 		}
 	}
 

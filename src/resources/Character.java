@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import graphics.sprites.SheetDeets;
-import graphics.sprites.SpriteSheet;
+import graphics.sprites.Sprite;
 
 public class Character extends Observable implements Collidable {
 	private static final double default_mass = 1.0;
-	private static final int default_radius = 20;
+	private static final int default_radius = 25;
 	private static final double default_max_speed_x = 3;
 	private static final double default_max_speed_y = 3;
 	private static final double default_acc = 0.1;
@@ -48,11 +48,15 @@ public class Character extends Observable implements Collidable {
 	private Class classType = Class.DEFAULT;
 
 	// variables imported from CharacterModel
-	private SpriteSheet spriteSheet;
-	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
-	private int rollingFrame, directionFrame, dyingFrame;
+	private BufferedImage characterSheet;
+	private BufferedImage dashSheet;
+	private ArrayList<BufferedImage> rollingSprites, directionSprites, dashSprites;
+	private int rollingFrame, directionFrame;
+	private int dyingStep = 0;
 	private boolean moving;
 	private int id;
+	private boolean visible = true;
+	private BufferedImage currentFrame;
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -126,37 +130,31 @@ public class Character extends Observable implements Collidable {
 		this.classType = classType;
 
 		// imported from graphics.
-		this.spriteSheet = SheetDeets.getSpriteSheetFromCharacter(this);
+		this.characterSheet = SheetDeets.getSpriteSheetFromCharacter(this);
+		this.dashSheet = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.DASH);
 		this.moving = false;
 
+		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		directionSprites = new ArrayList<BufferedImage>();
-		dyingSprites = new ArrayList<BufferedImage>();
-		
-		ArrayList<int[][]> sections = spriteSheet.getSections();
-		int[][] rollingSpriteLocs = sections.get(0);
-		int[][] directionSpriteLocs = sections.get(1);
-		int[][] deathSpriteLocs = sections.get(2);
-		
-		for (int i = 0; i < rollingSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(rollingSpriteLocs[i][0], rollingSpriteLocs[i][1]);
-			rollingSprites.add(sprite);
-			rollingSprites.add(sprite);
-		}
+		dashSprites = new ArrayList<BufferedImage>();
 
-		for (int i = 0; i < directionSpriteLocs.length; i++) {
-			BufferedImage sprite = spriteSheet.getSprite(directionSpriteLocs[i][0], directionSpriteLocs[i][1]);
+		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
+					SheetDeets.CHARACTERS_SIZEX);
+			rollingSprites.add(sprite);
 			directionSprites.add(sprite);
 		}
-		
-		for(int i = 0; i < deathSpriteLocs.length; i++){
-			BufferedImage sprite = spriteSheet.getSprite(deathSpriteLocs[i][0], deathSpriteLocs[i][1]);
-			dyingSprites.add(sprite);
+
+		for (int i = 0; i < SheetDeets.MISC_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(dashSheet, i, 0, SheetDeets.MISC_SIZEX, SheetDeets.MISC_SIZEY);
+			dashSprites.add(sprite);
 		}
+
+		this.currentFrame = rollingSprites.get(0);
 
 		rollingFrame = 0;
 		directionFrame = 0;
-		dyingFrame = 0;
 		falling = false;
 		dead = false;
 	}
@@ -176,62 +174,136 @@ public class Character extends Observable implements Collidable {
 	 */
 
 	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
-		
-		if(isDead()){
-			if(dyingFrame != 7){
-			dyingFrame++;
-			}
-			
-			return this.dyingSprites.get(dyingFrame);
+
+		int delX = newX - oldX;
+		int delY = newY - oldY;
+
+		if (isDead()) {
+			delY = 5;
+			delX = 5;
 		}
-		
-		int delx = newX - oldX;
-		int dely = newY - oldY;
-		
-		if(delx > 0){
-			if(dely > 0){
-				directionFrame = 3;
-			}else if(dely < 0){
-				directionFrame = 1;
-			} else{
-				directionFrame = 2;
-			}
-			rollingFrame++;
-		} else if (delx < 0){
-			if(dely > 0){
-				directionFrame = 5;
-			}else if(dely < 0){
-				directionFrame = 7;
-			} else{
-				directionFrame = 6;
-			}
-			rollingFrame--;
-		} else if (dely > 0){
-			directionFrame = 4;
-			rollingFrame++;
-		} else if (dely < 0){
+
+		if (delX == 0 && delY == 0) {
+			return currentFrame;
+		}
+
+		Heading h = getVisibleDirection(delX, delY);
+
+		switch (h) {
+		case N:
 			directionFrame = 0;
 			rollingFrame--;
+			break;
+		case NE:
+			directionFrame = 1;
+			rollingFrame++;
+			break;
+		case E:
+			directionFrame = 2;
+			rollingFrame++;
+			break;
+		case SE:
+			directionFrame = 3;
+			rollingFrame++;
+			break;
+		case S:
+			directionFrame = 4;
+			rollingFrame++;
+			break;
+		case SW:
+			directionFrame = 5;
+			rollingFrame--;
+			break;
+		case W:
+			directionFrame = 6;
+			rollingFrame--;
+			break;
+		case NW:
+			directionFrame = 7;
+			rollingFrame--;
+			break;
+		case STILL:
+			break;
 		}
-		
+
 		switch (classType) {
 		case TEST:
-			return this.directionSprites.get(directionFrame);
+
+			BufferedImage sprite = this.directionSprites.get(directionFrame);
+			this.currentFrame = sprite;
+			return sprite;
 
 		case ELF:
 		case WIZARD:
 		case DEFAULT:
-	
-				if (rollingFrame == 16)
-					rollingFrame = 0;
 
-				if (rollingFrame == -1)
-					rollingFrame = 15;
-			}
+			if (rollingFrame == 32)
+				rollingFrame = 0;
 
-			return this.rollingSprites.get(rollingFrame);
+			if (rollingFrame == -1)
+				rollingFrame = 31;
 		}
 
+		BufferedImage sprite = this.rollingSprites.get(rollingFrame / 4);
+		this.currentFrame = sprite;
+		return sprite;
+	}
+
+	/**
+	 * Get the dash sprite for a character Assumes direction has already been
+	 * set
+	 * 
+	 * @return the dash sprite
+	 */
+
+	public BufferedImage getDashSprite() {
+
+		return this.dashSprites.get(directionFrame);
+
+	}
+
+	/**
+	 * Given a change in x and y positions, return the direction a character is
+	 * visibly moving in This might be identical to another method? I don't know
+	 * 
+	 * @param delX
+	 *            the change in X
+	 * @param delY
+	 *            the change in Y
+	 * @return the direction the character is moving in
+	 */
+
+	public Heading getVisibleDirection(int delX, int delY) {
+
+		if (delX > 0) {
+
+			if (delY > 0) {
+				direction = Heading.SE;
+			} else if (delY < 0) {
+				direction = Heading.NE;
+			} else {
+				direction = Heading.E;
+			}
+		} else {
+			if (delX < 0) {
+
+				if (delY > 0) {
+					direction = Heading.SW;
+				} else if (delY < 0) {
+					direction = Heading.NW;
+				} else {
+					direction = Heading.W;
+				}
+			} else
+
+			if (delY > 0) {
+				direction = Heading.S;
+			} else if (delY < 0) {
+				direction = Heading.N;
+			}
+		}
+		return direction;
+	}
 
 	/*
 	 * Getters and setters for controls: this is mportant for determining which
@@ -708,6 +780,7 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Find out if character is set to fall.
+	 * 
 	 * @return falling
 	 */
 	public boolean isFalling() {
@@ -715,13 +788,14 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
-	 * find out if character is dead.
-	 * Dead characters don't update. (for now)
+	 * find out if character is dead. Dead characters don't update. (for now)
+	 * 
 	 * @return
 	 */
 	public boolean isDead() {
 		return dead;
 	}
+
 	/**
 	 * Set the mass of a character
 	 * 
@@ -861,14 +935,16 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Change whether or not the character is falling.
+	 * 
 	 * @param falling
 	 */
 	public void setFalling(boolean falling) {
 		this.falling = falling;
 	}
-	
+
 	/**
 	 * Change whether or not the character is dead.
+	 * 
 	 * @param dead
 	 */
 	public void setDead(boolean dead) {
@@ -877,12 +953,13 @@ public class Character extends Observable implements Collidable {
 
 	/**
 	 * Change whether or not the character is dashing.
+	 * 
 	 * @param dashing
 	 */
 	public void setDashing(boolean dashing) {
 		this.dashing = dashing;
 	}
-	
+
 	/**
 	 * Returns true if the character is dashing.
 	 * 
@@ -907,22 +984,23 @@ public class Character extends Observable implements Collidable {
 	public void incrementDashTimer() {
 		this.dashTimer += 1;
 	}
-	
+
 	/**
 	 * Resets the dash timer to 0;
 	 */
 	public void resetDashTimer() {
 		this.dashTimer = 0;
 	}
-	
+
 	/**
 	 * Change whether or not the character is blocking.
+	 * 
 	 * @param blocking
 	 */
 	public void setBlocking(boolean blocking) {
 		this.blocking = blocking;
 	}
-	
+
 	/**
 	 * Returns true if the character is blocking.
 	 * 
@@ -947,14 +1025,14 @@ public class Character extends Observable implements Collidable {
 	public void incrementBlockTimer() {
 		this.blockTimer += 1;
 	}
-	
+
 	/**
 	 * Resets the block timer to 0.
 	 */
 	public void resetBlockTimer() {
 		this.blockTimer = 0;
 	}
-	
+
 	/**
 	 * Returns the current stamina for this character.
 	 * 
@@ -970,32 +1048,32 @@ public class Character extends Observable implements Collidable {
 	public void setStamina(int stamina) {
 		this.stamina = stamina;
 	}
-	
+
 	/**
-	 * Increments the character's stamina by 1 if it is less that the maximum stamina.
-	 * Used to recharge stamina.
+	 * Increments the character's stamina by 1 if it is less that the maximum
+	 * stamina. Used to recharge stamina.
 	 */
 	public void incrementStamina() {
 		if (this.stamina < this.maxStamina) {
 			this.stamina += 1;
 		}
 	}
-	
+
 	/**
 	 * Resets the stamina to maximum value.
 	 */
 	public void resetStamina() {
 		this.stamina = maxStamina;
 	}
-	
+
 	/**
-	 * Sets the maximum stamina value. 
-	 * Can use for giving different classes different max stams.
+	 * Sets the maximum stamina value. Can use for giving different classes
+	 * different max stams.
 	 */
 	public void setMaxStamina(int maxStamina) {
 		this.maxStamina = maxStamina;
 	}
-	
+
 	/**
 	 * Returns the maximum stamina value.
 	 * 
@@ -1004,7 +1082,7 @@ public class Character extends Observable implements Collidable {
 	public int getMaxStamina() {
 		return maxStamina;
 	}
-	
+
 	/**
 	 * Gets the amount of stamina that is used when dashing.
 	 * 
@@ -1035,5 +1113,55 @@ public class Character extends Observable implements Collidable {
 	 */
 	public void setBlockStamina(int blockStamina) {
 		this.blockStamina = blockStamina;
+	}
+
+	/**
+	 * Set the dying step
+	 * 
+	 * @param step
+	 *            the dying step
+	 */
+
+	public void setDyingStep(int step) {
+		this.dyingStep = step;
+	}
+
+	/**
+	 * Get the dying step
+	 * 
+	 * @return the dying step
+	 */
+
+	public int getDyingStep() {
+		return this.dyingStep;
+	}
+
+	/**
+	 * Increment the dying step
+	 */
+
+	public void incDyingStep() {
+		this.dyingStep++;
+	}
+
+	/**
+	 * Is the player visible?
+	 * 
+	 * @return is the player visible?
+	 */
+
+	public boolean isVisible() {
+		return this.visible;
+	}
+
+	/**
+	 * Set the player's visibility
+	 * 
+	 * @param visible
+	 *            the state of visibility
+	 */
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 }

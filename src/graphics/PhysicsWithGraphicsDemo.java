@@ -4,8 +4,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.Random;
 
-import ai.RunRight;
-import audio.MusicPlayer;
+import ai.VeryBasicAI;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
@@ -28,6 +27,23 @@ public class PhysicsWithGraphicsDemo {
 	
 	public static void start(Resources resources) {
 		
+		// make the map the default just in case the following fails
+		Map.Tile[][] tiles = null;	
+		MapReader mr = new MapReader();	
+		try
+		{
+			tiles = mr.readMap("./resources/maps/asteroid.csv");
+			System.out.println("I guess it worked then");
+		}
+		catch (IOException e)
+		{
+			System.out.println("File not found");
+			e.printStackTrace();
+			
+		}
+		
+		resources.setMap(new Map(1200, 675, tiles, Map.World.SPACE));
+		
 		Character player = new Character(Character.Class.TEST);
 
 		player.setX(100);
@@ -40,8 +56,8 @@ public class PhysicsWithGraphicsDemo {
 
 		Character player2 = new Character(Character.Class.WIZARD);
 
-		player2.setX(500);
-		player2.setY(100);
+		player2.setX(800);
+		player2.setY(500);
 
 		
 		
@@ -57,31 +73,17 @@ public class PhysicsWithGraphicsDemo {
 			playa.setX(r.nextInt(1200));
 			playa.setY(r.nextInt(675));
 			resources.addPlayerToList(playa);
-		}
-		
-		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = null;	
-		MapReader mr = new MapReader();	
-		try
-		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
-			System.out.println("I guess it worked then");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
 			
+			VeryBasicAI ai = new VeryBasicAI(resources, playa);
+			ai.start();
 		}
-		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
 
 		// create physics thread
 		Physics p = new Physics(resources);
 		p.start();
 
-		RunRight run = new RunRight(player2);
-		run.start();
+		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
+		ai1.start();
 		
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {

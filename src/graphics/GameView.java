@@ -26,7 +26,7 @@ public class GameView extends JPanel implements Observer {
 	private double multiplier = 1;
 
 	private Resources resources;
-	
+
 	/**
 	 * Create a new game view
 	 * 
@@ -38,17 +38,22 @@ public class GameView extends JPanel implements Observer {
 
 	public GameView(Resources resources) {
 		super();
-		
+
 		this.resources = resources;
 
-		mapSprite = Sprite.createMap(resources.getMap());
+		makeMap();
 
 		points = new HashMap<Character, Point>();
 
 		for (Character model : resources.getPlayerList()) {
-			points.put(model, new Point((int)model.getX(), (int)model.getY()));
+			points.put(model, new Point((int) model.getX(), (int) model.getY()));
 		}
 
+		repaint();
+	}
+	
+	public void makeMap(){
+		mapSprite = Sprite.createMap(resources.getMap());
 		repaint();
 	}
 
@@ -76,76 +81,101 @@ public class GameView extends JPanel implements Observer {
 		g.drawImage(mapSprite, 0, (int) offset, (int) (mapSprite.getWidth() * multiplier),
 				(int) (mapSprite.getHeight() * multiplier), this);
 
-		for (Character model : resources.getPlayerList()) {
+		for (Character character : resources.getPlayerList()) {
 
-			BufferedImage frame = null;
+			if (character.isVisible()) {
 
-			int oldX = (int)points.get(model).getX();
-			int oldY = (int)points.get(model).getY();
-			
-			int newX = (int)model.getX();
-			int newY = (int)model.getY();
+				BufferedImage frame = null;
 
-			frame = model.getNextFrame(oldX, oldY, newX, newY);
-			points.put(model, new Point(newX, newY));
+				int oldX = (int) points.get(character).getX();
+				int oldY = (int) points.get(character).getY();
 
-			int actualX = (int)((newX - model.getRadius()) * multiplier);
-			int actualY = (int)((newY - model.getRadius()) * multiplier);
-
-			int sizeX = (int)(frame.getWidth() * multiplier);
-			int sizeY = (int)(frame.getHeight() * multiplier);
-
-			g.drawImage(frame, cast(actualX), cast(actualY + offset), sizeX, sizeY, this);
-
-			if(model.isDashing()){
+				int newX = (int) character.getX();
+				int newY = (int) character.getY();
 				
-				int dashX = 0;
-				int dashY = 0;
-				
-				int dashMult = 50;
-				
-				switch(model.getDirection()){
-				case N:
-					dashX = newX - model.getRadius();
-					dashY = newY - model.getRadius() + dashMult;
-					break;
-				case NE:
-					dashX = newX - model.getRadius() - dashMult;
-					dashY = newY - model.getRadius() + dashMult;
-					break;
-				case E:
-					dashX = newX - model.getRadius() - dashMult;
-					dashY = newY - model.getRadius();
-					break;
-				case SE:
-					dashX = newX - model.getRadius() - dashMult;
-					dashY = newY - model.getRadius() - dashMult;
-					break;
-				case S:
-					dashX = newX - model.getRadius();
-					dashY = newY - model.getRadius() - dashMult;
-					break;
-				case SW:
-					dashX = newX - model.getRadius() - dashMult;
-					dashY = newY - model.getRadius() - dashMult;
-					break;
-				case W:
-					dashX = newX - model.getRadius() + dashMult;
-					dashY = newY - model.getRadius();
-					break;
-				case NW:
-					dashX = newX - model.getRadius() + dashMult;
-					dashY = newY - model.getRadius() + dashMult;
-					break;
-				case STILL:
-					break;
-					
+				frame = character.getNextFrame(oldX, oldY, newX, newY);
+				points.put(character, new Point(newX, newY));
+
+				int sizeX = (int) (frame.getWidth() * multiplier);
+				int sizeY = (int) (frame.getHeight() * multiplier);
+
+				int deathModifier = 0;
+
+				if (character.isDead()) {
+					int step = character.getDyingStep();
+
+					if (step < sizeX * 4) {
+
+						deathModifier = (int) (step * 0.25);
+						sizeX -= deathModifier;
+						sizeY -= deathModifier;
+						character.incDyingStep();
+					} else {
+						sizeX = 0;
+						sizeY = 0;
+						character.setVisible(false);
+					}
+
 				}
+
+				int centreX = (int) (newX - character.getRadius());
+				int centreY = (int) (newY - character.getRadius());
 				
-				g.drawImage(Sprite.getSprite(SheetDeets.MISC.getSpriteSheet(), 0, 0, 50, 50), (int)((dashX * multiplier) + offset), (int)((dashY * multiplier) + offset), (int)(50 * multiplier), (int)(50 * multiplier), this);
+				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
+				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
+
+				g.drawImage(frame, (int)actualX, (int)(actualY + offset), sizeX, sizeY, this);
+
+				if (character.isDashing()) {
+
+					int dashX = 0;
+					int dashY = 0;
+
+					int dashMult = 30;
+
+					switch (character.getDirection()) {
+					case N:
+						dashX = newX - character.getRadius();
+						dashY = newY - character.getRadius() + dashMult;
+						break;
+					case NE:
+						dashX = newX - character.getRadius() - dashMult;
+						dashY = newY - character.getRadius() + dashMult;
+						break;
+					case E:
+						dashX = newX - character.getRadius() - dashMult;
+						dashY = newY - character.getRadius();
+						break;
+					case SE:
+						dashX = newX - character.getRadius() - dashMult;
+						dashY = newY - character.getRadius() - dashMult;
+						break;
+					case S:
+						dashX = newX - character.getRadius();
+						dashY = newY - character.getRadius() - dashMult;
+						break;
+					case SW:
+						dashX = newX - character.getRadius() + dashMult;
+						dashY = newY - character.getRadius() - dashMult;
+						break;
+					case W:
+						dashX = newX - character.getRadius() + dashMult;
+						dashY = newY - character.getRadius();
+						break;
+					case NW:
+						dashX = newX - character.getRadius() + dashMult;
+						dashY = newY - character.getRadius() + dashMult;
+						break;
+					case STILL:
+						break;
+
+					}
+
+					g.drawImage(character.getDashSprite(), (int) (dashX * multiplier),
+							(int) ((dashY * multiplier) + offset), (int) (50 * multiplier), (int) (50 * multiplier),
+							this);
+				}
 			}
-			
-			Toolkit.getDefaultToolkit().sync();
 
 		}
 
@@ -155,6 +185,8 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, 0, (int) screenWidth, (int) offset);
 			g.fillRect(0, (int) (screenHeight - offset), (int) screenWidth, (int) offset);
 		}
+
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	/**
@@ -179,22 +211,6 @@ public class GameView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		repaint();
 
-	}
-
-	/**
-	 * Actual effective casting of double to int, taking into account rounding
-	 * up
-	 * 
-	 * @param x
-	 * @return
-	 */
-
-	private int cast(double x) {
-		if (x - (int) x > 0.5) {
-			return (int) x + 1;
-		} else {
-			return (int) x;
-		}
 	}
 
 }

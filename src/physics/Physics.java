@@ -13,10 +13,11 @@ import resources.Resources;
 import resources.Wall;
 
 public class Physics extends Thread implements ActionListener {
-	// dashing reduces stamina, speed multiplied by stamina.
+	//dashing reduces stamina, speed multiplied by stamina.
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	
 	//checks whether the tile is a 'killing' tile.
 	private static Function<Tile,Boolean> tileCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
 
@@ -85,7 +86,26 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
-		if(c.isDead()) return;
+		if(c.isDead()) {
+			if(c.getDyingStep() >= 200) { //this number is "sizeX * 4". TODO find sizeX and read it.
+				//unset all 'character state' flags
+				c.setDead(false);
+				c.setFalling(false);
+				c.setVisible(true);
+				c.setDyingStep(0);
+				//set location
+				double randX = 0.0;
+				double randY = 0.0;
+				do {
+					randX = Math.random() * 1200;
+					randY = Math.random() * 675;
+				} while(tileCheck.apply(resources.getMap().tileAt(randX, randY)));
+				c.setX(randX);
+				c.setY(randY);
+				c.setDx(0);
+				c.setDy(0);
+			}
+		}
 		
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
@@ -121,6 +141,13 @@ public class Physics extends Thread implements ActionListener {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
 		} else {
+			//if too slow, speed up:
+			if(Math.abs(c.getDx()) < 0.5) {
+				c.setDx(c.getDx() * 1.1);
+			}
+			if(Math.abs(c.getDy()) < 0.5) {
+				c.setDy(c.getDy() * 1.1);
+			}
 			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
@@ -294,12 +321,14 @@ public class Physics extends Thread implements ActionListener {
 		CND cnd = new CND();
 		double p1x, p1y;
 		double p2x, p2y;
+		
 		// check whether c is inside w:
 		boolean inside = false;
-		if(inside) // TODO check if c is inside w 
-		{
+		if(c.getX() <= w.getX4() && c.getX() >= w.getX1() && c.getY() >= w.getY2() && c.getY() <= w.getY3()) {
+			// check if the centre of c is inside w 
 			inside = true;
 		}
+		
 		// calculate which points define the line that intersects the 
 		// line joining the middle of c to the middle of w
 		if(c.getX() > w.getMidx()) { // p4 is the farthest to the right
@@ -316,8 +345,46 @@ public class Physics extends Thread implements ActionListener {
 			p2x = w.getX2();
 			p2y = w.getY2();
 		}
-		//find closest point on w to c:
 		
+		//find closest point on w to c:
+		//(intersection of two lines)
+		//y = mx+c; (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
+		// rearrange to get: m = (y2 - y1)/(x2 - x1); c = y1 - (x1 * m)
+		
+		// line between p1 and p2
+		double m1 = (p2y - p1y)/(p2x - p1x);
+		double c1 = p1y - (p1x * m1);
+		
+		// line between middle of the wall and middle of the character
+		double m2 = (w.getMidy() - c.getY()) / (w.getMidx() - c.getX());
+		double c2 = c.getY() - (c.getX() * m2);
+		
+		// point of intersection:
+		double closestX = (c2 - c1) / (m1 - m2);
+		double closestY = (m1 * closestX) + c1;
+		
+		if(closestX <= w.getX4() && closestX >= w.getX1() && closestY >= w.getY2() && closestY <= w.getY3()) {
+			// closestX and closestY is a point on the wall.
+			double r = c.getRadius() + (Math.sqrt(Math.pow(closestX - w.getMidx(), 2) + Math.pow(closestY - w.getMidy(), 2)));
+			r *= r;
+			
+			double dx = closestX - c.getX();
+			double dy = closestY - c.getY();
+			double dx2 = Math.pow(dx, 2);
+			double dy2 = Math.pow(dy, 2);
+			
+			if((dx2 + dy2) <= r) { // collision detected! (at last)
+				double distance = Math.sqrt(dx2 + dy2);
+				cnd.collided = true;
+				cnd.collisionDepth = r - distance;
+				cnd.collisionNormal.x = dx/distance;
+				cnd.collisionNormal.y = dy/distance;
+				if(inside) { // if the centre of c is inside w, reverse the normal.
+					cnd.collisionNormal.x *= -1;
+					cnd.collisionNormal.y *= -1;
+				}
+			}
+		}
 		
 		return cnd;
 	}
