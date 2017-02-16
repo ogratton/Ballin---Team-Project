@@ -52,7 +52,8 @@ public class Character extends Observable implements Collidable {
 	private ArrayList<BufferedImage> rollingSprites, directionSprites, dyingSprites;
 	private int rollingFrame, directionFrame, dyingFrame;
 	private boolean moving;
-	
+	private int id;
+
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
 	// Stamina recharges until this maximum value
@@ -62,7 +63,7 @@ public class Character extends Observable implements Collidable {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
-
+	
 	/**
 	 * Default character with default sprite
 	 */
@@ -158,6 +159,14 @@ public class Character extends Observable implements Collidable {
 		dyingFrame = 0;
 		falling = false;
 		dead = false;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/**
@@ -525,6 +534,28 @@ public class Character extends Observable implements Collidable {
 		this.y = y;
 		setChanged();
 		notifyObservers();
+	}
+	
+	/**
+	 * Set the x coordinate of the character
+	 * 
+	 * @param x
+	 *            the x coordinate
+	 */
+
+	public void setXWithoutNotifying(double x) {
+		this.x = x;
+	}
+
+	/**
+	 * Set the y coordinate of the character
+	 * 
+	 * @param y
+	 *            the y coordinate
+	 */
+
+	public void setYWithoutNotifying(double y) {
+		this.y = y;
 	}
 
 	/**
