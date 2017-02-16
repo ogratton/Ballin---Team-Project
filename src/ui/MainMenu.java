@@ -35,11 +35,11 @@ public class MainMenu extends JFrame {
 		frame.setSize(frameSize);
 		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(false);
+		frame.setUndecorated(true);
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer(resources, "pokemon");
+		musicPlayer = new MusicPlayer(resources, "guile");
 		musicPlayer.run();
 	}
 
