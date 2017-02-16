@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
+import networking.Client;
+import networking.Port;
 import resources.Resources;
 
 public class MainMenu extends JFrame {
@@ -288,7 +290,11 @@ public class MainMenu extends JFrame {
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
 		startButton.addActionListener(e -> {
-			PhysicsWithGraphicsDemo.main(null);
+			//PhysicsWithGraphicsDemo.main(null);
+			//String[] arguments = new String[] {username, "" + Port.number, "localhost" };
+			Client client = new Client(username, "" + Port.number, "localhost" );
+			client.start();
+			System.out.println("Finished starting Client");
 		});
 		// startButton.addActionListener(e ->{
 		// try {

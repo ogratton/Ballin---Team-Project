@@ -31,9 +31,13 @@ public class ClientGUI extends Thread {
 		JFrame frame = new JFrame(name);
 		frame.setSize(600, 400);
 		
+		System.out.println("Starting to make GUI");
+		
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		ConnectionDataComponent comp = new ConnectionDataComponent(model, toServer);	
 		frame.add(comp);
+		
+		System.out.println("Finished making GUI");
 				
 		frame.setVisible(true);
 	}
