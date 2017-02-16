@@ -61,36 +61,36 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		timer = new Timer(30, this);
+		timer = new Timer(17, this);
 		timer.start();
-		
 
 		// End test code block
-		this.resources= resources;
+		this.resources = resources;
 
 		characters = resources.getPlayerList();
-		
-		
+
 		this.width = width;
 		this.height = height;
 
 		view = new GameView(resources);
 
-		for (Character model : resources.getPlayerList()) {
-			model.addObserver(view);
-			if(model.getId() == resources.getId()) {
-				model.addObserver(updater);
+		if (updater != null) {
+			for (Character model : resources.getPlayerList()) {
+				model.addObserver(view);
+				if (model.getId() == resources.getId()) {
+					model.addObserver(updater);
+				}
 			}
 		}
 		
-		for(int i=0; i<characters.size(); i++) {
+		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId() == resources.getId()) {
 				secondPlayerIndex = i;
-				//System.out.println("Index: " + secondPlayerIndex);
+				// System.out.println("Index: " + secondPlayerIndex);
 				break;
 			}
 		}
-		
+
 		add(view, BorderLayout.CENTER);
 
 	}
@@ -102,7 +102,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-		
+
 		repaint();
 
 	}
@@ -130,7 +130,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 			int newWidth = (int) (1200);
 			int newHeight = (int) (675);
-			
+
 			setMultiplier(newWidth, newHeight);
 			setSize(newWidth, newHeight);
 			setLocationRelativeTo(null);
@@ -141,7 +141,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
-			setLocation(0,0);
+			setLocation(0, 0);
 			setMultiplier(width, height);
 			setSize(width, height);
 			fullScreen = true;
@@ -153,12 +153,12 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
-	public void cycleWorld(){
-		
+	public void cycleWorld() {
+
 		World world = resources.getMap().getWorldType();
 		World newWorld = null;
-		
-		switch(world){
+
+		switch (world) {
 		case CAVE:
 			newWorld = Map.World.SPACE;
 			break;
@@ -166,12 +166,12 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.CAVE;
 			break;
 		}
-		
+
 		resources.getMap().setWorldType(newWorld);
 		view.makeMap();
-		
+
 	}
-	
+
 	private class TAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
@@ -256,8 +256,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				cycleWorld();
 				break;
 			}
-			
-				
+
 		}
 	}
 

@@ -39,7 +39,7 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer(resources, "pokemon");
+		musicPlayer = new MusicPlayer(resources, "guile");
 		musicPlayer.run();
 	}
 
@@ -72,9 +72,9 @@ public class MainMenu extends JFrame {
 	}
 
 	private static Font makeFont(int size) {
-		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
+		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf"))
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -250,7 +250,7 @@ public class MainMenu extends JFrame {
 		button.addActionListener(e -> {
 			username = textField.getText();
 			textField.setText("");
-			AudioFile audioPlayer = new AudioFile(resources, "resources\\audio\\ding.wav", "Ding");
+			AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
 			audioPlayer.play();
 			audioPlayer.setGain(resources.getSFXGain());
 			changeState(ViewState.MAINMENU_STATE);

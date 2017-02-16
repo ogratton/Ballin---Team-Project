@@ -46,8 +46,8 @@ public class PhysicsWithGraphicsDemo {
 		
 		Character player = new Character(Character.Class.TEST);
 
-		player.setX(100);
-		player.setY(100);
+		player.setX(400);
+		player.setY(400);
 
 		Character player1 = new Character(Character.Class.ELF);
 
