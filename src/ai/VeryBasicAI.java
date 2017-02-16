@@ -24,7 +24,7 @@ public class VeryBasicAI extends Thread
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.DETECTIVE; // default
+	private Behaviour behaviour = Behaviour.STUBBORN; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 20;

@@ -31,7 +31,9 @@ public class Character extends Observable implements Collidable {
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
 	//moveFlags moves ...
-	private boolean up, right, left, down, jump, punch, block, falling, dead, dashing, blocking = false;
+	private boolean up, right, left, down, jump, punch, block = false;
+	//state flags
+	private boolean falling, dead, dashing, blocking = false;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
