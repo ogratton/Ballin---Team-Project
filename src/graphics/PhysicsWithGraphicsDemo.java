@@ -42,7 +42,7 @@ public class PhysicsWithGraphicsDemo {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.SPACE));
 		
 		Character player = new Character(Character.Class.TEST);
 

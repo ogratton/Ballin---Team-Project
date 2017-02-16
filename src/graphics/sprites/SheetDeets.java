@@ -81,7 +81,7 @@ public class SheetDeets {
 	public static final BufferedImage TILES = Sprite.loadSpriteSheet(Sprite.SheetType.TILE);
 
 	public static final int TILES_COLS = 6;
-	public static final int TILES_ROWS = 3;
+	public static final int TILES_ROWS = 6;
 	public static final int TILES_SIZEX = 25;
 	public static final int TILES_SIZEY = 25;
 
@@ -109,6 +109,9 @@ public class SheetDeets {
 			break;
 		case DESERT:
 			x = 0;
+			break;
+		case SPACE:
+			x = 1;
 			break;
 		}
 
