@@ -37,6 +37,17 @@ public class Resources {
 	// map
 	private Map map;
 	
+	// client ID
+	private int id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Get the default up keybinding
 	 * @return the default up keybinding

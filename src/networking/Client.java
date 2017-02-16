@@ -19,20 +19,29 @@ package networking;
 import java.io.*;
 import java.net.*;
 
-class Client {
+public class Client extends Thread {
+	
+	private String username;
+	private String portNumber;
+	private String hostname;
+	
+	public Client(String username, String portNumber, String hostname) {
+		this.username = username;
+		this.portNumber = portNumber;
+		this.hostname = hostname;
+	}
 
-  public static void main(String[] args) {
+  public void run() {
 
     // Check correct usage:
-    if (args.length != 3) {
-      System.err.println("Usage: java Client user-nickname hostname");
-      System.exit(1); // Give up.
-    }
-
+    //if (args.length != 3) {
+    //  System.err.println("Usage: java Client user-nickname hostname");
+    //  System.exit(1); // Give up.
+    //}
     // Initialize information:
-    String nickname = args[0];
-    String hostname = args[2];
-    String port = args[1];
+    String nickname = username;
+    //String hostname = hostname;
+    String port = portNumber;
 
     // Open sockets:
     ObjectOutputStream toServer = null;

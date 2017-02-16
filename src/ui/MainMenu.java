@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
-//import networking.Client;
+import networking.Client;
 import networking.Port;
 import resources.Resources;
 
@@ -41,7 +41,7 @@ public class MainMenu extends JFrame {
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
-		musicPlayer = new MusicPlayer(resources, "pokemon");
+		musicPlayer = new MusicPlayer(resources, "guile");
 		musicPlayer.run();
 	}
 
@@ -71,9 +71,9 @@ public class MainMenu extends JFrame {
 	}
 
 	private static Font makeFont(int size) {
-		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
+		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf"))
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -96,17 +96,29 @@ public class MainMenu extends JFrame {
 						if (isPressed) {
 							controlsList.remove(button.getText());
 							if (e.getKeyCode() == KeyEvent.VK_UP) {
-								if (!checkKey("up arrow"))
-									button.setText("up arrow");
+								if (!checkKey("up arrow".toUpperCase()))
+									button.setText("up arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-								if (!checkKey("down arrow"))
-									button.setText("down arrow");
+								if (!checkKey("down arrow".toUpperCase()))
+									button.setText("down arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-								if (!checkKey("left arrow"))
-									button.setText("left arrow");
+								if (!checkKey("left arrow".toUpperCase()))
+									button.setText("left arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-								if (!checkKey("right arrow"))
-									button.setText("right arrow");
+								if (!checkKey("right arrow".toUpperCase()))
+									button.setText("right arrow".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+								if (!checkKey("space".toUpperCase()))
+									button.setText("space".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+								if (!checkKey("ctrl".toUpperCase()))
+									button.setText("ctrl".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+								if (!checkKey("shift".toUpperCase()))
+									button.setText("shift".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_ALT) {
+								if (!checkKey("alt".toUpperCase()))
+									button.setText("alt".toUpperCase());
 							} else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
 									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9'))) {
 								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
@@ -231,29 +243,58 @@ public class MainMenu extends JFrame {
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
-		JLabel label = new JLabel("Insert your username:");
+		JLabel label = new JLabel("Enter your username:");
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		label.setFont(font.deriveFont((float) 25));
 
 		JTextField textField = new JTextField();
 		textField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		textField
-				.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
+		textField.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
 		textField.setFont(font);
+		textField.addKeyListener(new KeyListener(){
 
-		JButton button = new JButton("Ok");
-		button.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		button.setFont(font);
-		button.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.6), (int) (frameSize.getHeight() * 0.1)));
-		button.addActionListener(e -> {
-			username = textField.getText();
-			textField.setText("");
-			AudioFile audioPlayer = new AudioFile(resources, "resources\\audio\\ding.wav", "Ding");
-			audioPlayer.play();
-			audioPlayer.setGain(resources.getSFXGain());
-			changeState(ViewState.MAINMENU_STATE);
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					username = textField.getText();
+					textField.setText("");
+					AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+					audioPlayer.play();
+					audioPlayer.setGain(resources.getSFXGain());
+					changeState(ViewState.MAINMENU_STATE);
+				}
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 
+		
+//		JButton button = new JButton("Ok");
+//		button.setAlignmentX(JButton.CENTER_ALIGNMENT);
+//		button.setFont(font);		
+//		button.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.6), (int) (frameSize.getHeight() * 0.1)));
+//		button.addActionListener(e -> {
+//			username = textField.getText();
+//			textField.setText("");
+//			AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+//			audioPlayer.play();
+//			audioPlayer.setGain(resources.getSFXGain());
+//			changeState(ViewState.MAINMENU_STATE);
+//		});
+		
+		
 		panel.add(Box
 				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.2))));
 		panel.add(label);
@@ -262,8 +303,7 @@ public class MainMenu extends JFrame {
 		panel.add(textField);
 		panel.add(Box.createRigidArea(
 				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
-		panel.add(button);
-
+		//panel.add(button);
 		return panel;
 	}
 
@@ -277,7 +317,7 @@ public class MainMenu extends JFrame {
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
-		JLabel gameTitle = new JLabel("Insert game name!");
+		JLabel gameTitle = new JLabel("Ballin'");
 		gameTitle.setFont(font.deriveFont((float) 28));
 		gameTitle.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
@@ -286,10 +326,12 @@ public class MainMenu extends JFrame {
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
 		startButton.addActionListener(e -> {
-			PhysicsWithGraphicsDemo.main(null);
-//			String[] arguments = new String[] {username, Port.number + "", "localhost"};
-//			 Client.main(arguments);
+			//PhysicsWithGraphicsDemo.main(null);
+			Client client = new Client(username, "" + Port.number, "localhost" );
+			client.start();
+			System.out.println("Finished starting Client");
 		});
+
 
 		JButton changeUsername = new JButton("Change Username");
 		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -314,9 +356,6 @@ public class MainMenu extends JFrame {
 		exitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		exitButton.setMaximumSize(buttonSize);
 		exitButton.setFont(font);
-
-		JPanel empty = new JPanel();
-		empty.setSize(500, 100);
 
 		panel.add(Box
 				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.1))));
@@ -436,6 +475,15 @@ public class MainMenu extends JFrame {
 		moveRight.setName("right");
 		setKeyRebindable(moveRight);
 		controlsList.add(moveRight.getText());
+		
+		JLabel dash = new JLabel("Dash: ");
+		dash.setFont(font);
+
+		JButton dashButton = new JButton("SPACE");
+		dashButton.setFont(font);
+		dashButton.setName("dash");
+		setKeyRebindable(dashButton);
+		controlsList.add(dashButton.getText());
 
 		JButton resetControls = new JButton("Reset controls to default");
 		resetControls.setFont(font);
@@ -444,6 +492,7 @@ public class MainMenu extends JFrame {
 			resetButton(moveDown);
 			resetButton(moveLeft);
 			resetButton(moveRight);
+			resetButton(dashButton);
 		});
 		resetControls.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
@@ -456,6 +505,8 @@ public class MainMenu extends JFrame {
 		controlsPanel.add(moveLeft);
 		controlsPanel.add(right);
 		controlsPanel.add(moveRight);
+		controlsPanel.add(dash);
+		controlsPanel.add(dashButton);
 
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(

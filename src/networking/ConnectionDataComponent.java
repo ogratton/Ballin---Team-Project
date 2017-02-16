@@ -50,6 +50,8 @@ public class ConnectionDataComponent extends JPanel {
 		
 		setLayout(new BorderLayout());
 		
+		System.out.println("Adding Buttons");
+		
 		add(bottomPanel, BorderLayout.SOUTH);
 		add(listPanel, BorderLayout.CENTER);
 		add(controls, BorderLayout.NORTH);

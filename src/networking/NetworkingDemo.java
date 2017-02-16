@@ -2,6 +2,7 @@ package networking;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
 
@@ -18,12 +19,16 @@ import resources.Resources;
 
 public class NetworkingDemo {
 
-	public static void startGame(ConnectionDataModel cModel) {
+	public static void startGame(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		
 		
 		Character newPlayer;
 		Random r = new Random();
-		int x;
-		int y;
+		Resources resources = new Resources();
+		resources.setId(cModel.getMyId());
+		Updater updater = new Updater(cModel, toServer, resources);
+		double x;
+		double y;
 		List<ClientInformation> clients = cModel.getSession(cModel.getSessionId()).getAllClients();
 		List<CharacterInfo> charactersList = cModel.getCharactersList();
 		CharacterInfo info;
@@ -34,7 +39,8 @@ public class NetworkingDemo {
 			newPlayer = new Character(Character.Class.ELF);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
-			Resources.playerList.add(newPlayer);
+			newPlayer.setId(id);
+			resources.addPlayerToList(newPlayer);
 			cModel.getCharacters().put(id, newPlayer);
 			info = new CharacterInfo(id, x, y);
 			charactersList.add(info);
@@ -43,7 +49,7 @@ public class NetworkingDemo {
 		cModel.setCharactersList(charactersList);
 		
 		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = Resources.default_map;	
+		Map.Tile[][] tiles = null;	
 		MapReader mr = new MapReader();	
 		try
 		{
@@ -57,28 +63,32 @@ public class NetworkingDemo {
 			
 		}
 		
-		Resources.map = new Map(1200, 675, tiles, Map.World.CAVE);
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		cModel.setResources(resources);
 
 		// create physics thread
-		Physics p = new Physics();
+		Physics p = new Physics(resources);
 		p.start();
 
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(Resources.playerList, Resources.map);
+				Graphics g = new Graphics(resources, updater);
 				g.start();
 			}
 		});
 	}
 	
-	public static void setGame(ConnectionDataModel cModel, GameData gameData) {
+	public static void setGame(ConnectionDataModel cModel, GameData gameData, ObjectOutputStream toServer) {
 		
 		Character newPlayer;
-		int x;
-		int y;
+		double x;
+		double y;
 		int id;
+		Resources resources = new Resources();
+		resources.setId(cModel.getMyId());
+		Updater updater = new Updater(cModel, toServer, resources);
 		List<CharacterInfo> charactersList = gameData.getCharactersList();
 		CharacterInfo info;
 		for(int i=0; i<charactersList.size(); i++) {
@@ -89,14 +99,15 @@ public class NetworkingDemo {
 			newPlayer = new Character(Character.Class.ELF);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
-			Resources.playerList.add(newPlayer);
+			newPlayer.setId(id);
+			resources.addPlayerToList(newPlayer);;
 			cModel.getCharacters().put(id, newPlayer);
 		}
 		
 		cModel.setCharactersList(charactersList);
 		
 		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = Resources.default_map;	
+		Map.Tile[][] tiles = null;	
 		MapReader mr = new MapReader();	
 		try
 		{
@@ -110,17 +121,18 @@ public class NetworkingDemo {
 			
 		}
 		
-		Resources.map = new Map(1200, 675, tiles, Map.World.CAVE);
-
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		cModel.setResources(resources);
+			
 		// create physics thread
-		Physics p = new Physics();
+		Physics p = new Physics(resources);
 		p.start();
 
 		// create ui thread
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(Resources.playerList, Resources.map);
+				Graphics g = new Graphics(resources, updater);
 				g.start();
 			}
 		});

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import audio.MusicPlayer;
+import graphics.old.MapModel;
+import networking.Updater;
 import resources.Character;
 import resources.Map;
 import resources.Map.World;
@@ -32,6 +35,8 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Timer timer;
 	private GameView view;
 	private Resources resources;
+	private int firstPlayerIndex = 0;
+	private int secondPlayerIndex = 1;
 
 	private boolean fullScreen = false;
 
@@ -48,7 +53,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	 *            the map the board is displaying
 	 */
 
-	public GameComponent(Resources resources, int width, int height) {
+	public GameComponent(Resources resources, int width, int height, Updater updater) {
 
 		setLayout(new BorderLayout());
 
@@ -56,25 +61,36 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		timer = new Timer(30, this);
+		timer = new Timer(17, this);
 		timer.start();
-		
 
 		// End test code block
-		this.resources= resources;
+		this.resources = resources;
 
 		characters = resources.getPlayerList();
-		
-		
+
 		this.width = width;
 		this.height = height;
 
 		view = new GameView(resources);
 
-		for (Character model : resources.getPlayerList()) {
-			model.addObserver(view);
+		if (updater != null) {
+			for (Character model : resources.getPlayerList()) {
+				model.addObserver(view);
+				if (model.getId() == resources.getId()) {
+					model.addObserver(updater);
+				}
+			}
 		}
 		
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters.get(i).getId() == resources.getId()) {
+				secondPlayerIndex = i;
+				// System.out.println("Index: " + secondPlayerIndex);
+				break;
+			}
+		}
+
 		add(view, BorderLayout.CENTER);
 
 	}
@@ -114,7 +130,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 			int newWidth = (int) (1200);
 			int newHeight = (int) (675);
-			
+
 			setMultiplier(newWidth, newHeight);
 			setSize(newWidth, newHeight);
 			setLocationRelativeTo(null);
@@ -125,7 +141,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
-			setLocation(0,0);
+			setLocation(0, 0);
 			setMultiplier(width, height);
 			setSize(width, height);
 			fullScreen = true;
@@ -137,12 +153,12 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
-	public void cycleWorld(){
-		
+	public void cycleWorld() {
+
 		World world = resources.getMap().getWorldType();
 		World newWorld = null;
-		
-		switch(world){
+
+		switch (world) {
 		case CAVE:
 			newWorld = Map.World.SPACE;
 			break;
@@ -150,40 +166,40 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.CAVE;
 			break;
 		}
-		
+
 		resources.getMap().setWorldType(newWorld);
 		view.makeMap();
-		
+
 	}
-	
+
 	private class TAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characters.get(0).setLeft(false);
+				characters.get(firstPlayerIndex).setLeft(false);
 				break;
 			case KeyEvent.VK_D:
-				characters.get(0).setRight(false);
+				characters.get(firstPlayerIndex).setRight(false);
 				break;
 			case KeyEvent.VK_W:
-				characters.get(0).setUp(false);
+				characters.get(firstPlayerIndex).setUp(false);
 				break;
 			case KeyEvent.VK_S:
-				characters.get(0).setDown(false);
+				characters.get(firstPlayerIndex).setDown(false);
 				break;
 			case KeyEvent.VK_UP:
-				characters.get(1).setUp(false);
+				characters.get(secondPlayerIndex).setUp(false);
 				break;
 			case KeyEvent.VK_DOWN:
-				characters.get(1).setDown(false);
+				characters.get(secondPlayerIndex).setDown(false);
 				break;
 			case KeyEvent.VK_LEFT:
-				characters.get(1).setLeft(false);
+				characters.get(secondPlayerIndex).setLeft(false);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characters.get(1).setRight(false);
+				characters.get(secondPlayerIndex).setRight(false);
 				break;
 			case KeyEvent.VK_ENTER:
 				toggleFullscreen();
@@ -196,41 +212,41 @@ public class GameComponent extends JFrame implements ActionListener {
 			int key = e.getKeyCode();
 			switch (key) {
 			case KeyEvent.VK_A:
-				characters.get(0).setLeft(true);
+				characters.get(firstPlayerIndex).setLeft(true);
 				break;
 			case KeyEvent.VK_D:
-				characters.get(0).setRight(true);
+				characters.get(firstPlayerIndex).setRight(true);
 				break;
 			case KeyEvent.VK_W:
-				characters.get(0).setUp(true);
+				characters.get(firstPlayerIndex).setUp(true);
 				break;
 			case KeyEvent.VK_S:
-				characters.get(0).setDown(true);
+				characters.get(firstPlayerIndex).setDown(true);
 				break;
 			case KeyEvent.VK_UP:
-				characters.get(1).setUp(true);
+				characters.get(secondPlayerIndex).setUp(true);
 				break;
 			case KeyEvent.VK_DOWN:
-				characters.get(1).setDown(true);
+				characters.get(secondPlayerIndex).setDown(true);
 				break;
 			case KeyEvent.VK_LEFT:
-				characters.get(1).setLeft(true);
+				characters.get(secondPlayerIndex).setLeft(true);
 				break;
 			case KeyEvent.VK_RIGHT:
-				characters.get(1).setRight(true);
+				characters.get(secondPlayerIndex).setRight(true);
 				break;
 			case KeyEvent.VK_SHIFT:
 				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(0).setDashing(true);
+					characters.get(firstPlayerIndex).setDashing(true);
 				} else {
-					characters.get(1).setDashing(true);
+					characters.get(secondPlayerIndex).setDashing(true);
 				}
 				break;
 			case KeyEvent.VK_CONTROL:
 				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(0).setBlocking(true);
+					characters.get(firstPlayerIndex).setBlocking(true);
 				} else {
-					characters.get(1).setBlocking(true);
+					characters.get(secondPlayerIndex).setBlocking(true);
 				}
 				break;
 			case KeyEvent.VK_ESCAPE:
@@ -240,8 +256,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				cycleWorld();
 				break;
 			}
-			
-				
+
 		}
 	}
 

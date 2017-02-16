@@ -30,7 +30,10 @@ public class Character extends Observable implements Collidable {
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
-	private boolean up, right, left, down, jump, punch, block, collided, falling, dead, dashing, blocking = false;
+	//moveFlags moves ...
+	private boolean up, right, left, down, jump, punch, block = false;
+	//state flags
+	private boolean falling, dead, dashing, blocking = false;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -54,6 +57,7 @@ public class Character extends Observable implements Collidable {
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
+	private int id;
 	private boolean visible = true;
 	private BufferedImage currentFrame;
 
@@ -66,7 +70,7 @@ public class Character extends Observable implements Collidable {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
-
+	
 	/**
 	 * Default character with default sprite
 	 */
@@ -156,6 +160,14 @@ public class Character extends Observable implements Collidable {
 		directionFrame = 0;
 		falling = false;
 		dead = false;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/**
@@ -553,16 +565,6 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
-	 * Has the character collided?
-	 * 
-	 * @return if the character has collided
-	 */
-
-	public boolean isCollided() {
-		return this.collided;
-	}
-
-	/**
 	 * Get the facing of this character
 	 * 
 	 * @return the facing
@@ -598,19 +600,29 @@ public class Character extends Observable implements Collidable {
 		setChanged();
 		notifyObservers();
 	}
-
+	
 	/**
-	 * Set if the character has collided
+	 * Set the x coordinate of the character
 	 * 
-	 * @param collided
-	 *            if the character has collided
+	 * @param x
+	 *            the x coordinate
 	 */
 
-	public void setCollided(boolean collided) {
-		this.collided = collided;
-		setChanged();
-		notifyObservers();
+	public void setXWithoutNotifying(double x) {
+		this.x = x;
 	}
+
+	/**
+	 * Set the y coordinate of the character
+	 * 
+	 * @param y
+	 *            the y coordinate
+	 */
+
+	public void setYWithoutNotifying(double y) {
+		this.y = y;
+	}
+
 
 	/**
 	 * Set the facing of the character

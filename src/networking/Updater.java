@@ -3,6 +3,8 @@ package networking;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,7 +14,7 @@ import javax.swing.JTextField;
 
 import resources.Resources;
 
-public class GameButtons extends JPanel implements Observer {
+public class Updater extends JPanel implements Observer {
 
 	/**
 	 * 
@@ -20,7 +22,7 @@ public class GameButtons extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
 	private ObjectOutputStream toServer;
-	private JButton refresh;
+	private Resources resources;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -29,27 +31,11 @@ public class GameButtons extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public GameButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	public Updater(ConnectionDataModel cModel, ObjectOutputStream toServer, Resources resources) {
 		super();
-		
 		this.cModel = cModel;
-		refresh = new JButton("Start Game");
-		refresh.addActionListener(e -> {
-			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
-				if(!cModel.isGameInProgress()) {
-					NetworkingDemo.startGame(cModel, toServer);
-					GameData gameData = new GameData(cModel.getCharactersList());
-					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), -1, cModel.getSessionId(), -1, gameData);
-					try {
-						toServer.writeUnshared(message);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		
-		add(refresh);
+		this.toServer = toServer;
+		this.resources = resources;
 	}
 
 /**
@@ -61,10 +47,26 @@ public class GameButtons extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
+		List<resources.Character> characters = resources.getPlayerList();
+		for(int i=0; i<characters.size(); i++) {
+			if(characters.get(i).getId() == cModel.getMyId()) {
+				CharacterInfo info = new CharacterInfo(characters.get(i).getId(), characters.get(i).getX(), characters.get(i).getY());
+				List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+				charactersList.add(info);
+				GameData gameData = new GameData(charactersList);
+				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), -1, cModel.getSessionId(), -1, gameData);
+				try {
+					toServer.writeUnshared(message);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 		repaint();
 	}
 
 }
+
 
 
 
