@@ -89,7 +89,7 @@ public class PhysicsWithGraphicsDemo {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(resources);
+				Graphics g = new Graphics(resources, null);
 				g.start();
 			}
 		});

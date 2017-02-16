@@ -30,7 +30,8 @@ public class Character extends Observable implements Collidable {
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
-	private boolean up, right, left, down, jump, punch, block, collided, falling, dead, dashing, blocking = false;
+	//moveFlags moves ...
+	private boolean up, right, left, down, jump, punch, block, falling, dead, dashing, blocking = false;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -562,16 +563,6 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
-	 * Has the character collided?
-	 * 
-	 * @return if the character has collided
-	 */
-
-	public boolean isCollided() {
-		return this.collided;
-	}
-
-	/**
 	 * Get the facing of this character
 	 * 
 	 * @return the facing
@@ -630,18 +621,6 @@ public class Character extends Observable implements Collidable {
 		this.y = y;
 	}
 
-	/**
-	 * Set if the character has collided
-	 * 
-	 * @param collided
-	 *            if the character has collided
-	 */
-
-	public void setCollided(boolean collided) {
-		this.collided = collided;
-		setChanged();
-		notifyObservers();
-	}
 
 	/**
 	 * Set the facing of the character

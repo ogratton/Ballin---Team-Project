@@ -48,23 +48,14 @@ public class Updater extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		List<resources.Character> characters = resources.getPlayerList();
-		if(cModel.getMyId() == 1000000) {
-			System.out.println("Got here");
-		}
 		for(int i=0; i<characters.size(); i++) {
 			if(characters.get(i).getId() == cModel.getMyId()) {
-				if(cModel.getMyId() == 1000000) {
-					System.out.println("Got here too");
-				}
 				CharacterInfo info = new CharacterInfo(characters.get(i).getId(), characters.get(i).getX(), characters.get(i).getY());
 				List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 				charactersList.add(info);
 				GameData gameData = new GameData(charactersList);
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), -1, cModel.getSessionId(), -1, gameData);
 				try {
-					if(cModel.getMyId() == 1000000) {
-						System.out.println("Updating: " + characters.get(i).getId());
-					}
 					toServer.writeUnshared(message);
 				} catch (Exception e1) {
 					e1.printStackTrace();

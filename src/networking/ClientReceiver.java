@@ -104,10 +104,6 @@ public void run() {
         						if (charactersList.get(j).getId() == players.get(i).getId()) {
         							players.get(i).setXWithoutNotifying(charactersList.get(j).getX());
         							players.get(i).setYWithoutNotifying(charactersList.get(j).getY());
-        							if(charactersList.get(j).getId() == 1000000) {
-        								//System.out.println("Updated: " + charactersList.get(j).getId());
-        							}
-        	    					
         						}
         					}
         				}

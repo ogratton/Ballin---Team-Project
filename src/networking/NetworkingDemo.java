@@ -27,8 +27,8 @@ public class NetworkingDemo {
 		Resources resources = new Resources();
 		resources.setId(cModel.getMyId());
 		Updater updater = new Updater(cModel, toServer, resources);
-		int x;
-		int y;
+		double x;
+		double y;
 		List<ClientInformation> clients = cModel.getSession(cModel.getSessionId()).getAllClients();
 		List<CharacterInfo> charactersList = cModel.getCharactersList();
 		CharacterInfo info;
@@ -64,6 +64,7 @@ public class NetworkingDemo {
 		}
 		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		cModel.setResources(resources);
 
 		// create physics thread
 		Physics p = new Physics(resources);

@@ -36,6 +36,7 @@ public class ServerReceiver extends Thread {
 	  Message response = null;
 	  int sessionId;
 	  Session session;
+	  List<ClientInformation> clientList;
 	  
 	  while(message.getCommand() != Command.QUIT) {
 		  try {
@@ -78,21 +79,30 @@ public class ServerReceiver extends Thread {
 					  session.addClient(senderClient.getId(), senderClient);
 					  senderClient.setSession(session);
 					  response = new Message(Command.SESSION, Note.JOINED, senderClient.getId(), -1, session.getId(), -1, sessions);
-					  senderClient.getQueue().offer(response);
+					  //senderClient.getQueue().offer(response);
+					  clientList = session.getAllClients();
+					  for(int i=0; i<clientList.size(); i++) {
+						  clientList.get(i).getQueue().offer(response);
+					  }
 					  break;
 				  case LEAVE:
 					  senderClient = clients.get(message.getSenderId());
 					  sessionId = message.getTargetSessionId();
+					  session = sessions.get(sessionId);
 					  sessions.get(sessionId).removeClient(senderClient.getId());
 					  senderClient.setSession(null);
 					  response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), -1, -1, -1, sessions);
 					  senderClient.getQueue().offer(response);
+					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), -1, -1, -1, sessions);
+					  clientList = session.getAllClients();
+					  for(int i=0; i<clientList.size(); i++) {
+						  clientList.get(i).getQueue().offer(response);
+					  }
 					  break;
 				  default:
 					  break;
 				  }
 			  case GAME:
-				  List<ClientInformation> clientList;
 				  switch(message.getNote()) {
 				  case START:
 					  session = sessions.get(message.getCurrentSessionId());

@@ -24,7 +24,7 @@ public class Graphics extends Thread {
 		comp.setSize(1200, 675);
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program
-		comp.setTitle("Ballin'");
+		comp.setTitle("" + resources.getId());
 		comp.setVisible(true);
 		
 	}
