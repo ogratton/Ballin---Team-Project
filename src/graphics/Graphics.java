@@ -15,13 +15,17 @@ public class Graphics extends Thread {
 		this.updater = updater;
 	}
 	
+	public Graphics(Resources resources){
+		this.resources = resources;
+	}
+	
 	public void run() {
 	
 		
 		GameComponent comp = new GameComponent(resources, 1200, 675, updater);
 	
 		comp.setUndecorated(false);
-		comp.setSize(1200, 675);
+		comp.setSize(1200, 710);
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program
 		comp.setTitle("Ballin'");

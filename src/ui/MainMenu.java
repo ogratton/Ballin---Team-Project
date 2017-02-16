@@ -35,7 +35,7 @@ public class MainMenu extends JFrame {
 		frame.setSize(frameSize);
 		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
+		frame.setUndecorated(false);
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
@@ -72,9 +72,9 @@ public class MainMenu extends JFrame {
 	}
 
 	private static Font makeFont(int size) {
-		Font customFont = new Font("Comic Sans MS", Font.PLAIN, 14);
+		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources\\fonts\\04b.ttf"))
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -250,7 +250,7 @@ public class MainMenu extends JFrame {
 		button.addActionListener(e -> {
 			username = textField.getText();
 			textField.setText("");
-			AudioFile audioPlayer = new AudioFile(resources, "resources\\audio\\ding.wav", "Ding");
+			AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
 			audioPlayer.play();
 			audioPlayer.setGain(resources.getSFXGain());
 			changeState(ViewState.MAINMENU_STATE);

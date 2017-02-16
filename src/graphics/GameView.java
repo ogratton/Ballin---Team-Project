@@ -104,9 +104,9 @@ public class GameView extends JPanel implements Observer {
 				if (character.isDead()) {
 					int step = character.getDyingStep();
 
-					if (step < sizeX * 4) {
+					if (step < 50) {
 
-						deathModifier = (int) (step * 0.25);
+						deathModifier = (int) (step);
 						sizeX -= deathModifier;
 						sizeY -= deathModifier;
 						character.incDyingStep();

@@ -30,7 +30,7 @@ public class VeryBasicAI extends Thread
 	private final double fuzziness = 20;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 	
-	private final long tick = 40; // loop every <tick>ms
+	private final long tick = 70; // loop every <tick>ms
 
 	private ArrayList<Tile> bad_tiles; // TODO add walls to this when they are implemented
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
@@ -148,6 +148,8 @@ public class VeryBasicAI extends Thread
 				}
 				Thread.sleep(tick);
 			}
+			
+			setAllMovementFalse();
 
 		}
 		catch (InterruptedException e)
