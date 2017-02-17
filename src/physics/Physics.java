@@ -256,29 +256,6 @@ public class Physics extends Thread implements ActionListener {
 		
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
-		
-		/*
-		double dx1 = c.getDx();
-		double dx2 = d.getDx();
-		double dy1 = c.getDy();
-		double dy2 = d.getDy();
-		double m1 = c.getMass();
-		double m2 = d.getMass();
-
-		double newDX1 = ((m1 - m2) / (m1 + m2)) * dx1 + ((2 * m2) / (m1 + m2)) * dx2;
-		double newDX2 = ((2 * m1) / (m1 + m2)) * dx1 + ((m2 - m1) / (m1 + m2)) * dx2;
-
-		double newDY1 = ((m1 - m2) / (m1 + m2)) * dy1 + ((2 * m2) / (m1 + m2)) * dy2;
-		double newDY2 = ((2 * m1) / (m1 + m2)) * dy1 + ((m2 - m1) / (m1 + m2)) * dy2;
-
-		c.setDx(newDX1);
-		c.setDy(newDY1);
-		d.setDx(newDX2);
-		d.setDy(newDY2);
-		
-		c.setCollided(true);
-		d.setCollided(true);
-		*/
 	}
 
 //	private double distanceBetween(Character c1, Character c2) {
@@ -390,40 +367,71 @@ public class Physics extends Thread implements ActionListener {
 	}
 	
 	private void dash(Character c) {
-		/*
+		c.setBlocking(false);
+		// Dash in the direction the player is trying to move
 		if (c.getDashTimer() == 0) {
-			//System.out.println("DASHING");
-			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
+			double maxSpeed = 2 * c.getMaxDx();
+			System.out.println("Direction dashing: " + c.getMovingDirection());
+			switch(c.getMovingDirection()) {
+			case N:
+				c.setDx(0);
+				c.setDy(-maxSpeed);
+				break;
+			case NE:
+				c.setDx(maxSpeed);
+				c.setDy(-maxSpeed);
+				break;
+			case E:
+				c.setDx(maxSpeed);
+				c.setDy(0);
+				break;
+			case SE:
+				c.setDx(maxSpeed);
+				c.setDy(maxSpeed);
+				break;
+			case S:
+				c.setDx(0);
+				c.setDy(maxSpeed);
+				break;
+			case SW:
+				c.setDx(-maxSpeed);
+				c.setDy(maxSpeed);
+				break;
+			case W:
+				c.setDx(-maxSpeed);
+				c.setDy(0);
+				break;
+			case NW:
+				c.setDx(-maxSpeed);
+				c.setDy(-maxSpeed);
+				break;
+			case STILL:
+				// Dash in direction moving, if you're moving
+				double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
+				// Can't dash if standing still
+				if (maxDxDy == 0) {
+					c.setDashing(false);
+					c.resetDashTimer();
+					// Refund stamina
+					c.setStamina(c.getStamina() + c.getDashStamina());
+					return;
+				}
+				double velInc = (2 * c.getMaxDx()) / maxDxDy;
+				c.setDx(c.getDx() * velInc);
+				c.setDy(c.getDy() * velInc);
+			}
 		}
-		*/
-		double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
-		// Can't dash if standing still
-		if (maxDxDy == 0) {
-			c.setDashing(false);
-			// Refund stamina
-			c.setStamina(c.getStamina() + c.getDashStamina());
-			return;
-		}
-		double velInc = (2 * c.getMaxDx()) / maxDxDy;
-		c.setDx(c.getDx() * velInc);
-		c.setDy(c.getDy() * velInc);
-		//System.out.println(maxDxDy);
 		c.incrementDashTimer();
-		
 		if (c.getDashTimer() >= 25) {
-			//System.out.println("DONE DASHING");
-			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
-			maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
-			velInc = (c.getMaxDx()) / maxDxDy;
-			c.setDx(c.getDx() * velInc);
-			c.setDy(c.getDy() * velInc);
-			//System.out.println("Reducing speed to: " + c.getDx() + ", " + c.getDy());
+			c.setDx(c.getDx() / 2);
+			c.setDy(c.getDy() / 2);
 			c.setDashing(false);
 			c.resetDashTimer();
 		}
 	}
 	
 	private void block(Character c) {
+		c.setDashing(false);
 		// Start blocking - increase mass
 		if (c.getBlockTimer() == 0) {
 			//System.out.println("BLOCKING");

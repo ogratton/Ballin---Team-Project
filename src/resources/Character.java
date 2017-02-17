@@ -469,7 +469,6 @@ public class Character extends Observable implements Collidable {
 	 * Set the direction of the character based on the commands it is currently
 	 * receiving
 	 */
-
 	private void setDirection() {
 
 		if (isUp()) {
@@ -510,6 +509,44 @@ public class Character extends Observable implements Collidable {
 
 		setChanged();
 		notifyObservers();
+	}
+	
+	/**
+	 * Get the direction that the character is accelerating towards.
+	 * (e.g. holding up and right = NE)
+	 */
+	public Heading getMovingDirection() {
+
+		if (isUp()) {
+			if (isLeft()) {
+				return Heading.NW;
+			}
+
+			else if (isRight()) {
+				return Heading.NE;
+			}
+
+			else {
+				return Heading.N;
+			}
+		} else if (isDown()) {
+			if (isLeft()) {
+				return Heading.SW;
+			}
+
+			else if (isRight()) {
+				return Heading.SE;
+			}
+
+			else {
+				return Heading.S;
+			}
+		} else if (isLeft()) {
+			return Heading.W;
+		} else if (isRight()) {
+			return Heading.E;
+		}
+		return Heading.STILL;
 	}
 
 	/*
