@@ -28,7 +28,7 @@ public class VeryBasicAI extends Thread
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.CLOUSEAU; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 20;
@@ -95,14 +95,14 @@ public class VeryBasicAI extends Thread
 
 			// this is setting things up for the debug Detective
 			boolean success = false; // we all start off life as failures
-			Point[] destinations = new Point[] {new Point(450,500)}; // { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
+			Point[] destinations = new Point[] { new Point(450, 500) }; // { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
 			int i = 0;
 
 			Point charStartPos = new Point((int) character.getX(), (int) character.getY());
-			System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
+			//System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
 			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]); // TODO make it work
-			System.out.println("Worked out waypoints to "+ destinations[i]);
-			System.out.println(waypoints);
+			//System.out.println("Worked out waypoints to "+ destinations[i]);
+			//System.out.println(waypoints);
 
 			while (!character.isDead())
 			{
@@ -149,17 +149,25 @@ public class VeryBasicAI extends Thread
 					 * POIROT BEHAVIOUR:
 					 * Uses A* pathfinding, so hopefully isn't a lemming
 					 */
+					//System.out.println("Poirot tick. Waypoints length: " + waypoints.size());
+
 					if (i < destinations.length)
 					{
-						if(!waypoints.isEmpty())
+						if (!waypoints.isEmpty())
 						{
-							success = moveTo(waypoints.getFirst());
+							success = moveTo(waypoints.removeFirst());
 							if (success)
 							{
-								i++;
 								success = false;
+								//System.out.println("Ze little grey cells, zey have led me to my goal!");
 							}
 						}
+						else
+						{
+							System.out.println("made it to destination...?");
+							i++;
+						}
+
 					}
 				}
 				else if (behaviour == Behaviour.STUBBORN)
@@ -302,9 +310,9 @@ public class VeryBasicAI extends Thread
 
 	private boolean moveTo(Point p) throws InterruptedException
 	{
-		return this.moveTo(p.x, p.y);
+		return this.moveTo(p.getX(), p.getY());
 	}
-	
+
 	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>

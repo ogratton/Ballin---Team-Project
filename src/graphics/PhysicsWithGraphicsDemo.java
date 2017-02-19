@@ -65,18 +65,18 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 
-//		for(int i = 0; i < 6; i++){
-//			
-//			Random r = new Random();
-//			
-//			Character playa = new Character(Character.Class.WIZARD);
-//			playa.setX(r.nextInt(1200));
-//			playa.setY(r.nextInt(675));
-//			resources.addPlayerToList(playa);
-//			
-//			VeryBasicAI ai = new VeryBasicAI(resources, playa);
-//			ai.start();
-//		}
+		for(int i = 0; i < 6; i++){
+			
+			Random r = new Random();
+			
+			Character playa = new Character(Character.Class.WIZARD);
+			playa.setX(r.nextInt(1200));
+			playa.setY(r.nextInt(675));
+			resources.addPlayerToList(playa);
+			
+			VeryBasicAI ai = new VeryBasicAI(resources, playa);
+			ai.start();
+		}
 
 		// create physics thread
 		Physics p = new Physics(resources);
