@@ -14,11 +14,9 @@ public class AStarSearch
 {
 	private PriorityQueue<SearchNode> frontier;
 	private TreeSet<Point> visited;
-	private Point start;
 	private Point goal;
 	private SearchNode current;
 	private double distTravelled;
-	private double distToGo;
 
 	private Resources resources;
 
@@ -32,11 +30,9 @@ public class AStarSearch
 		// reset all the fields
 		this.frontier = new PriorityQueue<SearchNode>(SearchNode.priorityComparator()); // sorts by cost + heuristic.
 		this.visited = new TreeSet<Point>(new PointComparator());
-		this.start = start;
 		this.goal = goal;
 		this.distTravelled = 0;
-		this.distToGo = StaticHeuristics.euclidean(start, goal);
-		this.current = new SearchNode(start, getTileType(start), new SearchNode(), distTravelled, goal);
+		this.current = new SearchNode(start, new SearchNode(), distTravelled, goal);
 
 		// first check if we're already there somehow
 		if (start.equals(goal))
@@ -46,20 +42,34 @@ public class AStarSearch
 
 		// generate frontier by getting 8 surrounding tiles
 		addNeighbours();
+//		System.out.println(frontier);
+		LinkedList<Point> ll = new LinkedList<Point>();
+		
+		boolean success = false;
 		// explore best looking (first) option in frontier until there are no more unexplored reachable states
-		while (!frontier.isEmpty())
+		while (!frontier.isEmpty() && !success)
 		{
 			// 	set current to the head of the frontier
 			this.current = frontier.poll();
-			if (current.getLocation().equals(goal))
+			
+			if (!visited.contains(current.getLocation()))
 			{
-				// TODO make path
+				if (current.getLocation().equals(goal))
+				{
+					System.out.println("Found the goal!");
+					ll = reconstructPath();
+					success = true;
+					break;
+				}
+//				System.out.println("Searching " + current.getLocation().getX() + ", " + current.getLocation().getY());
+//				System.out.println(frontier);
+				visited.add(current.getLocation());
+				addNeighbours();
 			}
-			visited.add(current.getLocation());
-			addNeighbours();
+
 		}
 
-		LinkedList<Point> ll = reconstructPath();
+		
 		// TODO just before returning the final list,
 		// make as sparse as possible so that the only
 		// elements are corners.
@@ -84,21 +94,27 @@ public class AStarSearch
 			for (int j = 0; j < dirs.length; j++)
 			{
 				// don't want to add the current node in again
-				if (!(i == 0 && j == 0))
+				if (!(dirs[i] == 0 && dirs[j] == 0))
 				{
+					int dirI = dirs[i];
+					int dirJ = dirs[j];
+					
 					// TODO need to make sure I'm getting the columns and rows the right way round
-					int neiX = curLoc.x + i;
-					int neiY = curLoc.y + i;
+					int neiX = curLoc.x + dirI;
+					int neiY = curLoc.y + dirJ;
 					Point neiLoc = new Point(neiX, neiY);
 					Tile neiTile = getTileType(neiLoc);
 
 					// we only care if we've not seen it yet and we can walk on it
-					if (!visited.contains(neiLoc) && !resources.getBadTiles().contains(neiTile))
+					if (!visited.contains(neiLoc))
 					{	
-						int distMoved = Math.abs(i) + Math.abs(j);
-						neighbours.add(new SearchNode(neiLoc, neiTile, current, distTravelled + distMoved, goal));
+						if (!resources.getBadTiles().contains(neiTile))
+						{
+//							System.out.println(neiTile);
+							int distMoved = Math.abs(dirI) + Math.abs(dirJ);
+							neighbours.add(new SearchNode(neiLoc, current, distTravelled + distMoved, goal));
+						}	
 					}
-
 				}
 			}
 		}
@@ -114,7 +130,8 @@ public class AStarSearch
 	 */
 	private Tile getTileType(Point location)
 	{
-		return resources.getMap().tileAt(location.x, location.y);
+		// TODO this returns null
+		return resources.getMap().tileAt(location.getX(), location.getY());
 	}
 	
 	/**

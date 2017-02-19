@@ -8,7 +8,6 @@ import resources.Map.Tile;
 public class SearchNode
 {
 	private Point location;
-	private Tile type;
 	private SearchNode parent;
 	private double distTravelled;
 	private double distToGo;
@@ -32,11 +31,10 @@ public class SearchNode
 	 * @param distTravelled
 	 * @param goal
 	 */
-	public SearchNode(Point location, Tile type, SearchNode parent, double distTravelled, Point goal)
+	public SearchNode(Point location, SearchNode parent, double distTravelled, Point goal)
 	{
 		isEmpty = false;
 		this.location = location;
-		this.type = type;
 		this.parent = parent;
 		this.distTravelled = distTravelled;
 		this.distToGo = StaticHeuristics.euclidean(location, goal);
@@ -93,6 +91,11 @@ public class SearchNode
 	public boolean isEmpty()
 	{
 		return isEmpty;
+	}
+	
+	public String toString()
+	{
+		return ("("+location.getX()+","+location.getY()+")");
 	}
 
 }

@@ -32,8 +32,8 @@ public class PhysicsWithGraphicsDemo {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/asteroid.csv");
-			System.out.println("I guess it worked then");
+			tiles = mr.readMap("./resources/maps/map1.csv");
+			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
 		{
@@ -56,8 +56,8 @@ public class PhysicsWithGraphicsDemo {
 
 		Character player2 = new Character(Character.Class.WIZARD);
 
-		player2.setX(800);
-		player2.setY(500);
+		player2.setX(700);
+		player2.setY(300);
 
 		
 		
@@ -65,18 +65,18 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 
-		for(int i = 0; i < 6; i++){
-			
-			Random r = new Random();
-			
-			Character playa = new Character(Character.Class.WIZARD);
-			playa.setX(r.nextInt(1200));
-			playa.setY(r.nextInt(675));
-			resources.addPlayerToList(playa);
-			
-			VeryBasicAI ai = new VeryBasicAI(resources, playa);
-			ai.start();
-		}
+//		for(int i = 0; i < 6; i++){
+//			
+//			Random r = new Random();
+//			
+//			Character playa = new Character(Character.Class.WIZARD);
+//			playa.setX(r.nextInt(1200));
+//			playa.setY(r.nextInt(675));
+//			resources.addPlayerToList(playa);
+//			
+//			VeryBasicAI ai = new VeryBasicAI(resources, playa);
+//			ai.start();
+//		}
 
 		// create physics thread
 		Physics p = new Physics(resources);
