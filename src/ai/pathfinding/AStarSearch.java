@@ -46,7 +46,7 @@ public class AStarSearch
 
 		// generate frontier by getting 8 surrounding tiles
 		addNeighbours();
-		// explore best looking option in frontier (thank you priority queues)
+		// explore best looking (first) option in frontier until there are no more unexplored reachable states
 		while (!frontier.isEmpty())
 		{
 			// 	set current to the head of the frontier
@@ -59,8 +59,8 @@ public class AStarSearch
 			addNeighbours();
 		}
 
-		LinkedList<Point> ll = new LinkedList<Point>();
-		// just before returning the final list,
+		LinkedList<Point> ll = reconstructPath();
+		// TODO just before returning the final list,
 		// make as sparse as possible so that the only
 		// elements are corners.
 		// this may be awkward with linked lists
@@ -90,11 +90,11 @@ public class AStarSearch
 					int neiX = curLoc.x + i;
 					int neiY = curLoc.y + i;
 					Point neiLoc = new Point(neiX, neiY);
+					Tile neiTile = getTileType(neiLoc);
 
-					// we only care if we've not seen it yet
-					if (!visited.contains(neiLoc))
-					{
-						Tile neiTile = getTileType(neiLoc);
+					// we only care if we've not seen it yet and we can walk on it
+					if (!visited.contains(neiLoc) && !resources.getBadTiles().contains(neiTile))
+					{	
 						int distMoved = Math.abs(i) + Math.abs(j);
 						neighbours.add(new SearchNode(neiLoc, neiTile, current, distTravelled + distMoved, goal));
 					}
@@ -116,8 +116,26 @@ public class AStarSearch
 	{
 		return resources.getMap().tileAt(location.x, location.y);
 	}
+	
+	/**
+	 * When we have found the goal as a search node, follow the parents back to
+	 * the source
+	 * Builds the list from the front so we don't need to reverse it
+	 * 
+	 * @return a list of points that lead from the start to the goal
+	 */
+	private LinkedList<Point> reconstructPath()
+	{
+		SearchNode node = current;
+		LinkedList<Point> ll = new LinkedList<Point>();
+		while (!node.isEmpty())
+		{
+			ll.addFirst(node.getLocation());
+			node = node.getParent();
+		}
 
-	// TODO reconstruct path function (just follow parents)
+		return ll;
+	}
 
 	// TODO minimise path function (see commments in search func)
 }

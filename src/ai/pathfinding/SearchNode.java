@@ -7,13 +7,13 @@ import resources.Map.Tile;
 
 public class SearchNode
 {
-	private Point location; // TODO make fields final when ready
+	private Point location;
 	private Tile type;
 	private SearchNode parent;
 	private double distTravelled;
 	private double distToGo;
 
-	private boolean isEmpty;
+	private final boolean isEmpty;
 
 	/**
 	 * Null constructor
@@ -45,7 +45,7 @@ public class SearchNode
 	/**
 	 * See how far we've come from the start
 	 * 
-	 * @return
+	 * @return number of squares traversed to get to this point
 	 */
 	public double distanceTravelled()
 	{
@@ -54,24 +54,42 @@ public class SearchNode
 
 	/**
 	 * An optimistic guess of how far we have to go
+	 * (Must be admissible as a requirement of A*)
 	 * 
-	 * @return
+	 * @return Euclidean distance to goal
 	 */
 	public double distanceToGo()
 	{
 		return distToGo;
 	}
 
+	/**
+	 * @return grid reference of this node on the map
+	 */
 	public Point getLocation()
 	{
 		return location;
 	}
 
+	/**
+	 * Enables the frontier to order its nodes in priority of heuristics
+	 */
 	public static Comparator<SearchNode> priorityComparator()
 	{
 		return new SearchNodePriorityComparator();
 	}
 
+	/**
+	 * @return the node that we got to this node from
+	 */
+	public SearchNode getParent()
+	{
+		return parent;
+	}
+
+	/**
+	 * Empty nodes are what the start nodes' parents are
+	 */
 	public boolean isEmpty()
 	{
 		return isEmpty;

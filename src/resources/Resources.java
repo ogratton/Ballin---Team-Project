@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import resources.Map.Tile;
+
 //import graphics.old.CharacterModel;
 
 /*
@@ -39,6 +41,15 @@ public class Resources {
 	
 	// client ID
 	private int id;
+	
+	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
+	
+	public Resources()
+	{
+		bad_tiles = new ArrayList<Tile>();
+		bad_tiles.add(Tile.ABYSS);
+		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are implemented
+	}
 
 	public int getId() {
 		return id;
@@ -271,6 +282,11 @@ public class Resources {
 	
 	public void setMap(Map map) {
 		this.map = map;
+	}
+	
+	public ArrayList<Tile> getBadTiles()
+	{
+		return bad_tiles;
 	}
 	
 	//public static MapReader mapReader = new MapReader();

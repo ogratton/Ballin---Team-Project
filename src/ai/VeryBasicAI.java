@@ -32,7 +32,7 @@ public class VeryBasicAI extends Thread
 	
 	private final long tick = 70; // loop every <tick>ms
 
-	private ArrayList<Tile> bad_tiles; // TODO add walls to this when they are implemented
+	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 	
 	private Random r;
@@ -61,10 +61,7 @@ public class VeryBasicAI extends Thread
 		this.resources = resources;
 
 		// the tiles we don't want to step on
-		bad_tiles = new ArrayList<Tile>();
-		bad_tiles.add(Tile.ABYSS);
-		bad_tiles.add(Tile.EDGE_ABYSS);
-		//TODO add walls
+		bad_tiles = resources.getBadTiles();
 
 		non_edge = new ArrayList<Tile>();
 		non_edge.addAll(bad_tiles);
