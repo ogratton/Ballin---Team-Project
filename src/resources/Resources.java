@@ -20,10 +20,12 @@ public class Resources {
 	private int default_down = KeyEvent.VK_S;
 	private int default_left = KeyEvent.VK_A;
 	private int default_right = KeyEvent.VK_D;
+	private int default_dash = KeyEvent.VK_SPACE;
 	private int up = KeyEvent.VK_W;
 	private int down = KeyEvent.VK_S;
 	private int left = KeyEvent.VK_A;
 	private int right = KeyEvent.VK_D;
+	private int dash = KeyEvent.VK_SPACE;
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
@@ -132,6 +134,24 @@ public class Resources {
 	}
 	
 	/**
+	 * Get the default dash keybinding
+	 * @return the default dash keybinding
+	 */
+	
+	public int getDefaultDash() {
+		return default_dash;
+	}
+	
+	/**
+	 * Set the default dash keybinding
+	 * @param default_right the default dash keybinding
+	 */
+	
+	public void setDefaultDash(int default_dash) {
+		this.default_dash = default_dash;
+	}
+	
+	/**
 	 * Get the up keybinding
 	 * @return the up keybinding
 	 */
@@ -201,6 +221,24 @@ public class Resources {
 	
 	public void setRight(int right) {
 		this.right = right;
+	}
+	
+	/**
+	 * Get the dash keybinding
+	 * @return the dash keybinding
+	 */
+	
+	public int getDash() {
+		return dash;
+	}
+	
+	/**
+	 * Set the dash keybinding
+	 * @param right the dash keybinding
+	 */
+	
+	public void setDash(int dash) {
+		this.dash = dash;
 	}
 	
 	/**
