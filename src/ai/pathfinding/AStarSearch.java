@@ -164,7 +164,27 @@ public class AStarSearch
 	{
 		// TODO vital for the whole thing to work
 		// I think
-		return dense;
+		
+		// temporary dumb way to keep only every <gap>th point:
+		LinkedList<Point> sparse = new LinkedList<Point>();
+		int gap = 10;
+		int init_size = dense.size();
+		
+		for(int position=0; dense.size() > 1; position += gap)
+		{
+			for (int i = 0; i<gap && position+i < init_size; i++)
+			{
+				Point temp = dense.removeFirst();
+				if (i==0)
+				{
+					sparse.addLast(temp);
+				}
+				
+			}
+
+		}
+		
+		return sparse;
 	}
 
 }
