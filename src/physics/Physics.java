@@ -83,9 +83,9 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
-		if(c.isDead() && c.getDeathCount() < resources.maxDeaths()) {
+		if(c.isDead() && c.getLives() > 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
-				c.incrementDeathCount();
+				c.decrementLives();
 				resources.getMap().spawn(c);
 			}
 		}

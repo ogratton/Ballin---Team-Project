@@ -310,7 +310,7 @@ public class Resources {
 	}
 	
 	/**
-	 * set the maximum number of times a character can die before they no longer respawn.
+	 * set the maximum number of lives for each character.
 	 * @param maxDeaths
 	 */
 	public void setMaxDeaths(int maxDeaths) {
@@ -318,7 +318,7 @@ public class Resources {
 	}
 	
 	/**
-	 * get the maximum number of times a character can die before they no longer respawn.
+	 * get the maximum number of lives for each character.
 	 * @return
 	 */
 	public int maxDeaths() {

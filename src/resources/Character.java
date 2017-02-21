@@ -34,7 +34,7 @@ public class Character extends Observable implements Collidable {
 	private boolean up, right, left, down, jump, punch, block = false;
 	//state flags
 	private boolean falling, dead, dashing, blocking = false;
-	private int deathCount = 0;
+	private int lives = 4;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -607,21 +607,31 @@ public class Character extends Observable implements Collidable {
 	 * 
 	 * @return the facing
 	 */
-
 	public Character.Heading getDirection() {
 		return this.direction;
 	}
 	
-	public void incrementDeathCount() {
-		deathCount++;
+	/**
+	 * Decrements the lives counter.
+	 */
+	public void decrementLives() {
+		lives--;
 	}
 	
-	public void setDeathCount(int deathCount){
-		this.deathCount = deathCount;
+	/**
+	 * Sets number of lives.
+	 * @param lives
+	 */
+	public void setLives(int lives){
+		this.lives = lives;
 	}
 	
-	public int getDeathCount() {
-		return deathCount;
+	/**
+	 * get the number of lives for this character.
+	 * @return
+	 */
+	public int getLives() {
+		return lives;
 	}
 
 	/**
