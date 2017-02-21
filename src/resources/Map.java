@@ -4,9 +4,11 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
+import resources.Map.Tile;
 
 public class Map {
 	private int width, height;
@@ -419,4 +421,43 @@ public class Map {
 	public boolean onMap(double x, double y) {
 		return x >= origin.getX() || y >= origin.getY() || x <= origin.getX() + width || y <= origin.getY() + height;
 	}
+	
+	/**
+	 * Spawns a character on a random point.
+	 * 
+	 * @param c
+	 */
+	public void spawn(Character c) {
+		//reset all 'character state' flags
+		c.setDead(false);
+		c.setFalling(false);
+		c.setDashing(false);
+		c.setBlocking(false);
+		c.setVisible(true);
+		c.setDyingStep(0);
+		//set velocity
+		c.setDx(0);
+		c.setDy(0);
+		//set location
+		double randX = 0.0;
+		double randY = 0.0;
+		do {
+			randX = Math.random() * width;
+			randY = Math.random() * height;
+		} while(Map.tileCheck(tileAt(randX, randY)));
+		c.setX(randX);
+		c.setY(randY);
+	}
+	
+	/**
+	 * Checks whether a given tile is a 'killing' tile.
+	 * @param tile
+	 * @return true if it is a 'killing' tile, false otherwise.
+	 */
+	public static boolean tileCheck(Tile tile) {
+		//checks whether the tile is a 'killing' tile.
+		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
+
+	}
+
 }

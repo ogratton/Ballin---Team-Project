@@ -32,8 +32,8 @@ public class Resources {
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
 	
-	// what number player am I?
-	private int me = -1;
+	// max deaths a character can have.
+	private int maxDeaths = 4;
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
@@ -260,24 +260,6 @@ public class Resources {
 	}
 	
 	/**
-	 * Get the player number
-	 * @return the player number
-	 */
-	
-	public int getMe() {
-		return me;
-	}
-	
-	/**
-	 * Set the player number
-	 * @param me the player number
-	 */
-	
-	public void setMe(int me) {
-		this.me = me;
-	}
-	
-	/**
 	 * Get the player list
 	 * @return the player list
 	 */
@@ -325,6 +307,22 @@ public class Resources {
 	public ArrayList<Tile> getBadTiles()
 	{
 		return bad_tiles;
+	}
+	
+	/**
+	 * set the maximum number of times a character can die before they no longer respawn.
+	 * @param maxDeaths
+	 */
+	public void setMaxDeaths(int maxDeaths) {
+		this.maxDeaths = maxDeaths;
+	}
+	
+	/**
+	 * get the maximum number of times a character can die before they no longer respawn.
+	 * @return
+	 */
+	public int maxDeaths() {
+		return maxDeaths;
 	}
 	
 	//public static MapReader mapReader = new MapReader();

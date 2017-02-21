@@ -34,6 +34,7 @@ public class Character extends Observable implements Collidable {
 	private boolean up, right, left, down, jump, punch, block = false;
 	//state flags
 	private boolean falling, dead, dashing, blocking = false;
+	private int deathCount = 0;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -309,7 +310,7 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/*
-	 * Getters and setters for controls: this is mportant for determining which
+	 * Getters and setters for controls: this is important for determining which
 	 * frame of the sprite to use next
 	 */
 
@@ -609,6 +610,18 @@ public class Character extends Observable implements Collidable {
 
 	public Character.Heading getDirection() {
 		return this.direction;
+	}
+	
+	public void incrementDeathCount() {
+		deathCount++;
+	}
+	
+	public void setDeathCount(int deathCount){
+		this.deathCount = deathCount;
+	}
+	
+	public int getDeathCount() {
+		return deathCount;
 	}
 
 	/**
@@ -1178,7 +1191,6 @@ public class Character extends Observable implements Collidable {
 	 * @param visible
 	 *            the state of visibility
 	 */
-
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}

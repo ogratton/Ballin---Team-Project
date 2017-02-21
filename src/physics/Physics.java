@@ -8,6 +8,7 @@ import javax.swing.Timer;
 
 import resources.Character;
 import resources.Collidable;
+import resources.Map;
 import resources.Map.Tile;
 import resources.Resources;
 import resources.Wall;
@@ -17,10 +18,6 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
-	
-	//checks whether the tile is a 'killing' tile.
-	private static Function<Tile,Boolean> tileCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
-
 	
 	public Physics(Resources resources){
 		this.resources = resources;
@@ -86,31 +83,17 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
-		if(c.isDead()) {
-			if(c.getDyingStep() >= 50) { //this number is "sizeX * 4". TODO find sizeX and read it.
-				//unset all 'character state' flags
-				c.setDead(false);
-				c.setFalling(false);
-				c.setVisible(true);
-				c.setDyingStep(0);
-				//set location
-				double randX = 0.0;
-				double randY = 0.0;
-				do {
-					randX = Math.random() * 1200;
-					randY = Math.random() * 675;
-				} while(tileCheck.apply(resources.getMap().tileAt(randX, randY)));
-				c.setX(randX);
-				c.setY(randY);
-				c.setDx(0);
-				c.setDy(0);
+		if(c.isDead() && c.getDeathCount() < resources.maxDeaths()) {
+			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
+				c.incrementDeathCount();
+				resources.getMap().spawn(c);
 			}
 		}
 		
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
 		//check for falling.
-		if(tileCheck.apply(t)) {
+		if(Map.tileCheck(t)) {
 			c.setFalling(true);
 		}
 		// Recharge stamina
@@ -119,7 +102,7 @@ public class Physics extends Thread implements ActionListener {
 		if (special(c)){
 			return;
 		}
-		if(!c.isFalling()) {
+		if(!c.isFalling()) { //moving
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -140,7 +123,14 @@ public class Physics extends Thread implements ActionListener {
 			if (!c.isUp() && !c.isDown()) {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
-		} else {
+		} else if (!c.isDead()){ //falling
+			//if stationary, give speed:
+			if(Math.abs(c.getDx()) < 0.02) {
+				c.setDx(0.02);
+			}
+			if(Math.abs(c.getDy()) < 0.02) {
+				c.setDy(0.02);
+			}
 			//if too slow, speed up:
 			if(Math.abs(c.getDx()) < 0.5) {
 				c.setDx(c.getDx() * 1.1);
@@ -151,22 +141,22 @@ public class Physics extends Thread implements ActionListener {
 			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!tileCheck.apply(t2)) { // bottom edge
+			if(!Map.tileCheck(t2)) { // bottom edge
 				dead = false;
 				c.setDx(0 - Math.abs(c.getDx()));
 			}
 			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!tileCheck.apply(t2)) { // top edge
+			if(!Map.tileCheck(t2)) { // top edge
 				dead = false;
 				c.setDx(Math.abs(c.getDx()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!tileCheck.apply(t2)) { // right edge
+			if(!Map.tileCheck(t2)) { // right edge
 				dead = false;
 				c.setDy(0 - Math.abs(c.getDy()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!tileCheck.apply(t2)) { // left edge
+			if(!Map.tileCheck(t2)) { // left edge
 				dead = false;
 				c.setDy(Math.abs(c.getDy()));
 			}
