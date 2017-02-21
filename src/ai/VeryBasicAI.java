@@ -31,7 +31,7 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 20;
+	private final double fuzziness = 30;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
 	private final long tick = 70; // loop every <tick>ms
@@ -95,11 +95,11 @@ public class VeryBasicAI extends Thread
 
 			// this is setting things up for the debug Detective
 			boolean success = false; // we all start off life as failures
-			Point[] destinations = new Point[] { new Point(450, 500) }; // { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
+			Point[] destinations = new Point[] { new Point(500, 500) }; // { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
 			int i = 0;
 
 			Point charStartPos = new Point((int) character.getX(), (int) character.getY());
-			//System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
+//			System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
 			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]); // TODO make it work
 			//System.out.println("Worked out waypoints to "+ destinations[i]);
 			//System.out.println(waypoints);
@@ -165,6 +165,7 @@ public class VeryBasicAI extends Thread
 						else
 						{
 							System.out.println("made it to destination...?");
+							brakeChar();
 							i++;
 						}
 
@@ -408,6 +409,7 @@ public class VeryBasicAI extends Thread
 	{
 		// 'release' all keys
 		setAllMovementFalse();
+		character.setBlock(true);
 
 		double dX = character.getDx();
 		double dY = character.getDy();
@@ -526,6 +528,8 @@ public class VeryBasicAI extends Thread
 				return;
 			}
 		}
+		
+		character.setBlock(false);
 
 	}
 
