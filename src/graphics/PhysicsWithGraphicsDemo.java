@@ -32,7 +32,7 @@ public class PhysicsWithGraphicsDemo {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/map0.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)

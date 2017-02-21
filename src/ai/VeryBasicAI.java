@@ -40,6 +40,7 @@ public class VeryBasicAI extends Thread
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
 	private Random r;
+	private int tempID;
 
 	private AStarSearch aStar;
 
@@ -75,6 +76,8 @@ public class VeryBasicAI extends Thread
 		non_edge.add(Tile.FLAT);
 
 		r = new Random();
+		
+		tempID = r.nextInt(500);
 
 		aStar = new AStarSearch(resources);
 	}
@@ -95,12 +98,12 @@ public class VeryBasicAI extends Thread
 
 			// this is setting things up for the debug Detective
 			boolean success = false; // we all start off life as failures
-			Point[] destinations = new Point[] { new Point(500, 500) }; // { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) };
+			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
 			int i = 0;
 
 			Point charStartPos = new Point((int) character.getX(), (int) character.getY());
 //			System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
-			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]); // TODO make it work
+			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]);
 			//System.out.println("Worked out waypoints to "+ destinations[i]);
 			//System.out.println(waypoints);
 
@@ -160,13 +163,20 @@ public class VeryBasicAI extends Thread
 							{
 								success = false;
 								//System.out.println("Ze little grey cells, zey have led me to my goal!");
+
 							}
 						}
 						else
 						{
-							System.out.println("made it to destination...?");
+							System.out.println(tempID + " made it to destination " + i);
 							brakeChar();
 							i++;
+							try {
+								waypoints = aStar.search(charStartPos, destinations[i]);
+								System.out.println(tempID + " pathfinding to point " + i);
+							} catch (ArrayIndexOutOfBoundsException e) {
+								i = 0; // loop
+							}
 						}
 
 					}
