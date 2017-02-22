@@ -420,7 +420,7 @@ public class Map {
 	 */
 	public Point tileCoordsOnMap(double x, double y) {
 		Point p = tileCoords(x,y);
-		return new Point(p.x * SheetDeets.TILES_SIZEX, p.y * SheetDeets.TILES_SIZEY);
+		return new Point((int)p.getX() * SheetDeets.TILES_SIZEX, (int)p.getY() * SheetDeets.TILES_SIZEY);
 	}
 
 	/**

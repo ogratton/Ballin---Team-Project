@@ -135,11 +135,11 @@ public class Physics extends Thread implements ActionListener {
 			}
 		} else if (!c.isDead()){ //falling
 			//if stationary, give speed:
-			if(Math.abs(c.getDx()) < 0.02) {
-				c.setDx(0.02);
+			if(Math.abs(c.getDx()) < 0.00001) {
+				c.setDx(0.00001);
 			}
-			if(Math.abs(c.getDy()) < 0.02) {
-				c.setDy(0.02);
+			if(Math.abs(c.getDy()) < 0.00001) {
+				c.setDy(0.00001);
 			}
 			//if too slow, speed up:
 			if(Math.abs(c.getDx()) < 0.5) {
