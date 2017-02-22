@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import resources.Map.Tile;
+
 //import graphics.old.CharacterModel;
 
 /*
@@ -18,18 +20,20 @@ public class Resources {
 	private int default_down = KeyEvent.VK_S;
 	private int default_left = KeyEvent.VK_A;
 	private int default_right = KeyEvent.VK_D;
+	private int default_dash = KeyEvent.VK_SPACE;
 	private int up = KeyEvent.VK_W;
 	private int down = KeyEvent.VK_S;
 	private int left = KeyEvent.VK_A;
 	private int right = KeyEvent.VK_D;
+	private int dash = KeyEvent.VK_SPACE;
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
 	
-	// what number player am I?
-	private int me = -1;
+	// max deaths a character can have.
+	private int maxDeaths = 4;
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
@@ -39,6 +43,15 @@ public class Resources {
 	
 	// client ID
 	private int id;
+	
+	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
+	
+	public Resources()
+	{
+		bad_tiles = new ArrayList<Tile>();
+		bad_tiles.add(Tile.ABYSS);
+		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are implemented
+	}
 
 	public int getId() {
 		return id;
@@ -121,6 +134,24 @@ public class Resources {
 	}
 	
 	/**
+	 * Get the default dash keybinding
+	 * @return the default dash keybinding
+	 */
+	
+	public int getDefaultDash() {
+		return default_dash;
+	}
+	
+	/**
+	 * Set the default dash keybinding
+	 * @param default_right the default dash keybinding
+	 */
+	
+	public void setDefaultDash(int default_dash) {
+		this.default_dash = default_dash;
+	}
+	
+	/**
 	 * Get the up keybinding
 	 * @return the up keybinding
 	 */
@@ -193,6 +224,24 @@ public class Resources {
 	}
 	
 	/**
+	 * Get the dash keybinding
+	 * @return the dash keybinding
+	 */
+	
+	public int getDash() {
+		return dash;
+	}
+	
+	/**
+	 * Set the dash keybinding
+	 * @param right the dash keybinding
+	 */
+	
+	public void setDash(int dash) {
+		this.dash = dash;
+	}
+	
+	/**
 	 * Get the SFX gain
 	 * @return the SFX gain
 	 */
@@ -208,24 +257,6 @@ public class Resources {
 	
 	public void setSFXGain(int sfx_gain) {
 		this.sfx_gain = sfx_gain;
-	}
-	
-	/**
-	 * Get the player number
-	 * @return the player number
-	 */
-	
-	public int getMe() {
-		return me;
-	}
-	
-	/**
-	 * Set the player number
-	 * @param me the player number
-	 */
-	
-	public void setMe(int me) {
-		this.me = me;
 	}
 	
 	/**
@@ -271,6 +302,27 @@ public class Resources {
 	
 	public void setMap(Map map) {
 		this.map = map;
+	}
+	
+	public ArrayList<Tile> getBadTiles()
+	{
+		return bad_tiles;
+	}
+	
+	/**
+	 * set the maximum number of lives for each character.
+	 * @param maxDeaths
+	 */
+	public void setMaxDeaths(int maxDeaths) {
+		this.maxDeaths = maxDeaths;
+	}
+	
+	/**
+	 * get the maximum number of lives for each character.
+	 * @return
+	 */
+	public int maxDeaths() {
+		return maxDeaths;
 	}
 	
 	//public static MapReader mapReader = new MapReader();

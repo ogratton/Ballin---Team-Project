@@ -2,8 +2,10 @@ package ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
+import ai.pathfinding.AStarSearch;
 import resources.Character;
 import resources.Map.Tile;
 import resources.Resources;
@@ -18,24 +20,29 @@ public class VeryBasicAI extends Thread
 	{
 		COWARD, // runs from all danger
 		AGGRESSIVE, // actively seeks other players
-		DETECTIVE, // debug: Follows a list of points
+
+		CLOUSEAU, // debug: Follows a list of points dumbly
+		POIROT, // use A* search to follow a list of points more intelligently
 		AIMLESS, // debug: moves randomly
 		PACING, // debug: moves up&down/left&right
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.STUBBORN; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 20;
+	private final double fuzziness = 30;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
-	
+
 	private final long tick = 70; // loop every <tick>ms
 
-	private ArrayList<Tile> bad_tiles; // TODO add walls to this when they are implemented
+	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
-	
+
 	private Random r;
+	private int tempID;
+
+	private AStarSearch aStar;
 
 	/*
 	 * Notes:
@@ -44,10 +51,11 @@ public class VeryBasicAI extends Thread
 	 * For now change direction randomly to avoid danger
 	 * (This is Coward behaviour)
 	 * 
-	 * TODO For moveAwayFromEdge use the ray-cast as the centre, not the player centre
+	 * TODO For moveAwayFromEdge use the ray-cast as the centre, not the player
+	 * centre
 	 * This will make it look more human, hopefully
 	 * 
-	 * TODO Pathfinding (don't run into holes)
+	 * TODO Test pathfinding
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -61,16 +69,17 @@ public class VeryBasicAI extends Thread
 		this.resources = resources;
 
 		// the tiles we don't want to step on
-		bad_tiles = new ArrayList<Tile>();
-		bad_tiles.add(Tile.ABYSS);
-		bad_tiles.add(Tile.EDGE_ABYSS);
-		//TODO add walls
+		bad_tiles = resources.getBadTiles();
 
 		non_edge = new ArrayList<Tile>();
 		non_edge.addAll(bad_tiles);
 		non_edge.add(Tile.FLAT);
-		
+
 		r = new Random();
+		
+		tempID = r.nextInt(500);
+
+		aStar = new AStarSearch(resources);
 	}
 
 	/**
@@ -86,13 +95,18 @@ public class VeryBasicAI extends Thread
 		{
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
 			Thread.sleep(1000);
-			
+
 			// this is setting things up for the debug Detective
 			boolean success = false; // we all start off life as failures
-			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400),
-					new Point(500, 500) };
+			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
 			int i = 0;
-			
+
+			Point charStartPos = new Point((int) character.getX(), (int) character.getY());
+//			System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
+			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]);
+			//System.out.println("Worked out waypoints to "+ destinations[i]);
+			//System.out.println(waypoints);
+
 			while (!character.isDead())
 			{
 				// common behaviour should go first
@@ -103,13 +117,14 @@ public class VeryBasicAI extends Thread
 				{
 					Thread.sleep(reaction_time);
 					moveAwayFromEdge(getCurrentTileCoords());
-//					System.out.println("Near an edge!");
+					//					System.out.println("Near an edge!");
 				}
-				if (behaviour == Behaviour.DETECTIVE)
+				if (behaviour == Behaviour.CLOUSEAU)
 				{
 					/*
-					 * DETECTIVE BEHAVIOUR:
-					 * Follows a list of clues to a fascinating conclusion
+					 * CLOUSEAU BEHAVIOUR:
+					 * Uses 'as-the-crow-flies' pathfinding, causing it to
+					 * probably fall into holes
 					 */
 
 					//System.out.println("Target: " + destinations[i]);
@@ -120,15 +135,50 @@ public class VeryBasicAI extends Thread
 						success = moveTo(destinations[i].getX(), destinations[i].getY());
 						if (success)
 						{
-							//						System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
-							//						System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
+							//System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
+							//System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
 							i++;
 							success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
 							if (i < destinations.length)
 							{
-								//							System.out.println("Target: " + destinations[i]);
+								//System.out.println("Target: " + destinations[i]);
 							}
 						}
+					}
+				}
+				else if (behaviour == Behaviour.POIROT)
+				{
+					/*
+					 * POIROT BEHAVIOUR:
+					 * Uses A* pathfinding, so hopefully isn't a lemming
+					 */
+					//System.out.println("Poirot tick. Waypoints length: " + waypoints.size());
+
+					if (i < destinations.length)
+					{
+						if (!waypoints.isEmpty())
+						{
+							success = moveTo(waypoints.removeFirst());
+							if (success)
+							{
+								success = false;
+								//System.out.println("Ze little grey cells, zey have led me to my goal!");
+
+							}
+						}
+						else
+						{
+							System.out.println(tempID + " made it to destination " + i);
+							brakeChar();
+							i++;
+							try {
+								waypoints = aStar.search(charStartPos, destinations[i]);
+								System.out.println(tempID + " pathfinding to point " + i);
+							} catch (ArrayIndexOutOfBoundsException e) {
+								i = 0; // loop
+							}
+						}
+
 					}
 				}
 				else if (behaviour == Behaviour.STUBBORN)
@@ -139,16 +189,16 @@ public class VeryBasicAI extends Thread
 				{
 					// Move in random directions
 					// But preferably not off the edge
-					
+
 					// TODO
 				}
 				else
 				{
-					//					System.out.println("Behaviour not yet implemented");
+					//System.out.println("Behaviour not yet implemented");
 				}
 				Thread.sleep(tick);
 			}
-			
+
 			setAllMovementFalse();
 
 		}
@@ -269,6 +319,11 @@ public class VeryBasicAI extends Thread
 	// TODO are there players in the way?
 	//private boolean isClear
 
+	private boolean moveTo(Point p) throws InterruptedException
+	{
+		return this.moveTo(p.getX(), p.getY());
+	}
+
 	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>
@@ -364,6 +419,7 @@ public class VeryBasicAI extends Thread
 	{
 		// 'release' all keys
 		setAllMovementFalse();
+		character.setBlock(true);
 
 		double dX = character.getDx();
 		double dY = character.getDy();
@@ -482,6 +538,8 @@ public class VeryBasicAI extends Thread
 				return;
 			}
 		}
+		
+		character.setBlock(false);
 
 	}
 

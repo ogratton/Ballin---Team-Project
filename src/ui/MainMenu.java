@@ -56,9 +56,6 @@ public class MainMenu extends JFrame {
 	private JPanel optionsPanel = optionPanel();
 	private JPanel mPanel;
 	private static ArrayList<String> controlsList;
-	// private JOptionPane keyError = new JOptionPane(mPanel, "This key is
-	// already assigned for another control. Please assign another key!","Key
-	// already assigned!", JOptionPane.ERROR_MESSAGE);
 	private static Resources resources;
 
 	public enum ViewState {
@@ -98,19 +95,30 @@ public class MainMenu extends JFrame {
 					public void keyPressed(KeyEvent e) {
 						if (isPressed) {
 							controlsList.remove(button.getText());
-							System.out.println(controlsList);
 							if (e.getKeyCode() == KeyEvent.VK_UP) {
-								if (!checkKey("up arrow"))
-									button.setText("up arrow");
+								if (!checkKey("up arrow".toUpperCase()))
+									button.setText("up arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-								if (!checkKey("down arrow"))
-									button.setText("down arrow");
+								if (!checkKey("down arrow".toUpperCase()))
+									button.setText("down arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-								if (!checkKey("left arrow"))
-									button.setText("left arrow");
+								if (!checkKey("left arrow".toUpperCase()))
+									button.setText("left arrow".toUpperCase());
 							} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-								if (!checkKey("right arrow"))
-									button.setText("right arrow");
+								if (!checkKey("right arrow".toUpperCase()))
+									button.setText("right arrow".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+								if (!checkKey("space".toUpperCase()))
+									button.setText("space".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+								if (!checkKey("ctrl".toUpperCase()))
+									button.setText("ctrl".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+								if (!checkKey("shift".toUpperCase()))
+									button.setText("shift".toUpperCase());
+							} else if (e.getKeyCode() == KeyEvent.VK_ALT) {
+								if (!checkKey("alt".toUpperCase()))
+									button.setText("alt".toUpperCase());
 							} else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
 									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9'))) {
 								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
@@ -127,6 +135,8 @@ public class MainMenu extends JFrame {
 								resources.setLeft(e.getKeyCode());
 							else if (button.getName().equals("right"))
 								resources.setRight(e.getKeyCode());
+							else if (button.getName().equals("dash"))
+								resources.setDash(e.getKeyCode());
 						}
 
 					}
@@ -180,22 +190,26 @@ public class MainMenu extends JFrame {
 	public static void resetButton(JButton button) {
 		if (button.getName().equals("up")) {
 			resources.setUp(resources.getDefaultUp());
-			button.setText("" + Character.toUpperCase((char) resources.getDefaultUp()));
+			button.setText(KeyEvent.getKeyText(resources.getDefaultUp()).toUpperCase());
 		} else if (button.getName().equals("down")) {
 			resources.setDown(resources.getDefaultDown());
-			button.setText("" + Character.toUpperCase((char) resources.getDefaultDown()));
+			button.setText(KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase());
 		} else if (button.getName().equals("left")) {
 			resources.setLeft(resources.getDefaultLeft());
-			button.setText("" + Character.toUpperCase((char) resources.getDefaultLeft()));
+			button.setText(KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase());
 		} else if (button.getName().equals("right")) {
 			resources.setRight(resources.getDefaultRight());
-			button.setText("" + Character.toUpperCase((char) resources.getDefaultRight()));
+			button.setText(KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase());
+		} else if (button.getName().equals("dash")) {
+			resources.setDash(resources.getDefaultDash());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase());
 		}
 		controlsList.removeAll(controlsList);
 		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
 		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
 		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultLeft()));
 		controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
+		controlsList.add(("" + resources.getDefaultDash()).toUpperCase());
 	}
 
 	public void changeState(ViewState viewState) {
@@ -235,7 +249,7 @@ public class MainMenu extends JFrame {
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
-		JLabel label = new JLabel("Insert your username:");
+		JLabel label = new JLabel("Enter your username:");
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		label.setFont(font.deriveFont((float) 25));
 
@@ -244,19 +258,49 @@ public class MainMenu extends JFrame {
 		textField
 				.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
 		textField.setFont(font);
+		textField.addKeyListener(new KeyListener() {
 
-		JButton button = new JButton("Ok");
-		button.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		button.setFont(font);
-		button.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.6), (int) (frameSize.getHeight() * 0.1)));
-		button.addActionListener(e -> {
-			username = textField.getText();
-			textField.setText("");
-			AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
-			audioPlayer.play();
-			audioPlayer.setGain(resources.getSFXGain());
-			changeState(ViewState.MAINMENU_STATE);
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					username = textField.getText();
+					textField.setText("");
+					AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+					audioPlayer.play();
+					audioPlayer.setGain(resources.getSFXGain());
+					changeState(ViewState.MAINMENU_STATE);
+				}
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
 		});
+
+		// JButton button = new JButton("Ok");
+		// button.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		// button.setFont(font);
+		// button.setMaximumSize(new Dimension((int) (frameSize.getWidth() *
+		// 0.6), (int) (frameSize.getHeight() * 0.1)));
+		// button.addActionListener(e -> {
+		// username = textField.getText();
+		// textField.setText("");
+		// AudioFile audioPlayer = new AudioFile(resources,
+		// "resources/audio/ding.wav", "Ding");
+		// audioPlayer.play();
+		// audioPlayer.setGain(resources.getSFXGain());
+		// changeState(ViewState.MAINMENU_STATE);
+		// });
 
 		panel.add(Box
 				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.2))));
@@ -266,8 +310,7 @@ public class MainMenu extends JFrame {
 		panel.add(textField);
 		panel.add(Box.createRigidArea(
 				new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.01))));
-		panel.add(button);
-
+		// panel.add(button);
 		return panel;
 	}
 
@@ -281,7 +324,7 @@ public class MainMenu extends JFrame {
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
-		JLabel gameTitle = new JLabel("Insert game name!");
+		JLabel gameTitle = new JLabel("Ballin'");
 		gameTitle.setFont(font.deriveFont((float) 28));
 		gameTitle.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
@@ -290,19 +333,11 @@ public class MainMenu extends JFrame {
 		startButton.setMaximumSize(buttonSize);
 		startButton.setFont(font);
 		startButton.addActionListener(e -> {
-			//PhysicsWithGraphicsDemo.main(null);
-			//String[] arguments = new String[] {username, "" + Port.number, "localhost" };
-			Client client = new Client(username, "" + Port.number, "localhost" );
+			// PhysicsWithGraphicsDemo.main(null);
+			Client client = new Client(username, "" + Port.number, "localhost");
 			client.start();
 			System.out.println("Finished starting Client");
 		});
-		// startButton.addActionListener(e ->{
-		// try {
-		// hostname = InetAddress.getLocalHost();
-		// } catch (Exception e1) {
-		// e1.printStackTrace();
-		// }
-		// });
 
 		JButton changeUsername = new JButton("Change Username");
 		changeUsername.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -327,9 +362,6 @@ public class MainMenu extends JFrame {
 		exitButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		exitButton.setMaximumSize(buttonSize);
 		exitButton.setFont(font);
-
-		JPanel empty = new JPanel();
-		empty.setSize(500, 100);
 
 		panel.add(Box
 				.createRigidArea(new Dimension((int) (frameSize.getWidth() * 0), (int) (frameSize.getHeight() * 0.1))));
@@ -450,6 +482,15 @@ public class MainMenu extends JFrame {
 		setKeyRebindable(moveRight);
 		controlsList.add(moveRight.getText());
 
+		JLabel dash = new JLabel("Dash: ");
+		dash.setFont(font);
+
+		JButton dashButton = new JButton("SPACE");
+		dashButton.setFont(font);
+		dashButton.setName("dash");
+		setKeyRebindable(dashButton);
+		controlsList.add(dashButton.getText());
+
 		JButton resetControls = new JButton("Reset controls to default");
 		resetControls.setFont(font);
 		resetControls.addActionListener(e -> {
@@ -457,6 +498,7 @@ public class MainMenu extends JFrame {
 			resetButton(moveDown);
 			resetButton(moveLeft);
 			resetButton(moveRight);
+			resetButton(dashButton);
 		});
 		resetControls.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
@@ -469,6 +511,8 @@ public class MainMenu extends JFrame {
 		controlsPanel.add(moveLeft);
 		controlsPanel.add(right);
 		controlsPanel.add(moveRight);
+		controlsPanel.add(dash);
+		controlsPanel.add(dashButton);
 
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(

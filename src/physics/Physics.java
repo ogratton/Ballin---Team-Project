@@ -1,13 +1,17 @@
 package physics;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.util.function.Function;
 
 import javax.swing.Timer;
 
+import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Collidable;
+import resources.Map;
 import resources.Map.Tile;
 import resources.Resources;
 import resources.Wall;
@@ -17,10 +21,6 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
-	
-	//checks whether the tile is a 'killing' tile.
-	private static Function<Tile,Boolean> tileCheck = (tile) -> (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
-
 	
 	public Physics(Resources resources){
 		this.resources = resources;
@@ -60,20 +60,12 @@ public class Physics extends Thread implements ActionListener {
 						//System.out.println("Collision!");
 						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
 						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
+
+						// TODO correct positions (prevent clipping)
+						//positionalCorrection(cnd);
 					}
 				}
 			}
-			for (Wall w : resources.getMap().getWalls()) {
-				// check collisions
-				CND cnd = detectCollision(c,w);
-				if(cnd.collided) {
-					collide(c,w,cnd);
-				}
-				
-				// TODO correct positions (prevent clipping)
-				//positionalCorrection(cnd);
-			}
-			
 		}
 //		for (Character c : Resources.players) {
 //			c.setCollided(false);
@@ -86,31 +78,17 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
-		if(c.isDead()) {
-			if(c.getDyingStep() >= 50) { //this number is "sizeX * 4". TODO find sizeX and read it.
-				//unset all 'character state' flags
-				c.setDead(false);
-				c.setFalling(false);
-				c.setVisible(true);
-				c.setDyingStep(0);
-				//set location
-				double randX = 0.0;
-				double randY = 0.0;
-				do {
-					randX = Math.random() * 1200;
-					randY = Math.random() * 675;
-				} while(tileCheck.apply(resources.getMap().tileAt(randX, randY)));
-				c.setX(randX);
-				c.setY(randY);
-				c.setDx(0);
-				c.setDy(0);
+		if(c.isDead() && c.getLives() > 0) {
+			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
+				c.decrementLives();
+				resources.getMap().spawn(c);
 			}
 		}
 		
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
 		//check for falling.
-		if(tileCheck.apply(t)) {
+		if(Map.tileCheck(t)) {
 			c.setFalling(true);
 		}
 		// Recharge stamina
@@ -119,7 +97,22 @@ public class Physics extends Thread implements ActionListener {
 		if (special(c)){
 			return;
 		}
-		if(!c.isFalling()) {
+		if(!c.isFalling()) { //moving
+			// check for wall collisions:
+			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+			if(t2 == Tile.WALL) {//east
+				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY());
+				detectCollision(c, wallCoords);
+			}
+			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+			if(t2 == Tile.WALL) {//west
+			}
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+			if(t2 == Tile.WALL) {//south
+			}
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+			if(t2 == Tile.WALL) {//north
+			}
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -140,7 +133,14 @@ public class Physics extends Thread implements ActionListener {
 			if (!c.isUp() && !c.isDown()) {
 				c.setDy(c.getDy() * resources.getMap().getFriction());
 			}
-		} else {
+		} else if (!c.isDead()){ //falling
+			//if stationary, give speed:
+			if(Math.abs(c.getDx()) < 0.02) {
+				c.setDx(0.02);
+			}
+			if(Math.abs(c.getDy()) < 0.02) {
+				c.setDy(0.02);
+			}
 			//if too slow, speed up:
 			if(Math.abs(c.getDx()) < 0.5) {
 				c.setDx(c.getDx() * 1.1);
@@ -151,22 +151,22 @@ public class Physics extends Thread implements ActionListener {
 			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!tileCheck.apply(t2)) { // bottom edge
+			if(!Map.tileCheck(t2)) { // bottom edge
 				dead = false;
 				c.setDx(0 - Math.abs(c.getDx()));
 			}
 			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!tileCheck.apply(t2)) { // top edge
+			if(!Map.tileCheck(t2)) { // top edge
 				dead = false;
 				c.setDx(Math.abs(c.getDx()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!tileCheck.apply(t2)) { // right edge
+			if(!Map.tileCheck(t2)) { // right edge
 				dead = false;
 				c.setDy(0 - Math.abs(c.getDy()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!tileCheck.apply(t2)) { // left edge
+			if(!Map.tileCheck(t2)) { // left edge
 				dead = false;
 				c.setDy(Math.abs(c.getDy()));
 			}
@@ -256,29 +256,6 @@ public class Physics extends Thread implements ActionListener {
 		
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
-		
-		/*
-		double dx1 = c.getDx();
-		double dx2 = d.getDx();
-		double dy1 = c.getDy();
-		double dy2 = d.getDy();
-		double m1 = c.getMass();
-		double m2 = d.getMass();
-
-		double newDX1 = ((m1 - m2) / (m1 + m2)) * dx1 + ((2 * m2) / (m1 + m2)) * dx2;
-		double newDX2 = ((2 * m1) / (m1 + m2)) * dx1 + ((m2 - m1) / (m1 + m2)) * dx2;
-
-		double newDY1 = ((m1 - m2) / (m1 + m2)) * dy1 + ((2 * m2) / (m1 + m2)) * dy2;
-		double newDY2 = ((2 * m1) / (m1 + m2)) * dy1 + ((m2 - m1) / (m1 + m2)) * dy2;
-
-		c.setDx(newDX1);
-		c.setDy(newDY1);
-		d.setDx(newDX2);
-		d.setDy(newDY2);
-		
-		c.setCollided(true);
-		d.setCollided(true);
-		*/
 	}
 
 //	private double distanceBetween(Character c1, Character c2) {
@@ -317,113 +294,80 @@ public class Physics extends Thread implements ActionListener {
 		return cnd;
 	}
 	
-	private CND detectCollision(Character c, Wall w) {
+	private CND detectCollision(Character c, Point wallCoords) {
+		// wallCoords is the top-left point of the wall.
+		// width (or height) = SheetDeets.TILE_SIZEX (or TILE_SIZEY)
 		CND cnd = new CND();
-		double p1x, p1y;
-		double p2x, p2y;
-		
-		// check whether c is inside w:
-		boolean inside = false;
-		if(c.getX() <= w.getX4() && c.getX() >= w.getX1() && c.getY() >= w.getY2() && c.getY() <= w.getY3()) {
-			// check if the centre of c is inside w 
-			inside = true;
-		}
-		
-		// calculate which points define the line that intersects the 
-		// line joining the middle of c to the middle of w
-		if(c.getX() > w.getMidx()) { // p4 is the farthest to the right
-			p1x = w.getX4();
-			p1y = w.getY4();
-		} else { // p1 is the farthest to the left
-			p1x = w.getX1();
-			p1y = w.getY1();
-		}
-		if(c.getY() > w.getMidy()) { // p3 is the lowest point
-			p2x = w.getX3();
-			p2y = w.getY3();
-		} else { // p2 is the highest point
-			p2x = w.getX2();
-			p2y = w.getY2();
-		}
-		
-		//find closest point on w to c:
-		//(intersection of two lines)
-		//y = mx+c; (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
-		// rearrange to get: m = (y2 - y1)/(x2 - x1); c = y1 - (x1 * m)
-		
-		// line between p1 and p2
-		double m1 = (p2y - p1y)/(p2x - p1x);
-		double c1 = p1y - (p1x * m1);
-		
-		// line between middle of the wall and middle of the character
-		double m2 = (w.getMidy() - c.getY()) / (w.getMidx() - c.getX());
-		double c2 = c.getY() - (c.getX() * m2);
-		
-		// point of intersection:
-		double closestX = (c2 - c1) / (m1 - m2);
-		double closestY = (m1 * closestX) + c1;
-		
-		if(closestX <= w.getX4() && closestX >= w.getX1() && closestY >= w.getY2() && closestY <= w.getY3()) {
-			// closestX and closestY is a point on the wall.
-			double r = c.getRadius() + (Math.sqrt(Math.pow(closestX - w.getMidx(), 2) + Math.pow(closestY - w.getMidy(), 2)));
-			r *= r;
-			
-			double dx = closestX - c.getX();
-			double dy = closestY - c.getY();
-			double dx2 = Math.pow(dx, 2);
-			double dy2 = Math.pow(dy, 2);
-			
-			if((dx2 + dy2) <= r) { // collision detected! (at last)
-				double distance = Math.sqrt(dx2 + dy2);
-				cnd.collided = true;
-				cnd.collisionDepth = r - distance;
-				cnd.collisionNormal.x = dx/distance;
-				cnd.collisionNormal.y = dy/distance;
-				if(inside) { // if the centre of c is inside w, reverse the normal.
-					cnd.collisionNormal.x *= -1;
-					cnd.collisionNormal.y *= -1;
-				}
-			}
-		}
 		
 		return cnd;
 	}
 	
 	private void dash(Character c) {
-		/*
+		c.setBlocking(false);
+		// Dash in the direction the player is trying to move
 		if (c.getDashTimer() == 0) {
-			//System.out.println("DASHING");
-			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
+			double maxSpeed = 2 * c.getMaxDx();
+			System.out.println("Direction dashing: " + c.getMovingDirection());
+			switch(c.getMovingDirection()) {
+			case N:
+				c.setDx(0);
+				c.setDy(-maxSpeed);
+				break;
+			case NE:
+				c.setDx(maxSpeed);
+				c.setDy(-maxSpeed);
+				break;
+			case E:
+				c.setDx(maxSpeed);
+				c.setDy(0);
+				break;
+			case SE:
+				c.setDx(maxSpeed);
+				c.setDy(maxSpeed);
+				break;
+			case S:
+				c.setDx(0);
+				c.setDy(maxSpeed);
+				break;
+			case SW:
+				c.setDx(-maxSpeed);
+				c.setDy(maxSpeed);
+				break;
+			case W:
+				c.setDx(-maxSpeed);
+				c.setDy(0);
+				break;
+			case NW:
+				c.setDx(-maxSpeed);
+				c.setDy(-maxSpeed);
+				break;
+			case STILL:
+				// Dash in direction moving, if you're moving
+				double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
+				// Can't dash if standing still
+				if (maxDxDy == 0) {
+					c.setDashing(false);
+					c.resetDashTimer();
+					// Refund stamina
+					c.setStamina(c.getStamina() + c.getDashStamina());
+					return;
+				}
+				double velInc = (2 * c.getMaxDx()) / maxDxDy;
+				c.setDx(c.getDx() * velInc);
+				c.setDy(c.getDy() * velInc);
+			}
 		}
-		*/
-		double maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
-		// Can't dash if standing still
-		if (maxDxDy == 0) {
-			c.setDashing(false);
-			// Refund stamina
-			c.setStamina(c.getStamina() + c.getDashStamina());
-			return;
-		}
-		double velInc = (2 * c.getMaxDx()) / maxDxDy;
-		c.setDx(c.getDx() * velInc);
-		c.setDy(c.getDy() * velInc);
-		//System.out.println(maxDxDy);
 		c.incrementDashTimer();
-		
 		if (c.getDashTimer() >= 25) {
-			//System.out.println("DONE DASHING");
-			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
-			maxDxDy = Math.max(Math.abs(c.getDx()), Math.abs(c.getDy()));
-			velInc = (c.getMaxDx()) / maxDxDy;
-			c.setDx(c.getDx() * velInc);
-			c.setDy(c.getDy() * velInc);
-			//System.out.println("Reducing speed to: " + c.getDx() + ", " + c.getDy());
+			c.setDx(c.getDx() / 2);
+			c.setDy(c.getDy() / 2);
 			c.setDashing(false);
 			c.resetDashTimer();
 		}
 	}
 	
 	private void block(Character c) {
+		c.setDashing(false);
 		// Start blocking - increase mass
 		if (c.getBlockTimer() == 0) {
 			//System.out.println("BLOCKING");

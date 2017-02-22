@@ -34,6 +34,7 @@ public class Character extends Observable implements Collidable {
 	private boolean up, right, left, down, jump, punch, block = false;
 	//state flags
 	private boolean falling, dead, dashing, blocking = false;
+	private int lives = 4;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
 	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
@@ -309,7 +310,7 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/*
-	 * Getters and setters for controls: this is mportant for determining which
+	 * Getters and setters for controls: this is important for determining which
 	 * frame of the sprite to use next
 	 */
 
@@ -469,7 +470,6 @@ public class Character extends Observable implements Collidable {
 	 * Set the direction of the character based on the commands it is currently
 	 * receiving
 	 */
-
 	private void setDirection() {
 
 		if (isUp()) {
@@ -510,6 +510,44 @@ public class Character extends Observable implements Collidable {
 
 		setChanged();
 		notifyObservers();
+	}
+	
+	/**
+	 * Get the direction that the character is accelerating towards.
+	 * (e.g. holding up and right = NE)
+	 */
+	public Heading getMovingDirection() {
+
+		if (isUp()) {
+			if (isLeft()) {
+				return Heading.NW;
+			}
+
+			else if (isRight()) {
+				return Heading.NE;
+			}
+
+			else {
+				return Heading.N;
+			}
+		} else if (isDown()) {
+			if (isLeft()) {
+				return Heading.SW;
+			}
+
+			else if (isRight()) {
+				return Heading.SE;
+			}
+
+			else {
+				return Heading.S;
+			}
+		} else if (isLeft()) {
+			return Heading.W;
+		} else if (isRight()) {
+			return Heading.E;
+		}
+		return Heading.STILL;
 	}
 
 	/*
@@ -569,9 +607,31 @@ public class Character extends Observable implements Collidable {
 	 * 
 	 * @return the facing
 	 */
-
 	public Character.Heading getDirection() {
 		return this.direction;
+	}
+	
+	/**
+	 * Decrements the lives counter.
+	 */
+	public void decrementLives() {
+		lives--;
+	}
+	
+	/**
+	 * Sets number of lives.
+	 * @param lives
+	 */
+	public void setLives(int lives){
+		this.lives = lives;
+	}
+	
+	/**
+	 * get the number of lives for this character.
+	 * @return
+	 */
+	public int getLives() {
+		return lives;
 	}
 
 	/**
@@ -1141,7 +1201,6 @@ public class Character extends Observable implements Collidable {
 	 * @param visible
 	 *            the state of visibility
 	 */
-
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
