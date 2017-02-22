@@ -1,11 +1,14 @@
 package physics;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.util.function.Function;
 
 import javax.swing.Timer;
 
+import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Collidable;
 import resources.Map;
@@ -57,20 +60,12 @@ public class Physics extends Thread implements ActionListener {
 						//System.out.println("Collision!");
 						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
 						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
+
+						// TODO correct positions (prevent clipping)
+						//positionalCorrection(cnd);
 					}
 				}
 			}
-			for (Wall w : resources.getMap().getWalls()) {
-				// check collisions
-				CND cnd = detectCollision(c,w);
-				if(cnd.collided) {
-					collide(c,w,cnd);
-				}
-				
-				// TODO correct positions (prevent clipping)
-				//positionalCorrection(cnd);
-			}
-			
 		}
 //		for (Character c : Resources.players) {
 //			c.setCollided(false);
@@ -103,6 +98,21 @@ public class Physics extends Thread implements ActionListener {
 			return;
 		}
 		if(!c.isFalling()) { //moving
+			// check for wall collisions:
+			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+			if(t2 == Tile.WALL) {//east
+				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY());
+				detectCollision(c, wallCoords);
+			}
+			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+			if(t2 == Tile.WALL) {//west
+			}
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+			if(t2 == Tile.WALL) {//south
+			}
+			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+			if(t2 == Tile.WALL) {//north
+			}
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -284,74 +294,10 @@ public class Physics extends Thread implements ActionListener {
 		return cnd;
 	}
 	
-	private CND detectCollision(Character c, Wall w) {
+	private CND detectCollision(Character c, Point wallCoords) {
+		// wallCoords is the top-left point of the wall.
+		// width (or height) = SheetDeets.TILE_SIZEX (or TILE_SIZEY)
 		CND cnd = new CND();
-		double p1x, p1y;
-		double p2x, p2y;
-		
-		// check whether c is inside w:
-		boolean inside = false;
-		if(c.getX() <= w.getX4() && c.getX() >= w.getX1() && c.getY() >= w.getY2() && c.getY() <= w.getY3()) {
-			// check if the centre of c is inside w 
-			inside = true;
-		}
-		
-		// calculate which points define the line that intersects the 
-		// line joining the middle of c to the middle of w
-		if(c.getX() > w.getMidx()) { // p4 is the farthest to the right
-			p1x = w.getX4();
-			p1y = w.getY4();
-		} else { // p1 is the farthest to the left
-			p1x = w.getX1();
-			p1y = w.getY1();
-		}
-		if(c.getY() > w.getMidy()) { // p3 is the lowest point
-			p2x = w.getX3();
-			p2y = w.getY3();
-		} else { // p2 is the highest point
-			p2x = w.getX2();
-			p2y = w.getY2();
-		}
-		
-		//find closest point on w to c:
-		//(intersection of two lines)
-		//y = mx+c; (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
-		// rearrange to get: m = (y2 - y1)/(x2 - x1); c = y1 - (x1 * m)
-		
-		// line between p1 and p2
-		double m1 = (p2y - p1y)/(p2x - p1x);
-		double c1 = p1y - (p1x * m1);
-		
-		// line between middle of the wall and middle of the character
-		double m2 = (w.getMidy() - c.getY()) / (w.getMidx() - c.getX());
-		double c2 = c.getY() - (c.getX() * m2);
-		
-		// point of intersection:
-		double closestX = (c2 - c1) / (m1 - m2);
-		double closestY = (m1 * closestX) + c1;
-		
-		if(closestX <= w.getX4() && closestX >= w.getX1() && closestY >= w.getY2() && closestY <= w.getY3()) {
-			// closestX and closestY is a point on the wall.
-			double r = c.getRadius() + (Math.sqrt(Math.pow(closestX - w.getMidx(), 2) + Math.pow(closestY - w.getMidy(), 2)));
-			r *= r;
-			
-			double dx = closestX - c.getX();
-			double dy = closestY - c.getY();
-			double dx2 = Math.pow(dx, 2);
-			double dy2 = Math.pow(dy, 2);
-			
-			if((dx2 + dy2) <= r) { // collision detected! (at last)
-				double distance = Math.sqrt(dx2 + dy2);
-				cnd.collided = true;
-				cnd.collisionDepth = r - distance;
-				cnd.collisionNormal.x = dx/distance;
-				cnd.collisionNormal.y = dy/distance;
-				if(inside) { // if the centre of c is inside w, reverse the normal.
-					cnd.collisionNormal.x *= -1;
-					cnd.collisionNormal.y *= -1;
-				}
-			}
-		}
 		
 		return cnd;
 	}

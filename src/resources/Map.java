@@ -2,6 +2,7 @@ package resources;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -45,6 +46,7 @@ public class Map {
 		EDGE_NES, EDGE_ESW, EDGE_SWN, EDGE_WNE, // tiles with three edges
 		EDGE_NESW, // tiles with four edges
 		EDGE_ABYSS, // tile representing the 'front' on the arena
+		WALL, // tile representing a wall.
 	};
 
 	/**
@@ -58,8 +60,6 @@ public class Map {
 	private Tile[][] tiles;
 	private World world;
 	private BufferedImage tileSet;
-
-	// TODO getters/setters/constructors
 
 	/**
 	 * Create a default map with given width and height
@@ -410,6 +410,18 @@ public class Map {
 		// if not in map
 		return null;
 	}
+	
+
+	/**
+	 * Return the top-left coordinates of the tile at x,y
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public Point tileCoordsOnMap(double x, double y) {
+		Point p = tileCoords(x,y);
+		return new Point(p.x * SheetDeets.TILES_SIZEX, p.y * SheetDeets.TILES_SIZEY);
+	}
 
 	/**
 	 * Check whether some coordinates are on the map.
@@ -441,10 +453,12 @@ public class Map {
 		//set location
 		double randX = 0.0;
 		double randY = 0.0;
+		Tile t = null;
 		do {
 			randX = Math.random() * width;
 			randY = Math.random() * height;
-		} while(Map.tileCheck(tileAt(randX, randY)));
+			t = tileAt(randX, randY);
+		} while(Map.tileCheck(t) && t == Tile.WALL);
 		c.setX(randX);
 		c.setY(randY);
 	}
@@ -455,9 +469,9 @@ public class Map {
 	 * @return true if it is a 'killing' tile, false otherwise.
 	 */
 	public static boolean tileCheck(Tile tile) {
-		//checks whether the tile is a 'killing' tile.
 		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
 
 	}
 
+	
 }
