@@ -451,6 +451,13 @@ public class Map {
 		c.setDx(0);
 		c.setDy(0);
 		//set location
+		Point p = randPointOnMap();
+		c.setX(p.x);
+		c.setY(p.y);
+	}
+	
+	public Point randPointOnMap() {
+		//set location
 		double randX = 0.0;
 		double randY = 0.0;
 		Tile t = null;
@@ -459,8 +466,7 @@ public class Map {
 			randY = Math.random() * height;
 			t = tileAt(randX, randY);
 		} while(Map.tileCheck(t) && t == Tile.WALL);
-		c.setX(randX);
-		c.setY(randY);
+		return new Point((int)randX,(int)randY);
 	}
 	
 	/**
