@@ -37,7 +37,7 @@ public class MainMenu extends JFrame {
 		frame.setSize(frameSize);
 		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
+		frame.setUndecorated(false);
 		changeState(defaultState);
 		frame.add(mPanel);
 		frame.setVisible(true);
