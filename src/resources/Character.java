@@ -72,6 +72,9 @@ public class Character extends Observable implements Collidable {
 	private int dashStamina = 150;
 	private int blockStamina = 75;
 	
+	// Store this character's score
+	private int score = 0;
+	
 	/**
 	 * Default character with default sprite
 	 */
@@ -1203,5 +1206,19 @@ public class Character extends Observable implements Collidable {
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	/**
+	 * @return The score of this character
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * Increments this character's score by 1
+	 */
+	public void incrementScore() {
+		score++;
 	}
 }

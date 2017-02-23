@@ -38,6 +38,9 @@ public class Resources {
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	
+	// puck used in hockey game mode, using character class to make things easy
+	private Character puck;
+	
 	// map
 	private Map map;
 	
@@ -323,6 +326,14 @@ public class Resources {
 	 */
 	public int maxDeaths() {
 		return maxDeaths;
+	}
+	
+	/**
+	 * Creates a puck for the hockey game mode. 
+	 */
+	public void createPuck() {
+		// need new character class to represent puck?
+		this.puck = new Character();
 	}
 	
 	//public static MapReader mapReader = new MapReader();
