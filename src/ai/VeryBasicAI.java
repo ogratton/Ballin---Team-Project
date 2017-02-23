@@ -23,15 +23,15 @@ public class VeryBasicAI extends Thread
 
 		CLOUSEAU, // debug: Follows a list of points dumbly
 		POIROT, // use A* search to follow a list of points more intelligently
-		AIMLESS, // debug: moves randomly
+		ROVING, // debug: moves randomly
 		PACING, // debug: moves up&down/left&right
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.POIROT; // default
+	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 30;
+	private final double fuzziness = 10;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
 	private final long tick = 70; // loop every <tick>ms
@@ -43,6 +43,8 @@ public class VeryBasicAI extends Thread
 	private int tempID;
 
 	private AStarSearch aStar;
+	
+	private LinkedList<Point> waypoints;
 
 	/*
 	 * Notes:
@@ -76,6 +78,8 @@ public class VeryBasicAI extends Thread
 		non_edge.add(Tile.FLAT);
 
 		r = new Random();
+
+		waypoints = new LinkedList<Point>();
 		
 		tempID = r.nextInt(500);
 
@@ -96,16 +100,13 @@ public class VeryBasicAI extends Thread
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
 			Thread.sleep(1000);
 
+			boolean success = true;
+			
 			// this is setting things up for the debug Detective
-			boolean success = false; // we all start off life as failures
 			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
 			int i = 0;
 
-			Point charStartPos = new Point((int) character.getX(), (int) character.getY());
-//			System.out.println("Started search from " + charStartPos + " to " + destinations[i]);
-			LinkedList<Point> waypoints = aStar.search(charStartPos, destinations[i]);
-			//System.out.println("Worked out waypoints to "+ destinations[i]);
-			//System.out.println(waypoints);
+			
 
 			while (!character.isDead())
 			{
@@ -154,43 +155,68 @@ public class VeryBasicAI extends Thread
 					 */
 					//System.out.println("Poirot tick. Waypoints length: " + waypoints.size());
 
-					if (i < destinations.length)
+					if (!waypoints.isEmpty())
 					{
-						if (!waypoints.isEmpty())
+						success = moveTo(waypoints.removeFirst());
+						if (success)
 						{
-							success = moveTo(waypoints.removeFirst());
-							if (success)
-							{
-								success = false;
-								//System.out.println("Ze little grey cells, zey have led me to my goal!");
-
-							}
-						}
-						else
-						{
-							System.out.println(tempID + " made it to destination " + i);
+							success = false;
+							//System.out.println("Ze little grey cells, zey have led me to my goal!");
 							brakeChar();
-							i++;
-							try {
-								waypoints = aStar.search(charStartPos, destinations[i]);
-								System.out.println(tempID + " pathfinding to point " + i);
-							} catch (ArrayIndexOutOfBoundsException e) {
-								i = 0; // loop
-							}
-						}
 
+						}
+					}
+					else
+					{
+						System.out.println(tempID + " made it to destination " + i);
+						i++;
+						try
+						{
+							Point charPos = new Point((int) character.getX(), (int) character.getY());
+							waypoints = aStar.search(charPos, destinations[i]);
+							System.out.println(tempID + " pathfinding to point " + i);
+						}
+						catch (ArrayIndexOutOfBoundsException e)
+						{
+							i = 0; // loop
+						}
 					}
 				}
 				else if (behaviour == Behaviour.STUBBORN)
 				{
 					brakeChar();
 				}
-				else if (behaviour == Behaviour.AIMLESS)
+				else if (behaviour == Behaviour.ROVING)
 				{
 					// Move in random directions
 					// But preferably not off the edge
+					// TODO broken, but probably just cos of the suicidal path-finding
+					
+					if (!waypoints.isEmpty())
+					{
+						success = moveTo(waypoints.removeFirst());
+						if (success)
+						{
+							success = false;
+							brakeChar();
+						}
+					}
+					else
+					{
 
-					// TODO
+						Point charPos = new Point((int) character.getX(), (int) character.getY());
+						Point newDest = resources.getMap().randPointOnMap();
+						System.out.println("going to try to pathfind to " + newDest);
+						while (waypoints.isEmpty())
+						{
+							// keep trying to get a new dest until we get a valid path
+							// just in case point given is dodgy
+							waypoints = aStar.search(charPos, newDest);
+						}
+						System.out.println("New destination: " + newDest);		
+						System.out.println(waypoints);
+
+					}
 				}
 				else
 				{
@@ -538,7 +564,7 @@ public class VeryBasicAI extends Thread
 				return;
 			}
 		}
-		
+
 		character.setBlock(false);
 
 	}
