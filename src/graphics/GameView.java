@@ -111,18 +111,6 @@ public class GameView extends JPanel implements Observer {
 				if (debugPaths) {
 					pointTrail.get(character).add(new Point(newX, newY));
 				}
-
-				if (debugPaths) {
-					g.setColor(Color.WHITE);
-
-					ArrayList<Point> charPoints = pointTrail.get(character);
-
-					for (int i = 0; i < charPoints.size() - 1; i++) {
-						g.drawLine((int) charPoints.get(i).getX(), (int) charPoints.get(i).getY(),
-								(int) charPoints.get(i + 1).getX(), (int) charPoints.get(i + 1).getY());
-					}
-				}
-
 				int sizeX = (int) (frame.getWidth() * multiplier);
 				int sizeY = (int) (frame.getHeight() * multiplier);
 
@@ -150,6 +138,19 @@ public class GameView extends JPanel implements Observer {
 
 				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
 				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
+
+				if (debugPaths) {
+					g.setColor(Color.WHITE);
+
+					ArrayList<Point> charPoints = pointTrail.get(character);
+
+					for (int i = 0; i < charPoints.size() - 1; i++) {
+						g.drawLine((int) (charPoints.get(i).getX() * multiplier),
+								(int) (charPoints.get(i).getY() * multiplier + offset),
+								(int) (charPoints.get(i + 1).getX() * multiplier),
+								(int) (charPoints.get(i + 1).getY() * multiplier + offset));
+					}
+				}
 
 				g.drawImage(frame, (int) actualX, (int) (actualY + offset), sizeX, sizeY, this);
 
