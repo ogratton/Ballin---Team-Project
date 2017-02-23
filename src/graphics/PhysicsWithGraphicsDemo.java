@@ -85,14 +85,8 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		// create ui thread
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Graphics g = new Graphics(resources, null);
-				g.start();
-			}
-		});
+		Graphics g = new Graphics(resources, null, false);
+		g.start();
 
 	}
 }

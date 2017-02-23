@@ -25,6 +25,10 @@ public class GameView extends JPanel implements Observer {
 	private BufferedImage mapSprite;
 	private double multiplier = 1;
 
+	// for debugging pathfinding
+	private boolean debugPaths = false;
+	private HashMap<Character, ArrayList<Point>> pointTrail;
+
 	private Resources resources;
 
 	/**
@@ -36,23 +40,31 @@ public class GameView extends JPanel implements Observer {
 	 *            the model of the map on the view
 	 */
 
-	public GameView(Resources resources) {
+	public GameView(Resources resources, boolean debugPaths) {
 		super();
 
 		this.resources = resources;
+		this.debugPaths = debugPaths;
 
 		makeMap();
 
 		points = new HashMap<Character, Point>();
 
+		pointTrail = new HashMap<Character, ArrayList<Point>>();
+
 		for (Character model : resources.getPlayerList()) {
 			points.put(model, new Point((int) model.getX(), (int) model.getY()));
+
+			if (debugPaths) {
+				pointTrail.put(model, new ArrayList<Point>());
+				pointTrail.get(model).add(new Point((int) model.getX(), (int) model.getY()));
+			}
 		}
 
 		repaint();
 	}
-	
-	public void makeMap(){
+
+	public void makeMap() {
 		mapSprite = Sprite.createMap(resources.getMap());
 		repaint();
 	}
@@ -92,9 +104,24 @@ public class GameView extends JPanel implements Observer {
 
 				int newX = (int) character.getX();
 				int newY = (int) character.getY();
-				
+
 				frame = character.getNextFrame(oldX, oldY, newX, newY);
 				points.put(character, new Point(newX, newY));
+
+				if (debugPaths) {
+					pointTrail.get(character).add(new Point(newX, newY));
+				}
+
+				if (debugPaths) {
+					g.setColor(Color.WHITE);
+
+					ArrayList<Point> charPoints = pointTrail.get(character);
+
+					for (int i = 0; i < charPoints.size() - 1; i++) {
+						g.drawLine((int) charPoints.get(i).getX(), (int) charPoints.get(i).getY(),
+								(int) charPoints.get(i + 1).getX(), (int) charPoints.get(i + 1).getY());
+					}
+				}
 
 				int sizeX = (int) (frame.getWidth() * multiplier);
 				int sizeY = (int) (frame.getHeight() * multiplier);
@@ -120,11 +147,11 @@ public class GameView extends JPanel implements Observer {
 
 				int centreX = (int) (newX - character.getRadius());
 				int centreY = (int) (newY - character.getRadius());
-				
+
 				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
 				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
 
-				g.drawImage(frame, (int)actualX, (int)(actualY + offset), sizeX, sizeY, this);
+				g.drawImage(frame, (int) actualX, (int) (actualY + offset), sizeX, sizeY, this);
 
 				if (character.isDashing()) {
 

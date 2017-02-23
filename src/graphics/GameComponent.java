@@ -39,6 +39,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private int secondPlayerIndex = 1;
 
 	private boolean fullScreen = false;
+	private boolean debugPaths = false;
 
 	int width, height;
 	int oldValueX, newValueX, oldValueY, newValueY;
@@ -53,8 +54,10 @@ public class GameComponent extends JFrame implements ActionListener {
 	 *            the map the board is displaying
 	 */
 
-	public GameComponent(Resources resources, int width, int height, Updater updater) {
+	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
+		this.debugPaths = debugPaths;
+		
 		setLayout(new BorderLayout());
 
 		// This code block below is just for testing!
@@ -72,7 +75,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.width = width;
 		this.height = height;
 
-		view = new GameView(resources);
+		view = new GameView(resources, debugPaths);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {

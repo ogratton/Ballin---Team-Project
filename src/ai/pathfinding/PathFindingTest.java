@@ -3,8 +3,11 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.TreeSet;
 
+import ai.VeryBasicAI;
+import graphics.Graphics;
+import physics.Physics;
+import resources.Character;
 import resources.Map;
 import resources.MapReader;
 import resources.Resources;
@@ -20,7 +23,7 @@ public class PathFindingTest
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/map0.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -40,8 +43,22 @@ public class PathFindingTest
 		
 //		System.out.println(resources.getMap().tileAt(start.getX(), start.getY()));
 		
+		Character playa = new Character(Character.Class.WIZARD);
+		playa.setX(start.getX());
+		playa.setY(start.getY());
+		resources.addPlayerToList(playa);
+		
+		VeryBasicAI ai = new VeryBasicAI(resources, playa);
+		ai.start();
+		
 		LinkedList<Point> ll = aStar.search(start, goal);
 		System.out.println(ll);
+		
+		Physics p = new Physics(resources);
+		p.start();
+		
+		Graphics g = new Graphics(resources, null, true);
+		g.start();
 		
 		
 	}
