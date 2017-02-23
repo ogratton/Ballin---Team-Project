@@ -148,4 +148,23 @@ public class SheetDeets {
 		return Sprite.getSprite(MISC, 0, x, MISC_SIZEX * numX, MISC_SIZEY * numY);
 	}
 
+	// ARROWHEAD TILES
+
+
+		public static final BufferedImage ARROWS = Sprite.loadSpriteSheet(Sprite.SheetType.ARROWS);
+		
+		public static final int ARROWS_COLS = 9;
+		public static final int ARROWS_ROWS = 1;
+		public static final int ARROWS_SIZEX = 50;
+		public static final int ARROWS_SIZEY = 50;
+		
+		public static BufferedImage getArrowFromPlayer(int no){
+			
+			if(no > 8){
+				no = 0;
+			}
+			
+			return Sprite.getSprite(ARROWS, no, 0, ARROWS_SIZEX, ARROWS_SIZEY);
+		}
+	
 }

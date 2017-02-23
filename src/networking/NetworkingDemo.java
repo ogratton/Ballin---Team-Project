@@ -36,7 +36,7 @@ public class NetworkingDemo {
 			x = r.nextInt(1200);
 			y = r.nextInt(675);
 			int id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ELF);
+			newPlayer = new Character(Character.Class.ELF, 1);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
 			newPlayer.setId(id);
@@ -74,7 +74,7 @@ public class NetworkingDemo {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(resources, updater);
+				Graphics g = new Graphics(resources, updater, false);
 				g.start();
 			}
 		});
@@ -96,7 +96,7 @@ public class NetworkingDemo {
 			x = info.getX();
 			y = info.getY();
 		    id = info.getId();
-			newPlayer = new Character(Character.Class.ELF);
+			newPlayer = new Character(Character.Class.ELF, 1);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
 			newPlayer.setId(id);
@@ -132,7 +132,7 @@ public class NetworkingDemo {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Graphics g = new Graphics(resources, updater);
+				Graphics g = new Graphics(resources, updater, false);
 				g.start();
 			}
 		});

@@ -23,7 +23,7 @@ public class Sprite {
 
 	// enum for the different types of sprite
 	public static enum SheetType {
-		CHARACTER, TILE, MISC
+		CHARACTER, TILE, MISC, ARROWS
 	};
 
 	/**
@@ -50,6 +50,9 @@ public class Sprite {
 			break;
 		case MISC:
 			sheetType = "misc";
+			break;
+		case ARROWS:
+			sheetType = "arrows";
 			break;
 		}
 

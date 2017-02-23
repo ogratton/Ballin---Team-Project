@@ -44,17 +44,17 @@ public class PhysicsWithGraphicsDemo {
 		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
 		
-		Character player = new Character(Character.Class.TEST);
+		Character player = new Character(Character.Class.WIZARD, 1);
 
 		player.setX(400);
 		player.setY(400);
 
-		Character player1 = new Character(Character.Class.ELF);
+		Character player1 = new Character(Character.Class.ELF, 2);
 
 		player1.setX(534);
 		player1.setY(454);
 
-		Character player2 = new Character(Character.Class.WIZARD);
+		Character player2 = new Character(Character.Class.WIZARD, 0);
 
 		player2.setX(800);
 		player2.setY(300);
@@ -69,7 +69,7 @@ public class PhysicsWithGraphicsDemo {
 			
 			Random r = new Random();
 			
-			Character playa = new Character(Character.Class.WIZARD);
+			Character playa = new Character(Character.Class.WIZARD, i+3);
 			playa.setX(r.nextInt(1200));
 			playa.setY(r.nextInt(675));
 			resources.addPlayerToList(playa);
@@ -85,7 +85,7 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		Graphics g = new Graphics(resources, null, true);
+		Graphics g = new Graphics(resources, null, false);
 		g.start();
 
 	}

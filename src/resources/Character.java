@@ -30,9 +30,9 @@ public class Character extends Observable implements Collidable {
 	// jump punch and/or block may be replaced by a single 'special' flag,
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
-	//moveFlags moves ...
+	// moveFlags moves ...
 	private boolean up, right, left, down, jump, punch, block = false;
-	//state flags
+	// state flags
 	private boolean falling, dead, dashing, blocking = false;
 	private int lives = 4;
 
@@ -59,6 +59,7 @@ public class Character extends Observable implements Collidable {
 	private int dyingStep = 0;
 	private boolean moving;
 	private int id;
+	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
 
@@ -71,15 +72,15 @@ public class Character extends Observable implements Collidable {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
-	
+
 	// Store this character's score
 	private int score = 0;
-	
+
 	/**
 	 * Default character with default sprite
 	 */
 	public Character() {
-		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT);
+		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0);
 	}
 
 	/**
@@ -89,10 +90,22 @@ public class Character extends Observable implements Collidable {
 	 *            the class
 	 */
 	public Character(Class c) {
-		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0);
+	}
+	
+	/**
+	 * Default character with a given class and player number
+	 * 
+	 * @param c
+	 *            the class
+	 * @param playerNo
+	 *            the player number
+	 */
+	public Character(Class c, int playerNo) {
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType) {
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo) {
 		this(false, false, false, false, false, false, false, // control flags
 				mass, x, // x
 				y, // y
@@ -102,13 +115,13 @@ public class Character extends Observable implements Collidable {
 																									// (TODO:
 																									// calculate
 																									// this)
-				default_restitution, radius, direction, classType);
+				default_restitution, radius, direction, classType, playerNo);
 	}
 
 	// master constructor. Any other constructors should eventually call this.
 	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
 			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
-			double acceleration, double restitution, int radius, Heading direction, Class classType) {
+			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo) {
 		// new Character();
 		this.up = up;
 		this.right = right;
@@ -135,6 +148,7 @@ public class Character extends Observable implements Collidable {
 		this.radius = radius;
 		this.direction = direction;
 		this.classType = classType;
+		this.playerNo = playerNo;
 
 		// imported from graphics.
 		this.characterSheet = SheetDeets.getSpriteSheetFromCharacter(this);
@@ -165,7 +179,7 @@ public class Character extends Observable implements Collidable {
 		falling = false;
 		dead = false;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -514,10 +528,10 @@ public class Character extends Observable implements Collidable {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	/**
-	 * Get the direction that the character is accelerating towards.
-	 * (e.g. holding up and right = NE)
+	 * Get the direction that the character is accelerating towards. (e.g.
+	 * holding up and right = NE)
 	 */
 	public Heading getMovingDirection() {
 
@@ -613,24 +627,26 @@ public class Character extends Observable implements Collidable {
 	public Character.Heading getDirection() {
 		return this.direction;
 	}
-	
+
 	/**
 	 * Decrements the lives counter.
 	 */
 	public void decrementLives() {
 		lives--;
 	}
-	
+
 	/**
 	 * Sets number of lives.
+	 * 
 	 * @param lives
 	 */
-	public void setLives(int lives){
+	public void setLives(int lives) {
 		this.lives = lives;
 	}
-	
+
 	/**
 	 * get the number of lives for this character.
+	 * 
 	 * @return
 	 */
 	public int getLives() {
@@ -663,7 +679,7 @@ public class Character extends Observable implements Collidable {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	/**
 	 * Set the x coordinate of the character
 	 * 
@@ -685,7 +701,6 @@ public class Character extends Observable implements Collidable {
 	public void setYWithoutNotifying(double y) {
 		this.y = y;
 	}
-
 
 	/**
 	 * Set the facing of the character
@@ -1220,5 +1235,9 @@ public class Character extends Observable implements Collidable {
 	 */
 	public void incrementScore() {
 		score++;
+	}
+
+	public int getPlayerNumber() {
+		return this.playerNo;
 	}
 }

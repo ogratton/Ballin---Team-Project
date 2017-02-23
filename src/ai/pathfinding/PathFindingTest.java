@@ -43,7 +43,7 @@ public class PathFindingTest
 		
 //		System.out.println(resources.getMap().tileAt(start.getX(), start.getY()));
 		
-		Character playa = new Character(Character.Class.WIZARD);
+		Character playa = new Character(Character.Class.WIZARD, 0);
 		playa.setX(start.getX());
 		playa.setY(start.getY());
 		resources.addPlayerToList(playa);
