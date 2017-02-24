@@ -9,9 +9,23 @@ import resources.Character;
  *
  */
 public interface GameModeFFA {
+	/**
+	 * @return The winning character
+	 */
 	public Character getWinner();
 
+	/**
+	 * @return Whether the game has ended
+	 */
 	public boolean isGameOver();
 
-	public void setAllLives(int n);
+	/**
+	 * Reset all player lives to maximum
+	 */
+	public void resetLives();
+	
+	/**
+	 * Respawns all the players in a random location
+	 */
+	public void randomRespawn();
 }

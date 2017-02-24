@@ -75,6 +75,10 @@ public class Character extends Observable implements Collidable {
 
 	// Store this character's score
 	private int score = 0;
+	// Who this character last collided with
+	private Character lastCollidedWith = null;
+	// What time this character last collided
+	private int lastCollidedTime = -1;
 
 	/**
 	 * Default character with default sprite
@@ -1231,10 +1235,33 @@ public class Character extends Observable implements Collidable {
 	}
 
 	/**
-	 * Increments this character's score by 1
+	 * Increments this character's score by n
 	 */
-	public void incrementScore() {
-		score++;
+	public void incrementScore(int n) {
+		score += n;
+	}
+	
+	/**
+	 * @param c The character that was collided with
+	 * @param time The time at which they collided
+	 */
+	public void setLastCollidedWith(Character c, int time) {
+		this.lastCollidedWith = c;
+		this.lastCollidedTime = time;
+	}
+	
+	/**
+	 * @return Who this character last collided with
+	 */
+	public Character getLastCollidedWith() {
+		return lastCollidedWith;
+	}
+	
+	/**
+	 * @return When this character last collided
+	 */
+	public int getLastCollidedTime() {
+		return lastCollidedTime;
 	}
 
 	public int getPlayerNumber() {

@@ -49,6 +49,9 @@ public class Resources {
 	
 	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
 	
+	// Counter of how many ticks have happened
+	private int globalTimer = 0;
+	
 	public Resources()
 	{
 		bad_tiles = new ArrayList<Tile>();
@@ -334,6 +337,14 @@ public class Resources {
 	public void createPuck() {
 		// need new character class to represent puck?
 		this.puck = new Character();
+	}
+
+	public int getGlobalTimer() {
+		return globalTimer;
+	}
+
+	public void incrementGlobalTimer() {
+		globalTimer++;
 	}
 	
 	//public static MapReader mapReader = new MapReader();

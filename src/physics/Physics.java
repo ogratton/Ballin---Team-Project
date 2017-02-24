@@ -67,9 +67,6 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 		}
-//		for (Character c : Resources.players) {
-//			c.setCollided(false);
-//		}
 	}
 
 	/**
@@ -77,6 +74,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 */
 	private void update(Character c) {
+		resources.incrementGlobalTimer();
 		// if dead, don't do anything (yet):
 		if(c.isDead() && c.getLives() > 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
@@ -172,6 +170,20 @@ public class Physics extends Thread implements ActionListener {
 			}
 			if(dead) {
 				c.setDead(true);
+				// Calculate score changes
+				System.out.println("Player " + c.getPlayerNumber() + " died!");
+				Character lastCollidedWith = c.getLastCollidedWith();
+				// If c has collided with someone else in the last 10 seconds
+				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 1000) {
+					// give 1 point to whoever they collided with
+					lastCollidedWith.incrementScore(1);
+					System.out.println("Points go to player " + lastCollidedWith.getPlayerNumber() + "!");
+				} else {
+					// take 2 points away from c
+					System.out.println("Player " + c.getPlayerNumber() + " killed themselves...");
+					c.incrementScore(-2);
+				}
+				c.setLastCollidedWith(null, 0);
 			}
 		}
 		move(c);
@@ -256,6 +268,12 @@ public class Physics extends Thread implements ActionListener {
 		
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
+		
+		// For scores (would be nice to somehow do something based on whether
+		// the collidable c/d is a collidable or a character)
+		int time = resources.getGlobalTimer();
+		((Character) c).setLastCollidedWith((Character) d, time);
+		((Character) d).setLastCollidedWith((Character) c, time);
 	}
 
 //	private double distanceBetween(Character c1, Character c2) {

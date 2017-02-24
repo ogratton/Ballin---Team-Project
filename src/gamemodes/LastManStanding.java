@@ -1,8 +1,9 @@
 package gamemodes;
 
-import java.util.ArrayList;
-
+import graphics.Graphics;
+import physics.Physics;
 import resources.Character;
+import resources.Resources;
 
 /**
  * Play until only one player remains.
@@ -10,18 +11,39 @@ import resources.Character;
  * @author Luke
  *
  */
-public class LastManStanding implements GameModeFFA {
+public class LastManStanding extends Thread implements GameModeFFA {
 
 	private int maxLives;
-	private ArrayList<Character> players;
 	private boolean gameOver = false;
 	private Character winner;
+	private Resources resources;
 
-	public LastManStanding(int maxLives, ArrayList<Character> players) {
+	public LastManStanding(Resources resources, int maxLives) {
 		this.maxLives = maxLives;
-		this.players = players;
-
+		this.resources = resources;
+		
+		// Set up game
 		setAllLives(maxLives);
+		randomRespawn();
+	}
+	
+	public void run() {
+		// Start game
+		Physics p = new Physics(resources);
+		p.start();
+		Graphics g = new Graphics(resources, null, false);
+		g.start();
+		
+		while (!isGameOver()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		// Game has ended
+		System.out.println("WE HAVE A WINNER");
+		System.out.println("Player " + winner.getPlayerNumber() + " survived the longest and reached a score of " + winner.getScore() + "!");
 	}
 
 	/**
@@ -30,8 +52,8 @@ public class LastManStanding implements GameModeFFA {
 	 * @param n
 	 *            Number of lives
 	 */
-	public void setAllLives(int n) {
-		for (Character c : players) {
+	private void setAllLives(int n) {
+		for (Character c : resources.getPlayerList()) {
 			c.setLives(n);
 		}
 	}
@@ -50,7 +72,7 @@ public class LastManStanding implements GameModeFFA {
 	 */
 	public int getCombinedLives() {
 		int total = 0;
-		for (Character c : players) {
+		for (Character c : resources.getPlayerList()) {
 			total += c.getLives();
 		}
 		return total;
@@ -83,7 +105,7 @@ public class LastManStanding implements GameModeFFA {
 	 * Finds the last remaining player in the game
 	 */
 	private void findWinner() {
-		for (Character c : players) {
+		for (Character c : resources.getPlayerList()) {
 			if (c.getLives() > 0) {
 				winner = c;
 				break;
@@ -96,11 +118,23 @@ public class LastManStanding implements GameModeFFA {
 	 */
 	public int playersRemaining() {
 		int remaining = 0;
-		for (Character c : players) {
+		for (Character c : resources.getPlayerList()) {
 			if (c.getLives() > 0) {
 				remaining++;
 			}
 		}
 		return remaining;
+	}
+
+	@Override
+	public void resetLives() {
+		setAllLives(maxLives);
+	}
+
+	@Override
+	public void randomRespawn() {
+		for (Character c : resources.getPlayerList()) {
+			resources.getMap().spawn(c);
+		}
 	}
 }
