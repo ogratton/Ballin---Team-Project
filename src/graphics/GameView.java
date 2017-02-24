@@ -156,7 +156,7 @@ public class GameView extends JPanel implements Observer {
 				
 				BufferedImage arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
 				
-				g.drawImage(arrow, (int)(actualX), (int) (actualY + offset - 50 + deathModifier), (int)(sizeX), (int)(sizeY), this);
+				g.drawImage(arrow, (int)(actualX), (int) (actualY + offset - (50 * multiplier) + deathModifier), (int)(sizeX), (int)(sizeY), this);
 				
 				if (character.isDashing()) {
 
