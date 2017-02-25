@@ -55,7 +55,8 @@ public class PlayGame {
 		ai2.start();
 		
 		// Create game mode (starts physics and graphics)
-		LastManStanding mode = new LastManStanding(resources, 5);
+		//LastManStanding mode = new LastManStanding(resources, 5);
+		Deathmatch mode = new Deathmatch(resources);
 		mode.start();
 	}
 }

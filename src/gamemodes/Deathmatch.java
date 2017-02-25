@@ -8,24 +8,23 @@ import resources.Character;
 import resources.Resources;
 
 /**
- * Play until only one player remains.
+ * Play until the timer runs out.
  * 
  * @author Luke
  *
  */
-public class LastManStanding extends Thread implements GameModeFFA {
+public class Deathmatch extends Thread implements GameModeFFA {
 
-	private int maxLives;
 	private boolean gameOver = false;
 	private Character winner;
 	private Resources resources;
+	private int timer = 30;
 
-	public LastManStanding(Resources resources, int maxLives) {
-		this.maxLives = maxLives;
+	public Deathmatch(Resources resources) {
 		this.resources = resources;
 
 		// Set up game
-		setAllLives(maxLives);
+		setAllLives(-1);
 		randomRespawn();
 	}
 
@@ -35,10 +34,11 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		p.start();
 		Graphics g = new Graphics(resources, null, false);
 		g.start();
-
 		while (!isGameOver()) {
 			try {
-				Thread.sleep(100);
+				System.out.println("Time remaining: " + timer + " seconds");
+				timer--;
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -46,8 +46,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		System.out.println("WE HAVE A WINNER");
-		System.out.println("Player " + winner.getPlayerNumber() + " survived the longest and reached a score of "
-				+ winner.getScore() + "!");
+		getWinner();
+		System.out.println(
+				"Player " + winner.getPlayerNumber() + " achieved the highest score of  " + winner.getScore() + "!");
 		ArrayList<Character> scores = getOrderedScores();
 		for (Character c : scores) {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
@@ -68,71 +69,18 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * @return maxLives
-	 */
-	public int getMaxLives() {
-		return maxLives;
-	}
-
-	/**
-	 * Get the total number of lives of all players
-	 * 
-	 * @return The combined number of lives of all players
-	 */
-	public int getCombinedLives() {
-		int total = 0;
-		for (Character c : resources.getPlayerList()) {
-			total += c.getLives();
-		}
-		return total;
-	}
-
-	/**
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver() {
-		checkWinner();
-		return gameOver;
+		return timer <= 0;
 	}
 
 	/**
 	 * @return The winning character
 	 */
 	public Character getWinner() {
-		checkWinner();
+		winner = getOrderedScores().get(0);
 		return winner;
-	}
-
-	private void checkWinner() {
-		if (playersRemaining() == 1) {
-			gameOver = true;
-			findWinner();
-		}
-	}
-
-	/**
-	 * Finds the last remaining player in the game
-	 */
-	private void findWinner() {
-		for (Character c : resources.getPlayerList()) {
-			if (c.getLives() > 0) {
-				winner = c;
-				break;
-			}
-		}
-	}
-
-	/**
-	 * @return The number of players alive
-	 */
-	public int playersRemaining() {
-		int remaining = 0;
-		for (Character c : resources.getPlayerList()) {
-			if (c.getLives() > 0) {
-				remaining++;
-			}
-		}
-		return remaining;
 	}
 
 	@Override
@@ -143,9 +91,10 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		return scores;
 	}
 
+	// Useless for this game mode
 	@Override
 	public void resetLives() {
-		setAllLives(maxLives);
+		setAllLives(-1);
 	}
 
 	@Override

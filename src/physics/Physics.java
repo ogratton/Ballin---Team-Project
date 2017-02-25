@@ -76,7 +76,7 @@ public class Physics extends Thread implements ActionListener {
 	private void update(Character c) {
 		resources.incrementGlobalTimer();
 		// if dead, don't do anything (yet):
-		if(c.isDead() && c.getLives() > 0) {
+		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
 				resources.getMap().spawn(c);
@@ -125,11 +125,27 @@ public class Physics extends Thread implements ActionListener {
 				c.setDy(c.getDy() + c.getAcc());
 			}
 			//apply friction
+			//double f = 1 - resources.getMap().getFriction();
+			double f = 0.02;
 			if (!c.isLeft() && !c.isRight()) {
-				c.setDx(c.getDx() * resources.getMap().getFriction());
+//				c.setDx(c.getDx() * resources.getMap().getFriction());
+				if (c.getDx() < -f ) {
+					c.setDx(c.getDx() + f);
+				} else if (c.getDx() > f) {
+					c.setDx(c.getDx() - f);
+				} else {
+					c.setDx(0);
+				}
 			}
 			if (!c.isUp() && !c.isDown()) {
-				c.setDy(c.getDy() * resources.getMap().getFriction());
+//				c.setDy(c.getDy() * resources.getMap().getFriction());	
+				if (c.getDy() < -f ) {
+					c.setDy(c.getDy() + f);
+				} else if (c.getDy() > f) {
+					c.setDy(c.getDy() - f);
+				} else {
+					c.setDy(0);
+				}
 			}
 		} else if (!c.isDead()){ //falling
 			//if stationary, give speed:
@@ -177,10 +193,10 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 1000) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
-					System.out.println("Points go to player " + lastCollidedWith.getPlayerNumber() + "!");
+					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 				} else {
 					// take 2 points away from c
-					System.out.println("Player " + c.getPlayerNumber() + " killed themselves...");
+					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
 					c.incrementScore(-2);
 				}
 				c.setLastCollidedWith(null, 0);

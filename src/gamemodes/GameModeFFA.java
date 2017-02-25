@@ -1,5 +1,7 @@
 package gamemodes;
 
+import java.util.ArrayList;
+
 import resources.Character;
 
 /**
@@ -13,6 +15,11 @@ public interface GameModeFFA {
 	 * @return The winning character
 	 */
 	public Character getWinner();
+	
+	/**
+	 * @return An ArrayList of all characters, order by descending score
+	 */
+	public ArrayList<Character> getOrderedScores();
 
 	/**
 	 * @return Whether the game has ended
