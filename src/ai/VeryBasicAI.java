@@ -214,7 +214,9 @@ public class VeryBasicAI extends Thread
 							waypoints = aStar.search(charPos, newDest);
 						}
 						System.out.println("New destination: " + newDest);		
+						
 						System.out.println(waypoints);
+						resources.setDestList(waypoints);
 
 					}
 				}

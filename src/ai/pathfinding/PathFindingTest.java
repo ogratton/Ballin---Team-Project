@@ -51,8 +51,8 @@ public class PathFindingTest
 		VeryBasicAI ai = new VeryBasicAI(resources, playa);
 		ai.start();
 		
-		LinkedList<Point> ll = aStar.search(start, goal);
-		System.out.println(ll);
+		resources.setDestList(aStar.search(start, goal));
+		System.out.println(resources.getDestList());
 		
 		Physics p = new Physics(resources);
 		p.start();

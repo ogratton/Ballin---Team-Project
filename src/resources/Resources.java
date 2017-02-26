@@ -1,8 +1,9 @@
 package resources;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.LinkedList;
 
 import resources.Map.Tile;
 
@@ -51,6 +52,9 @@ public class Resources {
 	
 	// Counter of how many ticks have happened
 	private int globalTimer = 0;
+	
+	// destination list for pathfinding
+	private LinkedList<Point> destList = new LinkedList<Point>();
 	
 	public Resources()
 	{
@@ -345,6 +349,14 @@ public class Resources {
 
 	public void incrementGlobalTimer() {
 		globalTimer++;
+	}
+	
+	public void setDestList(LinkedList<Point> destList){
+		this.destList = destList;
+	}
+	
+	public LinkedList<Point> getDestList(){
+		return this.destList;
 	}
 	
 	//public static MapReader mapReader = new MapReader();

@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,11 +16,11 @@ import javax.swing.JPanel;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
-import resources.Map;
 import resources.Resources;
 
 /**
  * Class where all the rendering happens
+ * 
  * @author George Kaye
  *
  */
@@ -34,6 +35,8 @@ public class GameView extends JPanel implements Observer {
 	// for debugging pathfinding
 	private boolean debugPaths = false;
 	private HashMap<Character, ArrayList<Point>> pointTrail;
+	private LinkedList<Point> destList;
+	private LinkedList<Point> fullDestList;
 
 	private Resources resources;
 
@@ -57,6 +60,8 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
+		destList = resources.getDestList();
+		fullDestList = resources.getDestList();
 
 		for (Character model : resources.getPlayerList()) {
 			points.put(model, new Point((int) model.getX(), (int) model.getY()));
@@ -84,11 +89,11 @@ public class GameView extends JPanel implements Observer {
 		super.paintComponent(g);
 
 		// clear the screen to prepare for the next frame
-		
+
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
 		// get screen size, important for retaining 16:9 ratio
-		
+
 		double screenWidth = getWidth();
 		double screenHeight = getHeight();
 		double offset = 0;
@@ -101,20 +106,38 @@ public class GameView extends JPanel implements Observer {
 		}
 
 		// draw the map sprite (this is the same throughout a game)
-		
+
 		g.drawImage(mapSprite, 0, (int) offset, (int) (mapSprite.getWidth() * multiplier),
 				(int) (mapSprite.getHeight() * multiplier), this);
 
+		destList = resources.getDestList();
+
+		for (Point p : destList) {
+			if (!fullDestList.contains(p)) {
+				fullDestList.add(p);
+			}
+		}
+
+		if (debugPaths) {
+			g.setColor(Color.RED);
+
+			for (int i = 0; i < fullDestList.size() - 1; i++) {
+
+				g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(),
+						(int) fullDestList.get(i + 1).getX(), (int) fullDestList.get(i + 1).getY());
+
+			}
+		}
 		// drawing each of the characters on the board
-		
+
 		for (Character character : resources.getPlayerList()) {
 
 			// no point drawing invisible characters
-			
+
 			if (character.isVisible()) {
 
 				BufferedImage frame = null;
-				
+
 				// compare old and new points
 
 				int oldX = (int) points.get(character).getX();
@@ -124,21 +147,21 @@ public class GameView extends JPanel implements Observer {
 				int newY = (int) character.getY();
 
 				// get the next frame of the character
-				
+
 				frame = character.getNextFrame(oldX, oldY, newX, newY);
 				points.put(character, new Point(newX, newY));
 
 				if (debugPaths) {
 					pointTrail.get(character).add(new Point(newX, newY));
 				}
-				
+
 				// determine the size of the player sprite
-				
+
 				int sizeX = (int) (frame.getWidth() * multiplier);
 				int sizeY = (int) (frame.getHeight() * multiplier);
 
 				// if the character is dying they need to get smaller
-				
+
 				int deathModifier = 0;
 
 				if (character.isDead()) {
@@ -158,13 +181,15 @@ public class GameView extends JPanel implements Observer {
 
 				}
 
-				// determine the actual centre of the character rather than drawing from the origin
-				
+				// determine the actual centre of the character rather than
+				// drawing from the origin
+
 				int centreX = (int) (newX - character.getRadius());
 				int centreY = (int) (newY - character.getRadius());
-				
-				// fancy mathemagic to get the right position even with death or different screen size
-				
+
+				// fancy mathemagic to get the right position even with death or
+				// different screen size
+
 				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
 				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
 
@@ -182,17 +207,18 @@ public class GameView extends JPanel implements Observer {
 				}
 
 				// draw the player!
-				
+
 				g.drawImage(frame, (int) actualX, (int) (actualY + offset), sizeX, sizeY, this);
-				
+
 				// draw the arrowhead for the player
-				
+
 				BufferedImage arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
-				
-				g.drawImage(arrow, (int)(actualX), (int) (actualY + offset - (50 * multiplier) + deathModifier), (int)(sizeX), (int)(sizeY), this);
-				
+
+				g.drawImage(arrow, (int) (actualX), (int) (actualY + offset - (50 * multiplier) + deathModifier),
+						(int) (sizeX), (int) (sizeY), this);
+
 				// if the player is dashing, draw the fire sprite
-				
+
 				if (character.isDashing()) {
 
 					int dashX = 0;
@@ -245,7 +271,7 @@ public class GameView extends JPanel implements Observer {
 			}
 
 		}
-		
+
 		// draw black bars if the ratio is not 16:9
 
 		if (notSixteenNine) {
