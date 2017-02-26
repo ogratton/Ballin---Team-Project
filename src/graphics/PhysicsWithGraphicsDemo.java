@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.util.Random;
 import ai.VeryBasicAI;
@@ -68,11 +69,11 @@ public class PhysicsWithGraphicsDemo {
 
 		/*for(int i = 0; i < 6; i++){
 			
-			Random r = new Random();
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
-			playa.setX(r.nextInt(100) + );
-			playa.setY(r.nextInt(100));
+			Point loc = resources.getMap().randPointOnMap();
+			playa.setX(loc.getX());
+			playa.setY(loc.getY());
 			resources.addPlayerToList(playa);
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);

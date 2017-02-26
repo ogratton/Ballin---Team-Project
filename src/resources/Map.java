@@ -23,7 +23,7 @@ public class Map {
 	private double gravity;
 	
 	private int[][] proxMask;
-	private int[][] costMask;
+	private double[][] costMask;
 
 	// any areas of different physics on the same map, starts at their origin.
 	// Preferably we should avoid a third level of recursion.
@@ -491,12 +491,12 @@ public class Map {
 
 	}
 	
-	public int[][] getCostMask()
+	public double[][] getCostMask()
 	{
 		return costMask;
 	}
 	
-	public void setCostMask(int[][] costMask)
+	public void setCostMask(double[][] costMask)
 	{
 		this.costMask = costMask;
 	}

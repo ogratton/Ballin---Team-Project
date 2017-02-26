@@ -207,16 +207,16 @@ public class VeryBasicAI extends Thread
 
 						Point charPos = new Point((int) character.getX(), (int) character.getY());
 						Point newDest = resources.getMap().randPointOnMap();
-						System.out.println("going to try to pathfind to " + newDest);
+//						System.out.println("going to try to pathfind to " + newDest);
 						while (waypoints.isEmpty())
 						{
 							// keep trying to get a new dest until we get a valid path
 							// just in case point given is dodgy
 							waypoints = aStar.search(charPos, newDest);
 						}
-						System.out.println("New destination: " + newDest);		
+//						System.out.println("New destination: " + newDest);		
 						
-						System.out.println(waypoints);
+//						System.out.println(waypoints);
 						resources.setDestList(waypoints);
 
 					}

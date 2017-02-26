@@ -112,7 +112,7 @@ public class AStarSearch
 							// cost of the move
 							//int cost = Math.abs(dirI) + Math.abs(dirJ);
 							Point tileLoc = resources.getMap().tileCoords(neiX, neiY);
-							int cost = resources.getMap().getCostMask()[tileLoc.x][tileLoc.y];
+							double cost = resources.getMap().getCostMask()[tileLoc.x][tileLoc.y];
 							neighbours.add(new SearchNode(neiLoc, current, costSoFar + cost, goal));
 						}
 					}
@@ -169,7 +169,7 @@ public class AStarSearch
 
 		// temporary dumb way to keep only every <gap>th point:
 		LinkedList<Point> sparse = new LinkedList<Point>();
-		int gap = 5;
+		int gap = 20;
 		int init_size = dense.size();
 
 		for (int position = 0; dense.size() > 1; position += gap)

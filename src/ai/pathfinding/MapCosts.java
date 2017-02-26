@@ -12,7 +12,7 @@ public class MapCosts
 
 	Tile[][] tileMap;
 	int[][] proxMask;
-	int[][] costMask;
+	double[][] costMask;
 
 	int width, height;
 	int biggestDimension;
@@ -28,20 +28,33 @@ public class MapCosts
 
 		genMapCostsMask();
 
-		printMask(); // debug
+//		printCostMask(); // debug
 		
 		resources.getMap().setProxMask(proxMask);
 		resources.getMap().setCostMask(costMask);
 	}
 
 	@SuppressWarnings("unused")
-	private void printMask()
+	private void printProxMask()
 	{
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
 				System.out.print(proxMask[i][j] + "; ");
+			}
+			System.out.println();
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private void printCostMask()
+	{
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				System.out.print(costMask[i][j] + "; ");
 			}
 			System.out.println();
 		}
@@ -163,13 +176,13 @@ public class MapCosts
 	 */
 	private void evaluateProxMask()
 	{
-		costMask = new int[width][height];
+		costMask = new double[width][height];
 
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-				costMask[i][j] = (int) costEquation(proxMask[i][j]);
+				costMask[i][j] = costEquation(proxMask[i][j]);
 			}
 		}
 	}
@@ -184,6 +197,6 @@ public class MapCosts
 	 */
 	private double costEquation(int x)
 	{
-		return 100 * Math.pow(Math.E, -x/1.5); // 100 * Math.pow(Math.E, -x/) + 1
+		return 100 * Math.pow(Math.E, -x); // 100 * Math.pow(Math.E, -x/) + 1
 	}
 }
