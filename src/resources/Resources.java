@@ -45,7 +45,8 @@ public class Resources {
 	// map
 	private Map map;
 	
-	private int[][] costMask;
+	private int[][] proxMask; // how many tiles away from danger
+	private int[][] costMask; // cost for AI to pathfind there
 	
 	// client ID
 	private int id;
@@ -316,15 +317,7 @@ public class Resources {
 		this.map = map;
 	}
 	
-	public int[][] getCostMask()
-	{
-		return costMask;
-	}
-	
-	public void setCostMask(int[][] costMask)
-	{
-		this.costMask = costMask;
-	}
+
 	
 	public ArrayList<Tile> getBadTiles()
 	{

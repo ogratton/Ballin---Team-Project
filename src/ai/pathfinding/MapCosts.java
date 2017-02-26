@@ -30,16 +30,18 @@ public class MapCosts
 
 		printMask(); // debug
 		
-		resources.setCostMask(costMask);
+		resources.getMap().setProxMask(proxMask);
+		resources.getMap().setCostMask(costMask);
 	}
 
+	@SuppressWarnings("unused")
 	private void printMask()
 	{
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-				System.out.print(costMask[i][j] + "; ");
+				System.out.print(proxMask[i][j] + "; ");
 			}
 			System.out.println();
 		}

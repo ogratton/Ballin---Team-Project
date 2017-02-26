@@ -16,7 +16,7 @@ public class AStarSearch
 	private TreeSet<Point> visited;
 	private Point goal;
 	private SearchNode current;
-	private double distTravelled;
+	private double costSoFar;
 
 	private Resources resources;
 
@@ -31,8 +31,8 @@ public class AStarSearch
 		this.frontier = new PriorityQueue<SearchNode>(SearchNode.priorityComparator()); // sorts by cost + heuristic.
 		this.visited = new TreeSet<Point>(new PointComparator());
 		this.goal = goal;
-		this.distTravelled = 0;
-		this.current = new SearchNode(start, new SearchNode(), distTravelled, goal);
+		this.costSoFar = 0;
+		this.current = new SearchNode(start, new SearchNode(), costSoFar, goal);
 
 		// first check if we're already there somehow
 		if (start.equals(goal))
@@ -88,7 +88,7 @@ public class AStarSearch
 	{
 		ArrayList<SearchNode> neighbours = new ArrayList<SearchNode>();
 		Point curLoc = current.getLocation();
-		int[] dirs = new int[] { 0, -1, 1 };
+		int[] dirs = new int[] { -1, 0, 1 };
 		for (int i = 0; i < dirs.length; i++)
 		{
 			for (int j = 0; j < dirs.length; j++)
@@ -99,7 +99,6 @@ public class AStarSearch
 					int dirI = dirs[i];
 					int dirJ = dirs[j];
 
-					// TODO need to make sure I'm getting the columns and rows the right way round
 					int neiX = curLoc.x + dirI;
 					int neiY = curLoc.y + dirJ;
 					Point neiLoc = new Point(neiX, neiY);
@@ -110,8 +109,11 @@ public class AStarSearch
 					{
 						if (!resources.getBadTiles().contains(neiTile))
 						{
-							int distMoved = Math.abs(dirI) + Math.abs(dirJ);
-							neighbours.add(new SearchNode(neiLoc, current, distTravelled + distMoved, goal));
+							// cost of the move
+							//int cost = Math.abs(dirI) + Math.abs(dirJ);
+							Point tileLoc = resources.getMap().tileCoords(neiX, neiY);
+							int cost = resources.getMap().getCostMask()[tileLoc.x][tileLoc.y];
+							neighbours.add(new SearchNode(neiLoc, current, costSoFar + cost, goal));
 						}
 					}
 				}
@@ -164,26 +166,26 @@ public class AStarSearch
 	{
 		// TODO vital for the whole thing to work
 		// I think
-		
+
 		// temporary dumb way to keep only every <gap>th point:
 		LinkedList<Point> sparse = new LinkedList<Point>();
-		int gap = 20;
+		int gap = 5;
 		int init_size = dense.size();
-		
-		for(int position=0; dense.size() > 1; position += gap)
+
+		for (int position = 0; dense.size() > 1; position += gap)
 		{
-			for (int i = 0; i<gap && position+i < init_size; i++)
+			for (int i = 0; i < gap && position + i < init_size; i++)
 			{
 				Point temp = dense.removeFirst();
-				if (i==0)
+				if (i == 0)
 				{
 					sparse.addLast(temp);
 				}
-				
+
 			}
 
 		}
-		
+
 		return sparse;
 	}
 

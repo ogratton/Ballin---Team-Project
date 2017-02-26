@@ -21,6 +21,9 @@ public class Map {
 	// to calculate the new speed.
 	private double friction;
 	private double gravity;
+	
+	private int[][] proxMask;
+	private int[][] costMask;
 
 	// any areas of different physics on the same map, starts at their origin.
 	// Preferably we should avoid a third level of recursion.
@@ -456,17 +459,26 @@ public class Map {
 		c.setY(p.y);
 	}
 	
-	public Point randPointOnMap() {
+	public Point randPointOnMap()
+	{
 		//set location
 		double randX = 0.0;
 		double randY = 0.0;
+		int i = 0;
+		int j = 0;
 		Tile t = null;
-		do {
+		do
+		{
 			randX = Math.random() * width;
 			randY = Math.random() * height;
 			t = tileAt(randX, randY);
-		} while(Map.tileCheck(t) && t == Tile.WALL);
-		return new Point((int)randX,(int)randY);
+			
+			Point randP = tileCoords(randX, randY);
+			i = randP.x;
+			j = randP.y;
+		}
+		while (proxMask[i][j] < 3); // never spawn anyone fewer than 3 tiles from the edge
+		return new Point((int) randX, (int) randY);
 	}
 	
 	/**
@@ -477,6 +489,26 @@ public class Map {
 	public static boolean tileCheck(Tile tile) {
 		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
 
+	}
+	
+	public int[][] getCostMask()
+	{
+		return costMask;
+	}
+	
+	public void setCostMask(int[][] costMask)
+	{
+		this.costMask = costMask;
+	}
+	
+	public int[][] getProxMask()
+	{
+		return proxMask;
+	}
+	
+	public void setProxMask(int[][] proxMask)
+	{
+		this.proxMask = proxMask;
 	}
 
 	
