@@ -65,7 +65,7 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 
-		/*for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++){
 			
 			Random r = new Random();
 			
@@ -76,7 +76,7 @@ public class PhysicsWithGraphicsDemo {
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
 			ai.start();
-		}*/
+		}
 
 		// create physics thread
 		Physics p = new Physics(resources);
