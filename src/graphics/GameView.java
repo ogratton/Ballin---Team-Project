@@ -203,14 +203,14 @@ public class GameView extends JPanel implements Observer {
 					switch (character.getDirection()) {
 					case N:
 						dashX = newX - character.getRadius();
-						dashY = newY - character.getRadius() + dashMult;
+						dashY = newY - character.getRadius() + dashMult + 15;
 						break;
 					case NE:
 						dashX = newX - character.getRadius() - dashMult;
 						dashY = newY - character.getRadius() + dashMult;
 						break;
 					case E:
-						dashX = newX - character.getRadius() - dashMult;
+						dashX = newX - character.getRadius() - dashMult - 15;
 						dashY = newY - character.getRadius();
 						break;
 					case SE:
@@ -219,14 +219,14 @@ public class GameView extends JPanel implements Observer {
 						break;
 					case S:
 						dashX = newX - character.getRadius();
-						dashY = newY - character.getRadius() - dashMult;
+						dashY = newY - character.getRadius() - dashMult - 15;
 						break;
 					case SW:
 						dashX = newX - character.getRadius() + dashMult;
 						dashY = newY - character.getRadius() - dashMult;
 						break;
 					case W:
-						dashX = newX - character.getRadius() + dashMult;
+						dashX = newX - character.getRadius() + dashMult + 15;
 						dashY = newY - character.getRadius();
 						break;
 					case NW:

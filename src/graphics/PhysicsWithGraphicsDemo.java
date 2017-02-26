@@ -2,7 +2,6 @@ package graphics;
 
 import java.io.IOException;
 import java.util.Random;
-
 import ai.VeryBasicAI;
 import ai.pathfinding.MapCosts;
 import physics.Physics;
@@ -68,18 +67,18 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 
-		for(int i = 0; i < 6; i++){
+		/*for(int i = 0; i < 6; i++){
 			
 			Random r = new Random();
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
-			playa.setX(r.nextInt(200));
-			playa.setY(r.nextInt(200));
+			playa.setX(r.nextInt(100) + );
+			playa.setY(r.nextInt(100));
 			resources.addPlayerToList(playa);
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
 			ai.start();
-		}
+		}*/
 
 		// create physics thread
 		Physics p = new Physics(resources);
