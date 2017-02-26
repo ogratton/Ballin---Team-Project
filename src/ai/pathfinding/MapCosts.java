@@ -1,12 +1,50 @@
 package ai.pathfinding;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.TreeSet;
 
 import resources.Map.Tile;
 import resources.Resources;
 
 public class MapCosts
 {
+	private Resources resources;
+
+	Tile[][] tileMap;
+	int[][] proxMask;
+	int[][] costMask;
+
+	int width, height;
+	int biggestDimension;
+
+	public MapCosts(Resources resources)
+	{
+		this.resources = resources;
+		
+		tileMap = resources.getMap().getTiles();
+		width = tileMap.length;
+		height = tileMap[0].length;
+		biggestDimension = height < width ? width : height;
+
+		genMapCostsMask();
+
+		printMask(); // debug
+		
+		resources.setCostMask(costMask);
+	}
+
+	private void printMask()
+	{
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				System.out.print(costMask[i][j] + "; ");
+			}
+			System.out.println();
+		}
+	}
+
 	/**
 	 * Create a 2D array the same size as the map with the costs of moving to
 	 * each tile
@@ -15,89 +53,123 @@ public class MapCosts
 	 * 
 	 * @param resources we will add the array directly into resources
 	 */
-	public static void genMapCostsMask(Resources resources)
+	private void genMapCostsMask()
 	{
 
-		Tile[][] tiles = resources.getMap().getTiles();
+		// first see how close all the tiles are to the edge		
+		genProxMask();
 
-		int width = tiles.length;
-		int height = tiles[0].length;
+		// then convert those proximities to costs
+		evaluateProxMask();
 
-		// first see how close all the tiles are to the edge
-		int[][] proxMask = new int[width][height];
-		Arrays.fill(proxMask, -1); // all unexplored to begin with
+		// TODO plug the costMask into resources (in constructor)
+	}
+
+	/**
+	 * Fill the proximity mask array by calculating how far away
+	 * the nearest abyss tile is
+	 */
+	private void genProxMask()
+	{
+		proxMask = new int[width][height];
+//		Arrays.fill(proxMask, Integer.MAX_VALUE); // all unexplored to begin with
 
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-
-				//System.out.print(tiles[i][j] + "; ");
-				if (proxMask[i][j] == -1)
+				if (proxMask[i][j] == 0)
 				{
-					findProx(i, j, tiles);
+					findProx(i, j);
 				}
 			}
-
-			//System.out.println();
-		}
-
-		// go through and evaluate the costs
-		double[][] costMask = new double[width][height];
-
-		for (int i = 0; i < width; i++)
-		{
-			for (int j = 0; j < height; j++)
-			{
-				costMask[i][j] = costEquation(proxMask[i][j]);
-			}
 		}
 	}
 
 	/**
-	 * A nice user-friendly starter for the proper findProx
-	 * @param i coord
-	 * @param j coord
-	 * @param tiles map
-	 * @return how close the tile is from an abyss tile
-	 */
-	private static int findProx(int i, int j, Tile[][] tiles)
-	{
-		int[] dirs = new int[] { -1, 0, 1 };
-		return findProx(i, j, tiles, tiles.length, tiles[0].length, dirs);
-	}
-
-	/**
-	 * From point i,j spiral outwards until abyss tile is reached
+	 * Search from given point to the closest abyss tile
 	 * 
 	 * @param i
 	 * @param j
-	 * @param tiles
-	 * @param maxI width of the tiles array
-	 * @param maxJ height of the tiles array
 	 * @return
 	 */
-	private static int findProx(int i, int j, Tile[][] tiles, int maxI, int maxJ, int[] dirs)
+	private int findProx(int i, int j)
 	{
-		if (tiles[i][j] == Tile.ABYSS)
+		// If we're on a bad tile to start with...
+		if (resources.getBadTiles().contains(tileMap[i][j]))
 		{
+			proxMask[i][j] = 0;
 			return 0;
 		}
-		else
+		for (int level = 1; level < biggestDimension; level++)
 		{
-			int closestNeighbour = Integer.MAX_VALUE;
-			
+			int[] dirs = new int[] { -level, 0, level };
+			TreeSet<Tile> neighbours = new TreeSet<Tile>();
+
+			// for every surrounding tile <level> tiles away
 			for (int n = 0; n < dirs.length; n++)
 			{
-				for (int m = 0; m < dirs.length; m++)
+				int dirN = dirs[n];
+				// check it's a legal coordinate
+				if ((i + dirN) < width && (i + dirN) >= 0)
 				{
-					// TODO for efficiency, the proximities it caluclates here should be stored too
-					// So make all this not static and have a field for proxMask
+					for (int m = 0; m < dirs.length; m++)
+					{
+						int dirM = dirs[m];
+						// check it's a legal coordinate 
+						if (j + dirM < height && (j + dirM) >= 0)
+						{
+							// don't evaluate ourselves
+							if (!(dirN == 0 && dirM == 0))
+							{
+								neighbours.add(tileMap[i + dirN][j + dirM]);
+							}
+						}
+					}
 				}
+			}
+
+			
+			if (containsAny(neighbours, resources.getBadTiles()))
+			{
+				proxMask[i][j] = level;
+				return level;
 			}
 		}
 		
-		return -1;
+		return Integer.MAX_VALUE; // if we never found a bad tile then this tile should be cheap to walk on
+	}
+	
+	/**
+	 * @return true if A contains any of the elements of B
+	 */
+	private <E> boolean containsAny(Collection<E> A, Collection<E> B)
+	{
+		for (Object object : B)
+		{
+			if(A.contains(object))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Fill the costMask with the cost value based on the proximity to an edge
+	 */
+	private void evaluateProxMask()
+	{
+		costMask = new int[width][height];
+
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				costMask[i][j] = (int) costEquation(proxMask[i][j]);
+			}
+		}
 	}
 
 	/**
@@ -108,8 +180,8 @@ public class MapCosts
 	 * @param x
 	 * @return
 	 */
-	private static double costEquation(int x)
+	private double costEquation(int x)
 	{
-		return 100 * Math.pow(Math.E, -x) + 1;
+		return 100 * Math.pow(Math.E, -x/1.5); // 100 * Math.pow(Math.E, -x/) + 1
 	}
 }

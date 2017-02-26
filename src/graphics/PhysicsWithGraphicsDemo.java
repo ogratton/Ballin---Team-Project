@@ -31,7 +31,7 @@ public class PhysicsWithGraphicsDemo {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/map0.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -43,8 +43,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
-		
-		//MapCosts.genMapCostsMask(resources);
+		new MapCosts(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
 
@@ -87,7 +86,7 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		Graphics g = new Graphics(resources, null, false);
+		Graphics g = new Graphics(resources, null, true);
 		g.start();
 
 	}

@@ -45,6 +45,8 @@ public class Resources {
 	// map
 	private Map map;
 	
+	private int[][] costMask;
+	
 	// client ID
 	private int id;
 	
@@ -312,6 +314,16 @@ public class Resources {
 	
 	public void setMap(Map map) {
 		this.map = map;
+	}
+	
+	public int[][] getCostMask()
+	{
+		return costMask;
+	}
+	
+	public void setCostMask(int[][] costMask)
+	{
+		this.costMask = costMask;
 	}
 	
 	public ArrayList<Tile> getBadTiles()

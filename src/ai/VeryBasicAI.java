@@ -174,6 +174,7 @@ public class VeryBasicAI extends Thread
 						{
 							Point charPos = new Point((int) character.getX(), (int) character.getY());
 							waypoints = aStar.search(charPos, destinations[i]);
+							resources.setDestList(waypoints);
 							System.out.println(tempID + " pathfinding to point " + i);
 						}
 						catch (ArrayIndexOutOfBoundsException e)
