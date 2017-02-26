@@ -1,13 +1,13 @@
 package graphics;
 
 import java.io.IOException;
+import java.util.Random;
 
 import ai.VeryBasicAI;
 import ai.pathfinding.MapCosts;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
-import resources.Map.Tile;
 import resources.MapReader;
 import resources.Resources;
 
@@ -45,7 +45,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
 		
-		MapCosts.genMapCostsMask(resources);
+		//MapCosts.genMapCostsMask(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
 
@@ -73,8 +73,8 @@ public class PhysicsWithGraphicsDemo {
 			Random r = new Random();
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
-			playa.setX(r.nextInt(1200));
-			playa.setY(r.nextInt(675));
+			playa.setX(r.nextInt(200));
+			playa.setY(r.nextInt(200));
 			resources.addPlayerToList(playa);
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
