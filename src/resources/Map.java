@@ -75,7 +75,7 @@ public class Map {
 
 	public Map(int width, int height) {
 
-		this(new Point2D.Double(0, 0), width, height, 5, 0.0, new ArrayList<Wall>());
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>());
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Map {
 	 */
 
 	public Map(int width, int height, Tile[][] tile, World world) {
-		this(new Point2D.Double(0, 0), width, height, 0.99, 0.0, new ArrayList<Wall>(), tile, world);
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world);
 	}
 
 	/**

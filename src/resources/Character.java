@@ -7,7 +7,7 @@ import java.util.Observable;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 
-public class Character extends Observable implements Collidable {
+public class Character extends Observable implements Collidable_Circle {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 25;
 	private static final double default_max_speed_x = 3;

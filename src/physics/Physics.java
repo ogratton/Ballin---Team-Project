@@ -11,6 +11,7 @@ import javax.swing.Timer;
 import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Collidable;
+import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
 import resources.Resources;
@@ -131,10 +132,8 @@ public class Physics extends Thread implements ActionListener {
 				c.setDy(c.getDy() + c.getAcc());
 			}
 			//apply friction
-			//double f = 1 - resources.getMap().getFriction();
-			double f = 0.02;
+			double f = resources.getMap().getFriction();
 			if (!c.isLeft() && !c.isRight()) {
-//				c.setDx(c.getDx() * resources.getMap().getFriction());
 				if (c.getDx() < -f ) {
 					c.setDx(c.getDx() + f);
 				} else if (c.getDx() > f) {
@@ -144,7 +143,6 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			if (!c.isUp() && !c.isDown()) {
-//				c.setDy(c.getDy() * resources.getMap().getFriction());	
 				if (c.getDy() < -f ) {
 					c.setDy(c.getDy() + f);
 				} else if (c.getDy() > f) {
@@ -154,44 +152,7 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 		} else { //falling
-			if(!c.isDead()) {//if stationary, give speed:
-				if(Math.abs(c.getDx()) < 0.00001) {
-					c.setDx(0.00001);
-				}
-				if(Math.abs(c.getDy()) < 0.00001) {
-					c.setDy(0.00001);
-				}
-				//if too slow, speed up:
-				if(Math.abs(c.getDx()) < 0.5) {
-					c.setDx(c.getDx() * 1.1);
-				}
-				if(Math.abs(c.getDy()) < 0.5) {
-					c.setDy(c.getDy() * 1.1);
-				}
-			}
-			//dead if completely off the map.
-			boolean dead = true;
-			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!Map.tileCheck(t2)) { // right edge
-				dead = false;
-				c.setDx(0 - Math.abs(c.getDx()));
-			}
-			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!Map.tileCheck(t2)) { // left edge
-				dead = false;
-				c.setDx(Math.abs(c.getDx()));
-			}			
-			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!Map.tileCheck(t2)) { // bottom edge
-				dead = false;
-				c.setDy(0 - Math.abs(c.getDy()));
-			}			
-			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!Map.tileCheck(t2)) { // top edge
-				dead = false;
-				c.setDy(Math.abs(c.getDy()));
-			}
-			if(dead && !c.isDead()) {
+			if(!c.isDead() && dead(c)) {
 				c.setDead(true);
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
@@ -210,6 +171,64 @@ public class Physics extends Thread implements ActionListener {
 			}
 		}
 		move(c);
+	}
+	
+	/**
+	 * Calculate speed and location of collidable circles.
+	 * @param c
+	 */
+	private void update(Collidable_Circle c) {
+		// find terrain type:
+		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
+		//check for falling.
+		if(Map.tileCheck(t)) {
+			c.setFalling(true);
+			if(!c.isDead() && dead(c)) {
+				
+			}
+		}
+		move(c);
+	}
+	
+	private boolean dead(Collidable_Circle c) {
+		if(!c.isDead()) {//if stationary, give speed:
+			if(Math.abs(c.getDx()) < 0.00001) {
+				c.setDx(0.00001);
+			}
+			if(Math.abs(c.getDy()) < 0.00001) {
+				c.setDy(0.00001);
+			}
+			//if too slow, speed up:
+			if(Math.abs(c.getDx()) < 0.5) {
+				c.setDx(c.getDx() * 1.1);
+			}
+			if(Math.abs(c.getDy()) < 0.5) {
+				c.setDy(c.getDy() * 1.1);
+			}
+		}
+		//dead if completely off the map.
+		boolean dead = true;
+		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+		if(!Map.tileCheck(t2)) { // right edge
+			dead = false;
+			c.setDx(0 - Math.abs(c.getDx()));
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+		if(!Map.tileCheck(t2)) { // left edge
+			dead = false;
+			c.setDx(Math.abs(c.getDx()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+		if(!Map.tileCheck(t2)) { // bottom edge
+			dead = false;
+			c.setDy(0 - Math.abs(c.getDy()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+		if(!Map.tileCheck(t2)) { // top edge
+			dead = false;
+			c.setDy(Math.abs(c.getDy()));
+		}
+		return dead;
 	}
 	
 	/**
@@ -254,7 +273,7 @@ public class Physics extends Thread implements ActionListener {
 		return false;
 	}
 	
-	private void move(Character c) {
+	private void move(Collidable_Circle c) {
 		//calculate location
 		double x = c.getX() + c.getDx();
 		double y = c.getY() + c.getDy();
@@ -312,7 +331,7 @@ public class Physics extends Thread implements ActionListener {
 //	  B.position += B.inv_mass * correction
 //	}
 	
-	private CND detectCollision(Character c, Character d) {
+	private CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
 		CND cnd = new CND();
 		int r = c.getRadius() + d.getRadius();
 		r *= r; // reduce need for Math.sqrt()
