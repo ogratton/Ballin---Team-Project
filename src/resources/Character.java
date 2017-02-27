@@ -6,6 +6,7 @@ import java.util.Observable;
 
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
+import resources.Powerup.Power;
 
 public class Character extends Observable implements Collidable_Circle {
 	private static final double default_mass = 1.0;
@@ -79,6 +80,11 @@ public class Character extends Observable implements Collidable_Circle {
 	private Character lastCollidedWith = null;
 	// What time this character last collided
 	private int lastCollidedTime = -1;
+	
+	private CollidableType type = CollidableType.Character;
+	private Power lastPowerup;
+	private int lastPowerupTime;
+	private boolean hasPowerup = false;
 
 	/**
 	 * Default character with default sprite
@@ -1266,5 +1272,55 @@ public class Character extends Observable implements Collidable_Circle {
 
 	public int getPlayerNumber() {
 		return this.playerNo;
+	}
+
+	@Override
+	public CollidableType getType() {
+		return type;
+	}
+	//private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
+	public void applyPowerup(Powerup p, int time) {
+		Power pow = p.getPower();
+		lastPowerup = pow;
+		lastPowerupTime = time;
+		switch (pow) {
+		case Speed:
+			// max speed * 2, acc * 2
+			setMaxDx(maxdx*2);
+			setMaxDy(maxdy*2);
+			setAcc(acc*2);
+		case Mass:
+			// Mass * 10, max speed / 2, acc / 2
+			setMass(mass*10);
+			setMaxDx(maxdx/2);
+			setMaxDy(maxdy/2);
+			setAcc(acc/2);
+		}
+	}
+	
+	public void revertPowerup() {
+		switch (lastPowerup) {
+		case Speed:
+			setMaxDx(maxdx/2);
+			setMaxDy(maxdy/2);
+			setAcc(acc/2);
+		case Mass:
+			setMass(mass/10);
+			setMaxDx(maxdx*2);
+			setMaxDy(maxdy*2);
+			setAcc(acc*2);
+		}
+	}
+
+	public Power getLastPowerup() {
+		return lastPowerup;
+	}
+
+	public int getLastPowerupTime() {
+		return lastPowerupTime;
+	}
+
+	public void hasPowerup(boolean b) {
+		hasPowerup = b;
 	}
 }

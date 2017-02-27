@@ -6,6 +6,7 @@ public class Puck implements Collidable_Circle {
 	double inv_mass = 1;
 	double restitution = 10;
 	boolean falling,dead = false;
+	private CollidableType type = CollidableType.Puck;
 	
 	public Puck(double x, double y) {
 		this.x = x;
@@ -83,6 +84,11 @@ public class Puck implements Collidable_Circle {
 	}
 	public boolean isFalling() {
 		return falling;
+	}
+
+	@Override
+	public CollidableType getType() {
+		return type;
 	}
 	
 }

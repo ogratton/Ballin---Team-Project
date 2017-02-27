@@ -451,6 +451,7 @@ public class Map {
 		c.setBlocking(false);
 		c.setVisible(true);
 		c.setDyingStep(0);
+		c.hasPowerup(false);
 		//set velocity
 		c.setDx(0);
 		c.setDy(0);
@@ -458,6 +459,12 @@ public class Map {
 		Point p = randPointOnMap();
 		c.setX(p.x);
 		c.setY(p.y);
+	}
+	
+	public void spawnPowerup(Powerup p) {
+		Point point = randPointOnMap();
+		p.setX(point.x);
+		p.setY(point.y);
 	}
 	
 	public Point randPointOnMap()

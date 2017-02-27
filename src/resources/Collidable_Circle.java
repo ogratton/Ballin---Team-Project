@@ -1,6 +1,9 @@
 package resources;
 
 public interface Collidable_Circle extends Collidable {
+	public enum CollidableType {
+		Character, Puck, Powerup
+	};
 	public double getX();
 	public double getY();
 	public int getRadius();
@@ -10,4 +13,5 @@ public interface Collidable_Circle extends Collidable {
 	public void setY(double y);
 	public void setFalling(boolean falling);
 	public boolean isFalling();
+	public CollidableType getType();
 }

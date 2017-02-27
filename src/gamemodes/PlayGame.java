@@ -3,6 +3,7 @@ package gamemodes;
 import java.io.IOException;
 
 import ai.VeryBasicAI;
+import ai.pathfinding.MapCosts;
 import resources.Character;
 import resources.Map;
 import resources.MapReader;
@@ -41,6 +42,7 @@ public class PlayGame {
 		}
 		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1);
 		Character player1 = new Character(Character.Class.ELF, 2);

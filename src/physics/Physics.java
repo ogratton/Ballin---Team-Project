@@ -3,19 +3,16 @@ package physics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.util.function.Function;
 
 import javax.swing.Timer;
 
-import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
+import resources.Powerup;
 import resources.Resources;
-import resources.Wall;
 
 public class Physics extends Thread implements ActionListener {
 	//dashing reduces stamina, speed multiplied by stamina.
@@ -50,6 +47,7 @@ public class Physics extends Thread implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		resources.incrementGlobalTimer();
 		for(Character c : resources.getPlayerList()){
 			update(c);
 			for (Character d : resources.getPlayerList()) {
@@ -67,6 +65,15 @@ public class Physics extends Thread implements ActionListener {
 					}
 				}
 			}
+			// Check collisions with powerups
+			for (Powerup p : resources.getPowerupList()) {
+				CND cnd = detectCollision(c,p);
+				if (cnd.collided) {
+					// Grant power to character, remove powerup
+					c.applyPowerup(p, resources.getGlobalTimer());
+					resources.removePowerup(p);
+				}
+			}
 		}
 	}
 
@@ -75,7 +82,6 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 */
 	private void update(Character c) {
-		resources.incrementGlobalTimer();
 		// if dead, don't do anything (yet):
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
@@ -89,6 +95,10 @@ public class Physics extends Thread implements ActionListener {
 		//check for falling.
 		if(Map.tileCheck(t)) {
 			c.setFalling(true);
+		}
+		// Powerup timer, remove powerup after 10 secs
+		if (resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
+			c.revertPowerup();
 		}
 		// Recharge stamina
 		c.incrementStamina();
@@ -157,8 +167,8 @@ public class Physics extends Thread implements ActionListener {
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
-				// If c has collided with someone else in the last 10 seconds
-				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 1000) {
+				// If c has collided with someone else in the last 5 seconds
+				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");

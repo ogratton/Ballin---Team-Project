@@ -38,6 +38,8 @@ public class Resources {
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
+	// powerups in play
+	private ArrayList<Powerup> powerupList = new ArrayList<Powerup>();
 	
 	// puck used in hockey game mode, using character class to make things easy
 	private Character puck;
@@ -362,6 +364,21 @@ public class Resources {
 	
 	public LinkedList<Point> getDestList(){
 		return this.destList;
+	}
+
+	public ArrayList<Powerup> getPowerupList() {
+		return powerupList;
+	}
+
+	public void addPowerup(Powerup p) {
+		powerupList.add(p);
+	}
+	
+	public void removePowerup(Powerup p) {
+		boolean b = powerupList.remove(p);
+		if (b) {
+			System.out.println("Removed powerup");
+		}
 	}
 	
 	//public static MapReader mapReader = new MapReader();
