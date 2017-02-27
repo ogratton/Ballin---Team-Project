@@ -466,12 +466,10 @@ public class Map {
 		double randY = 0.0;
 		int i = 0;
 		int j = 0;
-		Tile t = null;
 		do
 		{
 			randX = Math.random() * width;
 			randY = Math.random() * height;
-			t = tileAt(randX, randY);
 			
 			Point randP = tileCoords(randX, randY);
 			i = randP.x;

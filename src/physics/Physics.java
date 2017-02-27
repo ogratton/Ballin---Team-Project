@@ -147,44 +147,45 @@ public class Physics extends Thread implements ActionListener {
 					c.setDy(0);
 				}
 			}
-		} else if (!c.isDead()){ //falling
-			//if stationary, give speed:
-			if(Math.abs(c.getDx()) < 0.00001) {
-				c.setDx(0.00001);
-			}
-			if(Math.abs(c.getDy()) < 0.00001) {
-				c.setDy(0.00001);
-			}
-			//if too slow, speed up:
-			if(Math.abs(c.getDx()) < 0.5) {
-				c.setDx(c.getDx() * 1.1);
-			}
-			if(Math.abs(c.getDy()) < 0.5) {
-				c.setDy(c.getDy() * 1.1);
+		} else { //falling
+			if(!c.isDead()) {//if stationary, give speed:
+				if(Math.abs(c.getDx()) < 0.00001) {
+					c.setDx(0.00001);
+				}
+				if(Math.abs(c.getDy()) < 0.00001) {
+					c.setDy(0.00001);
+				}
+				//if too slow, speed up:
+				if(Math.abs(c.getDx()) < 0.5) {
+					c.setDx(c.getDx() * 1.1);
+				}
+				if(Math.abs(c.getDy()) < 0.5) {
+					c.setDy(c.getDy() * 1.1);
+				}
 			}
 			//dead if completely off the map.
 			boolean dead = true;
 			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			if(!Map.tileCheck(t2)) { // bottom edge
+			if(!Map.tileCheck(t2)) { // right edge
 				dead = false;
 				c.setDx(0 - Math.abs(c.getDx()));
 			}
 			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			if(!Map.tileCheck(t2)) { // top edge
+			if(!Map.tileCheck(t2)) { // left edge
 				dead = false;
 				c.setDx(Math.abs(c.getDx()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			if(!Map.tileCheck(t2)) { // right edge
+			if(!Map.tileCheck(t2)) { // bottom edge
 				dead = false;
 				c.setDy(0 - Math.abs(c.getDy()));
 			}			
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			if(!Map.tileCheck(t2)) { // left edge
+			if(!Map.tileCheck(t2)) { // top edge
 				dead = false;
 				c.setDy(Math.abs(c.getDy()));
 			}
-			if(dead) {
+			if(dead && !c.isDead()) {
 				c.setDead(true);
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
@@ -287,16 +288,14 @@ public class Physics extends Thread implements ActionListener {
 		
 		// For scores (would be nice to somehow do something based on whether
 		// the collidable c/d is a collidable or a character)
-		int time = resources.getGlobalTimer();
-		((Character) c).setLastCollidedWith((Character) d, time);
-		((Character) d).setLastCollidedWith((Character) c, time);
 	}
-
-//	private double distanceBetween(Character c1, Character c2) {
-//		double distance = Math.sqrt(Math.pow((c1.getX() - c2.getX()), 2) + Math.pow((c1.getY() - c2.getY()), 2));
-//		return distance;
-//	}
 	
+	private void collide(Character c, Character d, CND cnd) {
+		collide((Collidable)c,(Collidable)d, cnd);
+		int time = resources.getGlobalTimer();
+		c.setLastCollidedWith(d, time);
+		d.setLastCollidedWith(c, time);
+	}
 
 //	void PositionalCorrection( Object A, Object B )
 //	{ // copied from an example; needs adapting.
