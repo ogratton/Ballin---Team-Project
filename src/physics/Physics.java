@@ -104,12 +104,18 @@ public class Physics extends Thread implements ActionListener {
 			}
 			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
 			if(t2 == Tile.WALL) {//west
+				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY());
+				detectCollision(c, wallCoords);
 			}
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
 			if(t2 == Tile.WALL) {//south
+				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() + c.getRadius());
+				detectCollision(c, wallCoords);
 			}
 			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
 			if(t2 == Tile.WALL) {//north
+				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() - c.getRadius());
+				detectCollision(c, wallCoords);
 			}
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {

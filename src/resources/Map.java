@@ -444,6 +444,7 @@ public class Map {
 	 */
 	public void spawn(Character c) {
 		//reset all 'character state' flags
+		c.setLastCollidedWith(null, 0);
 		c.setDead(false);
 		c.setFalling(false);
 		c.setDashing(false);
