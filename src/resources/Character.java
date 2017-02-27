@@ -85,6 +85,8 @@ public class Character extends Observable implements Collidable_Circle {
 	private Power lastPowerup;
 	private int lastPowerupTime;
 	private boolean hasPowerup = false;
+	
+	private int teamNumber;
 
 	/**
 	 * Default character with default sprite
@@ -1322,5 +1324,17 @@ public class Character extends Observable implements Collidable_Circle {
 
 	public void hasPowerup(boolean b) {
 		hasPowerup = b;
+	}
+
+	public boolean hasPowerup() {
+		return hasPowerup;
+	}
+
+	public int getTeamNumber() {
+		return teamNumber;
+	}
+
+	public void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
 	}
 }

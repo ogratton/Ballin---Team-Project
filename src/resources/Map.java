@@ -461,6 +461,20 @@ public class Map {
 		c.setY(p.y);
 	}
 	
+	public void spawnPuck(Character c) {
+		c.setLastCollidedWith(null, 0);
+		c.setDead(false);
+		c.setFalling(false);
+		c.setVisible(true);
+		c.setDyingStep(0);
+		c.setDx(0);
+		c.setDy(0);
+		// Get middle of map for puck spawn point
+		Point p = new Point(200,200);
+		c.setX(p.x);
+		c.setY(p.y);
+	}
+	
 	public void spawnPowerup(Powerup p) {
 		Point point = randPointOnMap();
 		p.setX(point.x);

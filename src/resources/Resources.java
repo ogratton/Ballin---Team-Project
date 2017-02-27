@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import gamemodes.Team;
 import resources.Map.Tile;
 
 //import graphics.old.CharacterModel;
@@ -43,6 +44,9 @@ public class Resources {
 	
 	// puck used in hockey game mode, using character class to make things easy
 	private Character puck;
+	// are we playing a hockey game?
+	private boolean isHockey = false;
+	private Team[] teams;
 	
 	// map
 	private Map map;
@@ -347,7 +351,7 @@ public class Resources {
 	 */
 	public void createPuck() {
 		// need new character class to represent puck?
-		this.puck = new Character();
+		this.setPuck(new Character());
 	}
 
 	public int getGlobalTimer() {
@@ -379,6 +383,30 @@ public class Resources {
 		if (b) {
 			System.out.println("Removed powerup");
 		}
+	}
+
+	public boolean isHockey() {
+		return isHockey;
+	}
+
+	public void setHockey(boolean isHockey) {
+		this.isHockey = isHockey;
+	}
+
+	public Character getPuck() {
+		return puck;
+	}
+
+	public void setPuck(Character puck) {
+		this.puck = puck;
+	}
+
+	public Team[] getTeams() {
+		return teams;
+	}
+
+	public void setTeams(Team[] teams) {
+		this.teams = teams;
 	}
 	
 	//public static MapReader mapReader = new MapReader();
