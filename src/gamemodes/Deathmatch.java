@@ -39,7 +39,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
 				if (timer % 10 == 0) {
-					spawnPowerup();
+					//spawnPowerup();
 				}
 				timer--;
 				Thread.sleep(1000);
