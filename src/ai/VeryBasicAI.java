@@ -131,10 +131,11 @@ public class VeryBasicAI extends Thread
 
 					if (!waypoints.isEmpty())
 					{
-						success = moveTo(waypoints.removeFirst());
+						success = moveTo(waypoints.peek());
 						if (success)
 						{
 							success = false;
+							waypoints.removeFirst();
 							//System.out.println("Ze little grey cells, zey have led me to my goal!");
 							brakeChar();
 
@@ -142,11 +143,12 @@ public class VeryBasicAI extends Thread
 					}
 					else
 					{
-						System.out.println(id + " made it to destination " + i);
+						System.out.println(id + " made it to destination " + destinations[i]);
 						i++;
 						try
 						{
 							Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+							System.out.println(charPos);
 							waypoints = aStar.search(charPos, destinations[i]);
 
 							resources.setDestList(waypoints);
