@@ -31,7 +31,6 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 10;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
 	private final long tick = 70; // loop every <tick>ms
@@ -39,8 +38,7 @@ public class VeryBasicAI extends Thread
 	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
-	private Random r;
-	private int tempID;
+	private int id;
 
 	private AStarSearch aStar;
 	
@@ -77,11 +75,9 @@ public class VeryBasicAI extends Thread
 		non_edge.addAll(bad_tiles);
 		non_edge.add(Tile.FLAT);
 
-		r = new Random();
-
 		waypoints = new LinkedList<Point>();
 		
-		tempID = r.nextInt(500);
+		id = character.getId();
 
 		aStar = new AStarSearch(resources);
 	}
@@ -133,7 +129,7 @@ public class VeryBasicAI extends Thread
 					if (i < destinations.length)
 					{
 						Thread.sleep(10);
-						success = moveTo(destinations[i].getX(), destinations[i].getY());
+						success = moveTo(destinations[i]);
 						if (success)
 						{
 							//System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
@@ -168,14 +164,15 @@ public class VeryBasicAI extends Thread
 					}
 					else
 					{
-						System.out.println(tempID + " made it to destination " + i);
+						System.out.println(id + " made it to destination " + i);
 						i++;
 						try
 						{
 							Point charPos = new Point((int) character.getX(), (int) character.getY());
 							waypoints = aStar.search(charPos, destinations[i]);
 							resources.setDestList(waypoints);
-							System.out.println(tempID + " pathfinding to point " + i);
+							System.out.println(id + " pathfinding to point " + i);
+							System.out.println(getTileCoords(destinations[i]));
 						}
 						catch (ArrayIndexOutOfBoundsException e)
 						{
@@ -245,10 +242,15 @@ public class VeryBasicAI extends Thread
 	{
 		return resources.getMap().tileAt(character.getX(), character.getY());
 	}
-
+	
 	private Point getCurrentTileCoords()
 	{
 		return resources.getMap().tileCoords(character.getX(), character.getY());
+	}
+
+	private Point getTileCoords(Point p)
+	{
+		return resources.getMap().tileCoords(p.getX(), p.getY());
 	}
 
 	/**
@@ -345,13 +347,6 @@ public class VeryBasicAI extends Thread
 		setAllMovementFalse();
 	}
 
-	// TODO are there players in the way?
-	//private boolean isClear
-
-	private boolean moveTo(Point p) throws InterruptedException
-	{
-		return this.moveTo(p.getX(), p.getY());
-	}
 
 	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
@@ -363,56 +358,56 @@ public class VeryBasicAI extends Thread
 	 * @return are we nearly there yet?
 	 * @throws InterruptedException
 	 */
-	private boolean moveTo(double x, double y) throws InterruptedException
+	private boolean moveTo(Point p) throws InterruptedException
 	{
-		if (fuzzyEqual(character.getX(), x) && fuzzyEqual(character.getY(), y))
+		p = getTileCoords(p); // TODO only necessary while passing coords
+		
+		Point char_pos = new Point((int) character.getX(), (int) character.getY());
+		Point char_tile = getTileCoords(char_pos);
+		
+		int target_row = p.x;
+		int target_col = p.y;
+		
+		int current_row = char_tile.x;
+		int current_col = char_tile.y;
+		
+		if (current_row == target_row && current_col == target_col)
 		{
 			brakeChar();
 			return true;
 		}
-		if (fuzzyEqual(character.getX(), x))
+		if (current_row == target_row)
 		{
 			brakeChar();
 		}
-		if (fuzzyEqual(character.getY(), y))
+		if (current_col == target_col)
 		{
 			brakeChar();
 		}
-		if (character.getX() < x)
-		{
-			character.setLeft(false);
-			character.setRight(true);
-		}
-		if (character.getY() < y)
+		if (current_row < target_row)
 		{
 			character.setUp(false);
 			character.setDown(true);
 		}
-		if (character.getX() > x)
+		if (current_col < target_col)
 		{
-			character.setRight(false);
-			character.setLeft(true);
+			character.setLeft(false);
+			character.setRight(true);
 		}
-		if (character.getY() > y)
+		if (current_row > target_row)
 		{
 			character.setDown(false);
 			character.setUp(true);
+		}
+		if (current_col > target_col)
+		{
+			character.setRight(false);
+			character.setLeft(true);
 		}
 
 		return false;
 	}
 
-	/**
-	 * Are two coords equal give or take fuzziness?
-	 * 
-	 * @param coord1
-	 * @param coord2
-	 * @return true if the two values are close enough
-	 */
-	private boolean fuzzyEqual(double coord1, double coord2)
-	{
-		return (Math.abs(coord1 - coord2) <= fuzziness);
-	}
 
 	/**
 	 * 'Detach' all keys

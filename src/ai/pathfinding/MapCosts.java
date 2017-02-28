@@ -28,6 +28,8 @@ public class MapCosts
 
 		genMapCostsMask();
 
+//		printProxMask();
+//		System.out.println();
 //		printCostMask(); // debug
 		
 		resources.getMap().setProxMask(proxMask);
@@ -197,6 +199,6 @@ public class MapCosts
 	 */
 	private double costEquation(int x)
 	{
-		return 100 * Math.pow(Math.E, -x); // 100 * Math.pow(Math.E, -x/) + 1
+		return 500 * Math.pow(Math.E, -x/0.5); // 100 * Math.pow(Math.E, -x) + 1
 	}
 }

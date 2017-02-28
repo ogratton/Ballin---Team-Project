@@ -169,7 +169,7 @@ public class AStarSearch
 
 		// temporary dumb way to keep only every <gap>th point:
 		LinkedList<Point> sparse = new LinkedList<Point>();
-		int gap = 20;
+		int gap = 10;
 		int init_size = dense.size();
 
 		for (int position = 0; dense.size() > 1; position += gap)
