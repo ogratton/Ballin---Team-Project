@@ -497,7 +497,7 @@ public class Map {
 			i = randP.x;
 			j = randP.y;
 		}
-		while (proxMask[i][j] < 3); // never spawn anyone fewer than 3 tiles from the edge
+		while (proxMask[i][j] < 2); // XXX never spawn anyone fewer than 2 tiles from the edge (arbitrary choice!)
 		return new Point((int) randX, (int) randY);
 	}
 	

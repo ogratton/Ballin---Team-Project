@@ -26,12 +26,12 @@ public class VeryBasicAI extends Thread
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.POIROT; // default
+	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
-	private final long tick = 70; // loop every <tick>ms
+	private final long tick = 30; // loop every <tick>ms
 
 	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
@@ -53,7 +53,14 @@ public class VeryBasicAI extends Thread
 	 * centre
 	 * This will make it look more human, hopefully
 	 * 
-	 * TODO Test pathfinding
+	 * XXX I think the problem with the movement at the moment is the 'fuzziness'
+	 * When the tick is slow, it is more likely it will still be in the right square
+	 * But when the tick is high, it will probably have overshot by the time it checks
+	 * Can't rely on a good-seeming speed because lag on different machines will affect it
+	 * Also low tick speeds make the ai move sooooo slowly
+	 * 
+	 * TODO If the AI gets knocked closer to its final destination but farther from its next waypoint,
+	 * it will run backwards to the waypoint rather than take advantage of the collision
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -102,7 +109,7 @@ public class VeryBasicAI extends Thread
 			for (int i = 0; i < destinations.length; i++)
 			{
 				destinations[i] = getTileCoords(destinationPix[i]);
-				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
+//				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
 			}
 			
 			int i = 0;
@@ -174,11 +181,13 @@ public class VeryBasicAI extends Thread
 					
 					if (!waypoints.isEmpty())
 					{
-						success = moveTo(waypoints.removeFirst());
+						success = moveTo(waypoints.peek());
 						if (success)
 						{
 							success = false;
+							waypoints.removeFirst();
 							brakeChar();
+
 						}
 					}
 					else

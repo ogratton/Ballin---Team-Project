@@ -121,17 +121,15 @@ public class GameView extends JPanel implements Observer {
 		if (debugPaths) {
 			g.setColor(Color.RED);
 
-			for (int i = 0; i < fullDestList.size() - 1; i++) {
-				
-				double x1 = fullDestList.get(i).getY() * SheetDeets.TILES_SIZEX;
-				double y1 = fullDestList.get(i).getX() * SheetDeets.TILES_SIZEY;
-				double x2 = fullDestList.get(i+1).getY() * SheetDeets.TILES_SIZEX;
-				double y2 = fullDestList.get(i+1).getX() * SheetDeets.TILES_SIZEY;
-				
-
+			for (int i = 0; i < fullDestList.size() - 1; i++)
+			{
+				double x1 = fullDestList.get(i).getY() * SheetDeets.TILES_SIZEX * multiplier;
+				double y1 = fullDestList.get(i).getX() * SheetDeets.TILES_SIZEY * multiplier;
+				double x2 = fullDestList.get(i + 1).getY() * SheetDeets.TILES_SIZEX * multiplier;
+				double y2 = fullDestList.get(i + 1).getX() * SheetDeets.TILES_SIZEY * multiplier;
 				g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-
 			}
+			
 		}
 		// drawing each of the characters on the board
 
