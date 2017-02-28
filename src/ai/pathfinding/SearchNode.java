@@ -3,8 +3,6 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.util.Comparator;
 
-import resources.Map.Tile;
-
 public class SearchNode
 {
 	private Point location;

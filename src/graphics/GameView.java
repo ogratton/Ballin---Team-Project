@@ -122,9 +122,14 @@ public class GameView extends JPanel implements Observer {
 			g.setColor(Color.RED);
 
 			for (int i = 0; i < fullDestList.size() - 1; i++) {
+				
+				double x1 = fullDestList.get(i).getY() * SheetDeets.TILES_SIZEX;
+				double y1 = fullDestList.get(i).getX() * SheetDeets.TILES_SIZEY;
+				double x2 = fullDestList.get(i+1).getY() * SheetDeets.TILES_SIZEX;
+				double y2 = fullDestList.get(i+1).getX() * SheetDeets.TILES_SIZEY;
+				
 
-				g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(),
-						(int) fullDestList.get(i + 1).getX(), (int) fullDestList.get(i + 1).getY());
+				g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 
 			}
 		}

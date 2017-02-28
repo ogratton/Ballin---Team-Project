@@ -3,7 +3,6 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Random;
 
 import ai.pathfinding.AStarSearch;
 import resources.Character;
@@ -21,14 +20,13 @@ public class VeryBasicAI extends Thread
 		COWARD, // runs from all danger
 		AGGRESSIVE, // actively seeks other players
 
-		CLOUSEAU, // debug: Follows a list of points dumbly
 		POIROT, // use A* search to follow a list of points more intelligently
 		ROVING, // debug: moves randomly
 		PACING, // debug: moves up&down/left&right
 		STUBBORN // debug: tries to stop itself moving anywhere
 	};
 
-	private Behaviour behaviour = Behaviour.ROVING; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
@@ -99,7 +97,14 @@ public class VeryBasicAI extends Thread
 			boolean success = true;
 			
 			// this is setting things up for the debug Detective
-			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
+			Point[] destinationPix = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
+			Point[] destinations = new Point[destinationPix.length];
+			for (int i = 0; i < destinations.length; i++)
+			{
+				destinations[i] = getTileCoords(destinationPix[i]);
+				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
+			}
+			
 			int i = 0;
 
 			
@@ -116,34 +121,7 @@ public class VeryBasicAI extends Thread
 					moveAwayFromEdge(getCurrentTileCoords());
 					//					System.out.println("Near an edge!");
 				}
-				if (behaviour == Behaviour.CLOUSEAU)
-				{
-					/*
-					 * CLOUSEAU BEHAVIOUR:
-					 * Uses 'as-the-crow-flies' pathfinding, causing it to
-					 * probably fall into holes
-					 */
-
-					//System.out.println("Target: " + destinations[i]);
-
-					if (i < destinations.length)
-					{
-						Thread.sleep(10);
-						success = moveTo(destinations[i]);
-						if (success)
-						{
-							//System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
-							//System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
-							i++;
-							success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
-							if (i < destinations.length)
-							{
-								//System.out.println("Target: " + destinations[i]);
-							}
-						}
-					}
-				}
-				else if (behaviour == Behaviour.POIROT)
+				if (behaviour == Behaviour.POIROT)
 				{
 					/*
 					 * POIROT BEHAVIOUR:
@@ -168,11 +146,13 @@ public class VeryBasicAI extends Thread
 						i++;
 						try
 						{
-							Point charPos = new Point((int) character.getX(), (int) character.getY());
+							Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
 							waypoints = aStar.search(charPos, destinations[i]);
+
 							resources.setDestList(waypoints);
-							System.out.println(id + " pathfinding to point " + i);
-							System.out.println(getTileCoords(destinations[i]));
+							System.out.println(id + " pathfinding to point " + destinations[i]);
+							System.out.println("waypoints: " + waypoints);
+							System.out.println();
 						}
 						catch (ArrayIndexOutOfBoundsException e)
 						{
@@ -202,8 +182,8 @@ public class VeryBasicAI extends Thread
 					else
 					{
 
-						Point charPos = new Point((int) character.getX(), (int) character.getY());
-						Point newDest = resources.getMap().randPointOnMap();
+						Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+						Point newDest = getTileCoords(resources.getMap().randPointOnMap());
 //						System.out.println("going to try to pathfind to " + newDest);
 						while (waypoints.isEmpty())
 						{
@@ -359,9 +339,7 @@ public class VeryBasicAI extends Thread
 	 * @throws InterruptedException
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
-	{
-		p = getTileCoords(p); // TODO only necessary while passing coords
-		
+	{		
 		Point char_pos = new Point((int) character.getX(), (int) character.getY());
 		Point char_tile = getTileCoords(char_pos);
 		
