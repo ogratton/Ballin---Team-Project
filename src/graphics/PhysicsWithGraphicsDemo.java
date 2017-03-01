@@ -62,8 +62,8 @@ public class PhysicsWithGraphicsDemo {
 		player2.setY(400);
 
 		Character player3 = new Character(Character.Class.MONK, 4);
-		player2.setX(1023);
-		player2.setY(600);
+		player3.setX(1023);
+		player3.setY(500);
 
 		
 		resources.addPlayerToList(player);
@@ -71,7 +71,7 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player2);
 		resources.addPlayerToList(player3);
 
-		/*for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++){
 			
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
@@ -82,7 +82,7 @@ public class PhysicsWithGraphicsDemo {
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
 			ai.start();
-		}*/
+		}
 
 		// create physics thread
 		Physics p = new Physics(resources);
@@ -90,6 +90,12 @@ public class PhysicsWithGraphicsDemo {
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
+		
+		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
+		ai2.start();
+		
+		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
+		ai3.start();
 		
 		Graphics g = new Graphics(resources, null, false);
 		g.start();
