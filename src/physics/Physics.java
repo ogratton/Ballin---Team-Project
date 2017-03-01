@@ -170,7 +170,7 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 		} else { //falling
-			if(!c.isDead() && dead(c)) {
+			if(dead(c) && !c.isDead()) {
 				if (c.getType() == CollidableType.Character){
 					c.setDead(true);
 					// Calculate score changes
