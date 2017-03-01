@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-import audio.MusicPlayer;
-import graphics.old.MapModel;
 import networking.Updater;
 import resources.Character;
 import resources.Map;
@@ -64,7 +62,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		timer = new Timer(17, this);
+		timer = new Timer(10, this);
 		timer.start();
 
 		// End test code block

@@ -40,7 +40,7 @@ class Panel extends JPanel implements ActionListener {
 
 		this.resources = resources;
 
-		Character player = new Character(Character.Class.ELF, 1);
+		Character player = new Character(Character.Class.ARCHER, 1);
 		resources.addPlayerToList(player);
 
 		addKeyListener(new TAdapter());

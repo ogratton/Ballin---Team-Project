@@ -51,21 +51,25 @@ public class PhysicsWithGraphicsDemo {
 		player.setX(400);
 		player.setY(400);
 
-		Character player1 = new Character(Character.Class.ELF, 2);
+		Character player1 = new Character(Character.Class.WARRIOR, 2);
 
 		player1.setX(534);
 		player1.setY(454);
 
-		Character player2 = new Character(Character.Class.WIZARD, 0);
+		Character player2 = new Character(Character.Class.ARCHER, 3);
 
-		player2.setX(800);
-		player2.setY(300);
+		player2.setX(780);
+		player2.setY(400);
 
-		
+		Character player3 = new Character(Character.Class.MONK, 4);
+		player2.setX(1023);
+		player2.setY(600);
+
 		
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
+		resources.addPlayerToList(player3);
 
 		/*for(int i = 0; i < 6; i++){
 			
@@ -87,7 +91,7 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		Graphics g = new Graphics(resources, null, true);
+		Graphics g = new Graphics(resources, null, false);
 		g.start();
 
 	}

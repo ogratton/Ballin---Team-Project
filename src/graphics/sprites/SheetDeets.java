@@ -13,7 +13,7 @@ public class SheetDeets {
 	public static final BufferedImage CHARACTERS = Sprite.loadSpriteSheet(Sprite.SheetType.CHARACTER);
 
 	public static final int CHARACTERS_COLS = 8;
-	public static final int CHARACTERS_ROWS = 3;
+	public static final int CHARACTERS_ROWS = 4;
 	public static final int CHARACTERS_SIZEX = 50;
 	public static final int CHARACTERS_SIZEY = 50;
 
@@ -41,11 +41,14 @@ public class SheetDeets {
 		case WIZARD:
 			x = 0;
 			break;
-		case ELF:
+		case ARCHER:
 			x = 1;
 			break;
-		case TEST:
+		case WARRIOR:
 			x = 2;
+			break;
+		case MONK:
+			x = 3;
 			break;
 		case DEFAULT:
 			x = 0;
