@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import resources.Character;
 import resources.Map;
+import resources.Powerup;
 
 public class SheetDeets {
 
@@ -124,7 +125,7 @@ public class SheetDeets {
 	// MISCELLANEOUS TILES
 
 	public enum Misc {
-		DASH,
+		DASH, PUCK, POWERUP;
 	};
 
 	public static final BufferedImage MISC = Sprite.loadSpriteSheet(Sprite.SheetType.MISC);
@@ -136,19 +137,40 @@ public class SheetDeets {
 	
 	public static BufferedImage getMiscSpritesFromType(Misc m){
 		
+		int y = 0;
 		int x = 0;
 		int numX = 0;
 		int numY = 0;
 		
 		switch(m){
 		case DASH:
-			x = 0;
+			y = 0;
 			numX = 8;
 			numY = 1;
 			break;
+		case PUCK:
+			y = 1;
+			numX = 1;
+			numY = 1;
+			break;
+		case POWERUP:
+			y = 1;
+			x = 1;
+			numX = 7;
+			numY = 1;
+			
 		}
 		
-		return Sprite.getSprite(MISC, 0, x, MISC_SIZEX * numX, MISC_SIZEY * numY);
+		return Sprite.getSprite(MISC, x, y, MISC_SIZEX * numX, MISC_SIZEY * numY);
+		
+	}
+	
+	public static BufferedImage getPowerUpSpriteFromType(Powerup.Power p){
+		
+		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
+		
+		return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);		
+		
 	}
 
 	// ARROWHEAD TILES
