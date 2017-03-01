@@ -1,5 +1,6 @@
 package resources;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	
+
 	// keybindings
 	private int default_up = KeyEvent.VK_W;
 	private int default_down = KeyEvent.VK_S;
@@ -33,43 +34,53 @@ public class Resources {
 	// can be as negative as you like but no larger than about 10 I think
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
-	
+
 	// max deaths a character can have.
 	private int maxDeaths = 4;
-	
+
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	// powerups in play
 	private ArrayList<Powerup> powerupList = new ArrayList<Powerup>();
-	
+
 	// puck used in hockey game mode, using character class to make things easy
 	private Character puck;
 	// are we playing a hockey game?
 	private boolean isHockey = false;
 	private Team[] teams;
-	
+
 	// map
 	private Map map;
-	
+
 	private int[][] proxMask; // how many tiles away from danger
 	private int[][] costMask; // cost for AI to pathfind there
-	
+
 	// client ID
 	private int id;
-	
-	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
-	
+
+	private ArrayList<Tile> bad_tiles; // tiles to path-find around
+
 	// Counter of how many ticks have happened
 	private int globalTimer = 0;
-	
+
 	// destination list for pathfinding
 	private LinkedList<Point> destList = new LinkedList<Point>();
-	
-	public Resources()
-	{
+
+	private Color cpuColour = new Color(110, 110, 110);
+	private Color p1Colour = new Color(238, 31, 52);
+	private Color p2Colour = new Color(2, 23, 255);
+	private Color p3Colour = new Color(3, 209, 38);
+	private Color p4Colour = new Color(255, 217, 2);
+	private Color p5Colour = new Color(3, 255, 234);
+	private Color p6Colour = new Color(226, 10, 229);
+	private Color p7Colour = new Color(245, 122, 37);
+	private Color p8Colour = new Color(98, 31, 187);
+
+	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
-		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are implemented
+		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are
+										// implemented
 	}
 
 	public int getId() {
@@ -79,275 +90,315 @@ public class Resources {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Get the default up keybinding
+	 * 
 	 * @return the default up keybinding
 	 */
-	
+
 	public int getDefaultUp() {
 		return default_up;
 	}
-	
+
 	/**
 	 * Set the default up keybinding
-	 * @param default_up the default up keybinding
+	 * 
+	 * @param default_up
+	 *            the default up keybinding
 	 */
-	
+
 	public void setDefaultUp(int default_up) {
 		this.default_up = default_up;
 	}
-	
+
 	/**
 	 * Get the default down keybinding
+	 * 
 	 * @return the default down keybinding
 	 */
-	
+
 	public int getDefaultDown() {
 		return default_down;
 	}
-	
+
 	/**
 	 * Set the default down keybinding
-	 * @param default_down the default down keybinding
+	 * 
+	 * @param default_down
+	 *            the default down keybinding
 	 */
-	
+
 	public void setDefaultDown(int default_down) {
 		this.default_down = default_down;
 	}
-	
+
 	/**
 	 * Get the deault left keybinding
+	 * 
 	 * @return the default left keybinding
 	 */
-	
+
 	public int getDefaultLeft() {
 		return default_left;
 	}
-	
+
 	/**
 	 * Set the default left keybinding
-	 * @param default_left the default left keybinding
+	 * 
+	 * @param default_left
+	 *            the default left keybinding
 	 */
-	
+
 	public void setDefaultLeft(int default_left) {
 		this.default_left = default_left;
 	}
-	
+
 	/**
 	 * Get the default right keybinding
+	 * 
 	 * @return the default right keybinding
 	 */
-	
+
 	public int getDefaultRight() {
 		return default_right;
 	}
-	
+
 	/**
 	 * Set the default right keybinding
-	 * @param default_right the default right keybinding
+	 * 
+	 * @param default_right
+	 *            the default right keybinding
 	 */
-	
+
 	public void setDefaultRight(int default_right) {
 		this.default_right = default_right;
 	}
-	
+
 	/**
 	 * Get the default dash keybinding
+	 * 
 	 * @return the default dash keybinding
 	 */
-	
+
 	public int getDefaultDash() {
 		return default_dash;
 	}
-	
+
 	/**
 	 * Set the default dash keybinding
-	 * @param default_right the default dash keybinding
+	 * 
+	 * @param default_right
+	 *            the default dash keybinding
 	 */
-	
+
 	public void setDefaultDash(int default_dash) {
 		this.default_dash = default_dash;
 	}
-	
+
 	/**
 	 * Get the up keybinding
+	 * 
 	 * @return the up keybinding
 	 */
-	
+
 	public int getUp() {
 		return up;
 	}
-	
+
 	/**
 	 * Set the up keybinding
-	 * @param up the up keybinding
+	 * 
+	 * @param up
+	 *            the up keybinding
 	 */
-	
+
 	public void setUp(int up) {
 		this.up = up;
 	}
-	
+
 	/**
 	 * Get the down keybinding
+	 * 
 	 * @return the down keybinding
 	 */
-	
+
 	public int getDown() {
 		return down;
 	}
-	
+
 	/**
 	 * Set the down keybinding
-	 * @param down the down keybinding
+	 * 
+	 * @param down
+	 *            the down keybinding
 	 */
-	
+
 	public void setDown(int down) {
 		this.down = down;
 	}
-	
+
 	/**
 	 * Get the left keybinding
+	 * 
 	 * @return the left keybinding
 	 */
-	
+
 	public int getLeft() {
 		return left;
 	}
-	
+
 	/**
 	 * Set the left keybinding
-	 * @param left the left keybinding
+	 * 
+	 * @param left
+	 *            the left keybinding
 	 */
-	
+
 	public void setLeft(int left) {
 		this.left = left;
 	}
-	
+
 	/**
 	 * Get the right keybinding
+	 * 
 	 * @return the right keybinding
 	 */
-	
+
 	public int getRight() {
 		return right;
 	}
-	
+
 	/**
 	 * Set the right keybinding
-	 * @param right the right keybinding
+	 * 
+	 * @param right
+	 *            the right keybinding
 	 */
-	
+
 	public void setRight(int right) {
 		this.right = right;
 	}
-	
+
 	/**
 	 * Get the dash keybinding
+	 * 
 	 * @return the dash keybinding
 	 */
-	
+
 	public int getDash() {
 		return dash;
 	}
-	
+
 	/**
 	 * Set the dash keybinding
-	 * @param right the dash keybinding
+	 * 
+	 * @param right
+	 *            the dash keybinding
 	 */
-	
+
 	public void setDash(int dash) {
 		this.dash = dash;
 	}
-	
+
 	/**
 	 * Get the SFX gain
+	 * 
 	 * @return the SFX gain
 	 */
-	
+
 	public int getSFXGain() {
 		return sfx_gain;
 	}
-	
+
 	/**
 	 * Set the SFX gain
-	 * @param sfx_gain the SFX gain
+	 * 
+	 * @param sfx_gain
+	 *            the SFX gain
 	 */
-	
+
 	public void setSFXGain(int sfx_gain) {
 		this.sfx_gain = sfx_gain;
 	}
-	
+
 	/**
 	 * Get the player list
+	 * 
 	 * @return the player list
 	 */
-	
+
 	public ArrayList<Character> getPlayerList() {
 		return playerList;
 	}
-	
+
 	/**
 	 * Add a character to the player list
-	 * @param character the character
+	 * 
+	 * @param character
+	 *            the character
 	 */
-	
-	public void addPlayerToList(Character character){
+
+	public void addPlayerToList(Character character) {
 		playerList.add(character);
 	}
-	
+
 	/**
 	 * Set a player list
-	 * @param playerList the player list
+	 * 
+	 * @param playerList
+	 *            the player list
 	 */
-	
+
 	public void setPlayerList(ArrayList<Character> playerList) {
 		this.playerList = playerList;
 	}
-	
+
 	/**
 	 * Get the map
+	 * 
 	 * @return the map
 	 */
-	
+
 	public Map getMap() {
 		return map;
 	}
-	
+
 	/**
 	 * Set the map
-	 * @param map the map
+	 * 
+	 * @param map
+	 *            the map
 	 */
-	
+
 	public void setMap(Map map) {
 		this.map = map;
 	}
-	
 
-	
-	public ArrayList<Tile> getBadTiles()
-	{
+	public ArrayList<Tile> getBadTiles() {
 		return bad_tiles;
 	}
-	
+
 	/**
 	 * set the maximum number of lives for each character.
+	 * 
 	 * @param maxDeaths
 	 */
 	public void setMaxDeaths(int maxDeaths) {
 		this.maxDeaths = maxDeaths;
 	}
-	
+
 	/**
 	 * get the maximum number of lives for each character.
+	 * 
 	 * @return
 	 */
 	public int maxDeaths() {
 		return maxDeaths;
 	}
-	
+
 	/**
-	 * Creates a puck for the hockey game mode. 
+	 * Creates a puck for the hockey game mode.
 	 */
 	public void createPuck() {
 		// need new character class to represent puck?
@@ -361,12 +412,12 @@ public class Resources {
 	public void incrementGlobalTimer() {
 		globalTimer++;
 	}
-	
-	public void setDestList(LinkedList<Point> destList){
+
+	public void setDestList(LinkedList<Point> destList) {
 		this.destList = destList;
 	}
-	
-	public LinkedList<Point> getDestList(){
+
+	public LinkedList<Point> getDestList() {
 		return this.destList;
 	}
 
@@ -377,7 +428,7 @@ public class Resources {
 	public void addPowerup(Powerup p) {
 		powerupList.add(p);
 	}
-	
+
 	public void removePowerup(Powerup p) {
 		boolean b = powerupList.remove(p);
 		if (b) {
@@ -408,8 +459,40 @@ public class Resources {
 	public void setTeams(Team[] teams) {
 		this.teams = teams;
 	}
+
+	/**
+	 * Get the player colour for a given player (0 for cpu)
+	 * @param no the player number
+	 * @return the player colour
+	 */
 	
-	//public static MapReader mapReader = new MapReader();
-	//public static Map.Tile[][] map1 = mapReader.readMap("./resources/maps/map1.csv");
-	
+	public Color getPlayerColor(int no) {
+		switch (no) {
+		case 0:
+			return cpuColour;
+		case 1:
+			return p1Colour;
+		case 2:
+			return p2Colour;
+		case 3:
+			return p3Colour;
+		case 4:
+			return p4Colour;
+		case 5:
+			return p5Colour;
+		case 6:
+			return p6Colour;
+		case 7:
+			return p7Colour;
+		case 8:
+			return p8Colour;
+		default:
+			return cpuColour;
+		}
+	}
+
+	// public static MapReader mapReader = new MapReader();
+	// public static Map.Tile[][] map1 =
+	// mapReader.readMap("./resources/maps/map1.csv");
+
 }

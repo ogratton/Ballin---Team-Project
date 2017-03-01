@@ -1,12 +1,16 @@
 package resources;
 
+import java.awt.image.BufferedImage;
 import java.util.Random;
+
+import graphics.sprites.SheetDeets;
 
 public class Powerup implements Collidable_Circle {
 
 	private int radius = 5;
 	private double x, y = 0;
 	private CollidableType type = CollidableType.Powerup;
+	private BufferedImage sprite = SheetDeets.getPowerUpSpritesFromType(power);
 
 	// Size? Affect other characters? Fireballs?
 	public enum Power {

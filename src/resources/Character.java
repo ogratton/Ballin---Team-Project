@@ -22,7 +22,7 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ELF, TEST
+		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK;
 	}; // add to this as we develop more classes.
 
 	// flags for keys pressed.
@@ -259,24 +259,12 @@ public class Character extends Observable implements Collidable_Circle {
 			break;
 		}
 
-		switch (classType) {
-		case TEST:
-
-			BufferedImage sprite = this.directionSprites.get(directionFrame);
-			this.currentFrame = sprite;
-			return sprite;
-
-		case ELF:
-		case WIZARD:
-		case DEFAULT:
-
 			if (rollingFrame == 32)
 				rollingFrame = 0;
 
 			if (rollingFrame == -1)
 				rollingFrame = 31;
-		}
-
+			
 		BufferedImage sprite = this.rollingSprites.get(rollingFrame / 4);
 		this.currentFrame = sprite;
 		return sprite;

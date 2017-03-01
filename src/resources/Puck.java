@@ -1,5 +1,7 @@
 package resources;
 
+import graphics.sprites.SheetDeets;
+
 public class Puck implements Collidable_Circle {
 	int radius = 5;
 	double x,y,dx,dy = 0;
@@ -7,6 +9,7 @@ public class Puck implements Collidable_Circle {
 	double restitution = 10;
 	boolean falling,dead = false;
 	private CollidableType type = CollidableType.Puck;
+	private BufferedImage sprite = SheetDeets.getMiscSpritesFromType(SheetDeets.PUCK);
 	
 	public Puck(double x, double y) {
 		this.x = x;

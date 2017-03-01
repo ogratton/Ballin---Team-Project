@@ -67,14 +67,14 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			// Check collisions with powerups
-			for (Powerup p : resources.getPowerupList()) {
-				CND cnd = detectCollision(c,p);
-				if (cnd.collided) {
-					// Grant power to character, remove powerup
-					c.applyPowerup(p, resources.getGlobalTimer());
-					resources.removePowerup(p);
-				}
-			}
+//			for (Powerup p : resources.getPowerupList()) {
+//				CND cnd = detectCollision(c,p);
+//				if (cnd.collided) {
+//					// Grant power to character, remove powerup
+//					c.applyPowerup(p, resources.getGlobalTimer());
+//					resources.removePowerup(p);
+//				}
+//			}
 			if (resources.isHockey()) {
 				Character p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
@@ -105,9 +105,9 @@ public class Physics extends Thread implements ActionListener {
 			c.setFalling(true);
 		}
 		// Powerup timer, remove powerup after 10 secs
-		if (resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
-			c.revertPowerup();
-		}
+//		if (resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
+//			c.revertPowerup();
+//		}
 		// Recharge stamina
 		c.incrementStamina();
 		// If a special button has been pressed, perform the ability if possible
