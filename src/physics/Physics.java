@@ -9,10 +9,9 @@ import javax.swing.Timer;
 import resources.Character;
 import resources.Collidable;
 import resources.Collidable_Circle;
-import resources.Collidable_Circle.CollidableType;
 import resources.Map;
 import resources.Map.Tile;
-import resources.Powerup;
+import resources.Puck;
 import resources.Resources;
 
 public class Physics extends Thread implements ActionListener {
@@ -49,6 +48,10 @@ public class Physics extends Thread implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		resources.incrementGlobalTimer();
+		
+		// if hockey, move puck.
+		if(resources.isHockey()) update(resources.getPuck());
+		
 		for(Character c : resources.getPlayerList()){
 			update(c);
 			for (Character d : resources.getPlayerList()) {
@@ -57,12 +60,6 @@ public class Physics extends Thread implements ActionListener {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
 						collide(c,d,cnd);
-						//System.out.println("Collision!");
-						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
-						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
-
-						// TODO correct positions (prevent clipping)
-						//positionalCorrection(cnd);
 					}
 				}
 			}
@@ -76,7 +73,7 @@ public class Physics extends Thread implements ActionListener {
 //				}
 //			}
 			if (resources.isHockey()) {
-				Character p = resources.getPuck();
+				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
 				if(cnd.collided) {
 					collide(c,p,cnd);
@@ -171,30 +168,21 @@ public class Physics extends Thread implements ActionListener {
 			}
 		} else { //falling
 			if(dead(c) && !c.isDead()) {
-				if (c.getType() == CollidableType.Character){
-					c.setDead(true);
-					// Calculate score changes
-					System.out.println("Player " + c.getPlayerNumber() + " died!");
-					Character lastCollidedWith = c.getLastCollidedWith();
-					// If c has collided with someone else in the last 5 seconds
-					if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
-						// give 1 point to whoever they collided with
-						lastCollidedWith.incrementScore(1);
-						System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
-					} else {
-						// take 2 points away from c
-						System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
-						c.incrementScore(-2);
-					}
-					c.setLastCollidedWith(null, 0);
-				} else if (c.getType() == CollidableType.Puck) {
-					// Goal is scored
-					Character lastCollidedWith = c.getLastCollidedWith();
-					System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
-					// Find which goal was scored in
-					// If own goal, -2 points to player, otherwise +1 point
-					// +1 point to team who scored
+				c.setDead(true);
+				// Calculate score changes
+				System.out.println("Player " + c.getPlayerNumber() + " died!");
+				Character lastCollidedWith = c.getLastCollidedWith();
+				// If c has collided with someone else in the last 5 seconds
+				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
+					// give 1 point to whoever they collided with
+					lastCollidedWith.incrementScore(1);
+					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
+				} else {
+					// take 2 points away from c
+					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
+					c.incrementScore(-2);
 				}
+				c.setLastCollidedWith(null, 0);
 			}
 		}
 		move(c);
@@ -211,7 +199,13 @@ public class Physics extends Thread implements ActionListener {
 		if(Map.tileCheck(t)) {
 			c.setFalling(true);
 			if(!c.isDead() && dead(c)) {
-				//...
+				//if (c.getType() == CollidableType.Puck) {...}
+				// Goal is scored
+				Character lastCollidedWith = c.getLastCollidedWith();
+				System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
+				// Find which goal was scored in
+				// If own goal, -2 points to player, otherwise +1 point
+				// +1 point to team who scored
 			}
 		}
 		move(c);
@@ -338,12 +332,13 @@ public class Physics extends Thread implements ActionListener {
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
-		// For scores (would be nice to somehow do something based on whether
-		// the collidable c/d is a collidable or a character)
+		
 	}
 	
 	private void collide(Character c, Character d, CND cnd) {
 		collide((Collidable)c,(Collidable)d, cnd);
+		// For scores (would be nice to somehow do something based on whether
+		// the collidable c/d is a collidable or a character)
 		int time = resources.getGlobalTimer();
 		c.setLastCollidedWith(d, time);
 		d.setLastCollidedWith(c, time);

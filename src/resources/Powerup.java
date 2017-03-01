@@ -1,67 +1,85 @@
 package resources;
 
 import java.awt.image.BufferedImage;
+import java.util.Observable;
 import java.util.Random;
 
 import graphics.sprites.SheetDeets;
 
-public class Powerup implements Collidable_Circle {
+public class Powerup extends Observable implements Collidable_Circle {
 
 	private int radius = 5;
 	private double x, y = 0;
 	private CollidableType type = CollidableType.Powerup;
-	private BufferedImage sprite = SheetDeets.getPowerUpSpritesFromType(power);
+	private BufferedImage sprite = null;
 
 	// Size? Affect other characters? Fireballs?
 	public enum Power {
 		Speed, Mass
 	};
 	
-	private Power power;
+	private Power power = null;
+	private Character lastCollidedWith = null;
+	private boolean falling = false;
+	private boolean dead = false;
+	private double dy = 0;
+	private double dx = 0;
+	private int lastCollidedTime = -1;
+	private boolean visible;
+	private int dyingStep;
 
 	public Powerup() {
 		Random rand = new Random();
 		int p = rand.nextInt(Power.values().length);
 		power = Power.values()[p];
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
 		System.out.println("POWER: " + power);
 	}
 
 	@Override
 	public double getInvMass() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getRestitution() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getDx() {
-		// TODO Auto-generated method stub
-		return 0;
+		return dx;
 	}
 
 	@Override
 	public double getDy() {
-		// TODO Auto-generated method stub
-		return 0;
+		return dy;
 	}
 
 	@Override
 	public void setDx(double dx) {
-		// TODO Auto-generated method stub
-
+		this.dx = dx;
 	}
 
 	@Override
-	public void setDy(double dx) {
-		// TODO Auto-generated method stub
-
+	public void setDy(double dy) {
+		this.dy = dy;
 	}
 
+	@Override
+	public void setX(double x) {
+		this.x = x;
+		setChanged();
+		notifyObservers();
+	}
+
+	@Override
+	public void setY(double y) {
+		this.y = y;
+		setChanged();
+		notifyObservers();
+	}
+	
 	@Override
 	public double getX() {
 		return x;
@@ -79,36 +97,22 @@ public class Powerup implements Collidable_Circle {
 
 	@Override
 	public void setDead(boolean dead) {
-		// TODO Auto-generated method stub
-
+		this.dead = dead;
 	}
 
 	@Override
 	public boolean isDead() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	@Override
-	public void setY(double y) {
-		this.y = y;
+		return dead;
 	}
 
 	@Override
 	public void setFalling(boolean falling) {
-		// TODO Auto-generated method stub
-
+		this.falling = falling;
 	}
 
 	@Override
 	public boolean isFalling() {
-		// TODO Auto-generated method stub
-		return false;
+		return falling;
 	}
 
 	@Override
@@ -118,5 +122,49 @@ public class Powerup implements Collidable_Circle {
 	
 	public Power getPower() {
 		return power;
+	}
+
+	@Override
+	public void setLastCollidedWith(Character c, int time) {
+		this.lastCollidedWith = c;
+		this.lastCollidedTime = time;
+	}
+	
+	@Override
+	public Character getLastCollidedWith() {
+		return lastCollidedWith;
+	}
+	
+	@Override
+	public int getLastCollidedTime() {
+		return lastCollidedTime;
+	}
+
+	public void setSprite(BufferedImage sprite) {
+		this.sprite = sprite;
+	}
+
+	public BufferedImage getSprite() {
+		return sprite;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+
+	@Override
+	public void setDyingStep(int step) {
+		dyingStep = step;
+	}
+
+	@Override
+	public int getDyingStep() {
+		return dyingStep;
 	}
 }

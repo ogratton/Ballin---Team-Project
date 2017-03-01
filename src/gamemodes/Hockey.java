@@ -128,6 +128,6 @@ public class Hockey extends Thread implements GameModeTeams {
 			// randomly in their own half or in set positions
 			resources.getMap().spawn(c);
 		}
-		resources.getMap().spawnPuck(resources.getPuck());
+		resources.getMap().spawn(resources.getPuck());
 	}
 }

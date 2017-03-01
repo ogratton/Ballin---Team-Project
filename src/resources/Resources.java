@@ -44,7 +44,7 @@ public class Resources {
 	private ArrayList<Powerup> powerupList = new ArrayList<Powerup>();
 
 	// puck used in hockey game mode, using character class to make things easy
-	private Character puck;
+	private Puck puck;
 	// are we playing a hockey game?
 	private boolean isHockey = false;
 	private Team[] teams;
@@ -402,7 +402,7 @@ public class Resources {
 	 */
 	public void createPuck() {
 		// need new character class to represent puck?
-		this.setPuck(new Character());
+		this.setPuck(new Puck());
 	}
 
 	public int getGlobalTimer() {
@@ -444,11 +444,11 @@ public class Resources {
 		this.isHockey = isHockey;
 	}
 
-	public Character getPuck() {
+	public Puck getPuck() {
 		return puck;
 	}
 
-	public void setPuck(Character puck) {
+	public void setPuck(Puck puck) {
 		this.puck = puck;
 	}
 
