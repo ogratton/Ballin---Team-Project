@@ -463,8 +463,8 @@ public class Physics extends Thread implements ActionListener {
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
 		//System.out.println(c.getStamina());
 		//System.out.println(c.getDx() + ", " + c.getDy());
-		c.setDx(c.getDx() * 0.95 * resources.getMap().getFriction());
-		c.setDy(c.getDy() * 0.95 * resources.getMap().getFriction());
+		c.setDx(c.getDx() * 0.9);
+		c.setDy(c.getDy() * 0.9);
 		// Stop blocking - revert changes to mass
 		if (c.getBlockTimer() >= 25) {
 			//System.out.println("DONE BLOCKING");
