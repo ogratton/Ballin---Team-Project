@@ -211,7 +211,7 @@ public class Physics extends Thread implements ActionListener {
 		if(Map.tileCheck(t)) {
 			c.setFalling(true);
 			if(!c.isDead() && dead(c)) {
-				
+				//...
 			}
 		}
 		move(c);
