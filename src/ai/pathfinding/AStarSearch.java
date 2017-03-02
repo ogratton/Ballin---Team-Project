@@ -77,7 +77,7 @@ public class AStarSearch
 		// make as sparse as possible so that the only
 		// elements are corners.
 		// this may be awkward with linked lists
-//		ll = sparsifyPath(ll);
+		ll = sparsifyPath(ll);
 		return ll;
 	}
 

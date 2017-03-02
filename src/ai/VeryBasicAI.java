@@ -29,7 +29,7 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 10;
+	private final double fuzziness = 25;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
 	private final long tick = 30; // loop every <tick>ms

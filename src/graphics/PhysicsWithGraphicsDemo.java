@@ -34,7 +34,7 @@ public class PhysicsWithGraphicsDemo {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map0.csv");
+			tiles = mr.readMap("./resources/maps/map1.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -97,11 +97,11 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
+		/*VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
 		ai2.start();
 		
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
-		ai3.start();
+		ai3.start();*/	
 		
 		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 
