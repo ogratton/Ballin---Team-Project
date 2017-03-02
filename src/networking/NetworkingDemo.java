@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -36,7 +38,7 @@ public class NetworkingDemo {
 			x = r.nextInt(1200);
 			y = r.nextInt(675);
 			int id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ELF, 1);
+			newPlayer = new Character(Character.Class.ARCHER, 1);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
 			newPlayer.setId(id);
@@ -70,14 +72,7 @@ public class NetworkingDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		// create ui thread
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Graphics g = new Graphics(resources, updater, false);
-				g.start();
-			}
-		});
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
 	
 	public static void setGame(ConnectionDataModel cModel, GameData gameData, ObjectOutputStream toServer) {
@@ -96,7 +91,7 @@ public class NetworkingDemo {
 			x = info.getX();
 			y = info.getY();
 		    id = info.getId();
-			newPlayer = new Character(Character.Class.ELF, 1);
+			newPlayer = new Character(Character.Class.ARCHER, 1);
 			newPlayer.setX(x);
 			newPlayer.setY(y);
 			newPlayer.setId(id);
@@ -128,13 +123,6 @@ public class NetworkingDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		// create ui thread
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Graphics g = new Graphics(resources, updater, false);
-				g.start();
-			}
-		});
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
 }

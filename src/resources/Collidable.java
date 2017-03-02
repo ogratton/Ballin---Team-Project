@@ -6,5 +6,5 @@ public interface Collidable {
 	public double getDx();
 	public double getDy();
 	public void setDx(double dx);
-	public void setDy(double dx);
+	public void setDy(double dy);
 }

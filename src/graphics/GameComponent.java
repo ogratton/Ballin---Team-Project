@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -10,10 +11,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.Timer;
 
-import audio.MusicPlayer;
-import graphics.old.MapModel;
 import networking.Updater;
 import resources.Character;
 import resources.Map;
@@ -57,14 +57,14 @@ public class GameComponent extends JFrame implements ActionListener {
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
 		this.debugPaths = debugPaths;
-		
+
 		setLayout(new BorderLayout());
 
 		// This code block below is just for testing!
 
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		timer = new Timer(17, this);
+		timer = new Timer(10, this);
 		timer.start();
 
 		// End test code block
@@ -76,6 +76,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
+		//mapView = new MapView(resources);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -85,7 +86,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId() == resources.getId()) {
 				secondPlayerIndex = i;
@@ -94,8 +95,18 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 		}
 
-		add(view, BorderLayout.CENTER);
+		
+		/*layers = new JLayeredPane();
+		updateBounds();
+		layers.add(mapView, new Integer(0), 0);
+		layers.add(view, new Integer(1), 0);
 
+		layers.setVisible(true);
+		add(layers, BorderLayout.CENTER);
+		setVisible(true);*/
+
+		add(view, BorderLayout.CENTER);
+		setVisible(true);
 	}
 
 	// All code below here is for testing
@@ -105,23 +116,28 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-
-		repaint();
-
+		view.repaint();
 	}
 
-	/**
-	 * Set the mulitplier
-	 * 
-	 * @param mult
-	 *            the multiplier
-	 */
+/*	private void updateBounds() {
 
-	public void setMultiplier(double newWidth, double newHeight) {
+		if (fullScreen) {
 
-		double mult = newWidth / width;
-		this.view.setMultiplier(mult);
-	}
+			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			int width = gd.getDisplayMode().getWidth();
+			int height = gd.getDisplayMode().getHeight();
+
+			layers.setBounds(0, 0, width, height);
+			mapView.setBounds(0, 0, width, height);
+			view.setBounds(0, 0, width, height);
+		} else {
+
+			layers.setBounds(0, 0, 1200, 675);
+			mapView.setBounds(0, 0, 1200, 675);
+			view.setBounds(0, 0, 1200, 675);
+		}
+
+	}*/
 
 	/**
 	 * Switch between fullscreen and windowed
@@ -131,11 +147,9 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		if (fullScreen) {
 
-			int newWidth = (int) (1200);
-			int newHeight = (int) (675);
-
-			setMultiplier(newWidth, newHeight);
-			setSize(newWidth, newHeight);
+			view.setFullScreen(false);
+			getContentPane().setPreferredSize(new Dimension(1200, 675));
+			pack();
 			setLocationRelativeTo(null);
 			fullScreen = false;
 
@@ -145,15 +159,16 @@ public class GameComponent extends JFrame implements ActionListener {
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
 			setLocation(0, 0);
-			setMultiplier(width, height);
-			setSize(width, height);
+			view.setFullScreen(true);
+			getContentPane().setPreferredSize(new Dimension(width, height));
+			pack();
 			fullScreen = true;
 
 		}
-
+		
 		setFocusable(true);
 		requestFocus();
-
+		
 	}
 
 	public void cycleWorld() {

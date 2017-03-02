@@ -9,10 +9,9 @@ import javax.swing.Timer;
 import resources.Character;
 import resources.Collidable;
 import resources.Collidable_Circle;
-import resources.Collidable_Circle.CollidableType;
 import resources.Map;
 import resources.Map.Tile;
-import resources.Powerup;
+import resources.Puck;
 import resources.Resources;
 
 public class Physics extends Thread implements ActionListener {
@@ -49,6 +48,10 @@ public class Physics extends Thread implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		resources.incrementGlobalTimer();
+		
+		// if hockey, move puck.
+		if(resources.isHockey()) update(resources.getPuck());
+		
 		for(Character c : resources.getPlayerList()){
 			update(c);
 			for (Character d : resources.getPlayerList()) {
@@ -57,12 +60,6 @@ public class Physics extends Thread implements ActionListener {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
 						collide(c,d,cnd);
-						//System.out.println("Collision!");
-						//System.out.println("x1: " + c.getX() + ", y1: " + c.getY());
-						//System.out.println("x2: " + d.getX() + ", y2: " + d.getY());
-
-						// TODO correct positions (prevent clipping)
-						//positionalCorrection(cnd);
 					}
 				}
 			}
@@ -76,7 +73,7 @@ public class Physics extends Thread implements ActionListener {
 //				}
 //			}
 			if (resources.isHockey()) {
-				Character p = resources.getPuck();
+				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
 				if(cnd.collided) {
 					collide(c,p,cnd);
@@ -99,7 +96,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		
 		// find terrain type:
-		Tile t = resources.getMap().tileAt(c.getX(),c.getY());
+		Tile t = resources.getMap().tileAt(c.getX(), c.getY());
 		//check for falling.
 		if(Map.tileCheck(t)) {
 			c.setFalling(true);
@@ -116,26 +113,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		if(!c.isFalling()) { //moving
 			// check for wall collisions:
-			Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-			if(t2 == Tile.WALL) {//east
-				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY());
-				detectCollision(c, wallCoords);
-			}
-			t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-			if(t2 == Tile.WALL) {//west
-				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY());
-				detectCollision(c, wallCoords);
-			}
-			t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-			if(t2 == Tile.WALL) {//south
-				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() + c.getRadius());
-				detectCollision(c, wallCoords);
-			}
-			t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-			if(t2 == Tile.WALL) {//north
-				Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() - c.getRadius());
-				detectCollision(c, wallCoords);
-			}
+			checkWallCollisions(c);
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -170,31 +148,22 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 		} else { //falling
-			if(!c.isDead() && dead(c)) {
-				if (c.getType() == CollidableType.Character){
-					c.setDead(true);
-					// Calculate score changes
-					System.out.println("Player " + c.getPlayerNumber() + " died!");
-					Character lastCollidedWith = c.getLastCollidedWith();
-					// If c has collided with someone else in the last 5 seconds
-					if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
-						// give 1 point to whoever they collided with
-						lastCollidedWith.incrementScore(1);
-						System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
-					} else {
-						// take 2 points away from c
-						System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
-						c.incrementScore(-2);
-					}
-					c.setLastCollidedWith(null, 0);
-				} else if (c.getType() == CollidableType.Puck) {
-					// Goal is scored
-					Character lastCollidedWith = c.getLastCollidedWith();
-					System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
-					// Find which goal was scored in
-					// If own goal, -2 points to player, otherwise +1 point
-					// +1 point to team who scored
+			if(dead(c) && !c.isDead()) {
+				c.setDead(true);
+				// Calculate score changes
+				System.out.println("Player " + c.getPlayerNumber() + " died!");
+				Character lastCollidedWith = c.getLastCollidedWith();
+				// If c has collided with someone else in the last 5 seconds
+				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
+					// give 1 point to whoever they collided with
+					lastCollidedWith.incrementScore(1);
+					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
+				} else {
+					// take 2 points away from c
+					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
+					c.incrementScore(-2);
 				}
+				c.setLastCollidedWith(null, 0);
 			}
 		}
 		move(c);
@@ -211,7 +180,13 @@ public class Physics extends Thread implements ActionListener {
 		if(Map.tileCheck(t)) {
 			c.setFalling(true);
 			if(!c.isDead() && dead(c)) {
-				
+				//if (c.getType() == CollidableType.Puck) {...}
+				// Goal is scored
+				Character lastCollidedWith = c.getLastCollidedWith();
+				System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
+				// Find which goal was scored in
+				// If own goal, -2 points to player, otherwise +1 point
+				// +1 point to team who scored
 			}
 		}
 		move(c);
@@ -256,6 +231,30 @@ public class Physics extends Thread implements ActionListener {
 			c.setDy(Math.abs(c.getDy()));
 		}
 		return dead;
+	}
+	
+	private void checkWallCollisions(Collidable_Circle c) {
+		// Checks walls, if collided then collides.
+		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) {//east
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY());
+			detectCollision(c, wallCoords);
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) {//west
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY());
+			detectCollision(c, wallCoords);
+		}
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+		if(t2 == Tile.WALL) {//south
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() + c.getRadius());
+			detectCollision(c, wallCoords);
+		}
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+		if(t2 == Tile.WALL) {//north
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX(), c.getY() - c.getRadius());
+			detectCollision(c, wallCoords);
+		}
 	}
 	
 	/**
@@ -338,12 +337,13 @@ public class Physics extends Thread implements ActionListener {
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
-		// For scores (would be nice to somehow do something based on whether
-		// the collidable c/d is a collidable or a character)
+		
 	}
 	
 	private void collide(Character c, Character d, CND cnd) {
 		collide((Collidable)c,(Collidable)d, cnd);
+		// For scores (would be nice to somehow do something based on whether
+		// the collidable c/d is a collidable or a character)
 		int time = resources.getGlobalTimer();
 		c.setLastCollidedWith(d, time);
 		d.setLastCollidedWith(c, time);
@@ -379,7 +379,7 @@ public class Physics extends Thread implements ActionListener {
 		return cnd;
 	}
 	
-	private CND detectCollision(Character c, Point wallCoords) {
+	private CND detectCollision(Collidable_Circle c, Point wallCoords) {
 		// wallCoords is the top-left point of the wall.
 		// width (or height) = SheetDeets.TILE_SIZEX (or TILE_SIZEY)
 		CND cnd = new CND();
@@ -463,8 +463,8 @@ public class Physics extends Thread implements ActionListener {
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
 		//System.out.println(c.getStamina());
 		//System.out.println(c.getDx() + ", " + c.getDy());
-		c.setDx(c.getDx() * 0.95 * resources.getMap().getFriction());
-		c.setDy(c.getDy() * 0.95 * resources.getMap().getFriction());
+		c.setDx(c.getDx() * 0.9);
+		c.setDy(c.getDy() * 0.9);
 		// Stop blocking - revert changes to mass
 		if (c.getBlockTimer() >= 25) {
 			//System.out.println("DONE BLOCKING");

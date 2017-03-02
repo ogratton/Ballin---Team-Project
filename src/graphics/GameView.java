@@ -2,7 +2,11 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -29,8 +33,28 @@ import resources.Resources;
 public class GameView extends JPanel implements Observer {
 
 	private HashMap<Character, Point> points;
+	private double ordinaryPlayerSize = 50;
+	private double fullScreenPlayerSize;
+	private double ordinaryMapHeight = 675;
+	private double fullScreenMapHeight;
+	private double ordinaryMapWidth = 1200;
+	private double fullScreenMapWidth;
+	private double fullScreenWindowWidth;
+	private double fullScreenWindowHeight;
+	private double currentPlayerSize;
+	private double currentMapHeight;
+	private double currentMapWidth;
+	private double currentWindowHeight;
+	private double currentWindowWidth;
+	private double multiplier;
+	private double currentMultiplier = 1;
+	private boolean notSixteenNine;
+	private boolean fullscreen = false;
+	private double offset;
+	private double currentOffset = 0;
 	private BufferedImage mapSprite;
-	private double multiplier = 1;
+	private BufferedImage bigMapSprite;
+	private BufferedImage currentMapSprite;
 
 	// for debugging pathfinding
 	private boolean debugPaths = false;
@@ -63,21 +87,60 @@ public class GameView extends JPanel implements Observer {
 		destList = resources.getDestList();
 		fullDestList = resources.getDestList();
 
-		for (Character model : resources.getPlayerList()) {
-			points.put(model, new Point((int) model.getX(), (int) model.getY()));
+		setUpSizes();
+
+		for (Character player : resources.getPlayerList()) {
+			points.put(player, new Point((int) player.getX(), (int) player.getY()));
+
+			player.makeSizeSprites(multiplier);
 
 			if (debugPaths) {
-				pointTrail.put(model, new ArrayList<Point>());
-				pointTrail.get(model).add(new Point((int) model.getX(), (int) model.getY()));
+				pointTrail.put(player, new ArrayList<Point>());
+				pointTrail.get(player).add(new Point((int) player.getX(), (int) player.getY()));
 			}
 		}
 
-		repaint();
 	}
 
 	public void makeMap() {
 		mapSprite = Sprite.createMap(resources.getMap());
-		repaint();
+	}
+
+	private void setUpSizes() {
+
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		fullScreenWindowWidth = gd.getDisplayMode().getWidth();
+		fullScreenWindowHeight = gd.getDisplayMode().getHeight();
+
+		if (fullScreenWindowWidth / fullScreenWindowHeight < (16.0 / 9.0)) {
+
+			offset = (int) (0.5 * (fullScreenWindowHeight - (fullScreenWindowWidth * (9.0 / 16.0))));
+			notSixteenNine = true;
+		}
+
+		multiplier = fullScreenWindowWidth / ordinaryMapWidth;
+
+		fullScreenMapWidth = ordinaryMapWidth * multiplier;
+		fullScreenMapHeight = ordinaryMapHeight * multiplier;
+
+		fullScreenPlayerSize = ordinaryPlayerSize * multiplier;
+
+		currentMapWidth = ordinaryMapWidth;
+		currentMapHeight = ordinaryMapHeight;
+		currentPlayerSize = ordinaryPlayerSize;
+
+		bigMapSprite = mapSprite;
+
+		int w = mapSprite.getWidth();
+		int h = mapSprite.getHeight();
+		bigMapSprite = new BufferedImage((int) fullScreenMapWidth, (int) fullScreenMapWidth, mapSprite.getType());
+		Graphics2D g = bigMapSprite.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(mapSprite, 0, 0, (int) fullScreenMapWidth, (int) fullScreenMapHeight, 0, 0, w, h, null);
+		g.dispose();
+
+		currentMapSprite = mapSprite;
+
 	}
 
 	/**
@@ -87,47 +150,31 @@ public class GameView extends JPanel implements Observer {
 	public void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
-
 		// clear the screen to prepare for the next frame
 
-		g.clearRect(0, 0, this.getWidth(), this.getHeight());
-
-		// get screen size, important for retaining 16:9 ratio
-
-		double screenWidth = getWidth();
-		double screenHeight = getHeight();
-		double offset = 0;
-		boolean notSixteenNine = false;
-
-		if (screenWidth / screenHeight < (16.0 / 9.0)) {
-
-			offset = 0.5 * (screenHeight - (screenWidth * (9.0 / 16.0)));
-			notSixteenNine = true;
-		}
+		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
 		// draw the map sprite (this is the same throughout a game)
 
-		g.drawImage(mapSprite, 0, (int) offset, (int) (mapSprite.getWidth() * multiplier),
-				(int) (mapSprite.getHeight() * multiplier), this);
+		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
-		destList = resources.getDestList();
+		/*
+		 * destList = resources.getDestList();
+		 * 
+		 * for (Point p : destList) { if (!fullDestList.contains(p)) {
+		 * fullDestList.add(p); } }
+		 * 
+		 * if (debugPaths) { g.setColor(Color.RED);
+		 * 
+		 * for (int i = 0; i < fullDestList.size() - 1; i++) {
+		 * 
+		 * g.drawLine((int) fullDestList.get(i).getX(), (int)
+		 * fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
+		 * (int) fullDestList.get(i + 1).getY());
+		 * 
+		 * } }
+		 */
 
-		for (Point p : destList) {
-			if (!fullDestList.contains(p)) {
-				fullDestList.add(p);
-			}
-		}
-
-		if (debugPaths) {
-			g.setColor(Color.RED);
-
-			for (int i = 0; i < fullDestList.size() - 1; i++) {
-
-				g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(),
-						(int) fullDestList.get(i + 1).getX(), (int) fullDestList.get(i + 1).getY());
-
-			}
-		}
 		// drawing each of the characters on the board
 
 		for (Character character : resources.getPlayerList()) {
@@ -135,6 +182,9 @@ public class GameView extends JPanel implements Observer {
 			// no point drawing invisible characters
 
 			if (character.isVisible()) {
+
+				// sometimes the sizes will differ between players (e.g. death)
+				double adjustedPlayerSize = currentPlayerSize;
 
 				BufferedImage frame = null;
 
@@ -148,17 +198,12 @@ public class GameView extends JPanel implements Observer {
 
 				// get the next frame of the character
 
-				frame = character.getNextFrame(oldX, oldY, newX, newY);
+				frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
 				points.put(character, new Point(newX, newY));
 
 				if (debugPaths) {
 					pointTrail.get(character).add(new Point(newX, newY));
 				}
-
-				// determine the size of the player sprite
-
-				int sizeX = (int) (frame.getWidth() * multiplier);
-				int sizeY = (int) (frame.getHeight() * multiplier);
 
 				// if the character is dying they need to get smaller
 
@@ -170,12 +215,11 @@ public class GameView extends JPanel implements Observer {
 					if (step < 50) {
 
 						deathModifier = (int) (step);
-						sizeX -= deathModifier;
-						sizeY -= deathModifier;
+						adjustedPlayerSize -= deathModifier;
 						character.incDyingStep();
 					} else {
-						sizeX = 0;
-						sizeY = 0;
+						adjustedPlayerSize = 0;
+						adjustedPlayerSize = 0;
 						character.setVisible(false);
 					}
 
@@ -190,8 +234,8 @@ public class GameView extends JPanel implements Observer {
 				// fancy mathemagic to get the right position even with death or
 				// different screen size
 
-				int actualX = (int) ((centreX + deathModifier / 2) * multiplier);
-				int actualY = (int) ((centreY + deathModifier / 2) * multiplier);
+				int actualX = (int) ((centreX + deathModifier / 2) * currentMultiplier);
+				int actualY = (int) ((centreY + deathModifier / 2) * currentMultiplier);
 
 				if (debugPaths) {
 					g.setColor(Color.WHITE);
@@ -199,23 +243,25 @@ public class GameView extends JPanel implements Observer {
 					ArrayList<Point> charPoints = pointTrail.get(character);
 
 					for (int i = 0; i < charPoints.size() - 1; i++) {
-						g.drawLine((int) (charPoints.get(i).getX() * multiplier),
-								(int) (charPoints.get(i).getY() * multiplier + offset),
-								(int) (charPoints.get(i + 1).getX() * multiplier),
-								(int) (charPoints.get(i + 1).getY() * multiplier + offset));
+						g.drawLine((int) (charPoints.get(i).getX() * currentMultiplier),
+								(int) (charPoints.get(i).getY() * currentMultiplier + currentOffset),
+								(int) (charPoints.get(i + 1).getX() * currentMultiplier),
+								(int) (charPoints.get(i + 1).getY() * currentMultiplier + currentOffset));
 					}
 				}
 
 				// draw the player!
 
-				g.drawImage(frame, (int) actualX, (int) (actualY + offset), sizeX, sizeY, this);
+				g.drawImage(frame, actualX, (int) (actualY + currentOffset), (int) adjustedPlayerSize,
+						(int) adjustedPlayerSize, this);
 
 				// draw the arrowhead for the player
 
 				BufferedImage arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
 
-				g.drawImage(arrow, (int) (actualX), (int) (actualY + offset - (50 * multiplier) + deathModifier),
-						(int) (sizeX), (int) (sizeY), this);
+				g.drawImage(arrow, (int) (actualX),
+						(int) (actualY + currentOffset - (50 * currentMultiplier) + deathModifier),
+						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
 
 				// if the player is dashing, draw the fire sprite
 
@@ -264,9 +310,9 @@ public class GameView extends JPanel implements Observer {
 
 					}
 
-					g.drawImage(character.getDashSprite(), (int) (dashX * multiplier),
-							(int) ((dashY * multiplier) + offset), (int) (50 * multiplier), (int) (50 * multiplier),
-							this);
+					g.drawImage(character.getDashSprite(fullscreen), (int) (dashX * currentMultiplier),
+							(int) ((dashY * currentMultiplier) + currentOffset), (int) adjustedPlayerSize,
+							(int) adjustedPlayerSize, this);
 				}
 			}
 
@@ -274,26 +320,14 @@ public class GameView extends JPanel implements Observer {
 
 		// draw black bars if the ratio is not 16:9
 
-		if (notSixteenNine) {
+		if (notSixteenNine && fullscreen) {
 
 			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, (int) screenWidth, (int) offset);
-			g.fillRect(0, (int) (screenHeight - offset), (int) screenWidth, (int) offset);
+			g.fillRect(0, 0, (int) currentWindowWidth, (int) currentOffset);
+			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
 		Toolkit.getDefaultToolkit().sync();
-	}
-
-	/**
-	 * Sets the scaling multiplier
-	 * 
-	 * @param mult
-	 *            the multiplier
-	 */
-
-	public void setMultiplier(double mult) {
-		this.multiplier = mult;
-		repaint();
 	}
 
 	/**
@@ -306,6 +340,39 @@ public class GameView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		repaint();
 
+	}
+
+	/**
+	 * Set the correct sizes for sprites based on whether the game is fullscreen
+	 * or not
+	 * 
+	 * @param fullscreen
+	 *            whether the game is fullscreen
+	 */
+
+	public void setFullScreen(boolean fullscreen) {
+
+		if (fullscreen) {
+			currentMapHeight = fullScreenMapHeight;
+			currentMapWidth = fullScreenMapWidth;
+			currentPlayerSize = fullScreenPlayerSize;
+			currentWindowHeight = fullScreenWindowHeight;
+			currentWindowWidth = fullScreenWindowWidth;
+			currentOffset = offset;
+			currentMultiplier = multiplier;
+			currentMapSprite = bigMapSprite;
+			this.fullscreen = true;
+		} else {
+			currentMapHeight = ordinaryMapHeight;
+			currentMapWidth = ordinaryMapWidth;
+			currentPlayerSize = ordinaryPlayerSize;
+			currentWindowHeight = ordinaryMapHeight;
+			currentWindowWidth = ordinaryMapWidth;
+			currentOffset = 0;
+			currentMultiplier = 1;
+			currentMapSprite = mapSprite;
+			this.fullscreen = false;
+		}
 	}
 
 }
