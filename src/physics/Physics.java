@@ -202,6 +202,7 @@ public class Physics extends Thread implements ActionListener {
 				c.setLastCollidedWith(null, 0);
 			}
 		}
+		//System.out.println("Got here");
 		move(c);
 	}
 	

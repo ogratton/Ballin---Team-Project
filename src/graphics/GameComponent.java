@@ -80,14 +80,14 @@ public class GameComponent extends JFrame implements ActionListener {
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
 				model.addObserver(view);
-				if (model.getId() == resources.getId()) {
+				if (model.getId().equals(resources.getId())) {
 					model.addObserver(updater);
 				}
 			}
 		}
 		
 		for (int i = 0; i < characters.size(); i++) {
-			if (characters.get(i).getId() == resources.getId()) {
+			if (characters.get(i).getId().equals(resources.getId())) {
 				secondPlayerIndex = i;
 				// System.out.println("Index: " + secondPlayerIndex);
 				break;

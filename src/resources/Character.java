@@ -1,6 +1,7 @@
 package resources;
 
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -58,7 +59,7 @@ public class Character extends Observable implements Collidable {
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
-	private int id;
+	private UUID id;
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
@@ -184,11 +185,11 @@ public class Character extends Observable implements Collidable {
 		dead = false;
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

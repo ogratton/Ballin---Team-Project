@@ -3,6 +3,7 @@ package resources;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.UUID;
 
 import resources.Map.Tile;
 
@@ -45,7 +46,7 @@ public class Resources {
 	private Map map;
 	
 	// client ID
-	private int id;
+	private UUID id;
 	
 	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
 	
@@ -59,11 +60,11 @@ public class Resources {
 		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are implemented
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	
