@@ -427,7 +427,6 @@ public class Map {
 	}
 	
 	/**
-	 * TODO test
 	 * Converts from tile coords to map coords
 	 * Gives the coords of the centre of the tile
 	 * @param row

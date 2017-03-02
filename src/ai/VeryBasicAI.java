@@ -54,16 +54,6 @@ public class VeryBasicAI extends Thread
 	 * centre
 	 * This will make it look more human, hopefully
 	 * 
-	 * XXX I think the problem with the movement at the moment is the
-	 * 'fuzziness'
-	 * When the tick is slow, it is more likely it will still be in the right
-	 * square
-	 * But when the tick is high, it will probably have overshot by the time it
-	 * checks
-	 * Can't rely on a good-seeming speed because lag on different machines will
-	 * affect it
-	 * Also low tick speeds make the ai move sooooo slowly
-	 * 
 	 * TODO If the AI gets knocked closer to its final destination but farther
 	 * from its next waypoint,
 	 * it will run backwards to the waypoint rather than take advantage of the
@@ -182,7 +172,6 @@ public class VeryBasicAI extends Thread
 				{
 					// Move in random directions
 					// But preferably not off the edge
-					// TODO broken, but probably just cos of the suicidal path-finding
 
 					if (!waypoints.isEmpty())
 					{
@@ -317,10 +306,13 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * 
+	 * TODO this should use the new costMask
+	 * 
 	 * Move perpendicularly away from the imminent abyss
 	 * TODO how would we cope if were surrounded on two/four sides?
 	 * - shouldn't happen, hopefully
-	 * TODO do we care about diagonals?
+	 * do we care about diagonals?
 	 * 
 	 * @param currentTileIndex the index of the current tile
 	 */
@@ -329,7 +321,6 @@ public class VeryBasicAI extends Thread
 
 		//		setAllMovementFalse();
 
-		// TODO I don't get why I have to cast these, but maybe it's a Point thing
 		int column = (int) currentTileIndex.getX();
 		int row = (int) currentTileIndex.getY();
 		// get the surrounding tiles
