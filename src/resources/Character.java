@@ -1,5 +1,7 @@
 package resources;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -55,7 +57,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// variables imported from CharacterModel
 	private BufferedImage characterSheet;
 	private BufferedImage dashSheet;
-	private ArrayList<BufferedImage> rollingSprites, directionSprites, dashSprites;
+	private ArrayList<BufferedImage> rollingSprites, dashSprites, bigRollingSprites, bigDashSprites;
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
@@ -80,12 +82,12 @@ public class Character extends Observable implements Collidable_Circle {
 	private Character lastCollidedWith = null;
 	// What time this character last collided
 	private int lastCollidedTime = -1;
-	
+
 	private CollidableType type = CollidableType.Character;
 	private Power lastPowerup;
 	private int lastPowerupTime;
 	private boolean hasPowerup = false;
-	
+
 	private int teamNumber;
 
 	/**
@@ -104,7 +106,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public Character(Class c) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0);
 	}
-	
+
 	/**
 	 * Default character with a given class and player number
 	 * 
@@ -169,14 +171,12 @@ public class Character extends Observable implements Collidable_Circle {
 
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
-		directionSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
 					SheetDeets.CHARACTERS_SIZEX);
 			rollingSprites.add(sprite);
-			directionSprites.add(sprite);
 		}
 
 		for (int i = 0; i < SheetDeets.MISC_COLS; i++) {
@@ -206,7 +206,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return the frame
 	 */
 
-	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
+	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY, boolean fullscreen) {
 
 		int delX = newX - oldX;
 		int delY = newY - oldY;
@@ -259,13 +259,20 @@ public class Character extends Observable implements Collidable_Circle {
 			break;
 		}
 
-			if (rollingFrame == 32)
-				rollingFrame = 0;
+		if (rollingFrame == 32)
+			rollingFrame = 0;
 
-			if (rollingFrame == -1)
-				rollingFrame = 31;
-			
-		BufferedImage sprite = this.rollingSprites.get(rollingFrame / 4);
+		if (rollingFrame == -1)
+			rollingFrame = 31;
+
+		BufferedImage sprite = null;
+
+		if (fullscreen) {
+			sprite = this.bigRollingSprites.get(rollingFrame / 4);
+		} else {
+			sprite = this.rollingSprites.get(rollingFrame / 4);
+		}
+
 		this.currentFrame = sprite;
 		return sprite;
 	}
@@ -277,8 +284,12 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return the dash sprite
 	 */
 
-	public BufferedImage getDashSprite() {
-
+	public BufferedImage getDashSprite(boolean fullscreen) {
+		
+		if(fullscreen){
+			return this.bigDashSprites.get(directionFrame);
+		}
+		
 		return this.dashSprites.get(directionFrame);
 
 	}
@@ -1236,23 +1247,25 @@ public class Character extends Observable implements Collidable_Circle {
 	public void incrementScore(int n) {
 		score += n;
 	}
-	
+
 	/**
-	 * @param c The character that was collided with
-	 * @param time The time at which they collided
+	 * @param c
+	 *            The character that was collided with
+	 * @param time
+	 *            The time at which they collided
 	 */
 	public void setLastCollidedWith(Character c, int time) {
 		this.lastCollidedWith = c;
 		this.lastCollidedTime = time;
 	}
-	
+
 	/**
 	 * @return Who this character last collided with
 	 */
 	public Character getLastCollidedWith() {
 		return lastCollidedWith;
 	}
-	
+
 	/**
 	 * @return When this character last collided
 	 */
@@ -1268,7 +1281,9 @@ public class Character extends Observable implements Collidable_Circle {
 	public CollidableType getType() {
 		return type;
 	}
-	//private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
+
+	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
+	// 0.0;
 	public void applyPowerup(Powerup p, int time) {
 		Power pow = p.getPower();
 		lastPowerup = pow;
@@ -1276,29 +1291,29 @@ public class Character extends Observable implements Collidable_Circle {
 		switch (pow) {
 		case Speed:
 			// max speed * 2, acc * 2
-			setMaxDx(maxdx*2);
-			setMaxDy(maxdy*2);
-			setAcc(acc*2);
+			setMaxDx(maxdx * 2);
+			setMaxDy(maxdy * 2);
+			setAcc(acc * 2);
 		case Mass:
 			// Mass * 10, max speed / 2, acc / 2
-			setMass(mass*10);
-			setMaxDx(maxdx/2);
-			setMaxDy(maxdy/2);
-			setAcc(acc/2);
+			setMass(mass * 10);
+			setMaxDx(maxdx / 2);
+			setMaxDy(maxdy / 2);
+			setAcc(acc / 2);
 		}
 	}
-	
+
 	public void revertPowerup() {
 		switch (lastPowerup) {
 		case Speed:
-			setMaxDx(maxdx/2);
-			setMaxDy(maxdy/2);
-			setAcc(acc/2);
+			setMaxDx(maxdx / 2);
+			setMaxDy(maxdy / 2);
+			setAcc(acc / 2);
 		case Mass:
-			setMass(mass/10);
-			setMaxDx(maxdx*2);
-			setMaxDy(maxdy*2);
-			setAcc(acc*2);
+			setMass(mass / 10);
+			setMaxDx(maxdx * 2);
+			setMaxDy(maxdy * 2);
+			setAcc(acc * 2);
 		}
 	}
 
@@ -1324,5 +1339,36 @@ public class Character extends Observable implements Collidable_Circle {
 
 	public void setTeamNumber(int teamNumber) {
 		this.teamNumber = teamNumber;
+	}
+
+	private BufferedImage resize(BufferedImage image, double multiplier) {
+		int w = image.getWidth();
+		int h = image.getHeight();
+		BufferedImage big = new BufferedImage((int) (50 * multiplier), (int) (50 * multiplier), image.getType());
+		Graphics2D g = big.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(image, 0, 0, (int) (50 * multiplier), (int) (50 * multiplier), 0, 0, w, h, null);
+		g.dispose();
+
+		return big;
+	}
+
+	public void makeSizeSprites(double multiplier) {
+
+		bigRollingSprites = new ArrayList<BufferedImage>();
+		bigDashSprites = new ArrayList<BufferedImage>();
+
+		for (BufferedImage image : rollingSprites) {
+
+			bigRollingSprites.add(resize(image, multiplier));
+
+		}
+
+		for (BufferedImage image : dashSprites) {
+
+			bigDashSprites.add(resize(image, multiplier));
+
+		}
+
 	}
 }

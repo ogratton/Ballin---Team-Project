@@ -62,7 +62,7 @@ class Panel extends JPanel implements ActionListener {
 		super.paintComponent(g);
 
 		g.clearRect(0, 0, 250, 250);
-		g.drawImage(resources.getPlayerList().get(0).getNextFrame(0, 0, x, y), 85, 85, 50, 50, this);
+		g.drawImage(resources.getPlayerList().get(0).getNextFrame(0, 0, x, y, false), 85, 85, 50, 50, this);
 
 		Character character = resources.getPlayerList().get(0);
 
@@ -114,7 +114,7 @@ class Panel extends JPanel implements ActionListener {
 			}
 
 			if(dashX != 0 && dashY != 0)
-				g.drawImage(character.getDashSprite(), dashX, dashY, 50, 50, this);
+				g.drawImage(character.getDashSprite(false), dashX, dashY, 50, 50, this);
 		}
 
 	}

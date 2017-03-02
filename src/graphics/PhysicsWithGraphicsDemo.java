@@ -2,7 +2,9 @@ package graphics;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.util.Random;
+
+import javax.swing.SwingUtilities;
+
 import ai.VeryBasicAI;
 import ai.pathfinding.MapCosts;
 import physics.Physics;
@@ -97,8 +99,9 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
 		ai3.start();
 		
-		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+
+
 
 	}
 	

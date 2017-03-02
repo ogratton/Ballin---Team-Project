@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -70,14 +72,7 @@ public class NetworkingDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		// create ui thread
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Graphics g = new Graphics(resources, updater, false);
-				g.start();
-			}
-		});
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
 	
 	public static void setGame(ConnectionDataModel cModel, GameData gameData, ObjectOutputStream toServer) {
@@ -128,13 +123,6 @@ public class NetworkingDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		// create ui thread
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Graphics g = new Graphics(resources, updater, false);
-				g.start();
-			}
-		});
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
 }

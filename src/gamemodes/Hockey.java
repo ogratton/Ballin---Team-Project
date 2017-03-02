@@ -2,6 +2,8 @@ package gamemodes;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -34,8 +36,7 @@ public class Hockey extends Thread implements GameModeTeams {
 		// Start game
 		Physics p = new Physics(resources);
 		p.start();
-		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
