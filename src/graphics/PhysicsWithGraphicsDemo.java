@@ -103,7 +103,7 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
 		ai3.start();
 		
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		SwingUtilities.invokeLater(new Graphics(resources, null, true));
 
 
 

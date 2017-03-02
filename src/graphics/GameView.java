@@ -158,22 +158,30 @@ public class GameView extends JPanel implements Observer {
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
-		/*
-		 * destList = resources.getDestList();
-		 * 
-		 * for (Point p : destList) { if (!fullDestList.contains(p)) {
-		 * fullDestList.add(p); } }
-		 * 
-		 * if (debugPaths) { g.setColor(Color.RED);
-		 * 
-		 * for (int i = 0; i < fullDestList.size() - 1; i++) {
-		 * 
-		 * g.drawLine((int) fullDestList.get(i).getX(), (int)
-		 * fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
-		 * (int) fullDestList.get(i + 1).getY());
-		 * 
-		 * } }
-		 */
+		
+		 destList = resources.getDestList();
+		 
+		for (Point p : destList)
+		{
+			if (!fullDestList.contains(p))
+			{
+				fullDestList.add(p);
+			}
+		}
+
+		if (debugPaths)
+		{
+			g.setColor(Color.RED);
+
+			for (int i = 0; i < fullDestList.size() - 1; i++)
+			{
+
+				g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
+						(int) fullDestList.get(i + 1).getY());
+
+			}
+		}
+		 
 
 		// drawing each of the characters on the board
 

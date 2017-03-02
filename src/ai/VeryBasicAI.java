@@ -295,10 +295,12 @@ public class VeryBasicAI extends Thread
 	{
 		return !non_edge.contains(tile);
 	}
-	
+
 	/**
 	 * Convert a list of waypoints of tiles to use the coord system
-	 * @param waypoints a list of waypoints that uses the same coords as the character
+	 * 
+	 * @param waypoints a list of waypoints that uses the same coords as the
+	 * character
 	 * @return
 	 */
 	private LinkedList<Point> convertWaypoints(LinkedList<Point> waypoints)
@@ -310,7 +312,7 @@ public class VeryBasicAI extends Thread
 			Point converted = resources.getMap().tileCoordsToMapCoords(old.x, old.y);
 			newWays.add(i, converted);
 		}
-		
+
 		return newWays;
 	}
 
@@ -365,9 +367,10 @@ public class VeryBasicAI extends Thread
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>
 	 * n.b: This uses coords not tiles
+	 * 
 	 * @param x coord
 	 * @param y coord
-	 * @return are we nearly there yet? 
+	 * @return are we nearly there yet?
 	 * @throws InterruptedException
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
@@ -411,6 +414,7 @@ public class VeryBasicAI extends Thread
 	/**
 	 * 
 	 * Are two coords equal give or take fuzziness?
+	 * 
 	 * @param coord1
 	 * @param coord2
 	 * @return true if the two values are close enough
