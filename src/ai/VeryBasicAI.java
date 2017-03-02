@@ -3,7 +3,6 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Random;
 
 import ai.pathfinding.AStarSearch;
 import resources.Character;
@@ -21,7 +20,6 @@ public class VeryBasicAI extends Thread
 		COWARD, // runs from all danger
 		AGGRESSIVE, // actively seeks other players
 
-		CLOUSEAU, // debug: Follows a list of points dumbly
 		POIROT, // use A* search to follow a list of points more intelligently
 		ROVING, // debug: moves randomly
 		PACING, // debug: moves up&down/left&right
@@ -31,19 +29,18 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 10;
+	private final double fuzziness = 25;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
-	private final long tick = 70; // loop every <tick>ms
+	private final long tick = 30; // loop every <tick>ms
 
 	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
-	private Random r;
-	private int tempID;
+	private int id;
 
 	private AStarSearch aStar;
-	
+
 	private LinkedList<Point> waypoints;
 
 	/*
@@ -57,7 +54,10 @@ public class VeryBasicAI extends Thread
 	 * centre
 	 * This will make it look more human, hopefully
 	 * 
-	 * TODO Test pathfinding
+	 * TODO If the AI gets knocked closer to its final destination but farther
+	 * from its next waypoint,
+	 * it will run backwards to the waypoint rather than take advantage of the
+	 * collision
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -77,11 +77,9 @@ public class VeryBasicAI extends Thread
 		non_edge.addAll(bad_tiles);
 		non_edge.add(Tile.FLAT);
 
-		r = new Random();
-
 		waypoints = new LinkedList<Point>();
-		
-		tempID = r.nextInt(500);
+
+		id = character.getId();
 
 		aStar = new AStarSearch(resources);
 	}
@@ -101,12 +99,17 @@ public class VeryBasicAI extends Thread
 			Thread.sleep(1000);
 
 			boolean success = true;
-			
-			// this is setting things up for the debug Detective
-			Point[] destinations = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
-			int i = 0;
 
-			
+			// this is setting things up for the debug Detective
+			Point[] destinationPix = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
+			Point[] destinations = new Point[destinationPix.length];
+			for (int i = 0; i < destinations.length; i++)
+			{
+				destinations[i] = getTileCoords(destinationPix[i]);
+				//				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
+			}
+
+			int i = 0;
 
 			while (!character.isDead())
 			{
@@ -120,34 +123,7 @@ public class VeryBasicAI extends Thread
 					moveAwayFromEdge(getCurrentTileCoords());
 					//					System.out.println("Near an edge!");
 				}
-				if (behaviour == Behaviour.CLOUSEAU)
-				{
-					/*
-					 * CLOUSEAU BEHAVIOUR:
-					 * Uses 'as-the-crow-flies' pathfinding, causing it to
-					 * probably fall into holes
-					 */
-
-					//System.out.println("Target: " + destinations[i]);
-
-					if (i < destinations.length)
-					{
-						Thread.sleep(10);
-						success = moveTo(destinations[i].getX(), destinations[i].getY());
-						if (success)
-						{
-							//System.out.println("Checkpoint reached! " + character.getX() + ", " + character.getY());
-							//System.out.println(resources.getMap().tileCoords(character.getX(), character.getY()));
-							i++;
-							success = false; // not strictly necessary as it will reset next loop anyway, but hey-ho
-							if (i < destinations.length)
-							{
-								//System.out.println("Target: " + destinations[i]);
-							}
-						}
-					}
-				}
-				else if (behaviour == Behaviour.POIROT)
+				if (behaviour == Behaviour.POIROT)
 				{
 					/*
 					 * POIROT BEHAVIOUR:
@@ -157,10 +133,11 @@ public class VeryBasicAI extends Thread
 
 					if (!waypoints.isEmpty())
 					{
-						success = moveTo(waypoints.removeFirst());
+						success = moveTo(waypoints.peek());
 						if (success)
 						{
 							success = false;
+							waypoints.removeFirst();
 							//System.out.println("Ze little grey cells, zey have led me to my goal!");
 							brakeChar();
 
@@ -168,13 +145,18 @@ public class VeryBasicAI extends Thread
 					}
 					else
 					{
-						System.out.println(tempID + " made it to destination " + i);
+						System.out.println(id + " made it to destination " + destinations[i]);
 						i++;
 						try
 						{
-							Point charPos = new Point((int) character.getX(), (int) character.getY());
-							waypoints = aStar.search(charPos, destinations[i]);
-							System.out.println(tempID + " pathfinding to point " + i);
+							Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+							System.out.println(charPos);
+							waypoints = convertWaypoints(aStar.search(charPos, destinations[i]));
+
+							resources.setDestList(waypoints);
+							System.out.println(id + " pathfinding to point " + destinations[i]);
+							System.out.println("waypoints: " + waypoints);
+							System.out.println();
 						}
 						catch (ArrayIndexOutOfBoundsException e)
 						{
@@ -190,31 +172,34 @@ public class VeryBasicAI extends Thread
 				{
 					// Move in random directions
 					// But preferably not off the edge
-					// TODO broken, but probably just cos of the suicidal path-finding
-					
+
 					if (!waypoints.isEmpty())
 					{
-						success = moveTo(waypoints.removeFirst());
+						success = moveTo(waypoints.peek());
 						if (success)
 						{
 							success = false;
+							waypoints.removeFirst();
 							brakeChar();
+
 						}
 					}
 					else
 					{
 
-						Point charPos = new Point((int) character.getX(), (int) character.getY());
-						Point newDest = resources.getMap().randPointOnMap();
-						System.out.println("going to try to pathfind to " + newDest);
+						Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+						Point newDest = getTileCoords(resources.getMap().randPointOnMap());
+						//						System.out.println("going to try to pathfind to " + newDest);
 						while (waypoints.isEmpty())
 						{
 							// keep trying to get a new dest until we get a valid path
 							// just in case point given is dodgy
-							waypoints = aStar.search(charPos, newDest);
+							waypoints = convertWaypoints(aStar.search(charPos, newDest));
 						}
-						System.out.println("New destination: " + newDest);		
-						System.out.println(waypoints);
+						//						System.out.println("New destination: " + newDest);		
+
+						//						System.out.println(waypoints);
+						resources.setDestList(waypoints);
 
 					}
 				}
@@ -246,6 +231,11 @@ public class VeryBasicAI extends Thread
 	private Point getCurrentTileCoords()
 	{
 		return resources.getMap().tileCoords(character.getX(), character.getY());
+	}
+
+	private Point getTileCoords(Point p)
+	{
+		return resources.getMap().tileCoords(p.getX(), p.getY());
 	}
 
 	/**
@@ -296,10 +286,33 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * Convert a list of waypoints of tiles to use the coord system
+	 * 
+	 * @param waypoints a list of waypoints that uses the same coords as the
+	 * character
+	 * @return
+	 */
+	private LinkedList<Point> convertWaypoints(LinkedList<Point> waypoints)
+	{
+		LinkedList<Point> newWays = new LinkedList<Point>();
+		for (int i = 0; i < waypoints.size(); i++)
+		{
+			Point old = waypoints.get(i);
+			Point converted = resources.getMap().tileCoordsToMapCoords(old.x, old.y);
+			newWays.add(i, converted);
+		}
+
+		return newWays;
+	}
+
+	/**
+	 * 
+	 * TODO this should use the new costMask
+	 * 
 	 * Move perpendicularly away from the imminent abyss
 	 * TODO how would we cope if were surrounded on two/four sides?
 	 * - shouldn't happen, hopefully
-	 * TODO do we care about diagonals?
+	 * do we care about diagonals?
 	 * 
 	 * @param currentTileIndex the index of the current tile
 	 */
@@ -308,7 +321,6 @@ public class VeryBasicAI extends Thread
 
 		//		setAllMovementFalse();
 
-		// TODO I don't get why I have to cast these, but maybe it's a Point thing
 		int column = (int) currentTileIndex.getX();
 		int row = (int) currentTileIndex.getY();
 		// get the surrounding tiles
@@ -342,14 +354,6 @@ public class VeryBasicAI extends Thread
 		setAllMovementFalse();
 	}
 
-	// TODO are there players in the way?
-	//private boolean isClear
-
-	private boolean moveTo(Point p) throws InterruptedException
-	{
-		return this.moveTo(p.getX(), p.getY());
-	}
-
 	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>
@@ -360,46 +364,46 @@ public class VeryBasicAI extends Thread
 	 * @return are we nearly there yet?
 	 * @throws InterruptedException
 	 */
-	private boolean moveTo(double x, double y) throws InterruptedException
+	private boolean moveTo(Point p) throws InterruptedException
 	{
-		if (fuzzyEqual(character.getX(), x) && fuzzyEqual(character.getY(), y))
+		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
 			brakeChar();
 			return true;
 		}
-		if (fuzzyEqual(character.getX(), x))
+		if (fuzzyEqual(character.getX(), p.x))
 		{
 			brakeChar();
 		}
-		if (fuzzyEqual(character.getY(), y))
+		if (fuzzyEqual(character.getY(), p.y))
 		{
 			brakeChar();
 		}
-		if (character.getX() < x)
+		if (character.getX() < p.x)
 		{
 			character.setLeft(false);
 			character.setRight(true);
 		}
-		if (character.getY() < y)
+		if (character.getY() < p.y)
 		{
 			character.setUp(false);
 			character.setDown(true);
 		}
-		if (character.getX() > x)
+		if (character.getX() > p.x)
 		{
 			character.setRight(false);
 			character.setLeft(true);
 		}
-		if (character.getY() > y)
+		if (character.getY() > p.y)
 		{
 			character.setDown(false);
 			character.setUp(true);
 		}
-
 		return false;
 	}
 
 	/**
+	 * 
 	 * Are two coords equal give or take fuzziness?
 	 * 
 	 * @param coord1

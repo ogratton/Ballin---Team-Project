@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.swing.SwingUtilities;
+
 import ai.VeryBasicAI;
 import graphics.Graphics;
 import physics.Physics;
@@ -51,14 +53,13 @@ public class PathFindingTest
 		VeryBasicAI ai = new VeryBasicAI(resources, playa);
 		ai.start();
 		
-		LinkedList<Point> ll = aStar.search(start, goal);
-		System.out.println(ll);
+		resources.setDestList(aStar.search(start, goal));
+		System.out.println(resources.getDestList());
 		
 		Physics p = new Physics(resources);
 		p.start();
 		
-		Graphics g = new Graphics(resources, null, true);
-		g.start();
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		
 		
 	}

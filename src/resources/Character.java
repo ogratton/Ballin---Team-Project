@@ -1,5 +1,7 @@
 package resources;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -7,8 +9,9 @@ import java.util.Observable;
 
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
+import resources.Powerup.Power;
 
-public class Character extends Observable implements Collidable {
+public class Character extends Observable implements Collidable_Circle {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 25;
 	private static final double default_max_speed_x = 3;
@@ -22,7 +25,7 @@ public class Character extends Observable implements Collidable {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ELF, TEST
+		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK;
 	}; // add to this as we develop more classes.
 
 	// flags for keys pressed.
@@ -55,7 +58,7 @@ public class Character extends Observable implements Collidable {
 	// variables imported from CharacterModel
 	private BufferedImage characterSheet;
 	private BufferedImage dashSheet;
-	private ArrayList<BufferedImage> rollingSprites, directionSprites, dashSprites;
+	private ArrayList<BufferedImage> rollingSprites, dashSprites, bigRollingSprites, bigDashSprites;
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
@@ -81,6 +84,13 @@ public class Character extends Observable implements Collidable {
 	// What time this character last collided
 	private int lastCollidedTime = -1;
 
+	private CollidableType type = CollidableType.Character;
+	private Power lastPowerup;
+	private int lastPowerupTime;
+	private boolean hasPowerup = false;
+
+	private int teamNumber;
+
 	/**
 	 * Default character with default sprite
 	 */
@@ -97,7 +107,7 @@ public class Character extends Observable implements Collidable {
 	public Character(Class c) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0);
 	}
-	
+
 	/**
 	 * Default character with a given class and player number
 	 * 
@@ -162,14 +172,12 @@ public class Character extends Observable implements Collidable {
 
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
-		directionSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
 					SheetDeets.CHARACTERS_SIZEX);
 			rollingSprites.add(sprite);
-			directionSprites.add(sprite);
 		}
 
 		for (int i = 0; i < SheetDeets.MISC_COLS; i++) {
@@ -199,7 +207,7 @@ public class Character extends Observable implements Collidable {
 	 * @return the frame
 	 */
 
-	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY) {
+	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY, boolean fullscreen) {
 
 		int delX = newX - oldX;
 		int delY = newY - oldY;
@@ -252,25 +260,20 @@ public class Character extends Observable implements Collidable {
 			break;
 		}
 
-		switch (classType) {
-		case TEST:
+		if (rollingFrame == 32)
+			rollingFrame = 0;
 
-			BufferedImage sprite = this.directionSprites.get(directionFrame);
-			this.currentFrame = sprite;
-			return sprite;
+		if (rollingFrame == -1)
+			rollingFrame = 31;
 
-		case ELF:
-		case WIZARD:
-		case DEFAULT:
+		BufferedImage sprite = null;
 
-			if (rollingFrame == 32)
-				rollingFrame = 0;
-
-			if (rollingFrame == -1)
-				rollingFrame = 31;
+		if (fullscreen) {
+			sprite = this.bigRollingSprites.get(rollingFrame / 4);
+		} else {
+			sprite = this.rollingSprites.get(rollingFrame / 4);
 		}
 
-		BufferedImage sprite = this.rollingSprites.get(rollingFrame / 4);
 		this.currentFrame = sprite;
 		return sprite;
 	}
@@ -282,8 +285,12 @@ public class Character extends Observable implements Collidable {
 	 * @return the dash sprite
 	 */
 
-	public BufferedImage getDashSprite() {
-
+	public BufferedImage getDashSprite(boolean fullscreen) {
+		
+		if(fullscreen){
+			return this.bigDashSprites.get(directionFrame);
+		}
+		
 		return this.dashSprites.get(directionFrame);
 
 	}
@@ -1241,23 +1248,25 @@ public class Character extends Observable implements Collidable {
 	public void incrementScore(int n) {
 		score += n;
 	}
-	
+
 	/**
-	 * @param c The character that was collided with
-	 * @param time The time at which they collided
+	 * @param c
+	 *            The character that was collided with
+	 * @param time
+	 *            The time at which they collided
 	 */
 	public void setLastCollidedWith(Character c, int time) {
 		this.lastCollidedWith = c;
 		this.lastCollidedTime = time;
 	}
-	
+
 	/**
 	 * @return Who this character last collided with
 	 */
 	public Character getLastCollidedWith() {
 		return lastCollidedWith;
 	}
-	
+
 	/**
 	 * @return When this character last collided
 	 */
@@ -1267,5 +1276,100 @@ public class Character extends Observable implements Collidable {
 
 	public int getPlayerNumber() {
 		return this.playerNo;
+	}
+
+	@Override
+	public CollidableType getType() {
+		return type;
+	}
+
+	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
+	// 0.0;
+	public void applyPowerup(Powerup p, int time) {
+		Power pow = p.getPower();
+		lastPowerup = pow;
+		lastPowerupTime = time;
+		switch (pow) {
+		case Speed:
+			// max speed * 2, acc * 2
+			setMaxDx(maxdx * 2);
+			setMaxDy(maxdy * 2);
+			setAcc(acc * 2);
+		case Mass:
+			// Mass * 10, max speed / 2, acc / 2
+			setMass(mass * 10);
+			setMaxDx(maxdx / 2);
+			setMaxDy(maxdy / 2);
+			setAcc(acc / 2);
+		}
+	}
+
+	public void revertPowerup() {
+		switch (lastPowerup) {
+		case Speed:
+			setMaxDx(maxdx / 2);
+			setMaxDy(maxdy / 2);
+			setAcc(acc / 2);
+		case Mass:
+			setMass(mass / 10);
+			setMaxDx(maxdx * 2);
+			setMaxDy(maxdy * 2);
+			setAcc(acc * 2);
+		}
+	}
+
+	public Power getLastPowerup() {
+		return lastPowerup;
+	}
+
+	public int getLastPowerupTime() {
+		return lastPowerupTime;
+	}
+
+	public void hasPowerup(boolean b) {
+		hasPowerup = b;
+	}
+
+	public boolean hasPowerup() {
+		return hasPowerup;
+	}
+
+	public int getTeamNumber() {
+		return teamNumber;
+	}
+
+	public void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
+	}
+
+	private BufferedImage resize(BufferedImage image, double multiplier) {
+		int w = image.getWidth();
+		int h = image.getHeight();
+		BufferedImage big = new BufferedImage((int) (50 * multiplier), (int) (50 * multiplier), image.getType());
+		Graphics2D g = big.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(image, 0, 0, (int) (50 * multiplier), (int) (50 * multiplier), 0, 0, w, h, null);
+		g.dispose();
+
+		return big;
+	}
+
+	public void makeSizeSprites(double multiplier) {
+
+		bigRollingSprites = new ArrayList<BufferedImage>();
+		bigDashSprites = new ArrayList<BufferedImage>();
+
+		for (BufferedImage image : rollingSprites) {
+
+			bigRollingSprites.add(resize(image, multiplier));
+
+		}
+
+		for (BufferedImage image : dashSprites) {
+
+			bigDashSprites.add(resize(image, multiplier));
+
+		}
+
 	}
 }

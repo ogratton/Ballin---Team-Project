@@ -1,11 +1,13 @@
 package graphics;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 import networking.Updater;
 import resources.Resources;
 
-public class Graphics extends Thread {
+public class Graphics implements Runnable {
 
 	Resources resources;
 	Updater updater;
@@ -25,13 +27,13 @@ public class Graphics extends Thread {
 	
 		
 		GameComponent comp = new GameComponent(resources, 1200, 675, updater, debugPaths);
-	
-		comp.setUndecorated(false);
-		comp.setSize(1200, 675);
+		// since apparently setUndecorated won't work on CentOS :'(
+		comp.getContentPane().setPreferredSize(new Dimension(1200, 675));
+		comp.pack();
+		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program
 		comp.setTitle("" + resources.getId());
-		comp.setVisible(true);
 		
 	}
 

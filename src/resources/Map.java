@@ -21,6 +21,9 @@ public class Map {
 	// to calculate the new speed.
 	private double friction;
 	private double gravity;
+	
+	private int[][] proxMask;
+	private double[][] costMask;
 
 	// any areas of different physics on the same map, starts at their origin.
 	// Preferably we should avoid a third level of recursion.
@@ -72,7 +75,7 @@ public class Map {
 
 	public Map(int width, int height) {
 
-		this(new Point2D.Double(0, 0), width, height, 5, 0.0, new ArrayList<Wall>());
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>());
 	}
 
 	/**
@@ -90,7 +93,7 @@ public class Map {
 	 */
 
 	public Map(int width, int height, Tile[][] tile, World world) {
-		this(new Point2D.Double(0, 0), width, height, 0.99, 0.0, new ArrayList<Wall>(), tile, world);
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world);
 	}
 
 	/**
@@ -422,6 +425,21 @@ public class Map {
 		Point p = tileCoords(x,y);
 		return new Point((int)p.getX() * SheetDeets.TILES_SIZEX, (int)p.getY() * SheetDeets.TILES_SIZEY);
 	}
+	
+	/**
+	 * Converts from tile coords to map coords
+	 * Gives the coords of the centre of the tile
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public Point tileCoordsToMapCoords(int row, int col)
+	{
+		int x = (int) (col * SheetDeets.TILES_SIZEX + 0.5 * SheetDeets.TILES_SIZEX);
+		int y = (int) (row * SheetDeets.TILES_SIZEY + 0.5 * SheetDeets.TILES_SIZEX);
+		return new Point(x,y);
+		
+	}
 
 	/**
 	 * Check whether some coordinates are on the map.
@@ -441,12 +459,14 @@ public class Map {
 	 */
 	public void spawn(Character c) {
 		//reset all 'character state' flags
+		c.setLastCollidedWith(null, 0);
 		c.setDead(false);
 		c.setFalling(false);
 		c.setDashing(false);
 		c.setBlocking(false);
 		c.setVisible(true);
 		c.setDyingStep(0);
+		c.hasPowerup(false);
 		//set velocity
 		c.setDx(0);
 		c.setDy(0);
@@ -456,17 +476,44 @@ public class Map {
 		c.setY(p.y);
 	}
 	
-	public Point randPointOnMap() {
+	public void spawn(Puck puck) {
+		puck.setLastCollidedWith(null, 0);
+		puck.setDead(false);
+		puck.setFalling(false);
+		puck.setVisible(true);
+		puck.setDyingStep(0);
+		puck.setDx(0);
+		puck.setDy(0);
+		//TODO Get middle of map for puck spawn point
+		Point p = new Point(200,200);
+		puck.setX(p.x);
+		puck.setY(p.y);
+	}
+	
+	public void spawnPowerup(Powerup p) {
+		Point point = randPointOnMap();
+		p.setX(point.x);
+		p.setY(point.y);
+	}
+	
+	public Point randPointOnMap()
+	{
 		//set location
 		double randX = 0.0;
 		double randY = 0.0;
-		Tile t = null;
-		do {
+		int i = 0;
+		int j = 0;
+		do
+		{
 			randX = Math.random() * width;
 			randY = Math.random() * height;
-			t = tileAt(randX, randY);
-		} while(Map.tileCheck(t) && t == Tile.WALL);
-		return new Point((int)randX,(int)randY);
+			
+			Point randP = tileCoords(randX, randY);
+			i = randP.x;
+			j = randP.y;
+		}
+		while (proxMask[i][j] < 2); // XXX never spawn anyone fewer than 2 tiles from the edge (arbitrary choice!)
+		return new Point((int) randX, (int) randY);
 	}
 	
 	/**
@@ -477,6 +524,26 @@ public class Map {
 	public static boolean tileCheck(Tile tile) {
 		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
 
+	}
+	
+	public double[][] getCostMask()
+	{
+		return costMask;
+	}
+	
+	public void setCostMask(double[][] costMask)
+	{
+		this.costMask = costMask;
+	}
+	
+	public int[][] getProxMask()
+	{
+		return proxMask;
+	}
+	
+	public void setProxMask(int[][] proxMask)
+	{
+		this.proxMask = proxMask;
 	}
 
 	

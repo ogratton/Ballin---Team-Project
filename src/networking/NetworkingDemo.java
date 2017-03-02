@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -62,58 +64,9 @@ public class NetworkingDemo {
 		// create physics thread
 		Physics p = new Physics(resources);
 		p.start();
-		
+
 		resourcesMap.put(session.getId(), resources);
+
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
-	
-//	public static void setGame(ConnectionDataModel cModel, GameData gameData, ObjectOutputStream toServer) {
-//		
-//		Character newPlayer;
-//		double x;
-//		double y;
-//		int id;
-//		Resources resources = new Resources();
-//		resources.setId(cModel.getMyId());
-//		Updater updater = new Updater(cModel, toServer, resources);
-//		List<CharacterInfo> charactersList = gameData.getCharactersList();
-//		CharacterInfo info;
-//		for(int i=0; i<charactersList.size(); i++) {
-//			info = charactersList.get(i);
-//			x = info.getX();
-//			y = info.getY();
-//		    id = info.getId();
-//			newPlayer = new Character(Character.Class.ELF, 1);
-//			newPlayer.setX(x);
-//			newPlayer.setY(y);
-//			newPlayer.setId(id);
-//			resources.addPlayerToList(newPlayer);;
-//			cModel.getCharacters().put(id, newPlayer);
-//		}
-//		
-//		cModel.setCharactersList(charactersList);
-//		
-//		// make the map the default just in case the following fails
-//		Map.Tile[][] tiles = null;	
-//		MapReader mr = new MapReader();	
-//		try
-//		{
-//			tiles = mr.readMap("./resources/maps/map1.csv");
-//			System.out.println("I guess it worked then");
-//		}
-//		catch (IOException e)
-//		{
-//			System.out.println("File not found");
-//			e.printStackTrace();
-//			
-//		}
-//		
-//		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
-//		cModel.setResources(resources);
-//			
-//		// create physics thread
-//		Physics p = new Physics(resources);
-//		p.start();
-//
-//		
-//	}
 }

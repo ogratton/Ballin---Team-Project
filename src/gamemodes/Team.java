@@ -121,4 +121,11 @@ public class Team {
 			c.setLives(n);
 		}
 	}
+	
+	/**
+	 * @return All members of the team
+	 */
+	public ArrayList<Character> getMembers() {
+		return members;
+	}
 }

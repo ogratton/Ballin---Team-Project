@@ -1,10 +1,12 @@
 package graphics;
 
-import java.awt.EventQueue;
+import java.awt.Point;
 import java.io.IOException;
-import java.util.Random;
+
+import javax.swing.SwingUtilities;
 
 import ai.VeryBasicAI;
+import ai.pathfinding.MapCosts;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
@@ -42,41 +44,51 @@ public class PhysicsWithGraphicsDemo {
 			
 		}
 		
+		
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		new MapCosts(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
 
-		player.setX(400);
-		player.setY(400);
+		Point coords = new Point(400,400);
+		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+		
+		player.setX(coords.x);
+		player.setY(coords.y);
 
-		Character player1 = new Character(Character.Class.ELF, 2);
+		Character player1 = new Character(Character.Class.WARRIOR, 2);
 
 		player1.setX(534);
 		player1.setY(454);
 
-		Character player2 = new Character(Character.Class.WIZARD, 0);
+		Character player2 = new Character(Character.Class.ARCHER, 3);
 
-		player2.setX(800);
-		player2.setY(300);
+		player2.setX(780);
+		player2.setY(400);
 
-		
+		Character player3 = new Character(Character.Class.MONK, 4);
+		player3.setX(1023);
+		player3.setY(500);
+
 		
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
+		resources.addPlayerToList(player3);
 
-		/*for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++){
 			
-			Random r = new Random();
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
-			playa.setX(r.nextInt(1200));
-			playa.setY(r.nextInt(675));
+			Point loc = resources.getMap().randPointOnMap();
+			playa.setX(loc.getX());
+			playa.setY(loc.getY());
 			resources.addPlayerToList(playa);
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
 			ai.start();
-		}*/
+		}
 
 		// create physics thread
 		Physics p = new Physics(resources);
@@ -85,8 +97,17 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		/*VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
+		ai2.start();
+		
+		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
+		ai3.start();*/	
+		
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+
+
 
 	}
+	
+
 }

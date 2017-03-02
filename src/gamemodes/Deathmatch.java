@@ -2,9 +2,12 @@ package gamemodes;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
+import resources.Powerup;
 import resources.Resources;
 
 /**
@@ -32,11 +35,13 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources);
 		p.start();
-		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
+				if (timer % 10 == 0) {
+					//spawnPowerup();
+				}
 				timer--;
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -54,6 +59,14 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
 		System.out.println();
+	}
+
+	/**
+	 * Spawn a random powerup in a random location
+	 */
+	private void spawnPowerup() {
+		System.out.println("Spawning powerup");
+		resources.getMap().spawnPowerup(new Powerup());
 	}
 
 	/**

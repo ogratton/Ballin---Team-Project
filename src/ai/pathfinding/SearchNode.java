@@ -3,13 +3,11 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.util.Comparator;
 
-import resources.Map.Tile;
-
 public class SearchNode
 {
 	private Point location;
 	private SearchNode parent;
-	private double distTravelled;
+	private double costSoFar;
 	private double distToGo;
 
 	private final boolean isEmpty;
@@ -28,15 +26,15 @@ public class SearchNode
 	 * @param location
 	 * @param type
 	 * @param parent
-	 * @param distTravelled
+	 * @param costSoFar
 	 * @param goal
 	 */
-	public SearchNode(Point location, SearchNode parent, double distTravelled, Point goal)
+	public SearchNode(Point location, SearchNode parent, double costSoFar, Point goal)
 	{
 		isEmpty = false;
 		this.location = location;
 		this.parent = parent;
-		this.distTravelled = distTravelled;
+		this.costSoFar = costSoFar;
 		this.distToGo = StaticHeuristics.euclidean(location, goal);
 	}
 
@@ -47,7 +45,7 @@ public class SearchNode
 	 */
 	public double distanceTravelled()
 	{
-		return distTravelled;
+		return costSoFar;
 	}
 
 	/**
