@@ -48,8 +48,12 @@ public class PhysicsWithGraphicsDemo {
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
 
-		player.setX(400);
-		player.setY(400);
+		Point coords = new Point(400,400);
+		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+		
+		player.setX(coords.x);
+		player.setY(coords.y);
 
 		Character player1 = new Character(Character.Class.ELF, 2);
 

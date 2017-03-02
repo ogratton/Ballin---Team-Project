@@ -29,6 +29,7 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
+	private final double fuzziness = 10;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
 
 	private final long tick = 30; // loop every <tick>ms
@@ -39,7 +40,7 @@ public class VeryBasicAI extends Thread
 	private int id;
 
 	private AStarSearch aStar;
-	
+
 	private LinkedList<Point> waypoints;
 
 	/*
@@ -53,14 +54,20 @@ public class VeryBasicAI extends Thread
 	 * centre
 	 * This will make it look more human, hopefully
 	 * 
-	 * XXX I think the problem with the movement at the moment is the 'fuzziness'
-	 * When the tick is slow, it is more likely it will still be in the right square
-	 * But when the tick is high, it will probably have overshot by the time it checks
-	 * Can't rely on a good-seeming speed because lag on different machines will affect it
+	 * XXX I think the problem with the movement at the moment is the
+	 * 'fuzziness'
+	 * When the tick is slow, it is more likely it will still be in the right
+	 * square
+	 * But when the tick is high, it will probably have overshot by the time it
+	 * checks
+	 * Can't rely on a good-seeming speed because lag on different machines will
+	 * affect it
 	 * Also low tick speeds make the ai move sooooo slowly
 	 * 
-	 * TODO If the AI gets knocked closer to its final destination but farther from its next waypoint,
-	 * it will run backwards to the waypoint rather than take advantage of the collision
+	 * TODO If the AI gets knocked closer to its final destination but farther
+	 * from its next waypoint,
+	 * it will run backwards to the waypoint rather than take advantage of the
+	 * collision
 	 * 
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
@@ -81,7 +88,7 @@ public class VeryBasicAI extends Thread
 		non_edge.add(Tile.FLAT);
 
 		waypoints = new LinkedList<Point>();
-		
+
 		id = character.getId();
 
 		aStar = new AStarSearch(resources);
@@ -102,19 +109,17 @@ public class VeryBasicAI extends Thread
 			Thread.sleep(1000);
 
 			boolean success = true;
-			
+
 			// this is setting things up for the debug Detective
 			Point[] destinationPix = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
 			Point[] destinations = new Point[destinationPix.length];
 			for (int i = 0; i < destinations.length; i++)
 			{
 				destinations[i] = getTileCoords(destinationPix[i]);
-//				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
+				//				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
 			}
-			
-			int i = 0;
 
-			
+			int i = 0;
 
 			while (!character.isDead())
 			{
@@ -156,7 +161,7 @@ public class VeryBasicAI extends Thread
 						{
 							Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
 							System.out.println(charPos);
-							waypoints = aStar.search(charPos, destinations[i]);
+							waypoints = convertWaypoints(aStar.search(charPos, destinations[i]));
 
 							resources.setDestList(waypoints);
 							System.out.println(id + " pathfinding to point " + destinations[i]);
@@ -178,7 +183,7 @@ public class VeryBasicAI extends Thread
 					// Move in random directions
 					// But preferably not off the edge
 					// TODO broken, but probably just cos of the suicidal path-finding
-					
+
 					if (!waypoints.isEmpty())
 					{
 						success = moveTo(waypoints.peek());
@@ -195,16 +200,16 @@ public class VeryBasicAI extends Thread
 
 						Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
 						Point newDest = getTileCoords(resources.getMap().randPointOnMap());
-//						System.out.println("going to try to pathfind to " + newDest);
+						//						System.out.println("going to try to pathfind to " + newDest);
 						while (waypoints.isEmpty())
 						{
 							// keep trying to get a new dest until we get a valid path
 							// just in case point given is dodgy
-							waypoints = aStar.search(charPos, newDest);
+							waypoints = convertWaypoints(aStar.search(charPos, newDest));
 						}
-//						System.out.println("New destination: " + newDest);		
-						
-//						System.out.println(waypoints);
+						//						System.out.println("New destination: " + newDest);		
+
+						//						System.out.println(waypoints);
 						resources.setDestList(waypoints);
 
 					}
@@ -233,7 +238,7 @@ public class VeryBasicAI extends Thread
 	{
 		return resources.getMap().tileAt(character.getX(), character.getY());
 	}
-	
+
 	private Point getCurrentTileCoords()
 	{
 		return resources.getMap().tileCoords(character.getX(), character.getY());
@@ -290,6 +295,24 @@ public class VeryBasicAI extends Thread
 	{
 		return !non_edge.contains(tile);
 	}
+	
+	/**
+	 * Convert a list of waypoints of tiles to use the coord system
+	 * @param waypoints a list of waypoints that uses the same coords as the character
+	 * @return
+	 */
+	private LinkedList<Point> convertWaypoints(LinkedList<Point> waypoints)
+	{
+		LinkedList<Point> newWays = new LinkedList<Point>();
+		for (int i = 0; i < waypoints.size(); i++)
+		{
+			Point old = waypoints.get(i);
+			Point converted = resources.getMap().tileCoordsToMapCoords(old.x, old.y);
+			newWays.add(i, converted);
+		}
+		
+		return newWays;
+	}
 
 	/**
 	 * Move perpendicularly away from the imminent abyss
@@ -338,65 +361,64 @@ public class VeryBasicAI extends Thread
 		setAllMovementFalse();
 	}
 
-
 	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>
 	 * n.b: This uses coords not tiles
-	 * 
 	 * @param x coord
 	 * @param y coord
-	 * @return are we nearly there yet?
+	 * @return are we nearly there yet? 
 	 * @throws InterruptedException
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
-	{		
-		Point char_pos = new Point((int) character.getX(), (int) character.getY());
-		Point char_tile = getTileCoords(char_pos);
-		
-		int target_row = p.x;
-		int target_col = p.y;
-		
-		int current_row = char_tile.x;
-		int current_col = char_tile.y;
-		
-		if (current_row == target_row && current_col == target_col)
+	{
+		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
 			brakeChar();
 			return true;
 		}
-		if (current_row == target_row)
+		if (fuzzyEqual(character.getX(), p.x))
 		{
 			brakeChar();
 		}
-		if (current_col == target_col)
+		if (fuzzyEqual(character.getY(), p.y))
 		{
 			brakeChar();
 		}
-		if (current_row < target_row)
-		{
-			character.setUp(false);
-			character.setDown(true);
-		}
-		if (current_col < target_col)
+		if (character.getX() < p.x)
 		{
 			character.setLeft(false);
 			character.setRight(true);
 		}
-		if (current_row > target_row)
+		if (character.getY() < p.y)
 		{
-			character.setDown(false);
-			character.setUp(true);
+			character.setUp(false);
+			character.setDown(true);
 		}
-		if (current_col > target_col)
+		if (character.getX() > p.x)
 		{
 			character.setRight(false);
 			character.setLeft(true);
 		}
-
+		if (character.getY() > p.y)
+		{
+			character.setDown(false);
+			character.setUp(true);
+		}
 		return false;
 	}
 
+	/**
+	 * 
+	 * Are two coords equal give or take fuzziness?
+	 * @param coord1
+	 * @param coord2
+	 * @return true if the two values are close enough
+	 */
+	private boolean fuzzyEqual(double coord1, double coord2)
+	{
+		return (Math.abs(coord1 - coord2) <= fuzziness);
+	}
 
 	/**
 	 * 'Detach' all keys

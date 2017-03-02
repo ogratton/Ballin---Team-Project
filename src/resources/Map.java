@@ -425,6 +425,22 @@ public class Map {
 		Point p = tileCoords(x,y);
 		return new Point((int)p.getX() * SheetDeets.TILES_SIZEX, (int)p.getY() * SheetDeets.TILES_SIZEY);
 	}
+	
+	/**
+	 * TODO test
+	 * Converts from tile coords to map coords
+	 * Gives the coords of the centre of the tile
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public Point tileCoordsToMapCoords(int row, int col)
+	{
+		int x = (int) (col * SheetDeets.TILES_SIZEX + 0.5 * SheetDeets.TILES_SIZEX);
+		int y = (int) (row * SheetDeets.TILES_SIZEY + 0.5 * SheetDeets.TILES_SIZEX);
+		return new Point(x,y);
+		
+	}
 
 	/**
 	 * Check whether some coordinates are on the map.
