@@ -1,15 +1,21 @@
 package networking;
 
+import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import resources.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import graphics.Graphics;
+import resources.Character;
+import resources.MapReader;
 import resources.Resources;
 
 // Gets messages from other clients via the server (by the
@@ -46,7 +52,8 @@ public class ClientReceiver extends Thread {
   @SuppressWarnings("unchecked")
 public void run() {
     Message message = new Message();
-    ConcurrentMap<Integer, Session> sessions;
+    ConcurrentMap<UUID, Session> sessions;
+    //ConcurrentMap<UUID, SerializableSession> serializedSessions;
     
     try {
     	while(message.getCommand() != Command.QUIT) {
@@ -56,52 +63,115 @@ public void run() {
     			switch(message.getNote()) {
     			case COMPLETED:
     				System.out.println("Received sessions from Server");
-    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+//    				serializedSessions = (ConcurrentMap<UUID, SerializableSession>)message.getObject();
+//    				sessions = deSerialize(serializedSessions);
+    				sessions = (ConcurrentMap<UUID, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
     				break;
     			case CREATED:
     				System.out.println("Session created");
-    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+//    				serializedSessions = (ConcurrentMap<UUID, SerializableSession>)message.getObject();
+//    				sessions = deSerialize(serializedSessions);
+    				sessions = (ConcurrentMap<UUID, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
     				cModel.setSessionId(message.getCurrentSessionId());
     				break;
     			case JOINED:
     				System.out.println("Session Joined");
-    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+//    				serializedSessions = (ConcurrentMap<UUID, SerializableSession>)message.getObject();
+//    				sessions = deSerialize(serializedSessions);
+    				sessions = (ConcurrentMap<UUID, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
     				cModel.setSessionId(message.getCurrentSessionId());
     				break;
     			case LEFT:
     				System.out.println("Session Left");
-    				sessions = (ConcurrentMap<Integer, Session>)message.getObject();
+//    				serializedSessions = (ConcurrentMap<UUID, SerializableSession>)message.getObject();
+//    				sessions = deSerialize(serializedSessions);
+    				sessions = (ConcurrentMap<UUID, Session>)message.getObject();
     				cModel.setSessionsTable(sessions);
-    				cModel.setSessionId(0);
+    				cModel.setSessionId(null);
     				break;
     			}
     			break;
     		case SEND_ID:
     			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
+    			// Create a thread for the GUI:
+    		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), toServer);
+    		    gui.start();
     			break;
     		case GAME:
     			GameData gameData;
+    			Resources resources;
     			switch(message.getNote()) {
     			case START:
     				System.out.println("Game Started");
     				gameData = (GameData)message.getObject();
-    				if(!cModel.isGameInProgress()) {
-    					NetworkingDemo.setGame(cModel, gameData, toServer);
-    				}
     				cModel.setGameInProgress(true);
+    				
+    				resources = new Resources();
+    				
+    				Character player;
+    				double x;
+    				double y;
+    				UUID id;
+    				CharacterInfo c;
+    				List<CharacterInfo> info = gameData.getCharactersList();
+    				for(int i=0; i<info.size(); i++) {
+    					c = info.get(i);
+    					id = c.getId();
+    					x = c.getX();
+    					y = c.getY();
+    					
+    					if(id.equals(cModel.getMyId())) {
+    						resources.setId(id);
+    					}
+    					
+    					player = new Character(Character.Class.ELF, 1);
+    					player.setId(id);
+    					player.setXWithoutNotifying(x);
+    					player.setYWithoutNotifying(y);
+    					resources.addPlayerToList(player);
+    					cModel.getCharacters().put(id, player);
+    				}
+    				
+    				//make the map the default just in case the following fails
+			        resources.Map.Tile[][] tiles = null;	
+					MapReader mr = new MapReader();	
+					try
+					{
+						tiles = mr.readMap("./resources/maps/map1.csv");
+						System.out.println("I guess it worked then");
+					}
+					catch (IOException e)
+					{
+						System.out.println("File not found");
+						e.printStackTrace();
+					}
+					
+					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+    				
+    				cModel.setResources(resources);
+    				Updater updater = new Updater(cModel, toServer, resources);
+    				// create ui thread
+    				EventQueue.invokeLater(new Runnable() {
+    					@Override
+    					public void run() {
+    						Graphics g = new Graphics(resources, updater, false);
+    						g.start();
+    					}
+    				});
+    				
     				break;
     			case UPDATE:
     				if(cModel.getResources() != null) {
     					gameData = (GameData)message.getObject();
         				List<CharacterInfo> charactersList = gameData.getCharactersList();
-        				Resources resources = cModel.getResources();
+        				resources = cModel.getResources();
         				List<resources.Character> players = resources.getPlayerList();
         				for(int i=0; i<players.size(); i++) {
         					for(int j=0; j<charactersList.size(); j++) {
-        						if (charactersList.get(j).getId() == players.get(i).getId()) {
+        						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
         							players.get(i).setXWithoutNotifying(charactersList.get(j).getX());
         							players.get(i).setYWithoutNotifying(charactersList.get(j).getY());
         						}
@@ -123,5 +193,22 @@ public void run() {
       System.out.println("Server seems to have died " + e.getMessage());
       System.exit(1); // Give up.
     }
+  }
+
+  private ConcurrentMap<UUID, Session> deSerialize(ConcurrentMap<UUID, SerializableSession> serializedSessions) {
+	  
+	  ConcurrentMap<UUID, Session> sessions = new ConcurrentHashMap<UUID, Session>();
+	  
+	  Iterator<Entry<UUID, SerializableSession>> it =serializedSessions.entrySet().iterator();
+	  while (it.hasNext()) {
+	      java.util.Map.Entry<UUID, SerializableSession> pair = (java.util.Map.Entry<UUID, SerializableSession>)it.next();
+	      sessions.put(pair.getKey(), deSerialize(pair.getValue()));
+	      it.remove();
+	  }
+	  return sessions;
+  }
+  
+  private Session deSerialize(SerializableSession s) {
+		return new Session(s.getId(), s.getClients(), s.isGameInProgress());
   }
 }

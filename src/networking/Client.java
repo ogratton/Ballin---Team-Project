@@ -86,13 +86,11 @@ public class Client extends Thread {
     ClientSender sender = new ClientSender(nickname,toServer, gs);
     ClientReceiver receiver = new ClientReceiver(fromServer, gs, cModel, toServer);
     
-    // Create a thread for the GUI:
-    ClientGUI gui = new ClientGUI(cModel, nickname, toServer);
+    
 
     // Run them in parallel:
     sender.start();
     receiver.start();
-    gui.start();
     
     System.out.println("GUI Initialised.");
     
@@ -102,7 +100,6 @@ public class Client extends Thread {
       toServer.close();
       receiver.join();
       fromServer.close();
-      gui.join();
       server.close();
     }
     catch (IOException e) {

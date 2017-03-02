@@ -2,9 +2,11 @@ package networking;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import resources.Character;
@@ -12,18 +14,27 @@ import resources.Resources;
 
 public class ConnectionData {
 
-	private int sessionId;
-	private ConcurrentMap<Integer, Session> sessions = new ConcurrentHashMap<Integer, Session>();
+	private UUID sessionId;
+	private ConcurrentMap<UUID, Session> sessions = new ConcurrentHashMap<UUID, Session>();
 	private ClientInformation myClient;
 	private Display display;
-	private int highlightedSessionId = 0;
-	private int highlightedClientId = 0;
+	private UUID highlightedSessionId = null;
+	private UUID highlightedClientId = null;
 	private String receivedMessage;
-	private int targetId;
+	private UUID targetId;
 	private boolean gameInProgress;
-	private Map<Integer, Character> characters = new ConcurrentHashMap<Integer, Character>();
+	private Map<UUID, Character> characters = new ConcurrentHashMap<UUID, Character>();
 	private List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 	private Resources resources;
+	private List<GameData> requests = new LinkedList<GameData>();
+	
+	public List<GameData> getRequests() {
+		return requests;
+	}
+	
+	public void setRequests(List<GameData> requests) {
+		this.requests = requests;
+	}
 	
 	public Resources getResources() {
 		return resources;
@@ -41,11 +52,11 @@ public class ConnectionData {
 		this.charactersList = charactersList;
 	}
 
-	public Map<Integer, Character> getCharacters() {
+	public Map<UUID, Character> getCharacters() {
 		return characters;
 	}
 
-	public void setCharacters(Map<Integer, Character> characters) {
+	public void setCharacters(Map<UUID, Character> characters) {
 		this.characters = characters;
 	}
 	
@@ -69,51 +80,52 @@ public class ConnectionData {
 		myClient = client;
 	}
 	
-	public ConcurrentMap<Integer, Session> getSessionsTable() {
+	public ConcurrentMap<UUID, Session> getSessionsTable() {
 		return sessions;
 	}
 	
-	public void setSessionsTable(ConcurrentMap<Integer, Session> sessions) {
+	public void setSessionsTable(ConcurrentMap<UUID, Session> sessions) {
 		this.sessions = sessions;
 	}
 	
-	public int getSessionId() {
+	public UUID getSessionId() {
 		return sessionId;
 	}
 	
-	public void setSessionId(int sessionId) {
+	public void setSessionId(UUID sessionId) {
 		this.sessionId = sessionId;
 	}
 	
-	public ClientInformation getClient(int sessionId, int clientId) {
+	public ClientInformation getClient(UUID sessionId, UUID clientId) {
 		return sessions.get(sessionId).getClient(clientId);
 	}
 	
-	public void addClient(int sessionId, int clientId, ClientInformation client) {
+	public void addClient(UUID sessionId, UUID clientId, ClientInformation client) {
 		sessions.get(sessionId).addClient(clientId, client);
 	}
 	
-	public void removeClient(int sessionId, int clientId) {
+	public void removeClient(UUID sessionId, UUID clientId) {
 		sessions.get(sessionId).removeClient(clientId);
 	}
 	
-	public ConcurrentMap<Integer, Session>getSessions() {
+	public ConcurrentMap<UUID, Session>getSessions() {
 		return sessions;
 	}
 	
-	public List<ClientInformation> getClientsForSession(int sessionId) {
+	public List<ClientInformation> getClientsForSession(UUID sessionId) {
 		return sessions.get(sessionId).getAllClients();
 	}
 	
-	public void addSession(int sessionId) {
-		sessions.put(sessionId, new Session(sessionId, new ConcurrentHashMap<Integer, ClientInformation>()));
+	public void addSession() {
+		Session session = new Session(new ConcurrentHashMap<UUID, ClientInformation>());
+		sessions.put(session.getId(), session);
 	}
 	
-	public void removeSession(int sessionId) {
+	public void removeSession(UUID sessionId) {
 		sessions.remove(sessionId);
 	}
 	
-	public Session getSession(int sessionId) {
+	public Session getSession(UUID sessionId) {
 		return sessions.get(sessionId);
 	}
 	
@@ -133,19 +145,19 @@ public class ConnectionData {
 		this.display = display;
 	}
 	
-	public int getHighlightedSessionId() {
+	public UUID getHighlightedSessionId() {
 		return highlightedSessionId;
 	}
 	
-	public void setHiglightedSessionId(int id) {
+	public void setHiglightedSessionId(UUID id) {
 		highlightedSessionId = id;
 	}
 	
-	public int getHighlightedClientId() {
+	public UUID getHighlightedClientId() {
 		return highlightedClientId;
 	}
 	
-	public void setHighlightedClientId(int clientId) {
+	public void setHighlightedClientId(UUID clientId) {
 		highlightedClientId = clientId;
 	}
 	
@@ -157,11 +169,11 @@ public class ConnectionData {
 		receivedMessage = message;
 	}
 	
-	public int getTargetId() {
+	public UUID getTargetId() {
 		return targetId;
 	}
 	
-	public void setTargetId(int id) {
+	public void setTargetId(UUID id) {
 		targetId = id;
 	}
 	

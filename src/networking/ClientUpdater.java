@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -14,15 +16,15 @@ import javax.swing.JTextField;
 
 import resources.Resources;
 
-public class Updater extends JPanel implements Observer {
+public class ClientUpdater extends JPanel implements Observer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ConnectionDataModel  cModel;
-	private ObjectOutputStream toServer;
-	private Resources resources;
+	private UUID sessionId;
+	private ConcurrentMap<UUID, Resources> resourcesMap;
+	private ConcurrentMap<UUID, Session> sessions;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -31,11 +33,11 @@ public class Updater extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public Updater(ConnectionDataModel cModel, ObjectOutputStream toServer, Resources resources) {
+	public ClientUpdater(UUID sessionId, ConcurrentMap<UUID, Resources> resourcesMap, ConcurrentMap<UUID, Session> sessions) {
 		super();
-		this.cModel = cModel;
-		this.toServer = toServer;
-		this.resources = resources;
+		this.sessionId = sessionId;
+		this.resourcesMap = resourcesMap;
+		this.sessions = sessions;
 	}
 
 /**
@@ -47,29 +49,29 @@ public class Updater extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
-		List<resources.Character> characters = resources.getPlayerList();
+		List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
+		List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 		for(int i=0; i<characters.size(); i++) {
-			if(characters.get(i).getId().equals(cModel.getMyId())) {
-				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isJump(), characters.get(i).isPunch(), characters.get(i).isBlock());
-				GameData gameData = new GameData(info);
-				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
-				try {
-					toServer.writeUnshared(message);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
+			CharacterInfo info = new CharacterInfo(characters.get(i).getId(), characters.get(i).getX(), characters.get(i).getY());
+			charactersList.add(info);
 		}
-		repaint();
+		GameData data = new GameData(charactersList);
+		Message message = new Message(Command.GAME, Note.UPDATE, null, null, sessionId, sessionId, data);
+		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
+		ClientInformation client;
+		for(int i = 0; i<clients.size(); i++) {
+			client = clients.get(i);
+			client.getQueue().offer(message);
+		}
 	}
 	
-	private boolean any(resources.Character c) {
-		if(c.isUp() || c.isDown() || c.isLeft() || c.isRight() || c.isBlock() || c.isJump() || c.isPunch()) {
-			return true;
-		}
-		return false;
+	public UUID getSessionId() {
+		return sessionId;
 	}
 
+	public void setSessionId(UUID sessionId) {
+		this.sessionId = sessionId;
+	}
 }
 
 

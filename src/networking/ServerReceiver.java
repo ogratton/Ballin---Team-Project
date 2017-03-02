@@ -6,9 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import resources.MapReader;
+import resources.Resources;
+
 import java.io.*;
 
 // Gets messages from client and puts them in a queue, for another
@@ -16,8 +21,9 @@ import java.io.*;
 
 public class ServerReceiver extends Thread {
   private ObjectInputStream myClient;
-  private ConcurrentMap<Integer, Session> sessions;
-  private ConcurrentMap<Integer, ClientInformation> clients;
+  private ConcurrentMap<UUID, Session> sessions;
+  private ConcurrentMap<UUID, ClientInformation> clients;
+  private ConcurrentMap<UUID, Resources> resourcesMap;
 
   /**
    * Creates a Server Receiver to receive messages from a client. It interprets these messages and acts accordingly.
@@ -25,16 +31,17 @@ public class ServerReceiver extends Thread {
    * @param c The reader object which reads the messages from the client.
    * @param t The client table containing the information about the client on the server.
    */
-  public ServerReceiver(ObjectInputStream c, ConcurrentMap<Integer, Session> sessions, ConcurrentMap<Integer, ClientInformation> clients) {
+  public ServerReceiver(ObjectInputStream c, ConcurrentMap<UUID, Session> sessions, ConcurrentMap<UUID, ClientInformation> clients, ConcurrentMap<UUID, Resources> resourcesMap) {
     myClient = c;
     this.sessions = sessions;
     this.clients = clients;
+    this.resourcesMap = resourcesMap;
   }
 
   public void run() {
 	  Message message = new Message();
 	  Message response = null;
-	  int sessionId;
+	  UUID sessionId;
 	  Session session;
 	  List<ClientInformation> clientList;
 	  
@@ -48,7 +55,9 @@ public class ServerReceiver extends Thread {
 				  switch(message.getNote()) {
 				  case INDEX:
 					  senderClient = clients.get(message.getSenderId());
-					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), -1, -1, -1, sessions);
+					  //ConcurrentMap<UUID, SerializableSession> serialized = serialize(this.sessions);
+					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
+					  //System.out.println("Sessions Inside While Loop: " + serialize(this.sessions).size());
 					  senderClient.getQueue().offer(response);
 					  break;
 				  case CREATE:
@@ -57,14 +66,13 @@ public class ServerReceiver extends Thread {
 					  if(senderClient.getSession() != null) {
 						  senderClient.getSession().removeClient(senderClient.getId());
 					  }
-					  
-					  int id = generateID(sessions);
-				  	  ConcurrentMap<Integer, ClientInformation> sessionClients = new ConcurrentHashMap<Integer, ClientInformation>();
+				  	  ConcurrentMap<UUID, ClientInformation> sessionClients = new ConcurrentHashMap<UUID, ClientInformation>();
 				  	  sessionClients.put(senderClient.getId(), senderClient);
-				  	  session = new Session(id, sessionClients);
-					  sessions.put(id, session);
+				  	  session = new Session(sessionClients);
+					  sessions.put(session.getId(), session);
+					  resourcesMap.put(session.getId(), new Resources());
 					  senderClient.setSession(session);
-					  response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), -1, session.getId(), -1, sessions);
+					  response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), null, session.getId(), null, sessions);
 					  senderClient.getQueue().offer(response);
 					  System.out.println("Session created.");
 					  break;
@@ -78,7 +86,7 @@ public class ServerReceiver extends Thread {
 					  session = sessions.get(sessionId);
 					  session.addClient(senderClient.getId(), senderClient);
 					  senderClient.setSession(session);
-					  response = new Message(Command.SESSION, Note.JOINED, senderClient.getId(), -1, session.getId(), -1, sessions);
+					  response = new Message(Command.SESSION, Note.JOINED, senderClient.getId(), null, session.getId(), null, sessions);
 					  //senderClient.getQueue().offer(response);
 					  clientList = session.getAllClients();
 					  for(int i=0; i<clientList.size(); i++) {
@@ -91,9 +99,9 @@ public class ServerReceiver extends Thread {
 					  session = sessions.get(sessionId);
 					  sessions.get(sessionId).removeClient(senderClient.getId());
 					  senderClient.setSession(null);
-					  response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), -1, -1, -1, sessions);
+					  response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
 					  senderClient.getQueue().offer(response);
-					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), -1, -1, -1, sessions);
+					  response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 					  clientList = session.getAllClients();
 					  for(int i=0; i<clientList.size(); i++) {
 						  clientList.get(i).getQueue().offer(response);
@@ -109,24 +117,36 @@ public class ServerReceiver extends Thread {
 					  session.setGameInProgress(true);
 					  clientList = session.getAllClients();
 					  
-					  // Send to all clients in the session.
-					  for(int i=0; i<clientList.size(); i++) {
-						  if(clientList.get(i).getId() != message.getSenderId()) {
-							  clientList.get(i).getQueue().offer(message);
-						  }
+					  NetworkingDemo.startServerGame(session, resourcesMap, sessions);
+					  
+					  List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
+					  List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
+					  for(int i=0; i<characters.size(); i++) {
+						  resources.Character character = characters.get(i);
+						  characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY()));
 					  }
-					  break;
-				  case UPDATE:
-					  //System.out.println(message.getCurrentSessionId());
-					  session = sessions.get(message.getCurrentSessionId());
-					  clientList = session.getAllClients();
+					  
+					  GameData data = new GameData(characterInfo);
+					  Message startGame = new Message(Command.GAME, Note.START, message.getSenderId(), message.getReceiverId(), message.getCurrentSessionId(), message.getTargetSessionId(), data);
 					  
 					  // Send to all clients in the session.
 					  for(int i=0; i<clientList.size(); i++) {
-						  if(clientList.get(i).getId() != message.getSenderId()) {
-							  clientList.get(i).getQueue().offer(message);
+						  clientList.get(i).getQueue().offer(startGame);
+					  }
+					  
+					  break;
+				  case UPDATE:
+					  session = sessions.get(message.getCurrentSessionId());
+					  clientList = session.getAllClients();
+					  
+					  CharacterInfo info = ((GameData)message.getObject()).getInfo();
+					  for(int i=0; i<resourcesMap.get(session.getId()).getPlayerList().size(); i++) {
+						  resources.Character c = resourcesMap.get(session.getId()).getPlayerList().get(i);
+						  if(info.getId().equals(c.getId())) {
+							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isJump(), info.isPunch(), info.isBlock());
 						  }
 					  }
+					  
 					  break;
 				  default:
 					  break;
@@ -140,6 +160,7 @@ public class ServerReceiver extends Thread {
 		  }
 		  catch(IOException e) {
 			  e.printStackTrace();
+			  System.exit(1);
 		  }
 		  
 		  
@@ -148,7 +169,21 @@ public class ServerReceiver extends Thread {
       // We end this thread (we don't do System.exit(1)).
   }
   
-  private static boolean any(Integer i, Set<Integer> s) {
+//  private ConcurrentMap<UUID, SerializableSession> serialize(ConcurrentMap<UUID, Session> sessionsToChange) {
+//	  ConcurrentMap<UUID, SerializableSession> serialized = new ConcurrentHashMap<UUID, SerializableSession>();
+//	  for (Map.Entry<UUID, Session> entry : sessionsToChange.entrySet()) {
+//		    UUID key = entry.getKey();
+//		    Session value = entry.getValue();
+//		    serialized.put(key, value.serialize());
+//	  }
+//	  
+//	  System.out.println("Originial Hashcode: " + sessionsToChange.hashCode());
+//	  System.out.println("New Hashcode: " + serialized.hashCode());
+//	  
+//	  return serialized;
+//  }
+
+private static boolean any(Integer i, Set<Integer> s) {
 	  for (Integer ID: s) {
           if (i.equals(ID)) {
         	  return true;
