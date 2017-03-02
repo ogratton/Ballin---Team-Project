@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -108,18 +109,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
-	/**
-	 * Set the mulitplier
-	 * 
-	 * @param mult
-	 *            the multiplier
-	 */
-
-	public void setMultiplier(double newWidth, double newHeight) {
-
-		double mult = newWidth / width;
-		this.view.setMultiplier(mult);
-	}
 
 	/**
 	 * Switch between fullscreen and windowed
@@ -132,8 +121,9 @@ public class GameComponent extends JFrame implements ActionListener {
 			int newWidth = (int) (1200);
 			int newHeight = (int) (675);
 
-			setMultiplier(newWidth, newHeight);
-			setSize(newWidth, newHeight);
+			view.setFullScreen(false);
+			getContentPane().setPreferredSize(new Dimension(1200, 675));
+			pack();
 			setLocationRelativeTo(null);
 			fullScreen = false;
 
@@ -143,8 +133,9 @@ public class GameComponent extends JFrame implements ActionListener {
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
 			setLocation(0, 0);
-			setMultiplier(width, height);
-			setSize(width, height);
+			view.setFullScreen(true);
+			getContentPane().setPreferredSize(new Dimension(width, height));
+			pack();
 			fullScreen = true;
 
 		}
