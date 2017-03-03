@@ -87,13 +87,13 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 		}
 
-		for (int i = 0; i < characters.size(); i++) {
+		/*for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId().equals(resources.getId())) {
 				secondPlayerIndex = i;
 				// System.out.println("Index: " + secondPlayerIndex);
 				break;
 			}
-		}
+		}*/
 
 		
 		/*layers = new JLayeredPane();
