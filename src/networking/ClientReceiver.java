@@ -127,7 +127,7 @@ public void run() {
     						resources.setId(id);
     					}
     					
-    					player = new Character(Character.Class.ELF, 1);
+    					player = new Character(Character.Class.ARCHER, 1);
     					player.setId(id);
     					player.setXWithoutNotifying(x);
     					player.setYWithoutNotifying(y);
@@ -158,7 +158,7 @@ public void run() {
     					@Override
     					public void run() {
     						Graphics g = new Graphics(resources, updater, false);
-    						g.start();
+    						g.run();
     					}
     				});
     				

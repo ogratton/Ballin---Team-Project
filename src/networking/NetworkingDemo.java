@@ -1,6 +1,7 @@
 package networking;
 
 import java.awt.EventQueue;
+import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.swing.SwingUtilities;
 
+import ai.pathfinding.MapCosts;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -24,25 +26,6 @@ import resources.Resources;
 public class NetworkingDemo {
 
 	public static void startServerGame(Session session, ConcurrentMap<UUID, Resources> resourcesMap, ConcurrentMap<UUID, Session> sessions) {
-		
-		Character newPlayer;
-		Random r = new Random();
-		Resources resources = new Resources();
-		double x;
-		double y;
-		List<ClientInformation> clients = session.getAllClients();
-		CharacterInfo info;
-		for(int i=0; i<clients.size(); i++) {
-			x = r.nextInt(1200);
-			y = r.nextInt(675);
-			UUID id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ELF, 1);
-			newPlayer.setX(x);
-			newPlayer.setY(y);
-			newPlayer.setId(id);
-			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions));
-			resources.addPlayerToList(newPlayer);
-		}
 		
 		// make the map the default just in case the following fails
 		Map.Tile[][] tiles = null;	
@@ -59,7 +42,32 @@ public class NetworkingDemo {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		Map map = new Map(1200, 675, tiles, Map.World.CAVE);
+		
+		
+		Character newPlayer;
+		Resources resources = new Resources();
+		resources.setMap(map);
+		new MapCosts(resources);
+		
+		Point coords = new Point(400,400);
+		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+		
+		List<ClientInformation> clients = session.getAllClients();
+		for(int i=0; i<clients.size(); i++) {
+			Point point = map.randPointOnMap();
+			UUID id = clients.get(i).getId();
+			newPlayer = new Character(Character.Class.ARCHER, 1);
+			newPlayer.setX(coords.x);
+			newPlayer.setY(coords.y);
+			newPlayer.setId(id);
+			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions));
+			resources.addPlayerToList(newPlayer);
+		}
+		
+
+		
 
 		// create physics thread
 		Physics p = new Physics(resources);
