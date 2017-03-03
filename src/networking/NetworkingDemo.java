@@ -58,7 +58,7 @@ public class NetworkingDemo {
 		for(int i=0; i<clients.size(); i++) {
 			Point point = map.randPointOnMap();
 			UUID id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ARCHER, 1);
+			newPlayer = new Character(Character.Class.ARCHER, i);
 			newPlayer.setX(coords.x);
 			newPlayer.setY(coords.y);
 			newPlayer.setId(id);
