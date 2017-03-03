@@ -84,8 +84,8 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
-		destList = resources.getDestList();
-		fullDestList = resources.getDestList();
+		//destList = resources.getDestList();
+		//fullDestList = resources.getDestList();
 
 		setUpSizes();
 
@@ -159,9 +159,9 @@ public class GameView extends JPanel implements Observer {
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
 		
-		 destList = resources.getDestList();
+		//destList = resources.getDestList();
 		 
-		for (Point p : destList)
+		/*for (Point p : destList)
 		{
 			if (!fullDestList.contains(p))
 			{
@@ -180,7 +180,7 @@ public class GameView extends JPanel implements Observer {
 						(int) fullDestList.get(i + 1).getY());
 
 			}
-		}
+		}*/
 		 
 
 		// drawing each of the characters on the board

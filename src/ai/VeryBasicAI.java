@@ -3,6 +3,7 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import ai.pathfinding.AStarSearch;
 import resources.Character;
@@ -37,7 +38,7 @@ public class VeryBasicAI extends Thread
 	private ArrayList<Tile> bad_tiles;
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
-	private int id;
+	private UUID id;
 
 	private AStarSearch aStar;
 
