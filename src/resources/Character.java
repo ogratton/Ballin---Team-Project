@@ -1277,6 +1277,10 @@ public class Character extends Observable implements Collidable_Circle {
 	public int getPlayerNumber() {
 		return this.playerNo;
 	}
+	
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNo = playerNumber;
+	}
 
 	@Override
 	public CollidableType getType() {

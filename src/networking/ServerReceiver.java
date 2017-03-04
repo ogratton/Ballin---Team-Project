@@ -123,7 +123,7 @@ public class ServerReceiver extends Thread {
 					  List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
 					  for(int i=0; i<characters.size(); i++) {
 						  resources.Character character = characters.get(i);
-						  characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY()));
+						  characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY(), character.getPlayerNumber()));
 					  }
 					  
 					  GameData data = new GameData(characterInfo);

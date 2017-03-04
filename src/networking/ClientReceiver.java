@@ -117,22 +117,25 @@ public void run() {
     				UUID id;
     				CharacterInfo c;
     				List<CharacterInfo> info = gameData.getCharactersList();
+    				Updater updater = new Updater(cModel, toServer, resources);
     				for(int i=0; i<info.size(); i++) {
     					c = info.get(i);
     					id = c.getId();
     					x = c.getX();
     					y = c.getY();
     					
-    					if(id.equals(cModel.getMyId())) {
-    						resources.setId(id);
-    					}
-    					
     					player = new Character(Character.Class.ARCHER, 1);
     					player.setId(id);
     					player.setXWithoutNotifying(x);
     					player.setYWithoutNotifying(y);
+    					player.setPlayerNumber(c.getPlayerNumber());
     					resources.addPlayerToList(player);
     					cModel.getCharacters().put(id, player);
+    					
+    					if(id.equals(cModel.getMyId())) {
+    						resources.setId(id);
+    						player.addObserver(updater);
+    					}
     				}
     				
     				//make the map the default just in case the following fails
@@ -152,13 +155,13 @@ public void run() {
 					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
     				
     				cModel.setResources(resources);
-    				Updater updater = new Updater(cModel, toServer, resources);
+    				
     				// create ui thread
     				EventQueue.invokeLater(new Runnable() {
     					@Override
     					public void run() {
     						Graphics g = new Graphics(resources, updater, false);
-    						g.run();
+    						g.start();
     					}
     				});
     				
@@ -172,8 +175,13 @@ public void run() {
         				for(int i=0; i<players.size(); i++) {
         					for(int j=0; j<charactersList.size(); j++) {
         						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
-        							players.get(i).setXWithoutNotifying(charactersList.get(j).getX());
-        							players.get(i).setYWithoutNotifying(charactersList.get(j).getY());
+        							//System.out.println("X: " + charactersList.get(j).getX());
+        							players.get(i).setX(charactersList.get(j).getX());
+        							players.get(i).setY(charactersList.get(j).getY());
+        							players.get(i).setBlocking(charactersList.get(j).isBlocking());
+        							players.get(i).setFalling(charactersList.get(j).isFalling());
+        							players.get(i).setDead(charactersList.get(j).isDead());
+        							players.get(i).setDashing(charactersList.get(j).isDashing());
         						}
         					}
         				}
