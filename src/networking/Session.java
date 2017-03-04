@@ -83,4 +83,13 @@ public class Session implements Serializable {
 		}
 	    return clientList;
 	}
+	
+	public boolean allClientsReady() {
+		boolean ready = true;
+		for (ClientInformation client : clients.values()) {
+			ready = ready && client.isReady();
+		}
+		
+		return ready;
+	}
 }

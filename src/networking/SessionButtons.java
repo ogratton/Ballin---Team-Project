@@ -62,6 +62,7 @@ public class SessionButtons extends JPanel implements Observer {
 			try {
 				toServer.reset();
 				toServer.writeUnshared(leaveMessage);
+				cModel.setReady(false);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

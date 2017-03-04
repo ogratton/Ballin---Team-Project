@@ -90,6 +90,16 @@ public class Character extends Observable implements Collidable_Circle {
 	private boolean hasPowerup = false;
 
 	private int teamNumber;
+	
+	private int requestId;
+	
+	public int getRequestId() {
+		return requestId;
+	}
+	
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
+	}
 
 	/**
 	 * Default character with default sprite

@@ -26,15 +26,7 @@ public class ConnectionData {
 	private Map<UUID, Character> characters = new ConcurrentHashMap<UUID, Character>();
 	private List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 	private Resources resources;
-	private List<GameData> requests = new LinkedList<GameData>();
-	
-	public List<GameData> getRequests() {
-		return requests;
-	}
-	
-	public void setRequests(List<GameData> requests) {
-		this.requests = requests;
-	}
+	private boolean ready;
 	
 	public Resources getResources() {
 		return resources;
@@ -183,5 +175,13 @@ public class ConnectionData {
 	
 	public void setGameInProgress(boolean bool) {
 		this.gameInProgress = bool;
+	}
+	
+	public boolean isReady() {
+		return ready;
+	}
+	
+	public void setReady(boolean b) {
+		ready = b;
 	}
 }

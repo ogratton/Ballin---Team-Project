@@ -13,17 +13,20 @@ public class ClientInformation implements Serializable {
 	private final String name;
 	private MessageQueue queue;
 	private Session session;
+	private boolean ready;
 	
 	public ClientInformation(String name) {
 		this.id = UUID.randomUUID();
 		this.name = name;
 		this.queue = new MessageQueue();
+		this.ready = false;
 	}
 	
 	public ClientInformation(UUID id, String name) {
 		this.id = id;
 		this.name = name;
 		this.queue = new MessageQueue();
+		this.ready = false;
 	}
 	
 	public UUID getId() {
@@ -52,5 +55,13 @@ public class ClientInformation implements Serializable {
 	
 	public void setSession(Session session) {
 		this.session = session;
+	}
+	
+	public boolean isReady() {
+		return ready;
+	}
+	
+	public void setReady(boolean b) {
+		this.ready = b;
 	}
 }

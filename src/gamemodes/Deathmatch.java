@@ -35,7 +35,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources);
 		p.start();
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		
+		Graphics g = new Graphics(resources, null, false);
+		g.start();
+		
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");

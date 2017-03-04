@@ -19,24 +19,17 @@ public class GameData implements Serializable {
 	private Tag tag;
 	private List<CharacterInfo> characters;
 	private CharacterInfo info;
-	private UUID id;
 	
 	public GameData(List<CharacterInfo> characters) {
 		this.characters = characters;
-		this.id = UUID.randomUUID();
 	}
 	
 	public GameData(CharacterInfo info) {
 		this.info = info;
-		this.id = UUID.randomUUID();
 	}
 	
 	public List<CharacterInfo> getCharactersList() {
 		return characters;
-	}
-	
-	public UUID getId() {
-		return id;
 	}
 	
 	public CharacterInfo getInfo() {

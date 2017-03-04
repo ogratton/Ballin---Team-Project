@@ -151,7 +151,7 @@ public class ConnectionDataModel extends Observable {
 		return data.getMyCharacter();
 	}
 
-	public void setMyCharacter(Character myCharacter) {
+	public synchronized void setMyCharacter(Character myCharacter) {
 		data.setMyCharacter(myCharacter);
 		setChanged();
 		notifyObservers();
@@ -161,8 +161,10 @@ public class ConnectionDataModel extends Observable {
 		return data.getCharactersList();
 	}
 	
-	public void setCharactersList(List<CharacterInfo> list) {
+	public synchronized void setCharactersList(List<CharacterInfo> list) {
 		data.setCharactersList(list);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Resources getResources() {
@@ -173,11 +175,13 @@ public class ConnectionDataModel extends Observable {
 		data.setResources(res);
 	}
 	
-	public List<GameData> getRequests() {
-		return data.getRequests();
+	public boolean isReady() {
+		return data.isReady();
 	}
 	
-	public synchronized void setRequests(List<GameData> requests) {
-		data.setRequests(requests);
+	public synchronized void setReady(boolean b) {
+		data.setReady(b);
+		setChanged();
+		notifyObservers();
 	}
 }
