@@ -92,23 +92,19 @@ public class AStarSearch
 	{
 		ArrayList<SearchNode> neighbours = new ArrayList<SearchNode>();
 		Point curLoc = current.getLocation();
-		int[] dirs = new int[] { -1, 0, 1 };
-		for (int i = 0; i < dirs.length; i++)
+		for (int i = -1; i < 2; i++)
 		{
-			if ((curLoc.x + dirs[i]) < width && (curLoc.x + dirs[i]) >= 0)
+			if ((curLoc.x + i) < width && (curLoc.x + i) >= 0)
 			{
-				for (int j = 0; j < dirs.length; j++)
+				for (int j = -1; j < 2; j++)
 				{
-					if ((curLoc.y + dirs[j]) < height && (curLoc.y + dirs[j]) >= 0)
+					if ((curLoc.y + j) < height && (curLoc.y + j) >= 0)
 					{
 						// don't want to add the current node in again
-						if (!(dirs[i] == 0 && dirs[j] == 0))
+						if (!(i == 0 && j == 0))
 						{
-							int dirI = dirs[i];
-							int dirJ = dirs[j];
-
-							int neiX = curLoc.x + dirI;
-							int neiY = curLoc.y + dirJ;
+							int neiX = curLoc.x + i;
+							int neiY = curLoc.y + j;
 							Point neiLoc = new Point(neiX, neiY);
 							Tile neiTile = resources.getMap().tileAt(neiX, neiY); //getTileType(neiLoc);
 

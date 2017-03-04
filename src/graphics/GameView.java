@@ -256,6 +256,25 @@ public class GameView extends JPanel implements Observer {
 								(int) (charPoints.get(i + 1).getX() * currentMultiplier),
 								(int) (charPoints.get(i + 1).getY() * currentMultiplier + currentOffset));
 					}
+					
+					// Only works with one AI at a time atm as it uses shared resource
+					if (character.getPlayerNumber() == 3)
+					{
+						
+						try
+						{
+							g.setColor(Color.GREEN);
+							Point p = resources.getProjectedPos();
+							g.drawLine((int) (character.getX() * currentMultiplier),
+									(int) (character.getY() * currentMultiplier + currentOffset), (int) (p.x * currentMultiplier),
+									(int) (p.y * currentMultiplier + currentOffset));
+						}
+						catch (Exception e)
+						{
+							// skip
+						}
+					}
+				
 				}
 
 				// draw the player!

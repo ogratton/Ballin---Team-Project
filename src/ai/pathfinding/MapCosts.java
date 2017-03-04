@@ -120,32 +120,29 @@ public class MapCosts
 		}
 		for (int level = 1; level < biggestDimension; level++)
 		{
-			int[] dirs = new int[] { -level, 0, level };
+			
 			TreeSet<Tile> neighbours = new TreeSet<Tile>();
 
 			// for every surrounding tile <level> tiles away
-			for (int n = 0; n < dirs.length; n++)
+			for (int n = -level; n <= level; n++)
 			{
-				int dirN = dirs[n];
 				// check it's a legal coordinate
-				if ((i + dirN) < width && (i + dirN) >= 0)
+				if ((i + n) < width && (i + n) >= 0)
 				{
-					for (int m = 0; m < dirs.length; m++)
+					for (int m = -level; m <= level ; m++)
 					{
-						int dirM = dirs[m];
 						// check it's a legal coordinate 
-						if (j + dirM < height && (j + dirM) >= 0)
+						if (j + m < height && (j + m) >= 0)
 						{
 							// don't evaluate ourselves
-							if (!(dirN == 0 && dirM == 0))
+							if (!(n == 0 && m == 0))
 							{
-								neighbours.add(tileMap[i + dirN][j + dirM]);
+								neighbours.add(tileMap[i + n][j + m]);
 							}
 						}
 					}
 				}
 			}
-
 			
 			if (containsAny(neighbours, resources.getBadTiles()))
 			{
