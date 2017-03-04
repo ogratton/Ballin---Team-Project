@@ -492,6 +492,29 @@ public class Resources {
 			return cpuColour;
 		}
 	}
+	
+	// XXX Debug
+	private Point projectedPos;
+	
+	/**
+	 * XXX Debug for drawing predicted position of AI
+	 * @return
+	 */
+	public Point getProjectedPos()
+	{
+		return projectedPos;
+	}
+	
+	/**
+	 * XXX Debug for drawing predicted position of AI
+	 * @param pos
+	 */
+	public void setProjectedPos(Point pos)
+	{
+		projectedPos = pos;
+	}
+	
+	
 
 	// public static MapReader mapReader = new MapReader();
 	// public static Map.Tile[][] map1 =

@@ -24,25 +24,33 @@ public class VeryBasicAI extends Thread
 		POIROT, // use A* search to follow a list of points more intelligently
 		ROVING, // debug: moves randomly
 		PACING, // debug: moves up&down/left&right
-		STUBBORN // debug: tries to stop itself moving anywhere
+		STUBBORN, // debug: tries to stop itself moving anywhere
+		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.ROVING; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 25;
 	private final long reaction_time = 5; // can be increase once ray-casting is implemented
-
 	private final long tick = 30; // loop every <tick>ms
+	private long prescience = tick * 1; // how many ms ahead we look for our predicted point
 
 	private ArrayList<Tile> bad_tiles;
-	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
 	private UUID id;
 
 	private AStarSearch aStar;
 
 	private LinkedList<Point> waypoints;
+	
+	private boolean success = true; // we start off a winner (because we need to be motivated to look for new goals) 
+	
+	// XXX debug stuff
+	// this is setting things up for the debug Detective
+	Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
+	int destI = 0; // destination index
+	
 
 	/*
 	 * Notes:
@@ -74,10 +82,6 @@ public class VeryBasicAI extends Thread
 		// the tiles we don't want to step on
 		bad_tiles = resources.getBadTiles();
 
-		non_edge = new ArrayList<Tile>();
-		non_edge.addAll(bad_tiles);
-		non_edge.add(Tile.FLAT);
-
 		waypoints = new LinkedList<Point>();
 
 		id = character.getId();
@@ -99,119 +103,42 @@ public class VeryBasicAI extends Thread
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
 			Thread.sleep(1000);
 
-			boolean success = true;
-
-			// this is setting things up for the debug Detective
-			Point[] destinationPix = new Point[] { new Point(700, 300), new Point(800, 200), new Point(950, 400), new Point(500, 500) }; // { new Point(500, 500)};
-			Point[] destinations = new Point[destinationPix.length];
-			for (int i = 0; i < destinations.length; i++)
-			{
-				destinations[i] = getTileCoords(destinationPix[i]);
-				//				System.out.println(i + ": " + destinations[i].x + "," + destinations[i].y);
-			}
-
-			int i = 0;
-
 			while (!character.isDead())
 			{
 				// common behaviour should go first
 
 				// TODO this should be the predicted future tile, not the one we are actually on
 				// otherwise it's OP
-				while (isEdge(getCurrentTile()))
-				{
-					Thread.sleep(reaction_time);
-					moveAwayFromEdge(getCurrentTileCoords());
-					//					System.out.println("Near an edge!");
-				}
+				commonBehaviour();
+				
+				resources.setProjectedPos(projectedPosition());
+				
 				if (behaviour == Behaviour.POIROT)
 				{
-					/*
-					 * POIROT BEHAVIOUR:
-					 * Uses A* pathfinding, so hopefully isn't a lemming
-					 */
-					//System.out.println("Poirot tick. Waypoints length: " + waypoints.size());
-
-					if (!waypoints.isEmpty())
-					{
-						success = moveTo(waypoints.peek());
-						if (success)
-						{
-							success = false;
-							waypoints.removeFirst();
-							//System.out.println("Ze little grey cells, zey have led me to my goal!");
-							brakeChar();
-
-						}
-					}
-					else
-					{
-						System.out.println(id + " made it to destination " + destinations[i]);
-						i++;
-						try
-						{
-							Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
-							System.out.println(charPos);
-							waypoints = convertWaypoints(aStar.search(charPos, destinations[i]));
-
-							resources.setDestList(waypoints);
-							System.out.println(id + " pathfinding to point " + destinations[i]);
-							System.out.println("waypoints: " + waypoints);
-							System.out.println();
-						}
-						catch (ArrayIndexOutOfBoundsException e)
-						{
-							i = 0; // loop
-						}
-					}
+					poirotBehaviour();
 				}
 				else if (behaviour == Behaviour.STUBBORN)
 				{
-					brakeChar();
+					stubbornBehaviour();
 				}
 				else if (behaviour == Behaviour.ROVING)
 				{
-					// Move in random directions
-					// But preferably not off the edge
-
-					if (!waypoints.isEmpty())
-					{
-						success = moveTo(waypoints.peek());
-						if (success)
-						{
-							success = false;
-							waypoints.removeFirst();
-							brakeChar();
-
-						}
-					}
-					else
-					{
-
-						Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
-						Point newDest = getTileCoords(resources.getMap().randPointOnMap());
-						//						System.out.println("going to try to pathfind to " + newDest);
-						while (waypoints.isEmpty())
-						{
-							// keep trying to get a new dest until we get a valid path
-							// just in case point given is dodgy
-							waypoints = convertWaypoints(aStar.search(charPos, newDest));
-						}
-						//						System.out.println("New destination: " + newDest);		
-
-						//						System.out.println(waypoints);
-						resources.setDestList(waypoints);
-
-					}
+					rovingBehaviour();
+				}
+				else if (behaviour == Behaviour.POTATO)
+				{
+					// literally nothing
 				}
 				else
 				{
-					//System.out.println("Behaviour not yet implemented");
+					System.out.println("Behaviour not yet implemented");
 				}
 				Thread.sleep(tick);
 			}
 
 			setAllMovementFalse();
+			// XXX debug
+			resources.setProjectedPos(null);
 
 		}
 		catch (InterruptedException e)
@@ -219,6 +146,106 @@ public class VeryBasicAI extends Thread
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Performs 1 tick's worth of common behaviour
+	 * (move away from edge, move to next waypoint, etc)
+	 * @throws InterruptedException
+	 */
+	private void commonBehaviour() throws InterruptedException
+	{
+		while (projectedTile() != Tile.FLAT) // if we are expected to be heading for a dangerous tile
+		{
+			Thread.sleep(reaction_time);
+			moveAwayFromEdge();
+			System.out.println("Near an edge!");
+		}
+		if (!waypoints.isEmpty())
+		{
+			moveToNextWaypoint();
+		}
+	}
+	
+	private void moveToNextWaypoint() throws InterruptedException
+	{
+		success = moveTo(waypoints.peek());
+		if (success)
+		{
+			success = false;
+			waypoints.removeFirst();
+			brakeChar();
+
+		}
+	}
+	
+	/**
+	 * XXX Debug only
+	 * Perform 1 tick's worth of Poirot 
+	 * (follow set points by A*, so hopefully isn't a lemming)
+	 * @throws InterruptedException 
+	 */
+	private void poirotBehaviour() throws InterruptedException
+	{		
+
+		if(waypoints.isEmpty())
+		{
+			System.out.println(id + " made it to destination " + destinations[destI]);
+			destI++;
+			try
+			{
+				Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+				System.out.println(charPos);
+				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
+
+				resources.setDestList(waypoints);
+				System.out.println(id + " pathfinding to point " + destinations[destI]);
+				System.out.println("waypoints: " + waypoints);
+				System.out.println();
+			}
+			catch (ArrayIndexOutOfBoundsException e)
+			{
+				destI = 0; // loop
+			}
+		}
+	}
+	
+	/**
+	 * XXX Debug only
+	 * Performs 1 tick's worth of Stubborn behaviour 
+	 * (brakes) 
+	 * @throws InterruptedException
+	 */
+	private void stubbornBehaviour() throws InterruptedException
+	{
+		brakeChar();
+	}
+	
+	/**
+	 * Performs 1 tick's worth of Roving behaviour 
+	 * (moves randomly)
+	 * @throws InterruptedException
+	 */
+	private void rovingBehaviour() throws InterruptedException
+	{
+		if (waypoints.isEmpty())
+		{
+
+			Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+			Point newDest = getTileCoords(resources.getMap().randPointOnMap());
+			//						System.out.println("going to try to pathfind to " + newDest);
+			while (waypoints.isEmpty())
+			{
+				// keep trying to get a new dest until we get a valid path
+				// just in case point given is dodgy
+				waypoints = convertWaypoints(aStar.search(charPos, newDest));
+			}
+			//System.out.println("New destination: " + newDest);		
+
+			//System.out.println(waypoints);
+			resources.setDestList(waypoints);
+
+		}
 	}
 
 	/**
@@ -240,28 +267,35 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
-	 * @return The type of tile that we are heading for
+	 * Uses current dy & dx to estimate position in "prescience" ms 
+	 * @return
 	 */
-	@SuppressWarnings("unused")
-	private Tile getFacingTile()
+	private Point projectedPosition()
 	{
-		// TODO I need to predict the location of the AI in x amount of time/distance
-
-		return Tile.FLAT;
+		int x = (int) (character.getX() + prescience * character.getDx());
+		int y = (int) (character.getY() + prescience * character.getDy());
+		
+		int maxX = (int) resources.getMap().getWidth() -1; // -1 in case of rounding
+		int maxY = (int) resources.getMap().getHeight() -1;
+		
+		// clamp prediction to the map
+		if (x < 0) x = 0;
+		if (x > maxX) x = maxX;
+		
+		if (y < 0) y = 0;
+		if (y > maxY) y = maxY;
+		
+		return new Point(x,y);
 	}
-
+	
 	/**
-	 * Can we walk/roll on the tile at these coords?
-	 * 
-	 * @param x
-	 * @param y
-	 * @return true or false
+	 * What tile is the AI predicted to be on in "prescience" ms
+	 * @return
 	 */
-	@SuppressWarnings("unused")
-	private boolean isWalkable(double x, double y)
+	private Tile projectedTile()
 	{
-		Tile subject = resources.getMap().tileAt(x, y);
-		return bad_tiles.contains(subject);
+		Point proj = projectedPosition();
+		return resources.getMap().tileAt(proj.getX(), proj.getY());
 	}
 
 	/**
@@ -273,17 +307,6 @@ public class VeryBasicAI extends Thread
 	private boolean isWalkable(Tile tile)
 	{
 		return bad_tiles.contains(tile);
-	}
-
-	/**
-	 * Is a tile a (walkable) edge tile?
-	 * 
-	 * @param tile
-	 * @return true or false
-	 */
-	private boolean isEdge(Tile tile)
-	{
-		return !non_edge.contains(tile);
 	}
 
 	/**
@@ -317,42 +340,57 @@ public class VeryBasicAI extends Thread
 	 * 
 	 * @param currentTileIndex the index of the current tile
 	 */
-	private void moveAwayFromEdge(Point currentTileIndex) throws InterruptedException
+	private void moveAwayFromEdge() throws InterruptedException
 	{
+		double[][] costMask = resources.getMap().getCostMask();
+		
+		Point curLoc;
+		int mapWidth;
+		int mapHeight;
+		int safestX;
+		int safestY;
+		double safestTileCost;
+		try
+		{
+			curLoc = this.getCurrentTileCoords();
+			mapWidth = costMask.length;
+			mapHeight = costMask[0].length;
+			safestX = curLoc.x;
+			safestY = curLoc.y;
+			safestTileCost = costMask[safestX][safestY];
+		}
+		catch (NullPointerException e)
+		{
+			return; // this just means that they've died and are off the map, so they are beyond help
+		}
 
-		//		setAllMovementFalse();
-
-		int column = (int) currentTileIndex.getX();
-		int row = (int) currentTileIndex.getY();
-		// get the surrounding tiles
-		// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning)
-		// They must not use the same +&- conventions as dy and dx
-		// Or I'm being silly
-		// But either way, this works:
-		Tile tile_down = resources.getMap().tileAt(column - 2, row);
-		Tile tile_up = resources.getMap().tileAt(column + 2, row);
-		Tile tile_right = resources.getMap().tileAt(column, row - 2);
-		Tile tile_left = resources.getMap().tileAt(column, row + 2);
-
-		if (!isWalkable(tile_left))
+		// find the safest (cheapest) tile around the AI
+		for (int i = -1; i < 2; i++)
 		{
-			character.setRight(true);
+			int newX = curLoc.x + i;
+			if (newX < mapWidth && newX >= 0)
+			{
+				for (int j = -1; j < 2; j++)
+				{
+					int newY = curLoc.y + j;
+					if (newY < mapHeight && newY >= 0)
+					{
+						if(costMask[newX][newY] < safestTileCost)
+						{
+							safestX = newX;
+							safestY = newY;
+						}
+					}
+				}
+			}
 		}
-		if (!isWalkable(tile_right))
-		{
-			character.setLeft(true);
-		}
-		if (!isWalkable(tile_up))
-		{
-			character.setDown(true);
-		}
-		if (!isWalkable(tile_down))
-		{
-			character.setUp(true);
-		}
+		
+		Point haven = resources.getMap().tileCoordsToMapCoords(safestX, safestY);
+		waypoints.addFirst(haven); // this is now our priority to move to
+		moveToNextWaypoint();
 
 		Thread.sleep(10);
-		setAllMovementFalse();
+//		setAllMovementFalse();
 	}
 
 	/**
