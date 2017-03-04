@@ -79,22 +79,18 @@ public class GameComponent extends JFrame implements ActionListener {
 		view = new GameView(resources, debugPaths);
 		//mapView = new MapView(resources);
 
-		if (updater != null) {
-			for (Character model : resources.getPlayerList()) {
-				model.addObserver(view);
-				if (model.getId().equals(resources.getId())) {
-					model.addObserver(updater);
-				}
-			}
+		
+		for (Character model : resources.getPlayerList()) {
+			model.addObserver(view);
 		}
 
-		/*for (int i = 0; i < characters.size(); i++) {
+		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId().equals(resources.getId())) {
 				secondPlayerIndex = i;
 				// System.out.println("Index: " + secondPlayerIndex);
 				break;
 			}
-		}*/
+		}
 
 		
 		/*layers = new JLayeredPane();

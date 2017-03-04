@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import networking.Updater;
 import resources.Resources;
 
-public class Graphics implements Runnable {
+public class Graphics extends Thread {
 
 	Resources resources;
 	Updater updater;

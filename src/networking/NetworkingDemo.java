@@ -56,9 +56,8 @@ public class NetworkingDemo {
 		
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
-			Point point = map.randPointOnMap();
 			UUID id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ARCHER, i);
+			newPlayer = new Character(Character.Class.ARCHER, i+1);
 			newPlayer.setX(coords.x);
 			newPlayer.setY(coords.y);
 			newPlayer.setId(id);
@@ -75,6 +74,6 @@ public class NetworkingDemo {
 
 		resourcesMap.put(session.getId(), resources);
 
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}
 }

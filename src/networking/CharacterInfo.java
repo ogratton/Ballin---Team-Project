@@ -13,13 +13,27 @@ public class CharacterInfo implements Serializable {
 	private double y;
 	private UUID id;
 	private boolean up, right, left, down, jump, punch, block;
+	private boolean isFalling, isDead, isDashing, isBlock;
+	private int playerNumber;
 	
-	public CharacterInfo(UUID id, double d, double e) {
+	public CharacterInfo(UUID id, double d, double e, int playerNumber) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
+		this.playerNumber = playerNumber;
 	}
 	
+	public CharacterInfo(UUID id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlock) {
+		this.x = d;
+		this.y = e;
+		this.id = id;
+		this.playerNumber = playerNumber;
+		this.isFalling = isFalling;
+		this.isDead = isDead;
+		this.isDashing = isDashing;
+		this.isBlock = isBlock;
+	}
+
 	public CharacterInfo(UUID id, boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block) {
 		this.id = id;
 		this.up = up;
@@ -109,6 +123,46 @@ public class CharacterInfo implements Serializable {
 
 	public void setY(double y) {
 		this.y = y;
+	}
+	
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+	
+	public boolean isFalling() {
+		return isFalling;
+	}
+
+	public void setFalling(boolean isFalling) {
+		this.isFalling = isFalling;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean isDead) {
+		this.isDead = isDead;
+	}
+
+	public boolean isDashing() {
+		return isDashing;
+	}
+
+	public void setDashing(boolean isDashing) {
+		this.isDashing = isDashing;
+	}
+	
+	public boolean isBlocking() {
+		return isBlock;
+	}
+
+	public void setBlocking(boolean isBlock) {
+		this.isBlock = isBlock;
 	}
 	
 }

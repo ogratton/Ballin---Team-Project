@@ -49,10 +49,13 @@ public class ClientUpdater extends JPanel implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
+		//System.out.println("Updated");
 		List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
 		List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+		resources.Character c;
 		for(int i=0; i<characters.size(); i++) {
-			CharacterInfo info = new CharacterInfo(characters.get(i).getId(), characters.get(i).getX(), characters.get(i).getY());
+			c = characters.get(i);
+			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlock());
 			charactersList.add(info);
 		}
 		GameData data = new GameData(charactersList);
