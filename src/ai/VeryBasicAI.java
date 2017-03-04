@@ -29,7 +29,7 @@ public class VeryBasicAI extends Thread
 		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.POIROT; // default
+	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 25;
@@ -355,65 +355,40 @@ public class VeryBasicAI extends Thread
 	 * 
 	 * @param currentTileIndex the index of the current tile
 	 */
+
 	private void moveAwayFromEdge() throws InterruptedException
-	{
-		// XXX bit rubbish (sometimes moves parallel to edge)
-		
-		// brace ourselves until we know where we're going to
-		character.setBlock(true);
-		
-		double[][] costMask = resources.getMap().getCostMask();
-		
-		Point curLoc;
-		int mapWidth;
-		int mapHeight;
-		int safestX;
-		int safestY;
-		double safestTileCost;
-		try
+	{ 
+		Point currentTileIndex = getCurrentTileCoords();
+		//		setAllMovementFalse();
+		int column = (int) currentTileIndex.getX(); 
+		int row = (int) currentTileIndex.getY();
+		// get the surrounding tiles 
+		// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning) 	
+		// They must not use the same +&- conventions as dy and dx 	
+		// Or I'm being silly 		
+		// But either way, this works: 		
+		Tile tile_down = resources.getMap().tileAt(column - 2, row);
+		Tile tile_up = resources.getMap().tileAt(column + 2, row);
+		Tile tile_right = resources.getMap().tileAt(column, row - 2);
+		Tile tile_left = resources.getMap().tileAt(column, row + 2);
+		if (!isWalkable(tile_left))
 		{
-			curLoc = this.getCurrentTileCoords();
-			mapWidth = costMask.length;
-			mapHeight = costMask[0].length;
-			safestX = curLoc.x;
-			safestY = curLoc.y;
-			safestTileCost = costMask[safestX][safestY];
+			character.setRight(true);
 		}
-		catch (NullPointerException e)
+		if (!isWalkable(tile_right))
 		{
-			return; // this just means that they've died and are off the map, so they are beyond help
+			character.setLeft(true);
 		}
-
-		// find the safest (cheapest) tile around the AI
-		for (int i = -1; i < 2; i++)
+		if (!isWalkable(tile_up))
 		{
-			int newX = curLoc.x + i;
-			if (newX < mapWidth && newX >= 0)
-			{
-				for (int j = -1; j < 2; j++)
-				{
-					int newY = curLoc.y + j;
-					if (newY < mapHeight && newY >= 0)
-					{
-						double curCost = costMask[newX][newY];
-						if(curCost < safestTileCost)
-						{
-							safestX = newX;
-							safestY = newY;
-							safestTileCost = curCost;
-						}
-					}
-				}
-			}
+			character.setDown(true);
 		}
-		
-		Point haven = resources.getMap().tileCoordsToMapCoords(safestX, safestY);
-		waypoints.addFirst(haven); // this is now our priority to move to
-		character.setBlock(false);
-		moveToNextWaypoint();
-
+		if (!isWalkable(tile_down))
+		{
+			character.setUp(true);
+		}
 		Thread.sleep(10);
-//		setAllMovementFalse();
+		setAllMovementFalse();
 	}
 
 	/**
@@ -431,23 +406,23 @@ public class VeryBasicAI extends Thread
 		// TODO check that overshooting stuff actually makes a difference
 		
 		// work out vector from lastWaypoint to p
-//		Point curLoc = new Point((int) character.getX(), (int) character.getY());
-//		Point a = lastWaypoint;
-//		Point b = p;
-//		Vector ab_vec = new Vector(a,b);
-//		// work out the normal to that (pointing right if original is up)
-//		Vector ab_norm = ab_vec.normal(b);
-//		
-//		// if current position does not lie "behind" normal
-//		if (!ab_norm.pointInside(curLoc))
-//		{
-//			// skip to next waypoint
-////			System.out.println("Overshot! Skipping ahead");
-//			if (waypoints.size() > 0)
-//			{
-//				lastWaypoint = waypoints.removeFirst();
-//			}
-//		}
+		Point curLoc = new Point((int) character.getX(), (int) character.getY());
+		Point a = lastWaypoint;
+		Point b = p;
+		Vector ab_vec = new Vector(a,b);
+		// work out the normal to that (pointing right if original is up)
+		Vector ab_norm = ab_vec.normal(b);
+		
+		// if current position does not lie "behind" normal
+		if (!ab_norm.pointInside(curLoc))
+		{
+			// skip to next waypoint
+//			System.out.println("Overshot! Skipping ahead");
+			if (waypoints.size() > 0)
+			{
+				lastWaypoint = waypoints.removeFirst();
+			}
+		}
 		
 		
 		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
