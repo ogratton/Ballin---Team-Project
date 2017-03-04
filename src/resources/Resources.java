@@ -514,6 +514,18 @@ public class Resources {
 		projectedPos = pos;
 	}
 	
+	private Point AINextDest;
+	
+	public Point getAINextdest()
+	{
+		return AINextDest;
+	}
+	
+	public void setAINextDest(Point nd)
+	{
+		AINextDest = nd;
+	}
+	
 	
 
 	// public static MapReader mapReader = new MapReader();

@@ -173,12 +173,11 @@ public class AStarSearch
 	 */
 	private LinkedList<Point> sparsifyPath(LinkedList<Point> dense)
 	{
-		// TODO vital for the whole thing to work
-		// I think
+		// TODO to be replaced by a rudimentary smoothing algorithm
 
 		// temporary dumb way to keep only every <gap>th point:
 		LinkedList<Point> sparse = new LinkedList<Point>();
-		int gap = 2;
+		int gap = 3;
 		int init_size = dense.size();
 
 		for (int position = 0; dense.size() > 1; position += gap)

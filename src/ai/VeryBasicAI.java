@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import ai.pathfinding.AStarSearch;
+import ai.pathfinding.Vector;
 import resources.Character;
 import resources.Map.Tile;
 import resources.Resources;
@@ -28,11 +29,11 @@ public class VeryBasicAI extends Thread
 		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.ROVING; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 25;
-	private final long reaction_time = 5; // can be increase once ray-casting is implemented
+//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
 	private final long tick = 30; // loop every <tick>ms
 	private long prescience = tick * 1; // how many ms ahead we look for our predicted point
 
@@ -43,6 +44,8 @@ public class VeryBasicAI extends Thread
 	private AStarSearch aStar;
 
 	private LinkedList<Point> waypoints;
+	
+	private Point lastWaypoint; // the last waypoint we followed
 	
 	private boolean success = true; // we start off a winner (because we need to be motivated to look for new goals) 
 	
@@ -87,6 +90,8 @@ public class VeryBasicAI extends Thread
 		id = character.getId();
 
 		aStar = new AStarSearch(resources);
+		
+		lastWaypoint = getCurrentTileCoords();
 	}
 
 	/**
@@ -158,24 +163,33 @@ public class VeryBasicAI extends Thread
 //		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
 		if(projectedTile() != Tile.FLAT)
 		{
-			Thread.sleep(reaction_time);
+//			Thread.sleep(reaction_time);
 			moveAwayFromEdge();
 			System.out.println("Near an edge!");
 		}
 		if (!waypoints.isEmpty())
 		{
+			// TODO if we are a certain distance away from the next waypoint, recalculate route
+			// this may have to go in the behaviours
+			
 			moveToNextWaypoint();
 		}
 	}
 	
 	private void moveToNextWaypoint() throws InterruptedException
 	{
+		resources.setAINextDest(waypoints.peek()); // XXX debug
+		
 		success = moveTo(waypoints.peek());
 		if (success)
 		{
 			success = false;
-			waypoints.removeFirst();
-			brakeChar();
+			if (waypoints.size() > 0)
+			{
+				lastWaypoint = waypoints.removeFirst();
+				brakeChar();
+			}
+			
 
 		}
 	}
@@ -195,7 +209,7 @@ public class VeryBasicAI extends Thread
 			destI++;
 			try
 			{
-				Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+				Point charPos = getCurrentTileCoords();
 				System.out.println(charPos);
 				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
 
@@ -232,7 +246,7 @@ public class VeryBasicAI extends Thread
 		if (waypoints.isEmpty())
 		{
 
-			Point charPos = getTileCoords(new Point((int) character.getX(), (int) character.getY()));
+			Point charPos = getCurrentTileCoords();
 			Point newDest = getTileCoords(resources.getMap().randPointOnMap());
 			//						System.out.println("going to try to pathfind to " + newDest);
 			while (waypoints.isEmpty())
@@ -343,7 +357,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private void moveAwayFromEdge() throws InterruptedException
 	{
-		// XXX bit rubbish
+		// XXX bit rubbish (sometimes moves parallel to edge)
 		
 		// brace ourselves until we know where we're going to
 		character.setBlock(true);
@@ -414,9 +428,31 @@ public class VeryBasicAI extends Thread
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
 	{
+		// TODO check that overshooting stuff actually makes a difference
+		
+		// work out vector from lastWaypoint to p
+//		Point curLoc = new Point((int) character.getX(), (int) character.getY());
+//		Point a = lastWaypoint;
+//		Point b = p;
+//		Vector ab_vec = new Vector(a,b);
+//		// work out the normal to that (pointing right if original is up)
+//		Vector ab_norm = ab_vec.normal(b);
+//		
+//		// if current position does not lie "behind" normal
+//		if (!ab_norm.pointInside(curLoc))
+//		{
+//			// skip to next waypoint
+////			System.out.println("Overshot! Skipping ahead");
+//			if (waypoints.size() > 0)
+//			{
+//				lastWaypoint = waypoints.removeFirst();
+//			}
+//		}
+		
+		
 		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
-			brakeChar();
+//			brakeChar();
 			return true;
 		}
 		if (fuzzyEqual(character.getX(), p.x))
