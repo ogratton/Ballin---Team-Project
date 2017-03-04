@@ -3,6 +3,7 @@ package resources;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -61,7 +62,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
-	private int id;
+	private UUID id;
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
@@ -192,11 +193,11 @@ public class Character extends Observable implements Collidable_Circle {
 		dead = false;
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -1275,6 +1276,10 @@ public class Character extends Observable implements Collidable_Circle {
 
 	public int getPlayerNumber() {
 		return this.playerNo;
+	}
+	
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNo = playerNumber;
 	}
 
 	@Override

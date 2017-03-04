@@ -35,7 +35,7 @@ public class SessionButtons extends JPanel implements Observer {
 		joinSession = new JButton("Join Session");
 		joinSession.addActionListener(e -> {
 			if(cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), -1, cModel.getSessionId(), cModel.getHighlightedSessionId());
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null, cModel.getSessionId(), cModel.getHighlightedSessionId());
 				try {
 					toServer.reset();
 					toServer.writeUnshared(joinMessage);
@@ -47,7 +47,7 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		createSession = new JButton("Create Session");
 		createSession.addActionListener(e -> {
-			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), -1, -1, -1, cModel.getClientInformation());
+			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null, cModel.getClientInformation());
 			try {
 				toServer.reset();
 				toServer.writeUnshared(createMessage);
@@ -58,7 +58,7 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		leaveSession = new JButton("Leave Session");
 		leaveSession.addActionListener(e -> {
-			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), -1, cModel.getSessionId(), cModel.getHighlightedSessionId());
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), null, cModel.getSessionId(), cModel.getHighlightedSessionId());
 			try {
 				toServer.reset();
 				toServer.writeUnshared(leaveMessage);

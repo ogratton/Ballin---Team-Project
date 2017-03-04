@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import gamemodes.Team;
 import resources.Map.Tile;
@@ -56,9 +58,9 @@ public class Resources {
 	private int[][] costMask; // cost for AI to pathfind there
 
 	// client ID
-	private int id;
-
-	private ArrayList<Tile> bad_tiles; // tiles to path-find around
+	private UUID id;
+	
+	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
 
 	// Counter of how many ticks have happened
 	private int globalTimer = 0;
@@ -83,11 +85,11 @@ public class Resources {
 										// implemented
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -490,6 +492,29 @@ public class Resources {
 			return cpuColour;
 		}
 	}
+	
+	// XXX Debug
+	private Point projectedPos;
+	
+	/**
+	 * XXX Debug for drawing predicted position of AI
+	 * @return
+	 */
+	public Point getProjectedPos()
+	{
+		return projectedPos;
+	}
+	
+	/**
+	 * XXX Debug for drawing predicted position of AI
+	 * @param pos
+	 */
+	public void setProjectedPos(Point pos)
+	{
+		projectedPos = pos;
+	}
+	
+	
 
 	// public static MapReader mapReader = new MapReader();
 	// public static Map.Tile[][] map1 =

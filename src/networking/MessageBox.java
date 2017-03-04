@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -56,7 +57,7 @@ public class MessageBox extends JPanel implements Observer {
 		dropDown = new JComboBox<String>(clientNames);
 		dropDown.addActionListener(e -> {
 			String selection = (String) dropDown.getSelectedItem();
-			int id = getIdFromSelection(selection);
+			UUID id = getIdFromSelection(selection);
 			cModel.setTargetId(id);
 		});
 		
@@ -76,7 +77,7 @@ public class MessageBox extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		
 		List<ClientInformation> clients;
-		if(cModel.getSessionId() > 0) {
+		if(cModel.getSessionId() != null) {
 			clients = cModel.getSession(cModel.getSessionId()).getAllClients();
 		}
 		else {
@@ -92,17 +93,17 @@ public class MessageBox extends JPanel implements Observer {
 		dropDown = new JComboBox<String>(clientNames);
 		dropDown.addActionListener(e -> {
 			String selection = (String) dropDown.getSelectedItem();
-			int id = getIdFromSelection(selection);
+			UUID id = getIdFromSelection(selection);
 			cModel.setTargetId(id);
 		});
 		
 		repaint();
 	}
 	
-	private static int getIdFromSelection(String selection) {
+	private static UUID getIdFromSelection(String selection) {
 		String[] split = selection.split(",");
 		String[] split2 = split[0].split(":");
-		return Integer.parseInt(split2[1]);
+		return UUID.fromString(split2[1]);
 	}
 
 }

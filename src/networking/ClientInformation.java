@@ -1,6 +1,7 @@
 package networking;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class ClientInformation implements Serializable {
 	
@@ -8,22 +9,28 @@ public class ClientInformation implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3087945278365659260L;
-	private int id;
+	private UUID id;
 	private final String name;
 	private MessageQueue queue;
 	private Session session;
 	
-	public ClientInformation(int id, String name) {
+	public ClientInformation(String name) {
+		this.id = UUID.randomUUID();
+		this.name = name;
+		this.queue = new MessageQueue();
+	}
+	
+	public ClientInformation(UUID id, String name) {
 		this.id = id;
 		this.name = name;
 		this.queue = new MessageQueue();
 	}
 	
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	

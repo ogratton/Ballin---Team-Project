@@ -82,8 +82,8 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
-		destList = resources.getDestList();
-		fullDestList = resources.getDestList();
+		//destList = resources.getDestList();
+		//fullDestList = resources.getDestList();
 
 		setUpSizes();
 
@@ -154,22 +154,30 @@ public class GameView extends JPanel implements Observer {
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
-		/*
-		 * destList = resources.getDestList();
-		 * 
-		 * for (Point p : destList) { if (!fullDestList.contains(p)) {
-		 * fullDestList.add(p); } }
-		 * 
-		 * if (debugPaths) { g.setColor(Color.RED);
-		 * 
-		 * for (int i = 0; i < fullDestList.size() - 1; i++) {
-		 * 
-		 * g.drawLine((int) fullDestList.get(i).getX(), (int)
-		 * fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
-		 * (int) fullDestList.get(i + 1).getY());
-		 * 
-		 * } }
-		 */
+		
+		//destList = resources.getDestList();
+		 
+		/*for (Point p : destList)
+		{
+			if (!fullDestList.contains(p))
+			{
+				fullDestList.add(p);
+			}
+		}
+
+		if (debugPaths)
+		{
+			g.setColor(Color.RED);
+
+			for (int i = 0; i < fullDestList.size() - 1; i++)
+			{
+
+				g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
+						(int) fullDestList.get(i + 1).getY());
+
+			}
+		}*/
+		 
 
 		// drawing each of the characters on the board
 
@@ -244,6 +252,25 @@ public class GameView extends JPanel implements Observer {
 								(int) (charPoints.get(i + 1).getX() * currentMultiplier),
 								(int) (charPoints.get(i + 1).getY() * currentMultiplier + currentOffset));
 					}
+					
+					// Only works with one AI at a time atm as it uses shared resource
+					if (character.getPlayerNumber() == 3)
+					{
+						
+						try
+						{
+							g.setColor(Color.GREEN);
+							Point p = resources.getProjectedPos();
+							g.drawLine((int) (character.getX() * currentMultiplier),
+									(int) (character.getY() * currentMultiplier + currentOffset), (int) (p.x * currentMultiplier),
+									(int) (p.y * currentMultiplier + currentOffset));
+						}
+						catch (Exception e)
+						{
+							// skip
+						}
+					}
+				
 				}
 
 				// draw the player!

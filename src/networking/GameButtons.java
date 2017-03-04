@@ -37,9 +37,7 @@ public class GameButtons extends JPanel implements Observer {
 		refresh.addActionListener(e -> {
 			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
 				if(!cModel.isGameInProgress()) {
-					NetworkingDemo.startGame(cModel, toServer);
-					GameData gameData = new GameData(cModel.getCharactersList());
-					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), -1, cModel.getSessionId(), -1, gameData);
+					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
 						toServer.writeUnshared(message);
 					} catch (Exception e1) {

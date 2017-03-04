@@ -6,6 +6,7 @@ import resources.Resources;
 
 import java.util.Map;
 import java.util.Observable;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionDataModel extends Observable {
@@ -16,11 +17,11 @@ public class ConnectionDataModel extends Observable {
 		this.data = data;
 	}
 	
-	public int getMyId() {
+	public UUID getMyId() {
 		return data.getClientInformation().getId();
 	}
 	
-	public void setMyId(int id) {
+	public void setMyId(UUID id) {
 		data.getClientInformation().setId(id);
 		setChanged();
 		notifyObservers();
@@ -36,21 +37,21 @@ public class ConnectionDataModel extends Observable {
 		notifyObservers();
 	}
 	
-	public ConcurrentMap<Integer, Session> getSessionsTable() {
+	public ConcurrentMap<UUID, Session> getSessionsTable() {
 		return data.getSessionsTable();
 	}
 	
-	public void setSessionsTable(ConcurrentMap<Integer, Session> sessions) {
+	public void setSessionsTable(ConcurrentMap<UUID, Session> sessions) {
 		data.setSessionsTable(sessions);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public int getSessionId() {
+	public UUID getSessionId() {
 		return this.data.getSessionId();
 	}
 	
-	public synchronized void setSessionId(int id) {
+	public synchronized void setSessionId(UUID id) {
 		this.data.setSessionId(id);
 		setChanged();
 		notifyObservers();
@@ -60,41 +61,41 @@ public class ConnectionDataModel extends Observable {
 		return this.data;
 	}
 	
-	public synchronized void addClient(int sessionId, int clientId, ClientInformation client) {
+	public synchronized void addClient(UUID sessionId, UUID clientId, ClientInformation client) {
 		this.data.addClient(sessionId, clientId, client);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized void removeClient(int sessionId, int clientId) {
+	public synchronized void removeClient(UUID sessionId, UUID clientId) {
 		this.data.removeClient(sessionId, clientId);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized Session getSession(int sessionId) {
+	public synchronized Session getSession(UUID sessionId) {
 		return data.getSession(sessionId);
 	}
 	
-	public synchronized ClientInformation getClient(int sessionId, int clientId) {
+	public synchronized ClientInformation getClient(UUID sessionId, UUID clientId) {
 		return this.data.getClient(sessionId, clientId);
 	}
 	
-	public synchronized int getHighlightedSessionId() {
+	public synchronized UUID getHighlightedSessionId() {
 		return this.data.getHighlightedSessionId();
 	}
 	
-	public synchronized void setHighlightedSessionId(int id) {
+	public synchronized void setHighlightedSessionId(UUID id) {
 		this.data.setHiglightedSessionId(id);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized int getHighlightedClientId() {
+	public synchronized UUID getHighlightedClientId() {
 		return this.data.getHighlightedClientId();
 	}
 	
-	public synchronized void setHighlightedClientId(int id) {
+	public synchronized void setHighlightedClientId(UUID id) {
 		this.data.setHighlightedClientId(id);
 		setChanged();
 		notifyObservers();
@@ -110,11 +111,11 @@ public class ConnectionDataModel extends Observable {
 		notifyObservers();
 	}
 	
-	public synchronized int getTargetId() {
+	public synchronized UUID getTargetId() {
 		return data.getTargetId();
 	}
 	
-	public synchronized void setTargetId(int id) {
+	public synchronized void setTargetId(UUID id) {
 		data.setTargetId(id);
 		setChanged();
 		notifyObservers();
@@ -132,11 +133,11 @@ public class ConnectionDataModel extends Observable {
 		data.setGameInProgress(bool);
 	}
 	
-	public Map<Integer, Character> getCharacters() {
+	public Map<UUID, Character> getCharacters() {
 		return data.getCharacters();
 	}
 
-	public void setCharacters(Map<Integer, Character> characters) {
+	public void setCharacters(Map<UUID, Character> characters) {
 		data.setCharacters(characters);
 		setChanged();
 		notifyObservers();
@@ -170,5 +171,13 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setResources(Resources res) {
 		data.setResources(res);
+	}
+	
+	public List<GameData> getRequests() {
+		return data.getRequests();
+	}
+	
+	public synchronized void setRequests(List<GameData> requests) {
+		data.setRequests(requests);
 	}
 }

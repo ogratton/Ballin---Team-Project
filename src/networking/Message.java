@@ -1,6 +1,7 @@
 package networking;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Message implements Serializable {
 	
@@ -11,24 +12,24 @@ public class Message implements Serializable {
 	private Command command;
 	private Note note;
 	private String message;
-	private int senderId;
-	private int receiverId;
-	private int currentSessionId;
-	private int targetSessionId;
+	private UUID senderId;
+	private UUID receiverId;
+	private UUID currentSessionId;
+	private UUID targetSessionId;
 	private Object object;
 	
 	public Message() {
 		command = Command.NULL;
 		note = Note.EMPTY;
 		message = "";
-		senderId = -1;
-		receiverId = -1;
+		senderId = null;
+		receiverId = null;
 		object = new Empty();
-		currentSessionId = -1;
-		targetSessionId = -1;
+		currentSessionId = null;
+		targetSessionId = null;
 	}
 	
-	public Message(Command command, Note note, int senderId, int receiverId, int currentSessionId, int targetSessionId) {
+	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId) {
 		this.command = command;
 		this.note = note;
 		this.message = "";
@@ -39,7 +40,7 @@ public class Message implements Serializable {
 		this.object = new Empty();
 	}
 	
-	public Message(Command command, Note note, int senderId, int receiverId, int currentSessionId, int targetSessionId, Object object) {
+	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId, Object object) {
 		this.command = command;
 		this.note = note;
 		this.message = "";
@@ -50,7 +51,7 @@ public class Message implements Serializable {
 		this.targetSessionId = targetSessionId;
 	}
 	
-	public Message(Command command, Note note, int senderId, int receiverId, int currentSessionId, int targetSessionId, Object object, String message) {
+	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId, Object object, String message) {
 		this.command = command;
 		this.note = note;
 		this.message = message;
@@ -69,19 +70,19 @@ public class Message implements Serializable {
 		this.message = message;
 	}
 
-	public int getCurrentSessionId() {
+	public UUID getCurrentSessionId() {
 		return currentSessionId;
 	}
 
-	public void setCurrentSessionId(int currentSessionId) {
+	public void setCurrentSessionId(UUID currentSessionId) {
 		this.currentSessionId = currentSessionId;
 	}
 
-	public int getTargetSessionId() {
+	public UUID getTargetSessionId() {
 		return targetSessionId;
 	}
 
-	public void setTargetSessionId(int targetSessionId) {
+	public void setTargetSessionId(UUID targetSessionId) {
 		this.targetSessionId = targetSessionId;
 	}
 
@@ -101,19 +102,19 @@ public class Message implements Serializable {
 		this.note = note;
 	}
 
-	public int getSenderId() {
+	public UUID getSenderId() {
 		return senderId;
 	}
 
-	public void setSenderId(int senderId) {
+	public void setSenderId(UUID senderId) {
 		this.senderId = senderId;
 	}
 
-	public int getReceiverId() {
+	public UUID getReceiverId() {
 		return receiverId;
 	}
 
-	public void setReceiverId(int receiverId) {
+	public void setReceiverId(UUID receiverId) {
 		this.receiverId = receiverId;
 	}
 

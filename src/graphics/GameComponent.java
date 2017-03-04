@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -78,20 +79,18 @@ public class GameComponent extends JFrame implements ActionListener {
 		view = new GameView(resources, debugPaths);
 		//mapView = new MapView(resources);
 
-		if (updater != null) {
-			for (Character model : resources.getPlayerList()) {
-				model.addObserver(view);
-				if (model.getId() == resources.getId()) {
-					model.addObserver(updater);
-				}
-			}
+		
+		for (Character model : resources.getPlayerList()) {
+			model.addObserver(view);
 		}
 
-		for (int i = 0; i < characters.size(); i++) {
-			if (characters.get(i).getId() == resources.getId()) {
-				secondPlayerIndex = i;
-				// System.out.println("Index: " + secondPlayerIndex);
-				break;
+		if(resources != null) {
+			for (int i = 0; i < characters.size(); i++) {
+				if (characters.get(i).getId() != null && characters.get(i).getId().equals(resources.getId())) {
+					secondPlayerIndex = i;
+					// System.out.println("Index: " + secondPlayerIndex);
+					break;
+				}
 			}
 		}
 
@@ -106,6 +105,10 @@ public class GameComponent extends JFrame implements ActionListener {
 		setVisible(true);*/
 
 		add(view, BorderLayout.CENTER);
+		
+		//setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		//setUndecorated(true);
 		setVisible(true);
 	}
 

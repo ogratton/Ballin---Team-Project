@@ -11,8 +11,12 @@ import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import resources.Resources;
+
 import java.io.*;
 
 public class Server {
@@ -25,10 +29,12 @@ public class Server {
 	    }  
 	
     // This will be shared by the server threads:
-    ConcurrentMap<Integer, Session> sessions = new ConcurrentHashMap<Integer, Session>();
+    ConcurrentMap<UUID, Session> sessions = new ConcurrentHashMap<UUID, Session>();
     
     // Initialise the client information table.
-    ConcurrentMap<Integer, ClientInformation> clients = new ConcurrentHashMap<Integer, ClientInformation>();
+    ConcurrentMap<UUID, ClientInformation> clients = new ConcurrentHashMap<UUID, ClientInformation>();
+    
+    ConcurrentMap<UUID, Resources> resourcesMap = new ConcurrentHashMap<UUID, Resources>();
     
     String port = args[0];
 
@@ -80,20 +86,19 @@ public class Server {
         System.out.println(clientName.getMessage() + " connected");
 
         // Edited Code
-        Integer id = generateID(clients);
-        
-        clients.put(id, new ClientInformation(id, clientName.getMessage()));
+        ClientInformation client = new ClientInformation(clientName.getMessage());
+        clients.put(client.getId(), client);
         
         Message idMessage = new Message();
         idMessage.setCommand(Command.SEND_ID);
-        idMessage.setSenderId(id);
+        idMessage.setSenderId(client.getId());
         idMessage.setMessage(clientName.getMessage());
         toClient.writeObject(idMessage);
 
         // We create and start a new thread to read from the client:
-        (new ServerReceiver(fromClient, sessions, clients)).start();
+        (new ServerReceiver(fromClient, sessions, clients, resourcesMap)).start();
         
-        (new ServerSender(clients.get(id).getQueue(), toClient, sessions, clients)).start();
+        (new ServerSender(client.getQueue(), toClient, sessions, clients, resourcesMap)).start();
       }
     } 
     catch (IOException e) {

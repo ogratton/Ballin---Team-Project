@@ -9,44 +9,25 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
-import resources.Resources;
-
-public class Session implements Serializable {
+public class SerializableSession implements Serializable {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1929781468355749346L;
+	private static final long serialVersionUID = 7643089963106161264L;
 	private UUID id;
 	private ConcurrentMap<UUID, ClientInformation> clients;
 	private boolean gameInProgress;
-	//private Resources resources;
 	
-	public Session(ConcurrentMap<UUID, ClientInformation> clients) {
-		this.id = UUID.randomUUID();
-		this.clients = clients;
-		this.gameInProgress = false;
-		//this.resources = new Resources();
-	}
-	
-	public Session(UUID id, ConcurrentMap<UUID, ClientInformation> clients, boolean gameInProgress) {
+	public SerializableSession(UUID id, ConcurrentMap<UUID, ClientInformation> clients, boolean gameInProgress) {
 		this.id = id;
 		this.clients = clients;
 		this.gameInProgress = gameInProgress;
-		//this.resources = null;
 	}
-
-//	public SerializableSession serialize() {
-//		return new SerializableSession(id, clients, gameInProgress);
-//	}
 	
-//	public Resources getResources() {
-//		return resources;
-//	}
-//
-//	public void setResources(Resources resources) {
-//		this.resources = resources;
-//	}
+	public SerializableSession() {
+		
+	}
 
 	public boolean isGameInProgress() {
 		return gameInProgress;
@@ -82,5 +63,9 @@ public class Session implements Serializable {
 			clientList.add(client);
 		}
 	    return clientList;
+	}
+	
+	public ConcurrentMap<UUID, ClientInformation> getClients() {
+		return this.clients;
 	}
 }

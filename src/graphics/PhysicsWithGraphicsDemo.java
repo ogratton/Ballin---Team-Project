@@ -50,8 +50,12 @@ public class PhysicsWithGraphicsDemo {
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
 
-		player.setX(400);
-		player.setY(400);
+		Point coords = new Point(400,400);
+		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+		
+		player.setX(coords.x);
+		player.setY(coords.y);
 
 		Character player1 = new Character(Character.Class.WARRIOR, 2);
 
@@ -73,7 +77,7 @@ public class PhysicsWithGraphicsDemo {
 		resources.addPlayerToList(player2);
 		resources.addPlayerToList(player3);
 
-		for(int i = 0; i < 6; i++){
+		/*for(int i = 0; i < 6; i++){
 			
 			
 			Character playa = new Character(Character.Class.WIZARD, i+3);
@@ -84,7 +88,7 @@ public class PhysicsWithGraphicsDemo {
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
 			ai.start();
-		}
+		}*/
 
 		// create physics thread
 		Physics p = new Physics(resources);
@@ -93,13 +97,13 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
+		/*VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
 		ai2.start();
 		
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
-		ai3.start();
+		ai3.start();*/	
 		
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		SwingUtilities.invokeLater(new Graphics(resources, null, true));
 
 
 
