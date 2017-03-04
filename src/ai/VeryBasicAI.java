@@ -28,7 +28,7 @@ public class VeryBasicAI extends Thread
 		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.POIROT; // default
+	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 25;
@@ -155,7 +155,8 @@ public class VeryBasicAI extends Thread
 	 */
 	private void commonBehaviour() throws InterruptedException
 	{
-		while (projectedTile() != Tile.FLAT) // if we are expected to be heading for a dangerous tile
+//		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
+		if(projectedTile() != Tile.FLAT)
 		{
 			Thread.sleep(reaction_time);
 			moveAwayFromEdge();
@@ -342,6 +343,11 @@ public class VeryBasicAI extends Thread
 	 */
 	private void moveAwayFromEdge() throws InterruptedException
 	{
+		// XXX bit rubbish
+		
+		// brace ourselves until we know where we're going to
+		character.setBlock(true);
+		
 		double[][] costMask = resources.getMap().getCostMask();
 		
 		Point curLoc;
@@ -375,10 +381,12 @@ public class VeryBasicAI extends Thread
 					int newY = curLoc.y + j;
 					if (newY < mapHeight && newY >= 0)
 					{
-						if(costMask[newX][newY] < safestTileCost)
+						double curCost = costMask[newX][newY];
+						if(curCost < safestTileCost)
 						{
 							safestX = newX;
 							safestY = newY;
+							safestTileCost = curCost;
 						}
 					}
 				}
@@ -387,6 +395,7 @@ public class VeryBasicAI extends Thread
 		
 		Point haven = resources.getMap().tileCoordsToMapCoords(safestX, safestY);
 		waypoints.addFirst(haven); // this is now our priority to move to
+		character.setBlock(false);
 		moveToNextWaypoint();
 
 		Thread.sleep(10);
