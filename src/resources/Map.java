@@ -499,21 +499,15 @@ public class Map {
 	public Point randPointOnMap()
 	{
 		//set location
-		double randX = 0.0;
-		double randY = 0.0;
-		int i = 0;
-		int j = 0;
+		Point randP = null;
 		do
 		{
 			randX = Math.random() * width;
 			randY = Math.random() * height;
-			
-			Point randP = tileCoords(randX, randY);
-			i = randP.x;
-			j = randP.y;
+			randP = tileCoords(randX, randY);
 		}
-		while (proxMask[i][j] < 2); // XXX never spawn anyone fewer than 2 tiles from the edge (arbitrary choice!)
-		return new Point((int) randX, (int) randY);
+		while (proxMask[randP.x][randP.y] < 2); // XXX never spawn anyone fewer than 2 tiles from the edge (arbitrary choice!)
+		return randP;
 	}
 	
 	/**
