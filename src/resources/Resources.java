@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import ai.pathfinding.Line;
 import gamemodes.Team;
 import resources.Map.Tile;
 
@@ -526,6 +526,17 @@ public class Resources {
 		AINextDest = nd;
 	}
 	
+	private Line normal;
+	
+	public Line getNormal()
+	{
+		return normal;
+	}
+	
+	public void setNormal(Line n)
+	{
+		this.normal = n;
+	}
 	
 
 	// public static MapReader mapReader = new MapReader();

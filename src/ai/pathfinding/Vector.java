@@ -26,9 +26,9 @@ public class Vector
 		this.x = dest.x - source.x;
 		this.y = dest.y - source.y;
 		// normalise
-		double sum = x + y;
-		x = x/sum;
-		y = y/sum;
+		double sum = Math.abs(x) + Math.abs(y);
+		x = x / sum;
+		y = y / sum;
 		this.centre = dest;
 	}
 
@@ -41,10 +41,25 @@ public class Vector
 	 */
 	public Vector(double x, double y, Point centre)
 	{
-		double sum = x + y;
-		this.x = x/sum;
-		this.y = y/sum;
+		double sum = Math.abs(x) + Math.abs(y);
+		this.x = x / sum;
+		this.y = y / sum;
 		this.centre = centre;
+	}
+
+	public Point getCentre()
+	{
+		return centre;
+	}
+
+	public double getX()
+	{
+		return x;
+	}
+
+	public double getY()
+	{
+		return y;
 	}
 
 	/**
@@ -69,7 +84,7 @@ public class Vector
 	public boolean pointInside(Point p)
 	{
 		boolean bool = true;
-	
+
 		// TODO I don't think we care if this.x or this.y are 0 but check
 		if (this.x < 0)
 		{
@@ -87,8 +102,13 @@ public class Vector
 		{
 			bool &= p.x >= centre.x;
 		}
-		
+
 		return bool;
+	}
+
+	public String toString()
+	{
+		return "[ " + x + " " + y + " ]";
 	}
 
 }
