@@ -498,7 +498,7 @@ public class Map {
 	
 	public Point randPointOnMap()
 	{
-		//set location
+		//set location 		
 		double randX = 0.0;
 		double randY = 0.0;
 		int i = 0;
@@ -507,7 +507,6 @@ public class Map {
 		{
 			randX = Math.random() * width;
 			randY = Math.random() * height;
-			
 			Point randP = tileCoords(randX, randY);
 			i = randP.x;
 			j = randP.y;
@@ -515,7 +514,7 @@ public class Map {
 		while (proxMask[i][j] < 2); // XXX never spawn anyone fewer than 2 tiles from the edge (arbitrary choice!)
 		return new Point((int) randX, (int) randY);
 	}
-	
+
 	/**
 	 * Checks whether a given tile is a 'killing' tile.
 	 * @param tile

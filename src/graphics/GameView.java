@@ -17,6 +17,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import ai.pathfinding.Line;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
@@ -79,8 +80,6 @@ public class GameView extends JPanel implements Observer {
 		this.resources = resources;
 		this.debugPaths = debugPaths;
 
-		makeMap();
-
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
@@ -104,6 +103,14 @@ public class GameView extends JPanel implements Observer {
 
 	public void makeMap() {
 		mapSprite = Sprite.createMap(resources.getMap());
+		int w = mapSprite.getWidth();
+		int h = mapSprite.getHeight();
+		bigMapSprite = new BufferedImage((int) fullScreenMapWidth, (int) fullScreenMapWidth, mapSprite.getType());
+		Graphics2D g = bigMapSprite.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(mapSprite, 0, 0, (int) fullScreenMapWidth, (int) fullScreenMapHeight, 0, 0, w, h, null);
+		g.dispose();
+		currentMapSprite = mapSprite;
 	}
 
 	private void setUpSizes() {
@@ -129,17 +136,7 @@ public class GameView extends JPanel implements Observer {
 		currentMapHeight = ordinaryMapHeight;
 		currentPlayerSize = ordinaryPlayerSize;
 
-		bigMapSprite = mapSprite;
-
-		int w = mapSprite.getWidth();
-		int h = mapSprite.getHeight();
-		bigMapSprite = new BufferedImage((int) fullScreenMapWidth, (int) fullScreenMapWidth, mapSprite.getType());
-		Graphics2D g = bigMapSprite.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(mapSprite, 0, 0, (int) fullScreenMapWidth, (int) fullScreenMapHeight, 0, 0, w, h, null);
-		g.dispose();
-
-		currentMapSprite = mapSprite;
+		makeMap();
 
 	}
 
@@ -274,6 +271,24 @@ public class GameView extends JPanel implements Observer {
 							// skip
 						}
 					}
+					
+					g.setColor(Color.RED);
+					Point nd = resources.getAINextdest();
+					if (nd != null)
+					{
+						g.drawOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+						g.setColor(Color.CYAN);
+						g.fillOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+					}
+					
+					g.setColor(Color.YELLOW);
+					Line normal = resources.getNormal();
+					if (normal != null)
+					{
+						g.drawLine((int) (normal.a.x*currentMultiplier), (int) (normal.a.y*(currentMultiplier + currentOffset)), (int) (normal.b.x*currentMultiplier), (int) (normal.b.y*(currentMultiplier + currentOffset)));
+					}
+					
+					
 				
 				}
 
