@@ -33,9 +33,9 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 25;
+	private final double fuzziness = 30;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
-	private final long tick = 30; // loop every <tick>ms
+	private final long tick = 70; // loop every <tick>ms
 	private long prescience = tick * 1; // how many ms ahead we look for our predicted point
 
 	private ArrayList<Tile> bad_tiles;
@@ -63,15 +63,8 @@ public class VeryBasicAI extends Thread
 	 * For now change direction randomly to avoid danger
 	 * (This is Coward behaviour)
 	 * 
-	 * TODO For moveAwayFromEdge use the ray-cast as the centre, not the player
-	 * centre
-	 * This will make it look more human, hopefully
-	 * 
-	 * TODO If the AI gets knocked closer to its final destination but farther
-	 * from its next waypoint,
-	 * it will run backwards to the waypoint rather than take advantage of the
-	 * collision
-	 * 
+	 * TODO moveAwayFromEdge is still a bit dodgy 
+	 *  
 	 * Look at this
 	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
 	 * behaviour-trees.html
@@ -165,35 +158,16 @@ public class VeryBasicAI extends Thread
 		//		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
 		if (projectedTile() != Tile.FLAT)
 		{
-			//			Thread.sleep(reaction_time);
+			//Thread.sleep(reaction_time);
 			moveAwayFromEdge();
-			System.out.println("Near an edge!");
+//			System.out.println("Near an edge!");
 		}
 		if (!waypoints.isEmpty())
 		{
 			// TODO if we are a certain distance away from the next waypoint, recalculate route
 			// this may have to go in the behaviours
-
-			moveToNextWaypoint();
-		}
-	}
-
-	private void moveToNextWaypoint() throws InterruptedException
-	{
-		resources.setAINextDest(waypoints.peek()); // XXX debug
-
-		success = moveTo(waypoints.peek());
-		if (success)
-		{
-			success = false;
-			if (waypoints.size() > 0)
-			{
-				//				System.out.println("made it to a waypoint!");
-				lastWaypoint = waypoints.removeFirst();
-				normalToNextWaypoint = normalToNextWaypoint(waypoints.peek());
-				brakeChar();
-			}
-
+			
+			moveToWaypoint();
 		}
 	}
 
@@ -209,20 +183,20 @@ public class VeryBasicAI extends Thread
 
 		if (waypoints.isEmpty())
 		{
-			//			System.out.println();
-			//			System.out.println("made it to destination " + destinations[destI]);
+			//System.out.println();
+//			System.out.println("made it to destination " + destinations[destI]);
 			destI++;
 			try
 			{
 				Point charPos = getCurrentTileCoords();
-				//				System.out.println(charPos);
+				//System.out.println(charPos);
 				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
 
 				resources.setDestList(waypoints); // XXX debug
-				//				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
+				//resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
 
-				//				System.out.println("pathfinding to point " + destinations[destI]);
-				//				System.out.println("waypoints: " + waypoints);
+				//System.out.println("pathfinding to point " + destinations[destI]);
+				//System.out.println("waypoints: " + waypoints);
 			}
 			catch (ArrayIndexOutOfBoundsException e)
 			{
@@ -256,7 +230,7 @@ public class VeryBasicAI extends Thread
 
 			Point charPos = getCurrentTileCoords();
 			Point newDest = getTileCoords(resources.getMap().randPointOnMap());
-			//						System.out.println("going to try to pathfind to " + newDest);
+			//System.out.println("going to try to pathfind to " + newDest);
 			while (waypoints.isEmpty())
 			{
 				// keep trying to get a new dest until we get a valid path
@@ -272,26 +246,49 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * Move to the next waypoint in our list
+	 * 
+	 * @throws InterruptedException
+	 */
+	private void moveToWaypoint() throws InterruptedException
+	{
+		resources.setAINextDest(waypoints.peek()); // XXX debug
+
+		success = moveTo(waypoints.peek());
+		if (success)
+		{
+			success = false;
+			if (waypoints.size() > 0)
+			{
+//				System.out.println("made it to a waypoint!");
+				lastWaypoint = waypoints.removeFirst();
+				normalToNextWaypoint = normalToNextWaypoint();
+				brakeChar();
+			}
+
+		}
+	}
+
+	/**
 	 * Works out the normal to the next point based on the vector from the
 	 * previous
 	 * 
-	 * @param p
 	 */
-	private Vector normalToNextWaypoint(Point p)
+	private Vector normalToNextWaypoint()
 	{
-		if (p != null)
+		if (waypoints.size() > 0)
 		{
 			// TODO test
 
 			// work out vector from lastWaypoint to p
 			Point a = lastWaypoint;
-			Point b = p;
+			Point b = waypoints.peek();
 			Vector ab_vec = new Vector(a, b);
 			// work out the normal to that (pointing right if original is up)
 			Vector ab_norm = ab_vec.normal(b);
 
 			//XXX debug
-			System.out.println(ab_norm);
+//			System.out.println(ab_norm);
 			Point onNormal1 = new Point((int) (ab_norm.getCentre().getX() + 100 * ab_norm.getX()),
 					(int) (ab_norm.getCentre().getY() + 100 * ab_norm.getY()));
 			Point onNormal2 = new Point((int) (ab_norm.getCentre().getX() - 100 * ab_norm.getX()),
@@ -443,6 +440,37 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * If we have overshot the waypoint then we can go onto the next one
+	 * 
+	 * @return true if overshoot detected (and dealt with)
+	 */
+	private boolean detectOvershoot()
+	{
+		// get where we are
+		Point curLoc = new Point((int) character.getX(), (int) character.getY());
+
+		// if we have a normal to be looking at
+		if (normalToNextWaypoint != null)
+		{
+			// and we are beyond that normal
+			if (!normalToNextWaypoint.pointInside(curLoc))
+			{
+				// skip to next waypoint
+				// we've got to have one waypoint to remove and one to become the new head
+				if (waypoints.size() >= 2)
+				{
+//					System.out.println("Overshot! Skipping ahead"); // TODO how come this is triggered more than a white girl on tumblr
+					lastWaypoint = waypoints.removeFirst();
+					normalToNextWaypoint = normalToNextWaypoint();
+//					System.out.println("Now the next waypoint is " + waypoints.peek());
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Dumbly move as-the-(drunken-)crow-flies to coords.
 	 * <br>
 	 * n.b: This uses coords not tiles
@@ -454,31 +482,14 @@ public class VeryBasicAI extends Thread
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
 	{
-		// TODO fix this horrific bug:
-		
-//		Point curLoc = new Point((int)character.getX(), (int)character.getY());
-//		
-//		if (normalToNextWaypoint != null)
-//		{
-//			if (!normalToNextWaypoint.pointInside(curLoc))
-//			{
-//				// skip to next waypoint
-//				System.out.println("Overshot! Skipping ahead"); // TODO how come this is triggered more than a white girl
-//				if (waypoints.size() > 1)
-//				{
-//					lastWaypoint = waypoints.removeFirst();
-//					return false; // XXX ???
-//				}
-//			}
-//		}
-		
+		// TODO fix this horrific bug with overshoots triggering too much:
 
-		 //if current position does not lie "behind" normal
-				
+		if (detectOvershoot())
+			return false;
 
 		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
-			//			brakeChar();
+//			brakeChar();
 			return true;
 		}
 		if (fuzzyEqual(character.getX(), p.x))

@@ -5,6 +5,7 @@ import java.awt.Point;
 /**
  * An attempt at vectors in Java
  * Tailored a bit for what I actually need
+ * Really more of a line with a single point
  * 
  * @author Oliver Gratton
  *
@@ -12,7 +13,7 @@ import java.awt.Point;
 public class Vector
 {
 
-	private double x, y;
+	private double dx, dy;
 	private Point centre;
 
 	/**
@@ -23,12 +24,12 @@ public class Vector
 	 */
 	public Vector(Point source, Point dest)
 	{
-		this.x = dest.x - source.x;
-		this.y = dest.y - source.y;
+		this.dx = dest.x - source.x;
+		this.dy = dest.y - source.y;
 		// normalise
-		double sum = Math.abs(x) + Math.abs(y);
-		x = x / sum;
-		y = y / sum;
+		double sum = Math.abs(dx) + Math.abs(dy);
+		dx = dx / sum;
+		dy = dy / sum;
 		this.centre = dest;
 	}
 
@@ -42,8 +43,8 @@ public class Vector
 	public Vector(double x, double y, Point centre)
 	{
 		double sum = Math.abs(x) + Math.abs(y);
-		this.x = x / sum;
-		this.y = y / sum;
+		this.dx = x / sum;
+		this.dy = y / sum;
 		this.centre = centre;
 	}
 
@@ -54,12 +55,12 @@ public class Vector
 
 	public double getX()
 	{
-		return x;
+		return dx;
 	}
 
 	public double getY()
 	{
-		return y;
+		return dy;
 	}
 
 	/**
@@ -68,11 +69,11 @@ public class Vector
 	 */
 	public Vector normal(Point centre)
 	{
-		return new Vector(y, -x, centre);
+		return new Vector(dy, -dx, centre);
 	}
 
 	/**
-	 * Is point p inside (i.e. to the right of) the vector?
+	 * Is point p inside (i.e. to the left of) the vector?
 	 * This is used on normals by AIs following waypoints.
 	 * Being inside means that the waypoint is in the same
 	 * direction as the goal, but being outside means that
@@ -86,29 +87,57 @@ public class Vector
 		boolean bool = true;
 
 		// TODO I don't think we care if this.x or this.y are 0 but check
-		if (this.x < 0)
+		if (this.dx < 0)
 		{
-			bool &= p.y <= centre.y;
+			bool &= p.y >= getYfromX(p.x);
 		}
-		if (this.x > 0)
+		if (this.dx > 0)
 		{
-			bool &= p.y >= centre.y;
+			bool &= p.y <= getYfromX(p.x);
 		}
-		if (this.y < 0)
+		if (this.dy < 0)
 		{
-			bool &= p.x <= centre.x;
+			bool &= p.x <= getXfromY(p.y);
 		}
-		if (this.y > 0)
+		if (this.dy > 0)
 		{
-			bool &= p.x >= centre.x;
+			bool &= p.x >= getXfromY(p.y);
 		}
 
 		return bool;
 	}
+	
+	/**
+	 * Work out the y coord on the vector from the centre given x
+	 * @param x
+	 * @return
+	 */
+	private double getYfromX(double x)
+	{
+		double xFromCentre = x - centre.getX();
+		double times = xFromCentre/this.dx;
+		double y = centre.getY() + (this.dy*times);
+		
+		return y;
+	}
+	
+	/**
+	 * Work out the x coord on the vector from the centre given y
+	 * @param y
+	 * @return
+	 */
+	private double getXfromY(double y)
+	{
+		double yFromCentre = y - centre.getY();
+		double times = yFromCentre/this.dy;
+		double x = centre.getX() + (this.dx*times);
+		
+		return x;
+	}
 
 	public String toString()
 	{
-		return "[ " + x + " " + y + " ]";
+		return "[ " + dx + " " + dy + " ]";
 	}
 
 }

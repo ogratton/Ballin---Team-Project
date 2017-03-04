@@ -276,16 +276,16 @@ public class GameView extends JPanel implements Observer {
 					Point nd = resources.getAINextdest();
 					if (nd != null)
 					{
-						g.drawOval(nd.x, nd.y, 10, 10);
+						g.drawOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
 						g.setColor(Color.CYAN);
-						g.fillOval(nd.x, nd.y, 10, 10);
+						g.fillOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
 					}
 					
 					g.setColor(Color.YELLOW);
 					Line normal = resources.getNormal();
 					if (normal != null)
 					{
-						g.drawLine(normal.a.x, normal.a.y, normal.b.x, normal.b.y);
+						g.drawLine((int) (normal.a.x*currentMultiplier), (int) (normal.a.y*(currentMultiplier + currentOffset)), (int) (normal.b.x*currentMultiplier), (int) (normal.b.y*(currentMultiplier + currentOffset)));
 					}
 					
 					
