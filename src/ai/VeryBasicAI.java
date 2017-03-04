@@ -570,7 +570,6 @@ public class VeryBasicAI extends Thread
 	{
 		// 'release' all keys
 		setAllMovementFalse();
-		character.setBlock(true);
 
 		double dX = character.getDx();
 		double dY = character.getDy();
@@ -689,9 +688,6 @@ public class VeryBasicAI extends Thread
 				return;
 			}
 		}
-
-		character.setBlock(false);
-
 	}
 
 }
