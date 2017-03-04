@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import ai.pathfinding.AStarSearch;
+import ai.pathfinding.Line;
 import ai.pathfinding.Vector;
 import resources.Character;
 import resources.Map.Tile;
@@ -29,11 +30,11 @@ public class VeryBasicAI extends Thread
 		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.ROVING; // default
+	private Behaviour behaviour = Behaviour.POIROT; // default
 
 	//	private int raycast_length = 10;
 	private final double fuzziness = 25;
-//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
+	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
 	private final long tick = 30; // loop every <tick>ms
 	private long prescience = tick * 1; // how many ms ahead we look for our predicted point
 
@@ -44,16 +45,16 @@ public class VeryBasicAI extends Thread
 	private AStarSearch aStar;
 
 	private LinkedList<Point> waypoints;
-	
+
 	private Point lastWaypoint; // the last waypoint we followed
-	
+	private Vector normalToNextWaypoint;
+
 	private boolean success = true; // we start off a winner (because we need to be motivated to look for new goals) 
-	
+
 	// XXX debug stuff
 	// this is setting things up for the debug Detective
 	Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 	int destI = 0; // destination index
-	
 
 	/*
 	 * Notes:
@@ -90,7 +91,7 @@ public class VeryBasicAI extends Thread
 		id = character.getId();
 
 		aStar = new AStarSearch(resources);
-		
+
 		lastWaypoint = getCurrentTileCoords();
 	}
 
@@ -115,9 +116,9 @@ public class VeryBasicAI extends Thread
 				// TODO this should be the predicted future tile, not the one we are actually on
 				// otherwise it's OP
 				commonBehaviour();
-				
+
 				resources.setProjectedPos(projectedPosition());
-				
+
 				if (behaviour == Behaviour.POIROT)
 				{
 					poirotBehaviour();
@@ -152,18 +153,19 @@ public class VeryBasicAI extends Thread
 		}
 
 	}
-	
+
 	/**
 	 * Performs 1 tick's worth of common behaviour
 	 * (move away from edge, move to next waypoint, etc)
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void commonBehaviour() throws InterruptedException
 	{
-//		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
-		if(projectedTile() != Tile.FLAT)
+		//		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
+		if (projectedTile() != Tile.FLAT)
 		{
-//			Thread.sleep(reaction_time);
+			//			Thread.sleep(reaction_time);
 			moveAwayFromEdge();
 			System.out.println("Near an edge!");
 		}
@@ -171,52 +173,56 @@ public class VeryBasicAI extends Thread
 		{
 			// TODO if we are a certain distance away from the next waypoint, recalculate route
 			// this may have to go in the behaviours
-			
+
 			moveToNextWaypoint();
 		}
 	}
-	
+
 	private void moveToNextWaypoint() throws InterruptedException
 	{
 		resources.setAINextDest(waypoints.peek()); // XXX debug
-		
+
 		success = moveTo(waypoints.peek());
 		if (success)
 		{
 			success = false;
 			if (waypoints.size() > 0)
 			{
+				//				System.out.println("made it to a waypoint!");
 				lastWaypoint = waypoints.removeFirst();
+				normalToNextWaypoint = normalToNextWaypoint(waypoints.peek());
 				brakeChar();
 			}
-			
 
 		}
 	}
-	
+
 	/**
 	 * XXX Debug only
-	 * Perform 1 tick's worth of Poirot 
+	 * Perform 1 tick's worth of Poirot
 	 * (follow set points by A*, so hopefully isn't a lemming)
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	private void poirotBehaviour() throws InterruptedException
-	{		
+	{
 
-		if(waypoints.isEmpty())
+		if (waypoints.isEmpty())
 		{
-			System.out.println(id + " made it to destination " + destinations[destI]);
+			//			System.out.println();
+			//			System.out.println("made it to destination " + destinations[destI]);
 			destI++;
 			try
 			{
 				Point charPos = getCurrentTileCoords();
-				System.out.println(charPos);
+				//				System.out.println(charPos);
 				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
 
-				resources.setDestList(waypoints);
-				System.out.println(id + " pathfinding to point " + destinations[destI]);
-				System.out.println("waypoints: " + waypoints);
-				System.out.println();
+				resources.setDestList(waypoints); // XXX debug
+				//				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
+
+				//				System.out.println("pathfinding to point " + destinations[destI]);
+				//				System.out.println("waypoints: " + waypoints);
 			}
 			catch (ArrayIndexOutOfBoundsException e)
 			{
@@ -224,21 +230,23 @@ public class VeryBasicAI extends Thread
 			}
 		}
 	}
-	
+
 	/**
 	 * XXX Debug only
-	 * Performs 1 tick's worth of Stubborn behaviour 
-	 * (brakes) 
+	 * Performs 1 tick's worth of Stubborn behaviour
+	 * (brakes)
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void stubbornBehaviour() throws InterruptedException
 	{
 		brakeChar();
 	}
-	
+
 	/**
-	 * Performs 1 tick's worth of Roving behaviour 
+	 * Performs 1 tick's worth of Roving behaviour
 	 * (moves randomly)
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void rovingBehaviour() throws InterruptedException
@@ -264,6 +272,43 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * Works out the normal to the next point based on the vector from the
+	 * previous
+	 * 
+	 * @param p
+	 */
+	private Vector normalToNextWaypoint(Point p)
+	{
+		if (p != null)
+		{
+			// TODO test
+
+			// work out vector from lastWaypoint to p
+			Point a = lastWaypoint;
+			Point b = p;
+			Vector ab_vec = new Vector(a, b);
+			// work out the normal to that (pointing right if original is up)
+			Vector ab_norm = ab_vec.normal(b);
+
+			//XXX debug
+			System.out.println(ab_norm);
+			Point onNormal1 = new Point((int) (ab_norm.getCentre().getX() + 100 * ab_norm.getX()),
+					(int) (ab_norm.getCentre().getY() + 100 * ab_norm.getY()));
+			Point onNormal2 = new Point((int) (ab_norm.getCentre().getX() - 100 * ab_norm.getX()),
+					(int) (ab_norm.getCentre().getY() - 100 * ab_norm.getY()));
+			Line normal = new Line(onNormal1, onNormal2);
+			resources.setNormal(normal);
+
+			return ab_norm;
+		}
+		else
+		{
+			return null; // TODO seems iffy
+		}
+
+	}
+
+	/**
 	 * @return The type of tile the AI is standing on
 	 */
 	private Tile getCurrentTile()
@@ -282,29 +327,35 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
-	 * Uses current dy & dx to estimate position in "prescience" ms 
+	 * Uses current dy & dx to estimate position in "prescience" ms
+	 * 
 	 * @return
 	 */
 	private Point projectedPosition()
 	{
 		int x = (int) (character.getX() + prescience * character.getDx());
 		int y = (int) (character.getY() + prescience * character.getDy());
-		
-		int maxX = (int) resources.getMap().getWidth() -1; // -1 in case of rounding
-		int maxY = (int) resources.getMap().getHeight() -1;
-		
+
+		int maxX = (int) resources.getMap().getWidth() - 1; // -1 in case of rounding
+		int maxY = (int) resources.getMap().getHeight() - 1;
+
 		// clamp prediction to the map
-		if (x < 0) x = 0;
-		if (x > maxX) x = maxX;
-		
-		if (y < 0) y = 0;
-		if (y > maxY) y = maxY;
-		
-		return new Point(x,y);
+		if (x < 0)
+			x = 0;
+		if (x > maxX)
+			x = maxX;
+
+		if (y < 0)
+			y = 0;
+		if (y > maxY)
+			y = maxY;
+
+		return new Point(x, y);
 	}
-	
+
 	/**
 	 * What tile is the AI predicted to be on in "prescience" ms
+	 * 
 	 * @return
 	 */
 	private Tile projectedTile()
@@ -357,10 +408,10 @@ public class VeryBasicAI extends Thread
 	 */
 
 	private void moveAwayFromEdge() throws InterruptedException
-	{ 
+	{
 		Point currentTileIndex = getCurrentTileCoords();
 		//		setAllMovementFalse();
-		int column = (int) currentTileIndex.getX(); 
+		int column = (int) currentTileIndex.getX();
 		int row = (int) currentTileIndex.getY();
 		// get the surrounding tiles 
 		// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning) 	
@@ -403,31 +454,31 @@ public class VeryBasicAI extends Thread
 	 */
 	private boolean moveTo(Point p) throws InterruptedException
 	{
-		// TODO check that overshooting stuff actually makes a difference
+		// TODO fix this horrific bug:
 		
-		// work out vector from lastWaypoint to p
-		Point curLoc = new Point((int) character.getX(), (int) character.getY());
-		Point a = lastWaypoint;
-		Point b = p;
-		Vector ab_vec = new Vector(a,b);
-		// work out the normal to that (pointing right if original is up)
-		Vector ab_norm = ab_vec.normal(b);
+//		Point curLoc = new Point((int)character.getX(), (int)character.getY());
+//		
+//		if (normalToNextWaypoint != null)
+//		{
+//			if (!normalToNextWaypoint.pointInside(curLoc))
+//			{
+//				// skip to next waypoint
+//				System.out.println("Overshot! Skipping ahead"); // TODO how come this is triggered more than a white girl
+//				if (waypoints.size() > 1)
+//				{
+//					lastWaypoint = waypoints.removeFirst();
+//					return false; // XXX ???
+//				}
+//			}
+//		}
 		
-		// if current position does not lie "behind" normal
-		if (!ab_norm.pointInside(curLoc))
-		{
-			// skip to next waypoint
-//			System.out.println("Overshot! Skipping ahead");
-			if (waypoints.size() > 0)
-			{
-				lastWaypoint = waypoints.removeFirst();
-			}
-		}
-		
-		
+
+		 //if current position does not lie "behind" normal
+				
+
 		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
-//			brakeChar();
+			//			brakeChar();
 			return true;
 		}
 		if (fuzzyEqual(character.getX(), p.x))

@@ -17,6 +17,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import ai.pathfinding.Line;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
@@ -279,6 +280,14 @@ public class GameView extends JPanel implements Observer {
 						g.setColor(Color.CYAN);
 						g.fillOval(nd.x, nd.y, 10, 10);
 					}
+					
+					g.setColor(Color.YELLOW);
+					Line normal = resources.getNormal();
+					if (normal != null)
+					{
+						g.drawLine(normal.a.x, normal.a.y, normal.b.x, normal.b.y);
+					}
+					
 					
 				
 				}
