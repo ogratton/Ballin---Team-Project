@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -102,6 +103,10 @@ public class GameComponent extends JFrame implements ActionListener {
 		setVisible(true);*/
 
 		add(view, BorderLayout.CENTER);
+		
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		setUndecorated(true);
 		setVisible(true);
 	}
 
