@@ -95,6 +95,7 @@ public class PhysicsWithGraphicsDemo {
 		p.start();
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
+//		ai1.setBehaviour("poirot");
 		ai1.start();
 		
 		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
