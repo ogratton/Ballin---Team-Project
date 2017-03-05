@@ -45,7 +45,7 @@ public class PhysicsWithGraphicsDemo {
 		}
 		
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);

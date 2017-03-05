@@ -37,6 +37,8 @@ public class Map {
 	// not guaranteed to be accounted for in calculations.
 	private ArrayList<Wall> walls;
 
+	private String name;
+	
 	// powerups
 	// private ArrayList<PowerUp> powerups;
 
@@ -73,9 +75,9 @@ public class Map {
 	 *            the height
 	 */
 
-	public Map(int width, int height) {
+	public Map(int width, int height, String name) {
 
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>());
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), name);
 	}
 
 	/**
@@ -92,8 +94,8 @@ public class Map {
 	 *            the world type
 	 */
 
-	public Map(int width, int height, Tile[][] tile, World world) {
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world);
+	public Map(int width, int height, Tile[][] tile, World world, String name) {
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world, name);
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class Map {
 	 *            the list of walls
 	 */
 
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls) {
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls, String name) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
@@ -121,6 +123,7 @@ public class Map {
 		this.gravity = gravity;
 		this.walls = walls;
 		this.world = World.CAVE;
+		this.name = name;
 
 		tiles = new Tile[height][width];
 		tileSet = SheetDeets.getTileSetFromWorld(world);
@@ -153,13 +156,14 @@ public class Map {
 	 */
 
 	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
-			Tile[][] tile, World worldType) {
+			Tile[][] tile, World worldType, String name) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
 		this.gravity = gravity;
 		this.walls = walls;
+		this.name = name;
 
 		this.tiles = tile;
 		this.world = worldType;
@@ -545,5 +549,8 @@ public class Map {
 		this.proxMask = proxMask;
 	}
 
+	public String getName(){
+		return this.name;
+	}
 	
 }
