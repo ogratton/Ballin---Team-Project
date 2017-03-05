@@ -97,6 +97,8 @@ public class GameView extends JPanel implements Observer {
 				pointTrail.get(player).add(new Point((int) player.getX(), (int) player.getY()));
 			}
 		}
+		
+		setSize(1200, 675);
 
 	}
 
@@ -374,7 +376,7 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public void setFullScreen(boolean fullscreen) {
-
+		
 		if (fullscreen) {
 			currentMapHeight = fullScreenMapHeight;
 			currentMapWidth = fullScreenMapWidth;
