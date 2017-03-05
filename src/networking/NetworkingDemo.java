@@ -50,12 +50,15 @@ public class NetworkingDemo {
 		resources.setMap(map);
 		new MapCosts(resources);
 		
-		Point coords = new Point(400,400);
-		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
-		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+
+		
 		
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
+			Point coords = resources.getMap().randPointOnMap();
+			Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+			
 			UUID id = clients.get(i).getId();
 			newPlayer = new Character(Character.Class.ARCHER, i+1);
 			newPlayer.setX(coords.x);

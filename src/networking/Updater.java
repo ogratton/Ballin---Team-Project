@@ -23,7 +23,7 @@ public class Updater extends JPanel implements Observer {
 	private ConnectionDataModel  cModel;
 	private ObjectOutputStream toServer;
 	private Resources resources;
-	private boolean oldUp, oldRight, oldLeft, oldDown, oldJump, oldPunch, oldBlock = false;
+	private boolean oldUp, oldRight, oldLeft, oldDown, oldDashing, oldPunch, oldBlocking = false;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -51,7 +51,9 @@ public class Updater extends JPanel implements Observer {
 		List<resources.Character> characters = resources.getPlayerList();
 		for(int i=0; i<characters.size(); i++) {
 			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {
-				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isJump(), characters.get(i).isPunch(), characters.get(i).isBlock());
+				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), characters.get(i).isPunch(), characters.get(i).isBlocking(), resources.getNextRequestId());
+				resources.getRequests().add(info);
+				//System.out.println("Request ID sent: " + resources.getRequestId());
 				GameData gameData = new GameData(info);
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
 				try {
@@ -72,14 +74,14 @@ public class Updater extends JPanel implements Observer {
 	}
 	
 	private boolean hasControlsChanged(resources.Character c) {
-		if(c.isUp() != oldUp || c.isDown() != oldDown || c.isRight() != oldRight || c.isLeft() != oldLeft || c.isBlock() != oldBlock || c.isJump() != oldJump || c.isPunch() != oldPunch) {
+		if(c.isUp() != oldUp || c.isDown() != oldDown || c.isRight() != oldRight || c.isLeft() != oldLeft || c.isBlocking() != oldBlocking || c.isDashing() != oldDashing || c.isPunch() != oldPunch) {
 			oldUp = c.isUp();
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			oldJump = c.isJump();
+			oldDashing = c.isDashing();
 			oldPunch = c.isPunch();
-			oldBlock = c.isBlock();
+			oldBlocking = c.isBlocking();
 			return true;
 		}
 		else {
@@ -87,9 +89,9 @@ public class Updater extends JPanel implements Observer {
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			oldJump = c.isJump();
+			oldDashing = c.isDashing();
 			oldPunch = c.isPunch();
-			oldBlock = c.isBlock();
+			oldBlocking = c.isBlocking();
 			return false;
 		}
 	}

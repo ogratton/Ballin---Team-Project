@@ -95,6 +95,7 @@ public class ServerReceiver extends Thread {
 					  break;
 				  case LEAVE:
 					  senderClient = clients.get(message.getSenderId());
+					  senderClient.setReady(false);
 					  sessionId = message.getTargetSessionId();
 					  session = sessions.get(sessionId);
 					  sessions.get(sessionId).removeClient(senderClient.getId());
@@ -111,39 +112,55 @@ public class ServerReceiver extends Thread {
 					  break;
 				  }
 			  case GAME:
+				  GameData data;
+				  ClientInformation client;
 				  switch(message.getNote()) {
+				  case STOP:
+					  //session = sessions.get(message.getCurrentSessionId());
+					  client = clients.get(message.getSenderId());
+					  client.setReady(false);
+					  break;
 				  case START:
 					  session = sessions.get(message.getCurrentSessionId());
-					  session.setGameInProgress(true);
-					  clientList = session.getAllClients();
+					  client = clients.get(message.getSenderId());
+					  client.setReady(true);
 					  
-					  NetworkingDemo.startServerGame(session, resourcesMap, sessions);
-					  
-					  List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
-					  List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
-					  for(int i=0; i<characters.size(); i++) {
-						  resources.Character character = characters.get(i);
-						  characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY(), character.getPlayerNumber()));
+					  if(session.allClientsReady()) {
+						  NetworkingDemo.startServerGame(session, resourcesMap, sessions);
+						  session.setGameInProgress(true);
+						  List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
+						  List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
+						  for(int i=0; i<characters.size(); i++) {
+							  resources.Character character = characters.get(i);
+							  characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY(), character.getPlayerNumber()));
+						  }
+						  
+						  data = new GameData(characterInfo);
+						  Message startGame = new Message(Command.GAME, Note.START, message.getSenderId(), message.getReceiverId(), message.getCurrentSessionId(), message.getTargetSessionId(), data);
+						  
+						  clientList = session.getAllClients();
+						  // Send to all clients in the session.
+						  for(int i=0; i<clientList.size(); i++) {
+							  clientList.get(i).getQueue().offer(startGame);
+						  }
 					  }
 					  
-					  GameData data = new GameData(characterInfo);
-					  Message startGame = new Message(Command.GAME, Note.START, message.getSenderId(), message.getReceiverId(), message.getCurrentSessionId(), message.getTargetSessionId(), data);
-					  
-					  // Send to all clients in the session.
-					  for(int i=0; i<clientList.size(); i++) {
-						  clientList.get(i).getQueue().offer(startGame);
-					  }
 					  
 					  break;
 				  case UPDATE:
 					  session = sessions.get(message.getCurrentSessionId());
 					  clientList = session.getAllClients();
 					  
+					  data = (GameData)message.getObject();
+					  Resources res = resourcesMap.get(session.getId());
 					  CharacterInfo info = ((GameData)message.getObject()).getInfo();
-					  for(int i=0; i<resourcesMap.get(session.getId()).getPlayerList().size(); i++) {
-						  resources.Character c = resourcesMap.get(session.getId()).getPlayerList().get(i);
+					  for(int i=0; i<res.getPlayerList().size(); i++) {
+						  resources.Character c = res.getPlayerList().get(i);
 						  if(info.getId().equals(c.getId())) {
-							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isJump(), info.isPunch(), info.isBlock());
+							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isPunch(), info.isBlocking());
+							  c.setDashing(info.isDashing());
+							  c.setBlocking(info.isBlocking());
+							  c.setRequestId(info.getRequestId());
 						  }
 					  }
 					  

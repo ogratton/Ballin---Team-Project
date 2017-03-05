@@ -4,10 +4,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
+import ai.pathfinding.Line;
 import gamemodes.Team;
 import resources.Map.Tile;
 
@@ -77,6 +78,9 @@ public class Resources {
 	private Color p6Colour = new Color(226, 10, 229);
 	private Color p7Colour = new Color(245, 122, 37);
 	private Color p8Colour = new Color(98, 31, 187);
+	
+	private int requestId = 0;
+	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
@@ -91,6 +95,31 @@ public class Resources {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	
+	public int getRequestId() {
+		return this.requestId;
+	}
+	
+	public void setRequestId(int id) {
+		this.requestId = id;
+	}
+	
+	public void incRequestId() {
+		this.requestId++;
+	}
+	
+	public int getNextRequestId() {
+		this.incRequestId();
+		return this.requestId;
+	}
+	
+	public List<networking.CharacterInfo> getRequests() {
+		return requests;
+	}
+	
+	public void setRequests(List<networking.CharacterInfo> list) {
+		requests = list;
 	}
 
 	/**
@@ -514,6 +543,29 @@ public class Resources {
 		projectedPos = pos;
 	}
 	
+	private Point AINextDest;
+	
+	public Point getAINextdest()
+	{
+		return AINextDest;
+	}
+	
+	public void setAINextDest(Point nd)
+	{
+		AINextDest = nd;
+	}
+	
+	private Line normal;
+	
+	public Line getNormal()
+	{
+		return normal;
+	}
+	
+	public void setNormal(Line n)
+	{
+		this.normal = n;
+	}
 	
 
 	// public static MapReader mapReader = new MapReader();

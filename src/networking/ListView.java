@@ -113,7 +113,7 @@ public class ListView extends JPanel implements Observer {
 		DefaultListModel<String> clientModel = (DefaultListModel<String>) clientList.getModel();
 		clientModel.clear();
 		for(int i=0; i<clients.size(); i++) {
-			clientModel.addElement("ID: " + clients.get(i).getId() + ": Name: " + clients.get(i).getName());
+			clientModel.addElement("Name: " + clients.get(i).getName());
 		}
 		
 		repaint();

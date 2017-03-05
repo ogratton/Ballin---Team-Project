@@ -20,7 +20,8 @@ public class GameButtons extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
 	private ObjectOutputStream toServer;
-	private JButton refresh;
+	private JButton ready;
+	private JButton notReady;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -33,13 +34,14 @@ public class GameButtons extends JPanel implements Observer {
 		super();
 		
 		this.cModel = cModel;
-		refresh = new JButton("Start Game");
-		refresh.addActionListener(e -> {
+		ready = new JButton("Ready");
+		ready.addActionListener(e -> {
 			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
 				if(!cModel.isGameInProgress()) {
 					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
 						toServer.writeUnshared(message);
+						cModel.setReady(true);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -47,7 +49,23 @@ public class GameButtons extends JPanel implements Observer {
 			}
 		});
 		
-		add(refresh);
+		notReady = new JButton("Not Ready");
+		notReady.addActionListener(e -> {
+			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+				if(!cModel.isGameInProgress()) {
+					Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+					try {
+						toServer.writeUnshared(message);
+						cModel.setReady(false);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		add(ready);
+		add(notReady);
 	}
 
 /**

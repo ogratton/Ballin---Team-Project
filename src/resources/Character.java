@@ -35,7 +35,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
 	// moveFlags moves ...
-	private boolean up, right, left, down, jump, punch, block = false;
+	private boolean up, right, left, down = false;
 	// state flags
 	private boolean falling, dead, dashing, blocking = false;
 	private int lives = 4;
@@ -90,6 +90,16 @@ public class Character extends Observable implements Collidable_Circle {
 	private boolean hasPowerup = false;
 
 	private int teamNumber;
+	
+	private int requestId;
+	
+	public int getRequestId() {
+		return requestId;
+	}
+	
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
+	}
 
 	/**
 	 * Default character with default sprite
@@ -142,9 +152,6 @@ public class Character extends Observable implements Collidable_Circle {
 		this.right = right;
 		this.left = left;
 		this.down = down;
-		this.jump = jump;
-		this.punch = punch;
-		this.block = block;
 
 		this.mass = mass;
 		if (mass == 0)
@@ -384,36 +391,6 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * Is the character jumping?
-	 * 
-	 * @return is the character jumping?
-	 */
-
-	public boolean isJump() {
-		return this.jump;
-	}
-
-	/**
-	 * Is the character punching?
-	 * 
-	 * @return is the character punching?
-	 */
-
-	public boolean isPunch() {
-		return this.punch;
-	}
-
-	/**
-	 * Is the character blocking?
-	 * 
-	 * @return is the character blocking?
-	 */
-
-	public boolean isBlock() {
-		return this.block;
-	}
-
-	/**
 	 * Set if an up command is being received
 	 * 
 	 * @param up
@@ -459,40 +436,6 @@ public class Character extends Observable implements Collidable_Circle {
 	public void setRight(boolean right) {
 		this.right = right;
 		setDirection();
-	}
-
-	/**
-	 * Set if a jump command is being received
-	 * 
-	 * @param jump
-	 *            is a jump command being received?
-	 */
-
-	public void setJump(boolean jump) {
-		this.jump = jump;
-
-	}
-
-	/**
-	 * Set if a punch command is being received
-	 * 
-	 * @param punch
-	 *            is a punch command being received?
-	 */
-
-	public void setPunch(boolean punch) {
-		this.punch = punch;
-	}
-
-	/**
-	 * Set if a block command is being received
-	 * 
-	 * @param block
-	 *            is a block command being received?
-	 */
-
-	public void setBlock(boolean block) {
-		this.block = block;
 	}
 
 	/**
@@ -982,15 +925,13 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @param punch
 	 * @param block
 	 */
-	public void setControls(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean punch,
-			boolean block) {
+	public void setControls(boolean up, boolean down, boolean left, boolean right, boolean blocking, boolean dashing) {
 		this.up = up;
 		this.down = down;
 		this.left = left;
 		this.right = right;
-		this.jump = jump;
-		this.punch = punch;
-		this.block = block;
+		this.blocking = blocking;
+		this.dashing = dashing;
 		setChanged();
 		notifyObservers();
 	}

@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import resources.Map;
 import java.util.Map.Entry;
@@ -13,7 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import ai.pathfinding.MapCosts;
 import graphics.Graphics;
+import physics.Physics;
 import resources.Character;
 import resources.MapReader;
 import resources.Resources;
@@ -153,17 +156,15 @@ public void run() {
 					}
 					
 					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
-    				
+					new MapCosts(resources);
     				cModel.setResources(resources);
     				
+    				Physics p = new Physics(resources);
+    				p.start();
+    				
     				// create ui thread
-    				EventQueue.invokeLater(new Runnable() {
-    					@Override
-    					public void run() {
-    						Graphics g = new Graphics(resources, updater, false);
-    						g.start();
-    					}
-    				});
+    				Graphics g = new Graphics(resources, updater, false);
+    				g.start();
     				
     				break;
     			case UPDATE:
@@ -172,19 +173,35 @@ public void run() {
         				List<CharacterInfo> charactersList = gameData.getCharactersList();
         				resources = cModel.getResources();
         				List<resources.Character> players = resources.getPlayerList();
-        				for(int i=0; i<players.size(); i++) {
-        					for(int j=0; j<charactersList.size(); j++) {
-        						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
-        							//System.out.println("X: " + charactersList.get(j).getX());
-        							players.get(i).setX(charactersList.get(j).getX());
-        							players.get(i).setY(charactersList.get(j).getY());
-        							players.get(i).setBlocking(charactersList.get(j).isBlocking());
-        							players.get(i).setFalling(charactersList.get(j).isFalling());
-        							players.get(i).setDead(charactersList.get(j).isDead());
-        							players.get(i).setDashing(charactersList.get(j).isDashing());
-        						}
-        					}
-        				}
+        				
+//        				int index = 0;
+//        				for(int i=0; i<players.size(); i++) {
+//        					for(int j=0; j<charactersList.size(); j++) {
+//        						if(charactersList.get(j).getId().equals(cModel.getMyId())) {
+//        							index = j;
+//        						}
+//        					}
+//        				}
+        				
+//        				System.out.println("Client: " + cModel.getMyId());
+//        				System.out.println("Request ID Sent: " + resources.getRequestId());
+//        				System.out.println("Request ID Received: " + charactersList.get(index).getRequestId());
+//        				System.out.println("Index: " + index);
+        				//if(charactersList.get(index).getRequestId() >= resources.getRequestId()) {
+        					for(int i=0; i<players.size(); i++) {
+            					for(int j=0; j<charactersList.size(); j++) {
+            						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
+            							//System.out.println("X: " + charactersList.get(j).getX());
+            							players.get(i).setXWithoutNotifying(charactersList.get(j).getX());
+            							players.get(i).setYWithoutNotifying(charactersList.get(j).getY());
+            							players.get(i).setBlocking(charactersList.get(j).isBlocking());
+            							players.get(i).setFalling(charactersList.get(j).isFalling());
+            							players.get(i).setDead(charactersList.get(j).isDead());
+            							players.get(i).setDashing(charactersList.get(j).isDashing());
+            						}
+            					}
+            				}
+        				//}
     				}
     				break;
     			default:

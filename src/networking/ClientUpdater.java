@@ -55,9 +55,11 @@ public class ClientUpdater extends JPanel implements Observer {
 		resources.Character c;
 		for(int i=0; i<characters.size(); i++) {
 			c = characters.get(i);
-			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlock());
+			//System.out.println("X: " + c.getX());
+			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getRequestId());
 			charactersList.add(info);
 		}
+		
 		GameData data = new GameData(charactersList);
 		Message message = new Message(Command.GAME, Note.UPDATE, null, null, sessionId, sessionId, data);
 		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();

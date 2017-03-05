@@ -12,9 +12,10 @@ public class CharacterInfo implements Serializable {
 	private double x;
 	private double y;
 	private UUID id;
-	private boolean up, right, left, down, jump, punch, block;
-	private boolean isFalling, isDead, isDashing, isBlock;
+	private boolean up, right, left, down, jump, punch;
+	private boolean isFalling, isDead, isDashing, isBlocking;
 	private int playerNumber;
+	private int requestId;
 	
 	public CharacterInfo(UUID id, double d, double e, int playerNumber) {
 		this.x = d;
@@ -23,7 +24,7 @@ public class CharacterInfo implements Serializable {
 		this.playerNumber = playerNumber;
 	}
 	
-	public CharacterInfo(UUID id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlock) {
+	public CharacterInfo(UUID id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -31,18 +32,20 @@ public class CharacterInfo implements Serializable {
 		this.isFalling = isFalling;
 		this.isDead = isDead;
 		this.isDashing = isDashing;
-		this.isBlock = isBlock;
+		this.isBlocking = isBlocking;
+		this.requestId = requestId;
 	}
 
-	public CharacterInfo(UUID id, boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block) {
+	public CharacterInfo(UUID id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean punch, boolean block, int requestId) {
 		this.id = id;
 		this.up = up;
 		this.right = right;
 		this.left = left;
 		this.down = down;
-		this.jump = jump;
+		this.isDashing = dashing;
 		this.punch = punch;
-		this.block = block;
+		this.isBlocking = block;
+		this.requestId = requestId;
 	}
 
 	public boolean isUp() {
@@ -91,14 +94,6 @@ public class CharacterInfo implements Serializable {
 
 	public void setPunch(boolean punch) {
 		this.punch = punch;
-	}
-
-	public boolean isBlock() {
-		return block;
-	}
-
-	public void setBlock(boolean block) {
-		this.block = block;
 	}
 
 	public UUID getId() {
@@ -158,11 +153,19 @@ public class CharacterInfo implements Serializable {
 	}
 	
 	public boolean isBlocking() {
-		return isBlock;
+		return isBlocking;
 	}
 
-	public void setBlocking(boolean isBlock) {
-		this.isBlock = isBlock;
+	public void setBlocking(boolean isBlocking) {
+		this.isBlocking = isBlocking;
+	}
+
+	public int getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
 	}
 	
 }

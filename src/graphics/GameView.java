@@ -17,6 +17,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import ai.pathfinding.Line;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
@@ -272,6 +273,24 @@ public class GameView extends JPanel implements Observer {
 							// skip
 						}
 					}
+					
+					g.setColor(Color.RED);
+					Point nd = resources.getAINextdest();
+					if (nd != null)
+					{
+						g.drawOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+						g.setColor(Color.CYAN);
+						g.fillOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+					}
+					
+					g.setColor(Color.YELLOW);
+					Line normal = resources.getNormal();
+					if (normal != null)
+					{
+						g.drawLine((int) (normal.a.x*currentMultiplier), (int) (normal.a.y*(currentMultiplier + currentOffset)), (int) (normal.b.x*currentMultiplier), (int) (normal.b.y*(currentMultiplier + currentOffset)));
+					}
+					
+					
 				
 				}
 
