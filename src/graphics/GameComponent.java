@@ -1,7 +1,9 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -12,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.Timer;
 
@@ -34,6 +37,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private ArrayList<Character> characters;
 	private Timer timer;
 	private GameView view;
+	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 	private int secondPlayerIndex = 1;
@@ -44,6 +48,9 @@ public class GameComponent extends JFrame implements ActionListener {
 	int width, height;
 	int oldValueX, newValueX, oldValueY, newValueY;
 
+	int labelX, labelY;
+	int panelX, panelY;
+	
 	/**
 	 * Create a new game component (which comprises everything the player can
 	 * see!)
@@ -59,7 +66,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
-		setResizable(false);
 
 		// This code block below is just for testing!
 
@@ -92,6 +98,26 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 		
 		add(view, BorderLayout.CENTER);
+		
+		label = new JLabel("This is where the scores n shiz go");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setFont(new Font("Verdana", Font.PLAIN, 48));
+		label.setBackground(Color.BLACK);
+		label.setForeground(Color.WHITE);
+		label.setOpaque(true);
+		
+		Dimension dim = label.getPreferredSize();
+		labelX = (int)dim.getWidth();
+		labelY = (int)dim.getHeight();
+		
+		add(label, BorderLayout.NORTH);
+		
+		pack();
+		
+		Dimension panel = this.getPreferredSize();
+		panelX = (int)panel.getWidth();
+		panelY = (int)panel.getHeight();
+		
 		setVisible(true);
 	}
 
@@ -102,7 +128,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-		view.repaint();
+		repaint();
 	}
 
 	/**
@@ -118,9 +144,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			setUndecorated(false);
 			
 			view.setFullScreen(false);
-			getContentPane().setPreferredSize(new Dimension(1200, 675));
 			pack();
-			setResizable(false);
 			setLocationRelativeTo(null);
 			
 			fullScreen = false;
@@ -137,7 +161,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			
 			setLocation(0, 0);
 			view.setFullScreen(true);
-			getContentPane().setPreferredSize(new Dimension(width, height));
 			pack();
 			
 			fullScreen = true;

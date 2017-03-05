@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
@@ -99,7 +100,7 @@ public class GameView extends JPanel implements Observer {
 			}
 		}
 		
-		setSize(1200, 675);
+		setPreferredSize(new Dimension(1200, 675));
 
 	}
 
@@ -406,6 +407,7 @@ public class GameView extends JPanel implements Observer {
 			currentMultiplier = multiplier;
 			currentMapSprite = bigMapSprite;
 			this.fullscreen = true;
+			
 		} else {
 			currentMapHeight = ordinaryMapHeight;
 			currentMapWidth = ordinaryMapWidth;
@@ -417,6 +419,10 @@ public class GameView extends JPanel implements Observer {
 			currentMapSprite = mapSprite;
 			this.fullscreen = false;
 		}
+		
+		setPreferredSize(new Dimension((int)(currentMapWidth + currentOffset), (int)(currentMapHeight + currentOffset)));
 	}
 
+
+	
 }
