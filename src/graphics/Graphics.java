@@ -28,8 +28,11 @@ public class Graphics extends Thread {
 		
 		GameComponent comp = new GameComponent(resources, 1200, 675, updater, debugPaths);
 		// since apparently setUndecorated won't work on CentOS :'(
+	
 		comp.getContentPane().setPreferredSize(new Dimension(1200, 675));
 		comp.pack();
+		
+
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 								// end program

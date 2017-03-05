@@ -94,8 +94,8 @@ public class PhysicsWithGraphicsDemo {
 		Physics p = new Physics(resources);
 		p.start();
 
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
-		ai1.start();
+		/*VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
+		ai1.start();*/
 		
 		/*VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
 		ai2.start();

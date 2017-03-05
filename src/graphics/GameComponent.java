@@ -32,7 +32,6 @@ import resources.Resources;
 public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
-	private Map map;
 	private Timer timer;
 	private GameView view;
 	private Resources resources;
@@ -60,6 +59,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
+		setResizable(false);
 
 		// This code block below is just for testing!
 
@@ -77,8 +77,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
-		//mapView = new MapView(resources);
-
 		
 		for (Character model : resources.getPlayerList()) {
 			model.addObserver(view);
@@ -88,27 +86,12 @@ public class GameComponent extends JFrame implements ActionListener {
 			for (int i = 0; i < characters.size(); i++) {
 				if (characters.get(i).getId() != null && characters.get(i).getId().equals(resources.getId())) {
 					secondPlayerIndex = i;
-					// System.out.println("Index: " + secondPlayerIndex);
 					break;
 				}
 			}
 		}
-
 		
-		/*layers = new JLayeredPane();
-		updateBounds();
-		layers.add(mapView, new Integer(0), 0);
-		layers.add(view, new Integer(1), 0);
-
-		layers.setVisible(true);
-		add(layers, BorderLayout.CENTER);
-		setVisible(true);*/
-
 		add(view, BorderLayout.CENTER);
-		
-		//setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-		//setUndecorated(true);
 		setVisible(true);
 	}
 
@@ -122,38 +105,24 @@ public class GameComponent extends JFrame implements ActionListener {
 		view.repaint();
 	}
 
-/*	private void updateBounds() {
-
-		if (fullScreen) {
-
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			int width = gd.getDisplayMode().getWidth();
-			int height = gd.getDisplayMode().getHeight();
-
-			layers.setBounds(0, 0, width, height);
-			mapView.setBounds(0, 0, width, height);
-			view.setBounds(0, 0, width, height);
-		} else {
-
-			layers.setBounds(0, 0, 1200, 675);
-			mapView.setBounds(0, 0, 1200, 675);
-			view.setBounds(0, 0, 1200, 675);
-		}
-
-	}*/
-
 	/**
 	 * Switch between fullscreen and windowed
 	 */
 
 	public void toggleFullscreen() {
 
+		dispose();
+		
 		if (fullScreen) {
 
+			setUndecorated(false);
+			
 			view.setFullScreen(false);
 			getContentPane().setPreferredSize(new Dimension(1200, 675));
 			pack();
+			setResizable(false);
 			setLocationRelativeTo(null);
+			
 			fullScreen = false;
 
 		} else {
@@ -161,16 +130,23 @@ public class GameComponent extends JFrame implements ActionListener {
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
+
+			setUndecorated(true);
+			//setExtendedState(JFrame.MAXIMIZED_BOTH);
+			//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+			
 			setLocation(0, 0);
 			view.setFullScreen(true);
 			getContentPane().setPreferredSize(new Dimension(width, height));
 			pack();
+			
 			fullScreen = true;
 
 		}
 		
 		setFocusable(true);
 		requestFocus();
+		setVisible(true);
 		
 	}
 
