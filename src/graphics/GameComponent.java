@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -15,7 +12,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -151,10 +148,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		} else {
 
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			int width = gd.getDisplayMode().getWidth();
-			int height = gd.getDisplayMode().getHeight();
-
 			setUndecorated(true);
 			//setExtendedState(JFrame.MAXIMIZED_BOTH);
 			//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
@@ -183,12 +176,17 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.SPACE;
 			break;
 		case SPACE:
+			newWorld = Map.World.LAVA;
+			break;
+		case LAVA:
 			newWorld = Map.World.CAVE;
 			break;
 		}
-
+		
 		resources.getMap().setWorldType(newWorld);
 		view.makeMap();
+		view.setFullScreen(fullScreen);
+		
 
 	}
 
