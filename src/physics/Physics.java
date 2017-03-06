@@ -14,6 +14,7 @@ import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.NetworkMove;
+import resources.Powerup;
 import resources.Map.Tile;
 import resources.Puck;
 import resources.Resources;
@@ -24,9 +25,11 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	private boolean client = false;
 	
-	public Physics(Resources resources){
+	public Physics(Resources resources, boolean client){
 		this.resources = resources;
+		this.client = client;
 	}
 	
 	@Override
@@ -69,14 +72,14 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			// Check collisions with powerups
-//			for (Powerup p : resources.getPowerupList()) {
-//				CND cnd = detectCollision(c,p);
-//				if (cnd.collided) {
-//					// Grant power to character, remove powerup
-//					c.applyPowerup(p, resources.getGlobalTimer());
-//					resources.removePowerup(p);
-//				}
-//			}
+			for (Powerup p : resources.getPowerupList()) {
+				CND cnd = detectCollision(c,p);
+				if (cnd.collided) {
+					// Grant power to character, remove powerup
+					c.applyPowerup(p, resources.getGlobalTimer());
+					resources.removePowerup(p);
+				}
+			}
 			if (resources.isHockey()) {
 				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
