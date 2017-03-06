@@ -46,8 +46,8 @@ public class GameView extends JPanel implements Observer {
 	private double currentPlayerSize;
 	private double currentMapHeight;
 	private double currentMapWidth;
-	private double currentWindowHeight;
-	private double currentWindowWidth;
+	private double currentWindowHeight = 675;
+	private double currentWindowWidth = 1200;
 	private double multiplier;
 	private double currentMultiplier = 1;
 	private boolean notSixteenNine;
@@ -146,7 +146,7 @@ public class GameView extends JPanel implements Observer {
 		currentMapWidth = ordinaryMapWidth;
 		currentMapHeight = ordinaryMapHeight;
 		currentPlayerSize = ordinaryPlayerSize;
-
+		
 		makeMap();
 
 	}

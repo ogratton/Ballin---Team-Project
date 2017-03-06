@@ -83,7 +83,7 @@ public class MapPreview extends JPanel {
 
 		JFrame frame = new JFrame();
 		frame.setLayout(new BorderLayout());
-		frame.setSize(255, 188);
+		frame.setSize(255, 200);
 		frame.add(new MapPreview(maps), BorderLayout.CENTER);
 		label = new JLabel(maps.get(0).getName());
 		label.setHorizontalAlignment(JLabel.CENTER);
