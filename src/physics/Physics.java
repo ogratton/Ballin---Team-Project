@@ -85,6 +85,7 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			
+			// for networking
 			NetworkMove m = new NetworkMove();
 			m.x = c.getX();
 			m.y = c.getY();

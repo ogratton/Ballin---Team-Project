@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
@@ -41,6 +42,8 @@ public class Resources {
 	// max deaths a character can have.
 	private int maxDeaths = 4;
 
+	private Queue<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
+	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	// powerups in play
@@ -565,6 +568,14 @@ public class Resources {
 	public void setNormal(Line n)
 	{
 		this.normal = n;
+	}
+
+	public Queue<NetworkMove> getClientMoves() {
+		return clientMoves;
+	}
+
+	public void setClientMoves(Queue<NetworkMove> clientMoves) {
+		this.clientMoves = clientMoves;
 	}
 	
 
