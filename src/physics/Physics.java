@@ -3,6 +3,7 @@ package physics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.Timer;
 
@@ -12,6 +13,7 @@ import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
+import resources.NetworkMove;
 import resources.Map.Tile;
 import resources.Puck;
 import resources.Resources;
@@ -82,6 +84,12 @@ public class Physics extends Thread implements ActionListener {
 					collide(c,p,cnd);
 				}
 			}
+			
+			NetworkMove m = new NetworkMove();
+			m.x = c.getX();
+			m.y = c.getY();
+			m.t = new Date();
+			resources.getClientMoves().add(m);
 		}
 	}
 
@@ -412,10 +420,8 @@ public class Physics extends Thread implements ActionListener {
 	/**
 	 * detects collisions between character and wall
 	 * @param c
-	 * @param wallCoords coords of closest point
-	 * @param left is it the top of the wall?
-	 * @param top is it the left of the wall?
-	 * @return
+	 * @param topLeft coords of top-left corner of wall
+	 * @return collision variable.
 	 */
 	private CND detectCollision(Collidable_Circle c, Point topLeft) {
 		// topLeft is the top-left point of the wall.
