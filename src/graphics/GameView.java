@@ -156,8 +156,6 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public void paintComponent(Graphics g) {
-
-		System.out.println("paint");
 		
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
