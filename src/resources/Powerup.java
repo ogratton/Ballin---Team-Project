@@ -8,7 +8,7 @@ import graphics.sprites.SheetDeets;
 
 public class Powerup extends Observable implements Collidable_Circle {
 
-	private int radius = 5;
+	private int radius = 10;
 	private double x, y = 0;
 	private CollidableType type = CollidableType.Powerup;
 	private BufferedImage sprite = null;
@@ -27,6 +27,7 @@ public class Powerup extends Observable implements Collidable_Circle {
 	private int lastCollidedTime = -1;
 	private boolean visible;
 	private int dyingStep;
+	private boolean active = true;
 
 	public Powerup() {
 		Random rand = new Random();
@@ -166,5 +167,13 @@ public class Powerup extends Observable implements Collidable_Circle {
 	@Override
 	public int getDyingStep() {
 		return dyingStep;
+	}
+	
+	public boolean isActive(){
+		return active;
+	}
+	
+	public void setActive(boolean active){
+		this.active = active;
 	}
 }

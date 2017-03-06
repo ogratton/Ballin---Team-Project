@@ -16,6 +16,7 @@ import resources.Map;
 import resources.NetworkMove;
 import resources.Powerup;
 import resources.Map.Tile;
+import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
 import resources.Wall;
