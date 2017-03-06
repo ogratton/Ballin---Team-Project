@@ -157,10 +157,12 @@ public class GameView extends JPanel implements Observer {
 
 	public void paintComponent(Graphics g) {
 
+		System.out.println("paint");
+		
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
+		//g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
 		// draw the map sprite (this is the same throughout a game)
 
@@ -366,7 +368,7 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
-		//Toolkit.getDefaultToolkit().sync();
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	/**
