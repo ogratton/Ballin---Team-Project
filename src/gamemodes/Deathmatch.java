@@ -33,7 +33,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 	public void run() {
 		// Start game
-		Physics p = new Physics(resources);
+		Physics p = new Physics(resources, true);
 		p.start();
 		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		

@@ -359,7 +359,7 @@ public class GameView extends JPanel implements Observer {
 		
 		for(Powerup p : resources.getPowerupList()){
 			if(p.isActive()){
-				g.drawImage(p.getSprite(), (int)p.getX(), (int)p.getY(), this);
+				g.drawImage(p.getSprite(), (int)(p.getX() * currentMultiplier), (int)(p.getY() * currentMultiplier), this);
 			}
 			
 		}
