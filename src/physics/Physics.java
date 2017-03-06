@@ -13,6 +13,7 @@ import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
+import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
 import resources.Wall;
@@ -67,14 +68,14 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			// Check collisions with powerups
-//			for (Powerup p : resources.getPowerupList()) {
-//				CND cnd = detectCollision(c,p);
-//				if (cnd.collided) {
-//					// Grant power to character, remove powerup
-//					c.applyPowerup(p, resources.getGlobalTimer());
-//					resources.removePowerup(p);
-//				}
-//			}
+			for (Powerup p : resources.getPowerupList()) {
+				CND cnd = detectCollision(c,p);
+				if (cnd.collided) {
+					// Grant power to character, remove powerup
+					c.applyPowerup(p, resources.getGlobalTimer());
+					resources.removePowerup(p);
+				}
+			}
 			if (resources.isHockey()) {
 				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);

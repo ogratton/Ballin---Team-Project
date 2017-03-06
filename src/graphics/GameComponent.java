@@ -94,15 +94,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 		}*/
 
-		
-		/*layers = new JLayeredPane();
-		updateBounds();
-		layers.add(mapView, new Integer(0), 0);
-		layers.add(view, new Integer(1), 0);
-
-		layers.setVisible(true);
-		add(layers, BorderLayout.CENTER);
-		setVisible(true);*/
 
 		add(view, BorderLayout.CENTER);
 		setUndecorated(true);
@@ -208,9 +199,6 @@ public class GameComponent extends JFrame implements ActionListener {
 				break;
 			case KeyEvent.VK_RIGHT:
 				characters.get(secondPlayerIndex).setRight(false);
-				break;
-			case KeyEvent.VK_ENTER:
-				toggleFullscreen();
 				break;
 			}
 		}

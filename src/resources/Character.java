@@ -1234,6 +1234,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
 	// 0.0;
 	public void applyPowerup(Powerup p, int time) {
+		System.out.println("you got powered!!!!");
 		Power pow = p.getPower();
 		lastPowerup = pow;
 		lastPowerupTime = time;
