@@ -140,7 +140,7 @@ public class Physics extends Thread implements ActionListener {
 		// Recharge stamina
 		c.incrementStamina();
 		// If a special button has been pressed, perform the ability if possible
-		if (special(c)){
+		if (special(c) && !c.isFalling()){
 			return;
 		}
 		if(!c.isFalling()) { //moving
