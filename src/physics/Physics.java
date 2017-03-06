@@ -16,6 +16,7 @@ import resources.Map;
 import resources.NetworkMove;
 import resources.Powerup;
 import resources.Map.Tile;
+import resources.Map.World;
 import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
@@ -61,6 +62,9 @@ public class Physics extends Thread implements ActionListener {
 		if(resources.isHockey()) update(resources.getPuck());
 		
 		for(Character c : resources.getPlayerList()){
+//			if (c.getPlayerNumber() == 1) {
+//				System.out.println("hp: " + c.getHealth());
+//			}
 			update(c);
 			for (Character d : resources.getPlayerList()) {
 				// check collisions
@@ -114,8 +118,20 @@ public class Physics extends Thread implements ActionListener {
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(), c.getY());
 		//check for falling.
-		if(Map.tileCheck(t)) {
-			c.setFalling(true);
+		if (Map.tileCheck(t)) {
+			if (resources.getMap().getWorldType() == World.LAVA) {
+				c.setBurning(true);
+				if (c.getHealth() <= 0) {
+					c.setFalling(true);
+				}
+			} else {
+				c.setFalling(true);
+			}
+		} else {
+			c.setBurning(false);
+		}
+		if (c.getBurning() == true) {
+			c.decrementHealth();
 		}
 		// Powerup timer, remove powerup after 10 secs
 		if (c.hasPowerup() && resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {

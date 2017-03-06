@@ -69,6 +69,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private BufferedImage currentFrame;
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
+	
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -79,6 +80,8 @@ public class Character extends Observable implements Collidable_Circle {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
+	private int health = 100;
+	private boolean burning = false;
 
 	// Store this character's score
 	private int score = 0;
@@ -1337,5 +1340,29 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 		
 		return arrow;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int i) {
+		health = i;
+	}
+	
+	public void decrementHealth() {
+		health--;
+	}
+
+	public void decrementHealth(int n) {
+		health -= n;
+	}
+
+	public void setBurning(boolean burning) {
+		this.burning = burning;
+	}
+	
+	public boolean getBurning() {
+		return burning;
 	}
 }

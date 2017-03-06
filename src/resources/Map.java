@@ -480,6 +480,7 @@ public class Map {
 		c.setVisible(true);
 		c.setDyingStep(0);
 		c.hasPowerup(false);
+		c.setHealth(100);
 		//set velocity
 		c.setDx(0);
 		c.setDy(0);
@@ -534,7 +535,6 @@ public class Map {
 	 */
 	public static boolean tileCheck(Tile tile) {
 		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
-
 	}
 	
 	public double[][] getCostMask()
