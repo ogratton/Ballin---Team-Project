@@ -35,7 +35,6 @@ public class Physics extends Thread implements ActionListener {
 	
 	@Override
 	public void run() {
-		System.out.println("start");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -75,7 +74,7 @@ public class Physics extends Thread implements ActionListener {
 			// Check collisions with powerups
 			for (Powerup p : resources.getPowerupList()) {
 				CND cnd = detectCollision(c,p);
-				if (cnd.collided) {
+				if (cnd.collided && p.isActive()) {
 					// Grant power to character, remove powerup
 					c.applyPowerup(p, resources.getGlobalTimer());
 					resources.removePowerup(p);
@@ -119,9 +118,9 @@ public class Physics extends Thread implements ActionListener {
 			c.setFalling(true);
 		}
 		// Powerup timer, remove powerup after 10 secs
-//		if (resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
-//			c.revertPowerup();
-//		}
+		if (c.hasPowerup() && resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
+			c.revertPowerup();
+		}
 		// Recharge stamina
 		c.incrementStamina();
 		// If a special button has been pressed, perform the ability if possible
@@ -181,6 +180,9 @@ public class Physics extends Thread implements ActionListener {
 					c.incrementScore(-2);
 				}
 				c.setLastCollidedWith(null, 0);
+				if (c.hasPowerup()) {
+					c.revertPowerup();
+				}
 			}
 		}
 		//System.out.println("Got here");
@@ -565,20 +567,14 @@ public class Physics extends Thread implements ActionListener {
 		c.setDashing(false);
 		// Start blocking - increase mass
 		if (c.getBlockTimer() == 0) {
-			//System.out.println("BLOCKING");
-			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
 			c.setMass(c.getMass() * 10);
 		}
 		c.incrementBlockTimer();
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
-		//System.out.println(c.getStamina());
-		//System.out.println(c.getDx() + ", " + c.getDy());
 		c.setDx(c.getDx() * 0.9);
 		c.setDy(c.getDy() * 0.9);
 		// Stop blocking - revert changes to mass
 		if (c.getBlockTimer() >= 25) {
-			//System.out.println("DONE BLOCKING");
-			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
 			c.setBlocking(false);
 			c.resetBlockTimer();
 			c.setMass(c.getMass() / 10);

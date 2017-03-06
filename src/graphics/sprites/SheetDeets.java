@@ -154,7 +154,6 @@ public class SheetDeets {
 			numY = 1;
 			break;
 		case POWERUP:
-			System.out.println("power!!!");
 			y = 1;
 			x = 1;
 			numX = 1;

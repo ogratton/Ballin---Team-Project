@@ -370,7 +370,8 @@ public class GameView extends JPanel implements Observer {
 		
 		for(Powerup p : resources.getPowerupList()){
 			if(p.isActive()){
-				g.drawImage(p.getSprite(), (int)(p.getX() * currentMultiplier), (int)(p.getY() * currentMultiplier), this);
+				// Don't know why I need to take 3 radiuses away instead of 1
+				g.drawImage(p.getSprite(), (int)((p.getX() - 3*p.getRadius()) * currentMultiplier), (int)((p.getY() - 3*p.getRadius()) * currentMultiplier), this);
 			}
 			
 		}

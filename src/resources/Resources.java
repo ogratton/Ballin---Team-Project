@@ -464,18 +464,7 @@ public class Resources {
 	}
 
 	public void removePowerup(Powerup p) {
-		
-		for(Powerup q : powerupList){
-			if(q.equals(p)){
-				q.setActive(false);
-			}
-		}
-		
-		
-		/*boolean b = powerupList.remove(p);
-		if (b) {
-			System.out.println("Removed powerup");
-		}*/
+		p.setActive(false);
 	}
 
 	public boolean isHockey() {

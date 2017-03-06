@@ -1235,23 +1235,26 @@ public class Character extends Observable implements Collidable_Circle {
 	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
 	// 0.0;
 	public void applyPowerup(Powerup p, int time) {
-		System.out.println("you got powered!!!!");
+		if (hasPowerup) {
+			revertPowerup();
+		}
 		Power pow = p.getPower();
 		lastPowerup = pow;
 		lastPowerupTime = time;
 		switch (pow) {
 		case Speed:
-			// max speed * 2, acc * 2
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
+			break;
 		case Mass:
-			// Mass * 10, max speed / 2, acc / 2
 			setMass(mass * 10);
 			setMaxDx(maxdx / 2);
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
+			break;
 		}
+		hasPowerup = true;
 	}
 
 	public void revertPowerup() {
@@ -1260,12 +1263,15 @@ public class Character extends Observable implements Collidable_Circle {
 			setMaxDx(maxdx / 2);
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
+			break;
 		case Mass:
 			setMass(mass / 10);
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
+			break;
 		}
+		hasPowerup = false;
 	}
 
 	public Power getLastPowerup() {
