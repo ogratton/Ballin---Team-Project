@@ -1,10 +1,9 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,7 +11,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -32,9 +32,9 @@ import resources.Resources;
 public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
-	private Map map;
 	private Timer timer;
 	private GameView view;
+	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 	private int secondPlayerIndex = 1;
@@ -45,6 +45,9 @@ public class GameComponent extends JFrame implements ActionListener {
 	int width, height;
 	int oldValueX, newValueX, oldValueY, newValueY;
 
+	int labelX, labelY;
+	int panelX, panelY;
+	
 	/**
 	 * Create a new game component (which comprises everything the player can
 	 * see!)
@@ -77,8 +80,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
-		//mapView = new MapView(resources);
-
 		
 		for (Character model : resources.getPlayerList()) {
 			model.addObserver(view);
@@ -88,27 +89,32 @@ public class GameComponent extends JFrame implements ActionListener {
 			for (int i = 0; i < characters.size(); i++) {
 				if (characters.get(i).getId() != null && characters.get(i).getId().equals(resources.getId())) {
 					secondPlayerIndex = i;
-					// System.out.println("Index: " + secondPlayerIndex);
 					break;
 				}
 			}
 		}
-
 		
-		/*layers = new JLayeredPane();
-		updateBounds();
-		layers.add(mapView, new Integer(0), 0);
-		layers.add(view, new Integer(1), 0);
-
-		layers.setVisible(true);
-		add(layers, BorderLayout.CENTER);
-		setVisible(true);*/
-
 		add(view, BorderLayout.CENTER);
 		
-		//setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-		//setUndecorated(true);
+		label = new JLabel("This is where the scores n shiz go");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setFont(new Font("Verdana", Font.PLAIN, 48));
+		label.setBackground(Color.BLACK);
+		label.setForeground(Color.WHITE);
+		label.setOpaque(true);
+		
+		Dimension dim = label.getPreferredSize();
+		labelX = (int)dim.getWidth();
+		labelY = (int)dim.getHeight();
+		
+		add(label, BorderLayout.NORTH);
+		
+		pack();
+		
+		Dimension panel = this.getPreferredSize();
+		panelX = (int)panel.getWidth();
+		panelY = (int)panel.getHeight();
+		
 		setVisible(true);
 	}
 
@@ -119,28 +125,8 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-		view.repaint();
+		repaint();
 	}
-
-/*	private void updateBounds() {
-
-		if (fullScreen) {
-
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			int width = gd.getDisplayMode().getWidth();
-			int height = gd.getDisplayMode().getHeight();
-
-			layers.setBounds(0, 0, width, height);
-			mapView.setBounds(0, 0, width, height);
-			view.setBounds(0, 0, width, height);
-		} else {
-
-			layers.setBounds(0, 0, 1200, 675);
-			mapView.setBounds(0, 0, 1200, 675);
-			view.setBounds(0, 0, 1200, 675);
-		}
-
-	}*/
 
 	/**
 	 * Switch between fullscreen and windowed
@@ -148,29 +134,35 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void toggleFullscreen() {
 
+		dispose();
+		
 		if (fullScreen) {
 
+			setUndecorated(false);
+			
 			view.setFullScreen(false);
-			getContentPane().setPreferredSize(new Dimension(1200, 675));
 			pack();
 			setLocationRelativeTo(null);
+			
 			fullScreen = false;
 
 		} else {
 
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			int width = gd.getDisplayMode().getWidth();
-			int height = gd.getDisplayMode().getHeight();
+			setUndecorated(true);
+			//setExtendedState(JFrame.MAXIMIZED_BOTH);
+			//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+			
 			setLocation(0, 0);
 			view.setFullScreen(true);
-			getContentPane().setPreferredSize(new Dimension(width, height));
 			pack();
+			
 			fullScreen = true;
 
 		}
 		
 		setFocusable(true);
 		requestFocus();
+		setVisible(true);
 		
 	}
 
@@ -184,12 +176,17 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.SPACE;
 			break;
 		case SPACE:
+			newWorld = Map.World.LAVA;
+			break;
+		case LAVA:
 			newWorld = Map.World.CAVE;
 			break;
 		}
-
+		
 		resources.getMap().setWorldType(newWorld);
 		view.makeMap();
+		view.setFullScreen(fullScreen);
+		
 
 	}
 

@@ -45,7 +45,7 @@ public class PhysicsWithGraphicsDemo {
 		}
 		
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
@@ -97,13 +97,13 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
 		ai1.start();
 		
-		/*VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
+		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
 		ai2.start();
 		
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
-		ai3.start();*/	
+		ai3.start();
 		
-		Graphics g = new Graphics(resources, null, true);
+		Graphics g = new Graphics(resources, null, false);
 		g.start();
 		//SwingUtilities.invokeLater(new Graphics(resources, null, true));
 

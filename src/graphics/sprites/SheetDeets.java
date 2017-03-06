@@ -106,7 +106,7 @@ public class SheetDeets {
 			x = 0;
 			break;
 		case LAVA:
-			x = 0;
+			x = 2;
 			break;
 		case ICE:
 			x = 0;

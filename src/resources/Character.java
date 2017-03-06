@@ -66,6 +66,8 @@ public class Character extends Observable implements Collidable_Circle {
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
+	private BufferedImage arrow;
+	private BufferedImage bigArrow;
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -180,6 +182,7 @@ public class Character extends Observable implements Collidable_Circle {
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
+		arrow = SheetDeets.getArrowFromPlayer(playerNo);
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
@@ -1315,6 +1318,16 @@ public class Character extends Observable implements Collidable_Circle {
 			bigDashSprites.add(resize(image, multiplier));
 
 		}
+		
+		bigArrow = resize(arrow, multiplier);
 
+	}
+	
+	public BufferedImage getArrow(boolean fullscreen){
+		if(fullscreen){
+			return bigArrow;
+		}
+		
+		return arrow;
 	}
 }

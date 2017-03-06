@@ -35,7 +35,7 @@ public class PathFindingTest
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		
 		
 		// TEST SEARCH
