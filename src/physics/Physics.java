@@ -106,7 +106,7 @@ public class Physics extends Thread implements ActionListener {
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
-				resources.getMap().spawn(c);
+				if(!client) resources.getMap().spawn(c);
 				
 			}
 		}

@@ -91,7 +91,7 @@ public class PhysicsWithGraphicsDemo {
 		}*/
 
 		// create physics thread
-		Physics p = new Physics(resources);
+		Physics p = new Physics(resources, true);
 		p.start();
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
