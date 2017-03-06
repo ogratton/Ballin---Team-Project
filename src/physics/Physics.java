@@ -3,6 +3,7 @@ package physics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.Timer;
 
@@ -12,6 +13,8 @@ import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
+import resources.NetworkMove;
+import resources.Powerup;
 import resources.Map.Tile;
 import resources.Powerup;
 import resources.Puck;
@@ -23,9 +26,11 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	private boolean client = false;
 	
-	public Physics(Resources resources){
+	public Physics(Resources resources, boolean client){
 		this.resources = resources;
+		this.client = client;
 	}
 	
 	@Override
@@ -83,6 +88,13 @@ public class Physics extends Thread implements ActionListener {
 					collide(c,p,cnd);
 				}
 			}
+			
+			// for networking
+			NetworkMove m = new NetworkMove();
+			m.x = c.getX();
+			m.y = c.getY();
+			m.t = new Date();
+			resources.getClientMoves().add(m);
 		}
 	}
 
@@ -95,7 +107,7 @@ public class Physics extends Thread implements ActionListener {
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
-				resources.getMap().spawn(c);
+				if(!client) resources.getMap().spawn(c);
 				
 			}
 		}
@@ -414,10 +426,8 @@ public class Physics extends Thread implements ActionListener {
 	/**
 	 * detects collisions between character and wall
 	 * @param c
-	 * @param wallCoords coords of closest point
-	 * @param left is it the top of the wall?
-	 * @param top is it the left of the wall?
-	 * @return
+	 * @param topLeft coords of top-left corner of wall
+	 * @return collision variable.
 	 */
 	private CND detectCollision(Collidable_Circle c, Point topLeft) {
 		// topLeft is the top-left point of the wall.
