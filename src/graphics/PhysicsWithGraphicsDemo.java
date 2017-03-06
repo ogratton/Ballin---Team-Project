@@ -105,7 +105,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		Graphics g = new Graphics(resources, null, false);
 		g.start();
-		//SwingUtilities.invokeLater(new Graphics(resources, null, true));
+		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
 
 
 

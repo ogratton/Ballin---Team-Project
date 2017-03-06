@@ -46,8 +46,8 @@ public class GameView extends JPanel implements Observer {
 	private double currentPlayerSize;
 	private double currentMapHeight;
 	private double currentMapWidth;
-	private double currentWindowHeight;
-	private double currentWindowWidth;
+	private double currentWindowHeight = 675;
+	private double currentWindowWidth = 1200;
 	private double multiplier;
 	private double currentMultiplier = 1;
 	private boolean notSixteenNine;
@@ -146,7 +146,7 @@ public class GameView extends JPanel implements Observer {
 		currentMapWidth = ordinaryMapWidth;
 		currentMapHeight = ordinaryMapHeight;
 		currentPlayerSize = ordinaryPlayerSize;
-
+		
 		makeMap();
 
 	}
@@ -156,11 +156,11 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public void paintComponent(Graphics g) {
-
+		
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
+		//g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
 		// draw the map sprite (this is the same throughout a game)
 
@@ -366,7 +366,7 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
-		//Toolkit.getDefaultToolkit().sync();
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	/**
