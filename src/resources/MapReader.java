@@ -43,6 +43,7 @@ public class MapReader
 		tileDict.put("p", Map.Tile.EDGE_WNE);
 		tileDict.put("q", Map.Tile.EDGE_NESW);
 		tileDict.put("r", Map.Tile.EDGE_ABYSS);
+		tileDict.put("s", Map.Tile.WALL);
 	}
 	
 	/**
