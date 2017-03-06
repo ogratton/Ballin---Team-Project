@@ -157,7 +157,7 @@ public class ServerReceiver extends Thread {
 					  for(int i=0; i<res.getPlayerList().size(); i++) {
 						  resources.Character c = res.getPlayerList().get(i);
 						  if(info.getId().equals(c.getId())) {
-							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isPunch(), info.isBlocking());
+							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
 							  c.setDashing(info.isDashing());
 							  c.setBlocking(info.isBlocking());
 							  c.setRequestId(info.getRequestId());

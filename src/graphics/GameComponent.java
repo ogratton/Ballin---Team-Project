@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -149,8 +149,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		} else {
 
 			setUndecorated(true);
-			//setExtendedState(JFrame.MAXIMIZED_BOTH);
-			//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+			setExtendedState(JFrame.MAXIMIZED_BOTH);
+			GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 			
 			setLocation(0, 0);
 			view.setFullScreen(true);
