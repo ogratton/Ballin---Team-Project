@@ -78,7 +78,7 @@ public class MainMenu extends JFrame {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
 		} catch (Exception e) {
-			e.printStackTrace();
+			customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		}
 		return customFont;
 	}
@@ -430,13 +430,13 @@ public class MainMenu extends JFrame {
 		musicSlider.setPaintTicks(true);
 		musicSlider.setPaintLabels(true);
 		musicSlider.setFont(font.deriveFont((float) 16));
-		musicSlider.addChangeListener(e -> {
-			int volume = musicSlider.getValue();
-			if (volume == 0)
-				musicPlayer.mute();
-			else
-				musicPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
-		});
+//		musicSlider.addChangeListener(e -> {
+//			int volume = musicSlider.getValue();
+//			if (volume == 0)
+//				musicPlayer.mute();
+//			else
+//				musicPlayer.setGain((float) ((VOL_MAX - volume) * (-0.33)));
+//		});
 
 		JLabel controlsLabel = new JLabel("Controls");
 		controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);

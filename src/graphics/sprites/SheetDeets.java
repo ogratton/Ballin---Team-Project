@@ -154,14 +154,16 @@ public class SheetDeets {
 			numY = 1;
 			break;
 		case POWERUP:
+			System.out.println("power!!!");
 			y = 1;
 			x = 1;
-			numX = 7;
+			numX = 1;
 			numY = 1;
+			break;
 			
 		}
 		
-		return Sprite.getSprite(MISC, x, y, MISC_SIZEX * numX, MISC_SIZEY * numY);
+		return Sprite.getSprite(MISC, x, y, 50 * numX, 50 * numY);
 		
 	}
 	
@@ -169,7 +171,9 @@ public class SheetDeets {
 		
 		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
 		
-		return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);		
+		return set;
+		
+		//return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);		
 		
 	}
 

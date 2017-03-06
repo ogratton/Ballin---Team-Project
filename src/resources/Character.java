@@ -35,13 +35,14 @@ public class Character extends Observable implements Collidable_Circle {
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
 	// moveFlags moves ...
-	private boolean up, right, left, down = false;
+	private boolean up = false, right = false, left = false, down = false;
 	// state flags
-	private boolean falling, dead, dashing, blocking = false;
+	private boolean falling = false, dead = false, dashing = false, blocking = false;
 	private int lives = 4;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
-	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
+	private double mass = 0.0, inv_mass = 0.0, dx = 0.0, dy = 0.0, 
+			maxdx = 0.0, maxdy = 0.0, acc = 0.0, restitution = 0.0;
 
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -50,7 +51,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// radius is the radius of the circle, in arbitrary units.
 	// direction is the direction that the character's facing
 	// (this is entirely for graphics)
-	private double x, y = 0.0;
+	private double x = 0.0, y = 0.0;
 	private int radius = 0;
 	private Heading direction = Heading.STILL;
 	private Class classType = Class.DEFAULT;
@@ -1234,6 +1235,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
 	// 0.0;
 	public void applyPowerup(Powerup p, int time) {
+		System.out.println("you got powered!!!!");
 		Power pow = p.getPower();
 		lastPowerup = pow;
 		lastPowerupTime = time;
