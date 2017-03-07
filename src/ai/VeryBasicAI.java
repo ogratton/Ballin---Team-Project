@@ -87,13 +87,13 @@ public class VeryBasicAI extends Thread
 		waypoints = new LinkedList<Point>();
 
 		id = character.getId();
-		
-//		// for single player
+
+		//		// for single player
 		// TODO actually, we ned this to happen earlier because otherwise we won't see the real players...?
-//		if (id == null)
-//		{
-//			id = UUID.randomUUID();
-//		}
+		//		if (id == null)
+		//		{
+		//			id = UUID.randomUUID();
+		//		}
 
 		aStar = new AStarSearch(resources);
 
@@ -152,10 +152,8 @@ public class VeryBasicAI extends Thread
 				Thread.sleep(tick);
 			}
 
-			setAllMovementFalse();
-			
-			// XXX debug
-			resources.setProjectedPos(null);
+			// Things to do after death
+			funeral();
 
 		}
 		catch (InterruptedException e)
@@ -173,12 +171,11 @@ public class VeryBasicAI extends Thread
 	 */
 	private void commonBehaviour() throws InterruptedException
 	{
-		//		while (projectedTile() != Tile.FLAT && !character.isDead()) // if we are expected to be heading for a dangerous tile
 		if (projectedTile() != Tile.FLAT)
 		{
 			//Thread.sleep(reaction_time);
 			moveAwayFromEdge();
-//			System.out.println("Near an edge!");
+			//			System.out.println("Near an edge!");
 		}
 		if (!waypoints.isEmpty())
 		{
@@ -202,7 +199,7 @@ public class VeryBasicAI extends Thread
 		if (waypoints.isEmpty())
 		{
 			System.out.println();
-						System.out.println("made it to destination " + destinations[destI]);
+			System.out.println("made it to destination " + destinations[destI]);
 			destI++;
 			try
 			{
@@ -262,33 +259,46 @@ public class VeryBasicAI extends Thread
 
 		}
 	}
-	
+
 	/**
-	 * TODO
 	 * Performs 1 tick's worth of Coward behaviour
 	 * (runs away from all players)
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void cowardBehaviour() throws InterruptedException
 	{
 		// TODO
 	}
-	
+
 	/**
-	 * TODO
 	 * Performs 1 tick's worth of Aggressive behaviour
 	 * (runs towards all players)
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void aggressiveBehaviour() throws InterruptedException
 	{
 		// TODO
+		// scan for the nearest player
+			// pathfind to them
 	}
-	
-	
-	
+
+	/**
+	 * Cleans up the AI after it dies
+	 */
+	private void funeral()
+	{
+		setAllMovementFalse();
+		waypoints.clear();
+		lastWaypoint = resources.getMap().randPointOnMap(); // safer than null
+
+		// XXX debug
+		resources.setProjectedPos(null);
+
+	}
+
 	// BELOW ARE A LOAD OF HELPER FUNCTIONS
-	
 
 	/**
 	 * Move to the next waypoint in our list
@@ -297,7 +307,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private void moveToWaypoint() throws InterruptedException
 	{
-//		resources.setAINextDest(waypoints.peek()); // XXX debug
+		//		resources.setAINextDest(waypoints.peek()); // XXX debug
 
 		success = moveTo(waypoints.peek());
 		if (success)
@@ -351,10 +361,10 @@ public class VeryBasicAI extends Thread
 	/**
 	 * @return The type of tile the AI is standing on
 	 */
-//	private Tile getCurrentTile()
-//	{
-//		return resources.getMap().tileAt(character.getX(), character.getY());
-//	}
+	//	private Tile getCurrentTile()
+	//	{
+	//		return resources.getMap().tileAt(character.getX(), character.getY());
+	//	}
 
 	private Point getCurrentTileCoords()
 	{
@@ -730,10 +740,11 @@ public class VeryBasicAI extends Thread
 			}
 		}
 	}
-	
+
 	/**
 	 * XXX debugging only
 	 * Sets what type of AI to be
+	 * 
 	 * @param behaviour
 	 */
 	public void setBehaviour(String behaviour)
@@ -764,7 +775,7 @@ public class VeryBasicAI extends Thread
 		}
 
 	}
-	
+
 	/**
 	 * 
 	 * @param behaviour
@@ -773,7 +784,7 @@ public class VeryBasicAI extends Thread
 	{
 		this.behaviour = behaviour;
 	}
-	
+
 	/**
 	 * XXX debugging only
 	 * Set the waypoints to a given list
@@ -782,7 +793,7 @@ public class VeryBasicAI extends Thread
 	 */
 	public void setDestinations(Point[] destinations)
 	{
-		this.destinations = destinations;  
+		this.destinations = destinations;
 	}
 
 }

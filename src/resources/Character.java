@@ -147,6 +147,10 @@ public class Character extends Observable implements Collidable_Circle {
 																									// calculate
 																									// this)
 				default_restitution, radius, direction, classType, playerNo);
+		
+				// XXX set temp UUID for single player
+				// overwritten by networking
+				this.id = UUID.randomUUID();
 	}
 
 	// master constructor. Any other constructors should eventually call this.
