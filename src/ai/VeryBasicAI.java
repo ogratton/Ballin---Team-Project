@@ -178,7 +178,7 @@ public class VeryBasicAI extends Thread
 		{
 			//Thread.sleep(reaction_time);
 			moveAwayFromEdge();
-			//			System.out.println("Near an edge!");
+//			System.out.println("Near an edge!");
 		}
 		if (!waypoints.isEmpty())
 		{
@@ -201,8 +201,8 @@ public class VeryBasicAI extends Thread
 
 		if (waypoints.isEmpty())
 		{
-			//System.out.println();
-			//			System.out.println("made it to destination " + destinations[destI]);
+			System.out.println();
+						System.out.println("made it to destination " + destinations[destI]);
 			destI++;
 			try
 			{
@@ -211,9 +211,9 @@ public class VeryBasicAI extends Thread
 				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
 
 				resources.setDestList(waypoints); // XXX debug
-				//resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
+				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
 
-				//System.out.println("pathfinding to point " + destinations[destI]);
+				System.out.println("pathfinding to point " + destinations[destI]);
 				//System.out.println("waypoints: " + waypoints);
 			}
 			catch (ArrayIndexOutOfBoundsException e)
@@ -297,7 +297,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private void moveToWaypoint() throws InterruptedException
 	{
-		resources.setAINextDest(waypoints.peek()); // XXX debug
+//		resources.setAINextDest(waypoints.peek()); // XXX debug
 
 		success = moveTo(waypoints.peek());
 		if (success)

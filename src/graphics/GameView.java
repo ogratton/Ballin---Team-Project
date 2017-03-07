@@ -185,8 +185,8 @@ public class GameView extends JPanel implements Observer {
 				for (int i = 0; i < fullDestList.size() - 1; i++)
 				{
 
-					g.drawLine((int) fullDestList.get(i).getX(), (int) fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
-							(int) fullDestList.get(i + 1).getY());
+					g.drawLine((int) (fullDestList.get(i).getX()*multiplier), (int) (fullDestList.get(i).getY()*multiplier), (int) (fullDestList.get(i + 1).getX()*multiplier),
+							(int) (fullDestList.get(i + 1).getY()*multiplier));
 
 				}
 			}
@@ -270,7 +270,7 @@ public class GameView extends JPanel implements Observer {
 
 					// Only works with one AI at a time atm as it uses shared
 					// resource
-					if (character.getPlayerNumber() == 3) {
+					if (character.getPlayerNumber() == 1) {
 
 						try {
 							g.setColor(Color.GREEN);
