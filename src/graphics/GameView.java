@@ -270,7 +270,7 @@ public class GameView extends JPanel implements Observer {
 
 					// Only works with one AI at a time atm as it uses shared
 					// resource
-					if (character.getPlayerNumber() == 1) {
+					if (character.getPlayerNumber() == 0) {
 
 						try {
 							g.setColor(Color.GREEN);

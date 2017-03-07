@@ -23,7 +23,7 @@ public class PathFindingTest
 {
 	private static Point startTile = new Point(12, 28);
 	//	private static Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
-	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 3), new Point(20, 44) }; // TODO to test moveAwayFrom Edge
+	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 44) }; // TODO to test moveAwayFrom Edge
 //	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
 
 	public static void main(String[] args)
@@ -55,7 +55,7 @@ public class PathFindingTest
 		Character player = new Character(Character.Class.WIZARD, 0);
 		player.setX(startCoords.getX());
 		player.setY(startCoords.getY());
-		player.setPlayerNumber(1);
+		player.setPlayerNumber(0);
 		resources.addPlayerToList(player);
 
 		VeryBasicAI ai = new VeryBasicAI(resources, player);

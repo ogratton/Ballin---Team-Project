@@ -95,7 +95,7 @@ public class PhysicsWithGraphicsDemo {
 		p.start();
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
-//		ai1.setBehaviour("poirot");
+		ai1.setBehaviour("aggressive");
 		ai1.start();
 		
 		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
@@ -106,7 +106,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		/*Graphics g = new Graphics(resources, null, false);
 		g.start();*/
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		SwingUtilities.invokeLater(new Graphics(resources, null, true));
 
 
 
