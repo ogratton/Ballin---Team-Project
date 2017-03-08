@@ -51,10 +51,12 @@ public class Updater extends JPanel implements Observer {
 		List<resources.Character> characters = resources.getPlayerList();
 		for(int i=0; i<characters.size(); i++) {
 			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {
-				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
-				resources.getRequests().add(info);
+				//CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
+				//resources.getRequests().add(info);
 				//System.out.println("Request ID sent: " + resources.getRequestId());
-				GameData gameData = new GameData(info);
+				GameData gameData = new GameData(resources.getClientMoves());
+				resources.transferMoves();
+				//resources.getClientMoves().clear();
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
 				try {
 					toServer.writeUnshared(message);

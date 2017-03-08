@@ -51,7 +51,8 @@ public class ServerSender extends Thread {
 //			Iterator<Entry<UUID, SerializableSession>> it = set.iterator();
 //			String name = it.next().getValue().getClass().toString();
 			
-			//System.out.println("Command: " + msg.getCommand() + " Note: " + msg.getNote() + " Object: " + ((SerializableSession)msg.getObject()).getClass().toString());
+			System.out.println("Command: " + msg.getCommand() + " Note: " + msg.getNote());
+		
 			toClient.writeUnshared(msg);
 		} catch (IOException e) {
 			e.printStackTrace();

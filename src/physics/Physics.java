@@ -97,6 +97,7 @@ public class Physics extends Thread implements ActionListener {
 			m.x = c.getX();
 			m.y = c.getY();
 			m.t = new Date();
+			m.id = resources.getId();
 			resources.getClientMoves().add(m);
 		}
 	}

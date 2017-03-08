@@ -45,6 +45,7 @@ public class Resources {
 	private int maxDeaths = 4;
 
 	private Queue<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
+	private Queue<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
@@ -619,6 +620,30 @@ public class Resources {
 		this.clientMoves = clientMoves;
 	}
 	
+	public Queue<NetworkMove> getSentClientMoves() {
+		return sentClientMoves;
+	}
+
+	public void setSentClientMoves(Queue<NetworkMove> sentClientMoves) {
+		this.sentClientMoves = sentClientMoves;
+	}
+	
+	public void transferMoves() {
+		NetworkMove move;
+		while(!clientMoves.isEmpty()) {
+			move = clientMoves.remove();
+			sentClientMoves.offer(move);
+		}
+	}
+	
+	public Character getMyCharacter() {
+		for(int i=0; i<this.getPlayerList().size(); i++) {
+			if(this.getPlayerList().get(i).getId().equals(this.getId())) {
+				return this.getPlayerList().get(i);
+			}
+		}
+		return null;
+	}
 
 	// public static MapReader mapReader = new MapReader();
 	// public static Map.Tile[][] map1 =
