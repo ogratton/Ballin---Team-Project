@@ -15,7 +15,7 @@ public class UIRes {
 	public static final int width = 600;
 	public static final int height = 800;
 	public static String username;
-	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
+	public static final Dimension buttonSize = new Dimension((int) (width * 0.85), (int) (height * 0.1));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.09));
 	public static MenuItems menuItems = new MenuItems();
 	public static String host;

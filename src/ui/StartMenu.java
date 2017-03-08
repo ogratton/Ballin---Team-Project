@@ -11,11 +11,11 @@ public class StartMenu extends BaseMenu{
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 		addGameTitle(panel);
-		addStartButton(panel, UIRes.username);
+		addStartSingleplayerButton(panel);
+		addStartMultiplayerButton(panel);
 		addUsernameButton(panel);
 		addOptionsButton(panel);
 		addExitButton(panel);
-		//musicPlayer.run();
 		return panel;
 	}
 
@@ -25,6 +25,7 @@ public class StartMenu extends BaseMenu{
 		UIRes.startPanel.setPreferredSize(frame.getSize());
 		frame.add(UIRes.mainPanel);
 		frame.setVisible(true);
+		UIRes.musicPlayer.run();
 	}
 
 }

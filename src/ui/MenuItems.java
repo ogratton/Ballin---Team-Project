@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import audio.AudioFile;
 import audio.MusicPlayer;
+import graphics.PhysicsWithGraphicsDemo;
 import networking.Client;
 import networking.Port;
 import resources.Resources;
@@ -78,11 +79,19 @@ public class MenuItems {
 		return label;
 	}
 	
-	JButton getPlayButton(){
-		JButton startButton = new JButton("Start Game");
+	JButton getPlaySingleplayerButton(){
+		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
 		startButton.addActionListener(e -> {
-			// PhysicsWithGraphicsDemo.main(null);
+			PhysicsWithGraphicsDemo.main(null);
+		});
+		return startButton;
+	}
+	
+	JButton getPlayMultiplayerButton(){
+		JButton startButton = new JButton("Start Multiplayer Game");
+		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
+		startButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
 			String input = (String)JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server", JOptionPane.PLAIN_MESSAGE);
 			if (input != null){
@@ -199,7 +208,8 @@ public class MenuItems {
 		panel.add(getControlButton("Move down:", KeyEvent.getKeyText(UIRes.resources.getDefaultDown()).toUpperCase(), "down"));
 		panel.add(getControlButton("Move left:", KeyEvent.getKeyText(UIRes.resources.getDefaultLeft()).toUpperCase(), "left"));
 		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(UIRes.resources.getDefaultRight()).toUpperCase(), "right"));
-		panel.add(getControlButton("Move dash:", KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase(), "dash"));
+		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase(), "dash"));
+		panel.add(getControlButton("Block:", KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase(), "block"));
 		
 		return panel;
 	}
@@ -220,6 +230,9 @@ public class MenuItems {
 		} else if (button.getName().equals("dash")) {
 			UIRes.resources.setDash(UIRes.resources.getDefaultDash());
 			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase());
+		} else if (button.getName().equals("block")) {
+			UIRes.resources.setBlock(UIRes.resources.getDefaultBlock());
+			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase());
 		}
 	}
 	
@@ -239,6 +252,7 @@ public class MenuItems {
 			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultLeft()));
 			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultRight()));
 			UIRes.controlsList.add(("" + UIRes.resources.getDefaultDash()).toUpperCase());
+			UIRes.controlsList.add(("" + UIRes.resources.getDefaultBlock()).toUpperCase());
 			
 		});
 		return resetControlsButton;
@@ -298,6 +312,8 @@ public class MenuItems {
 								UIRes.resources.setRight(e.getKeyCode());
 							else if (button.getName().equals("dash"))
 								UIRes.resources.setDash(e.getKeyCode());
+							else if (button.getName().equals("block"))
+								UIRes.resources.setBlock(e.getKeyCode());
 						}
 
 					}

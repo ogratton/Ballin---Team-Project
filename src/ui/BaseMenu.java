@@ -36,9 +36,16 @@ public abstract class BaseMenu {
 		return panel;
 	}
 
-	JPanel addStartButton(JPanel panel, String host){
-		JButton startButton = UIRes.menuItems.getPlayButton();
+	JPanel addStartSingleplayerButton(JPanel panel){
+		JButton startButton = UIRes.menuItems.getPlaySingleplayerButton();
 		addSpace(panel, 0, 0.1);
+		panel.add(startButton);
+		return panel;
+	}
+	
+	JPanel addStartMultiplayerButton(JPanel panel){
+		JButton startButton = UIRes.menuItems.getPlayMultiplayerButton();
+		addSpace(panel, 0, 0.02);
 		panel.add(startButton);
 		return panel;
 	}
