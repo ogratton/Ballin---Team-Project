@@ -88,7 +88,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId().equals(resources.getId())) {
-				secondPlayerIndex = i;
+				firstPlayerIndex = i;
 				System.out.println("Player Number: " + characters.get(i).getPlayerNumber());
 				break;
 			}
@@ -96,9 +96,9 @@ public class GameComponent extends JFrame implements ActionListener {
 
 
 		add(view, BorderLayout.CENTER);
-		setUndecorated(true);
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		//setUndecorated(true);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
 		toggleFullscreen();
 		

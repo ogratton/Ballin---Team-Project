@@ -44,8 +44,8 @@ public class Resources {
 	// max deaths a character can have.
 	private int maxDeaths = 4;
 
-	private Queue<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
-	private Queue<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
+	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
+	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
@@ -612,19 +612,19 @@ public class Resources {
 		this.normal = n;
 	}
 
-	public Queue<NetworkMove> getClientMoves() {
+	public LinkedList<NetworkMove> getClientMoves() {
 		return clientMoves;
 	}
 
-	public void setClientMoves(Queue<NetworkMove> clientMoves) {
+	public void setClientMoves(LinkedList<NetworkMove> clientMoves) {
 		this.clientMoves = clientMoves;
 	}
 	
-	public Queue<NetworkMove> getSentClientMoves() {
+	public LinkedList<NetworkMove> getSentClientMoves() {
 		return sentClientMoves;
 	}
 
-	public void setSentClientMoves(Queue<NetworkMove> sentClientMoves) {
+	public void setSentClientMoves(LinkedList<NetworkMove> sentClientMoves) {
 		this.sentClientMoves = sentClientMoves;
 	}
 	

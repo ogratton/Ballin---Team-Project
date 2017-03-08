@@ -58,6 +58,9 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		leaveSession = new JButton("Leave Session");
 		leaveSession.addActionListener(e -> {
+			if(cModel.getSessionId() == null) {
+				return;
+			}
 			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), null, cModel.getSessionId(), cModel.getHighlightedSessionId());
 			try {
 				toServer.reset();

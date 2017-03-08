@@ -36,7 +36,7 @@ public class GameButtons extends JPanel implements Observer {
 		this.cModel = cModel;
 		ready = new JButton("Ready");
 		ready.addActionListener(e -> {
-			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+			if(cModel.getSessionId() != null && cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
 				if(!cModel.isGameInProgress()) {
 					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
@@ -51,7 +51,7 @@ public class GameButtons extends JPanel implements Observer {
 		
 		notReady = new JButton("Not Ready");
 		notReady.addActionListener(e -> {
-			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+			if(cModel.getSessionId() != null && cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
 				if(!cModel.isGameInProgress()) {
 					Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
