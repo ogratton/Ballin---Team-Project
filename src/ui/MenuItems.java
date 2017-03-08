@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import audio.AudioFile;
 import audio.MusicPlayer;
+import gamemodes.PlayGame;
 import graphics.PhysicsWithGraphicsDemo;
 import networking.Client;
 import networking.Port;
@@ -83,7 +84,7 @@ public class MenuItems {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
 		startButton.addActionListener(e -> {
-			PhysicsWithGraphicsDemo.start(UIRes.resources);
+			PlayGame.start(UIRes.resources);;
 		});
 		return startButton;
 	}

@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
+import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
 
@@ -21,6 +22,8 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
+	
+	public GameModeFFA gamemode;
 
 	// keybindings
 	private int default_up = KeyEvent.VK_W;
