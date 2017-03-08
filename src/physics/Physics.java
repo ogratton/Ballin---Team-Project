@@ -7,6 +7,7 @@ import java.util.Date;
 
 import javax.swing.Timer;
 
+import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import resources.Character;
 import resources.Character.Heading;
@@ -27,11 +28,16 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	
+	private AudioFile boing;
+	
 	private boolean client = false;
 	
 	public Physics(Resources resources, boolean client){
 		this.resources = resources;
 		this.client = client;
+		
+		boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
 	}
 	
 	@Override
@@ -394,6 +400,8 @@ public class Physics extends Thread implements ActionListener {
 		d.setDx(d.getDx() - (d.getInvMass() * impulsex));
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
+		// XXX play SFX
+		boing.play();
 		
 	}
 	
