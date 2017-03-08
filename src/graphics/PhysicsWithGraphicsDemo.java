@@ -91,7 +91,7 @@ public class PhysicsWithGraphicsDemo {
 		}*/
 
 		// create physics thread
-		Physics p = new Physics(resources, true);
+		Physics p = new Physics(resources, false);
 		p.start();
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
@@ -106,7 +106,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		/*Graphics g = new Graphics(resources, null, false);
 		g.start();*/
-		SwingUtilities.invokeLater(new Graphics(resources, null, true));
+		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 
 
 

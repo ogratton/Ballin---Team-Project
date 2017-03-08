@@ -61,7 +61,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		// This code block below is just for testing!
 
-		addKeyListener(new TAdapter());
+		addKeyListener(new TAdapter(resources));
 		setFocusable(true);
 		timer = new Timer(10, this);
 		timer.start();
@@ -96,9 +96,9 @@ public class GameComponent extends JFrame implements ActionListener {
 
 
 		add(view, BorderLayout.CENTER);
-		//setUndecorated(true);
-		//setExtendedState(JFrame.MAXIMIZED_BOTH);
-//		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		setUndecorated(true);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
 		toggleFullscreen();
 		
@@ -172,10 +172,55 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	private class TAdapter extends KeyAdapter {
+		
+		private Resources resources;
+		private int leftKey;
+		private int rightKey;
+		private int upKey;
+		private int downKey;
+		private int dashKey;
+		private int blockKey;
+		
+		public TAdapter(Resources resources) {
+			this.resources = resources;
+			
+			
+			setUpControls();
+			
+		}
+		
+		public void setUpControls(){
+			
+			leftKey = resources.getLeft();
+			rightKey = resources.getRight();
+			upKey = resources.getUp();
+			downKey = resources.getDown();
+			
+			blockKey = resources.getBlock();
+			dashKey = resources.getDash();
+			
+		}
+
 		@Override
 		public void keyReleased(KeyEvent e) {
+			
 			int key = e.getKeyCode();
-			switch (key) {
+			
+			if(key == leftKey){
+				characters.get(firstPlayerIndex).setLeft(false);
+			} else if(key == rightKey){
+				characters.get(firstPlayerIndex).setRight(false);
+			} else if(key == upKey){
+				characters.get(firstPlayerIndex).setUp(false);
+			} else if(key == downKey){
+				characters.get(firstPlayerIndex).setDown(false);
+			} else if(key == dashKey){
+				characters.get(firstPlayerIndex).setDashing(false);
+			} else if(key == blockKey){
+				characters.get(firstPlayerIndex).setBlocking(false);
+			}
+			
+			/*switch (key) {
 			case KeyEvent.VK_A:
 				characters.get(firstPlayerIndex).setLeft(false);
 				break;
@@ -200,13 +245,33 @@ public class GameComponent extends JFrame implements ActionListener {
 			case KeyEvent.VK_RIGHT:
 				characters.get(secondPlayerIndex).setRight(false);
 				break;
-			}
+			}*/
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
-			switch (key) {
+			
+			if(key == leftKey){
+				characters.get(firstPlayerIndex).setLeft(true);
+			} else if(key == rightKey){
+				characters.get(firstPlayerIndex).setRight(true);
+			} else if(key == upKey){
+				characters.get(firstPlayerIndex).setUp(true);
+			} else if(key == downKey){
+				characters.get(firstPlayerIndex).setDown(true);
+			} else if(key == dashKey){
+				System.out.println("dash");
+				characters.get(firstPlayerIndex).setDashing(true);
+			} else if(key == blockKey){
+				characters.get(firstPlayerIndex).setBlocking(true);
+			} else if(key == KeyEvent.VK_ESCAPE){
+				System.exit(0);
+			} else if(key == KeyEvent.VK_Z){
+				cycleWorld();
+			}
+			
+			/*switch (key) {
 			case KeyEvent.VK_A:
 				characters.get(firstPlayerIndex).setLeft(true);
 				break;
@@ -251,7 +316,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			case KeyEvent.VK_Z:
 				cycleWorld();
 				break;
-			}
+			}*/
 
 		}
 	}
