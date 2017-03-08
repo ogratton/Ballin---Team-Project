@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -68,6 +69,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 		label = new JLabel();
 		label.setText("hello");
+		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
 		timer = new Timer(10, this);
 		timer.start();
