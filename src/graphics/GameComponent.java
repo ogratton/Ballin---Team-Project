@@ -107,9 +107,11 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 		add(label, BorderLayout.NORTH);
 		//setUndecorated(true);
-		//setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
+		add(view, BorderLayout.CENTER);
+		
 		toggleFullscreen();
 		
 		setVisible(true);

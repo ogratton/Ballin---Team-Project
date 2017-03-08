@@ -384,12 +384,12 @@ public class GameView extends JPanel implements Observer {
 
 		// draw black bars if the ratio is not 16:9
 
-		if (notSixteenNine && fullscreen) {
+		/*if (notSixteenNine && fullscreen) {
 
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, (int) currentWindowWidth, (int) currentOffset);
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
-		}
+		}*/
 
 		if (resources.gamemode.isGameOver()) {
 			g.setColor(Color.YELLOW);
