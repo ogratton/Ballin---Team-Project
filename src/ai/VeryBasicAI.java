@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import ai.pathfinding.AStarSearch;
 import ai.pathfinding.Line;
+import ai.pathfinding.StaticHeuristics;
 import ai.pathfinding.Vector;
 import resources.Character;
 import resources.Map.Tile;
@@ -54,6 +55,8 @@ public class VeryBasicAI extends Thread
 	// this is setting things up for the debug Detective
 	Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 	int destI = 0; // destination index
+	private boolean debug;
+	
 
 	/*
 	 * Notes:
@@ -88,16 +91,12 @@ public class VeryBasicAI extends Thread
 
 		id = character.getId();
 
-		//		// for single player
-		// TODO actually, we ned this to happen earlier because otherwise we won't see the real players...?
-		//		if (id == null)
-		//		{
-		//			id = UUID.randomUUID();
-		//		}
-
 		aStar = new AStarSearch(resources);
 
 		lastWaypoint = getCurrentTileCoords();
+		
+		// TODO do stuff with this
+		debug = character.getPlayerNumber() == 1 ? true : false;
 	}
 
 	/**
@@ -175,7 +174,7 @@ public class VeryBasicAI extends Thread
 		{
 			//Thread.sleep(reaction_time);
 			moveAwayFromEdge();
-			//			System.out.println("Near an edge!");
+			//System.out.println("Near an edge!");
 		}
 		if (!waypoints.isEmpty())
 		{
@@ -261,6 +260,7 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * TODO
 	 * Performs 1 tick's worth of Coward behaviour
 	 * (runs away from all players)
 	 * 
@@ -272,6 +272,7 @@ public class VeryBasicAI extends Thread
 	}
 
 	/**
+	 * TODO
 	 * Performs 1 tick's worth of Aggressive behaviour
 	 * (runs towards all players)
 	 * 
@@ -279,9 +280,29 @@ public class VeryBasicAI extends Thread
 	 */
 	private void aggressiveBehaviour() throws InterruptedException
 	{
-		// TODO
-		// scan for the nearest player
+		// 	if we don't have a target to hunt
+		if(waypoints.isEmpty())
+		{
+			Character nearestPlayer;
+			try
+			{
+				nearestPlayer = scanForNearestPlayer();
+			}
+			catch (NullPointerException e)
+			{
+				// no other players, so probably switch behaviour
+				setBehaviour(Behaviour.ROVING);
+				return;
+			}
+
 			// pathfind to them
+			Point charPos = getCurrentTileCoords();
+			Point newDest = new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY());
+			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
+			waypoints = convertWaypoints(aStar.search(charPos, newDest));
+		}
+
+		
 	}
 
 	/**
@@ -301,13 +322,49 @@ public class VeryBasicAI extends Thread
 	// BELOW ARE A LOAD OF HELPER FUNCTIONS
 
 	/**
+	 * TODO this will need to be adapted for teams
+	 * 
+	 * @return The closest player that is not us
+	 * @throws NullPointerException if there are no players
+	 */
+	private Character scanForNearestPlayer() throws NullPointerException
+	{
+		Character nearestPlayer = null;
+		double SLD_to_nearestPlayer = -1;
+		for (Character player : resources.getPlayerList())
+		{
+			UUID playerID = player.getId();
+			// don't hunt ourselves
+			if (!id.equals(playerID))
+			{
+				Point playerLoc = new Point((int) player.getX(), (int) player.getY());
+				Point ourLoc = getOurLocation();
+				double distanceToPlayer = StaticHeuristics.euclidean(ourLoc, playerLoc);
+				if (distanceToPlayer < SLD_to_nearestPlayer)
+				{
+					nearestPlayer = player;
+					SLD_to_nearestPlayer = distanceToPlayer;
+				}
+
+			}
+		}
+
+		if (nearestPlayer == null)
+		{
+			throw new NullPointerException("No other players around :(");
+		}
+
+		return nearestPlayer;
+	}
+
+	/**
 	 * Move to the next waypoint in our list
 	 * 
 	 * @throws InterruptedException
 	 */
 	private void moveToWaypoint() throws InterruptedException
 	{
-		//		resources.setAINextDest(waypoints.peek()); // XXX debug
+		//resources.setAINextDest(waypoints.peek()); // XXX debug
 
 		success = moveTo(waypoints.peek());
 		if (success)
@@ -315,7 +372,7 @@ public class VeryBasicAI extends Thread
 			success = false;
 			if (waypoints.size() > 0)
 			{
-				//				System.out.println("made it to a waypoint!");
+				//System.out.println("made it to a waypoint!");
 				lastWaypoint = waypoints.removeFirst();
 				normalToNextWaypoint = normalToNextWaypoint();
 				brakeChar();
@@ -341,7 +398,7 @@ public class VeryBasicAI extends Thread
 			Vector ab_norm = ab_vec.normal(b);
 
 			//XXX debug
-			//			System.out.println(ab_norm);
+			//System.out.println(ab_norm);
 			Point onNormal1 = new Point((int) (ab_norm.getCentre().getX() + 100 * ab_norm.getX()),
 					(int) (ab_norm.getCentre().getY() + 100 * ab_norm.getY()));
 			Point onNormal2 = new Point((int) (ab_norm.getCentre().getX() - 100 * ab_norm.getX()),
@@ -365,12 +422,27 @@ public class VeryBasicAI extends Thread
 	//	{
 	//		return resources.getMap().tileAt(character.getX(), character.getY());
 	//	}
+	
+	/**
+	 * @return the AI's location in character coords (not tiles)
+	 */
+	private Point getOurLocation()
+	{
+		return new Point((int) character.getX(), (int) character.getY());
+	}
 
+	/**
+	 * @return the tile index of the AI's current location
+	 */
 	private Point getCurrentTileCoords()
 	{
 		return resources.getMap().tileCoords(character.getX(), character.getY());
 	}
 
+	/**
+	 * @param p a point in the character coord system
+	 * @return the tile index of a point p
+	 */
 	private Point getTileCoords(Point p)
 	{
 		return resources.getMap().tileCoords(p.getX(), p.getY());
@@ -500,7 +572,7 @@ public class VeryBasicAI extends Thread
 	private boolean detectOvershoot()
 	{
 		// get where we are
-		Point curLoc = new Point((int) character.getX(), (int) character.getY());
+		Point curLoc = getOurLocation();
 
 		// if we have a normal to be looking at
 		if (normalToNextWaypoint != null)
@@ -540,7 +612,7 @@ public class VeryBasicAI extends Thread
 
 		if (fuzzyEqual(character.getX(), p.x) && fuzzyEqual(character.getY(), p.y))
 		{
-			//			brakeChar();
+			brakeChar();
 			return true;
 		}
 		if (fuzzyEqual(character.getX(), p.x))
