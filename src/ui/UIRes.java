@@ -28,7 +28,7 @@ public class UIRes {
 	public static final double labelRatio = 0.32;
 	public static final double sliderRatio = 0.25;
 	
-	public static MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+	
 	public static AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
 	
 	public static StartMenu start = new StartMenu();
@@ -36,6 +36,6 @@ public class UIRes {
 	
 	public static JPanel mainPanel = new JPanel();
 	public static JPanel startPanel = start.getStartMenuPanel();
-	public static JPanel optionsPanel = options.getOptionsPanel(musicPlayer, audioPlayer, resources);
+	public static JPanel optionsPanel = options.getOptionsPanel();
 
 }

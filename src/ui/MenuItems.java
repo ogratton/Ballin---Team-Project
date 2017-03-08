@@ -85,9 +85,11 @@ public class MenuItems {
 		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
 		startButton.addActionListener(e -> {
 			PlayGame.start(UIRes.resources);
+			// button sound effect
+			UIRes.audioPlayer.play();
 			// XXX change the song
-			UIRes.musicPlayer.changePlaylist("thirty");
-			UIRes.musicPlayer.resumeMusic();
+			UIRes.resources.getMusicPlayer().changePlaylist("thirty");
+			UIRes.resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}
@@ -163,9 +165,9 @@ public class MenuItems {
 		musicSlider.addChangeListener(e -> {
 			int volume = musicSlider.getValue();
 			if (volume == 0)
-				UIRes.musicPlayer.mute();
+				UIRes.resources.getMusicPlayer().mute();
 			else
-				UIRes.musicPlayer.setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
+				UIRes.resources.getMusicPlayer().setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
 		});
 		return musicSlider;
 	}

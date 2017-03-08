@@ -22,6 +22,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private int timer = 30;
+	
+	private String victoryMusic = "grandma";
 
 	public Deathmatch(Resources resources) {
 		this.resources = resources;
@@ -56,6 +58,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		// TODO pause/change music too
+		resources.getMusicPlayer().changePlaylist(victoryMusic);
+		resources.getMusicPlayer().resumeMusic();
 		System.out.println("WE HAVE A WINNER");
 		getWinner();
 		System.out.println(

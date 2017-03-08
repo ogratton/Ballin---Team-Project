@@ -4,6 +4,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import audio.MusicPlayer;
+
 public class StartMenu extends BaseMenu{
 	
 	public JPanel getStartMenuPanel(){
@@ -25,7 +27,10 @@ public class StartMenu extends BaseMenu{
 		UIRes.startPanel.setPreferredSize(frame.getSize());
 		frame.add(UIRes.mainPanel);
 		frame.setVisible(true);
-		UIRes.musicPlayer.start();
+		
+		MusicPlayer musicPlayer = new MusicPlayer(UIRes.resources, "guile");
+		UIRes.resources.setMusicPlayer(musicPlayer);
+		musicPlayer.start();
 	}
 
 }

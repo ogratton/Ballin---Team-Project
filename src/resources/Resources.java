@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
+import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
@@ -64,8 +65,7 @@ public class Resources {
 	// map
 	private Map map;
 
-	private int[][] proxMask; // how many tiles away from danger
-	private int[][] costMask; // cost for AI to pathfind there
+	private MusicPlayer musicPlayer;
 
 	// client ID
 	private UUID id;
@@ -648,8 +648,14 @@ public class Resources {
 		return null;
 	}
 
-	// public static MapReader mapReader = new MapReader();
-	// public static Map.Tile[][] map1 =
-	// mapReader.readMap("./resources/maps/map1.csv");
+	public MusicPlayer getMusicPlayer()
+	{
+		return musicPlayer;
+	}
+	
+	public void setMusicPlayer(MusicPlayer mp)
+	{
+		this.musicPlayer = mp;
+	}
 
 }
