@@ -569,36 +569,39 @@ public class VeryBasicAI extends Thread
 	private void moveAwayFromEdge() throws InterruptedException
 	{
 		Point currentTileIndex = getCurrentTileCoords();
-		//		setAllMovementFalse();
-		int column = (int) currentTileIndex.getX();
-		int row = (int) currentTileIndex.getY();
-		// get the surrounding tiles 
-		// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning) 	
-		// They must not use the same +&- conventions as dy and dx 	
-		// Or I'm being silly 		
-		// But either way, this works: 		
-		Tile tile_down = resources.getMap().tileAt(column - 2, row);
-		Tile tile_up = resources.getMap().tileAt(column + 2, row);
-		Tile tile_right = resources.getMap().tileAt(column, row - 2);
-		Tile tile_left = resources.getMap().tileAt(column, row + 2);
-		if (!isWalkable(tile_left))
+		//setAllMovementFalse();
+		if (currentTileIndex != null)
 		{
-			character.setRight(true);
+			int column = (int) currentTileIndex.getX();
+			int row = (int) currentTileIndex.getY();
+			// get the surrounding tiles 
+			// n.b. These values weren't the expected ones (tile_down should be row+1 by my reckoning) 	
+			// They must not use the same +&- conventions as dy and dx 	
+			// Or I'm being silly 		
+			// But either way, this works: 		
+			Tile tile_down = resources.getMap().tileAt(column - 2, row);
+			Tile tile_up = resources.getMap().tileAt(column + 2, row);
+			Tile tile_right = resources.getMap().tileAt(column, row - 2);
+			Tile tile_left = resources.getMap().tileAt(column, row + 2);
+			if (!isWalkable(tile_left))
+			{
+				character.setRight(true);
+			}
+			if (!isWalkable(tile_right))
+			{
+				character.setLeft(true);
+			}
+			if (!isWalkable(tile_up))
+			{
+				character.setDown(true);
+			}
+			if (!isWalkable(tile_down))
+			{
+				character.setUp(true);
+			}
+			Thread.sleep(10);
+			setAllMovementFalse();
 		}
-		if (!isWalkable(tile_right))
-		{
-			character.setLeft(true);
-		}
-		if (!isWalkable(tile_up))
-		{
-			character.setDown(true);
-		}
-		if (!isWalkable(tile_down))
-		{
-			character.setUp(true);
-		}
-		Thread.sleep(10);
-		setAllMovementFalse();
 	}
 
 	/**
