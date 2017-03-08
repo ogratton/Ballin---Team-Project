@@ -3,6 +3,7 @@ package physics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.Timer;
 
@@ -12,7 +13,11 @@ import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
+import resources.NetworkMove;
+import resources.Powerup;
 import resources.Map.Tile;
+import resources.Map.World;
+import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
 import resources.Wall;
@@ -22,14 +27,15 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
+	private boolean client = false;
 	
-	public Physics(Resources resources){
+	public Physics(Resources resources, boolean client){
 		this.resources = resources;
+		this.client = client;
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("start");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -56,6 +62,9 @@ public class Physics extends Thread implements ActionListener {
 		if(resources.isHockey()) update(resources.getPuck());
 		
 		for(Character c : resources.getPlayerList()){
+//			if (c.getPlayerNumber() == 1) {
+//				System.out.println("hp: " + c.getHealth());
+//			}
 			update(c);
 			for (Character d : resources.getPlayerList()) {
 				// check collisions
@@ -67,14 +76,14 @@ public class Physics extends Thread implements ActionListener {
 				}
 			}
 			// Check collisions with powerups
-//			for (Powerup p : resources.getPowerupList()) {
-//				CND cnd = detectCollision(c,p);
-//				if (cnd.collided) {
-//					// Grant power to character, remove powerup
-//					c.applyPowerup(p, resources.getGlobalTimer());
-//					resources.removePowerup(p);
-//				}
-//			}
+			for (Powerup p : resources.getPowerupList()) {
+				CND cnd = detectCollision(c,p);
+				if (cnd.collided && p.isActive()) {
+					// Grant power to character, remove powerup
+					c.applyPowerup(p, resources.getGlobalTimer());
+					resources.removePowerup(p);
+				}
+			}
 			if (resources.isHockey()) {
 				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
@@ -82,6 +91,13 @@ public class Physics extends Thread implements ActionListener {
 					collide(c,p,cnd);
 				}
 			}
+			
+			// for networking
+			NetworkMove m = new NetworkMove();
+			m.x = c.getX();
+			m.y = c.getY();
+			m.t = new Date();
+			resources.getClientMoves().add(m);
 		}
 	}
 
@@ -94,24 +110,37 @@ public class Physics extends Thread implements ActionListener {
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
-				resources.getMap().spawn(c);
+				if(!client) resources.getMap().spawn(c);
+				
 			}
 		}
 		
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(), c.getY());
 		//check for falling.
-		if(Map.tileCheck(t)) {
-			c.setFalling(true);
+		if (Map.tileCheck(t)) {
+			if (resources.getMap().getWorldType() == World.LAVA) {
+				c.setBurning(true);
+				if (c.getHealth() <= 0) {
+					c.setFalling(true);
+				}
+			} else {
+				c.setFalling(true);
+			}
+		} else {
+			c.setBurning(false);
+		}
+		if (c.getBurning() == true) {
+			c.decrementHealth();
 		}
 		// Powerup timer, remove powerup after 10 secs
-//		if (resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
-//			c.revertPowerup();
-//		}
+		if (c.hasPowerup() && resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
+			c.revertPowerup();
+		}
 		// Recharge stamina
 		c.incrementStamina();
 		// If a special button has been pressed, perform the ability if possible
-		if (special(c)){
+		if (special(c) && !c.isFalling()){
 			return;
 		}
 		if(!c.isFalling()) { //moving
@@ -167,6 +196,9 @@ public class Physics extends Thread implements ActionListener {
 					c.incrementScore(-2);
 				}
 				c.setLastCollidedWith(null, 0);
+				if (c.hasPowerup()) {
+					c.revertPowerup();
+				}
 			}
 		}
 		//System.out.println("Got here");
@@ -412,10 +444,8 @@ public class Physics extends Thread implements ActionListener {
 	/**
 	 * detects collisions between character and wall
 	 * @param c
-	 * @param wallCoords coords of closest point
-	 * @param left is it the top of the wall?
-	 * @param top is it the left of the wall?
-	 * @return
+	 * @param topLeft coords of top-left corner of wall
+	 * @return collision variable.
 	 */
 	private CND detectCollision(Collidable_Circle c, Point topLeft) {
 		// topLeft is the top-left point of the wall.
@@ -553,20 +583,14 @@ public class Physics extends Thread implements ActionListener {
 		c.setDashing(false);
 		// Start blocking - increase mass
 		if (c.getBlockTimer() == 0) {
-			//System.out.println("BLOCKING");
-			//System.out.println("BEFORE: " + c.getDx() + ", " + c.getDy());
 			c.setMass(c.getMass() * 10);
 		}
 		c.incrementBlockTimer();
 		// Decrease speed - should instantly stop to avoid abuse of blocking?
-		//System.out.println(c.getStamina());
-		//System.out.println(c.getDx() + ", " + c.getDy());
 		c.setDx(c.getDx() * 0.9);
 		c.setDy(c.getDy() * 0.9);
 		// Stop blocking - revert changes to mass
 		if (c.getBlockTimer() >= 25) {
-			//System.out.println("DONE BLOCKING");
-			//System.out.println("AFTER: " + c.getDx() + ", " + c.getDy());
 			c.setBlocking(false);
 			c.resetBlockTimer();
 			c.setMass(c.getMass() / 10);

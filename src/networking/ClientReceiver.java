@@ -155,12 +155,12 @@ public void run() {
 						e.printStackTrace();
 					}
 					
-					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE));
+					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 					new MapCosts(resources);
     				cModel.setResources(resources);
     				
-    				Physics p = new Physics(resources);
-    				p.start();
+//    				Physics p = new Physics(resources);
+//    				p.start();
     				
     				// create ui thread
     				Graphics g = new Graphics(resources, updater, false);
@@ -192,10 +192,11 @@ public void run() {
             					for(int j=0; j<charactersList.size(); j++) {
             						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
             							//System.out.println("X: " + charactersList.get(j).getX());
-            							players.get(i).setXWithoutNotifying(charactersList.get(j).getX());
-            							players.get(i).setYWithoutNotifying(charactersList.get(j).getY());
+            							players.get(i).setX(charactersList.get(j).getX());
+            							players.get(i).setY(charactersList.get(j).getY());
             							players.get(i).setBlocking(charactersList.get(j).isBlocking());
             							players.get(i).setFalling(charactersList.get(j).isFalling());
+            							
             							players.get(i).setDead(charactersList.get(j).isDead());
             							players.get(i).setDashing(charactersList.get(j).isDashing());
             						}

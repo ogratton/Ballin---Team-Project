@@ -35,13 +35,14 @@ public class Character extends Observable implements Collidable_Circle {
 	// which does an action based on the class of the character.
 	// Collided flag added to help with collision calculations (depreciated)
 	// moveFlags moves ...
-	private boolean up, right, left, down = false;
+	private boolean up = false, right = false, left = false, down = false;
 	// state flags
-	private boolean falling, dead, dashing, blocking = false;
+	private boolean falling = false, dead = false, dashing = false, blocking = false;
 	private int lives = 4;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
-	private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution = 0.0;
+	private double mass = 0.0, inv_mass = 0.0, dx = 0.0, dy = 0.0, 
+			maxdx = 0.0, maxdy = 0.0, acc = 0.0, restitution = 0.0;
 
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -50,7 +51,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// radius is the radius of the circle, in arbitrary units.
 	// direction is the direction that the character's facing
 	// (this is entirely for graphics)
-	private double x, y = 0.0;
+	private double x = 0.0, y = 0.0;
 	private int radius = 0;
 	private Heading direction = Heading.STILL;
 	private Class classType = Class.DEFAULT;
@@ -66,6 +67,9 @@ public class Character extends Observable implements Collidable_Circle {
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
+	private BufferedImage arrow;
+	private BufferedImage bigArrow;
+	
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -76,6 +80,8 @@ public class Character extends Observable implements Collidable_Circle {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
+	private int health = 100;
+	private boolean burning = false;
 
 	// Store this character's score
 	private int score = 0;
@@ -141,6 +147,10 @@ public class Character extends Observable implements Collidable_Circle {
 																									// calculate
 																									// this)
 				default_restitution, radius, direction, classType, playerNo);
+		
+				// XXX set temp UUID for single player
+				// overwritten by networking
+				this.id = UUID.randomUUID();
 	}
 
 	// master constructor. Any other constructors should eventually call this.
@@ -180,6 +190,7 @@ public class Character extends Observable implements Collidable_Circle {
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
+		arrow = SheetDeets.getArrowFromPlayer(playerNo);
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
@@ -1231,22 +1242,26 @@ public class Character extends Observable implements Collidable_Circle {
 	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
 	// 0.0;
 	public void applyPowerup(Powerup p, int time) {
+		if (hasPowerup) {
+			revertPowerup();
+		}
 		Power pow = p.getPower();
 		lastPowerup = pow;
 		lastPowerupTime = time;
 		switch (pow) {
 		case Speed:
-			// max speed * 2, acc * 2
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
+			break;
 		case Mass:
-			// Mass * 10, max speed / 2, acc / 2
 			setMass(mass * 10);
 			setMaxDx(maxdx / 2);
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
+			break;
 		}
+		hasPowerup = true;
 	}
 
 	public void revertPowerup() {
@@ -1255,12 +1270,15 @@ public class Character extends Observable implements Collidable_Circle {
 			setMaxDx(maxdx / 2);
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
+			break;
 		case Mass:
 			setMass(mass / 10);
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
+			break;
 		}
+		hasPowerup = false;
 	}
 
 	public Power getLastPowerup() {
@@ -1315,6 +1333,40 @@ public class Character extends Observable implements Collidable_Circle {
 			bigDashSprites.add(resize(image, multiplier));
 
 		}
+		
+		bigArrow = resize(arrow, multiplier);
 
+	}
+	
+	public BufferedImage getArrow(boolean fullscreen){
+		if(fullscreen){
+			return bigArrow;
+		}
+		
+		return arrow;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int i) {
+		health = i;
+	}
+	
+	public void decrementHealth() {
+		health--;
+	}
+
+	public void decrementHealth(int n) {
+		health -= n;
+	}
+
+	public void setBurning(boolean burning) {
+		this.burning = burning;
+	}
+	
+	public boolean getBurning() {
+		return burning;
 	}
 }
