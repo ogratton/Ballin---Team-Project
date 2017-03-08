@@ -255,8 +255,7 @@ public class MainMenu extends JFrame {
 
 		JTextField textField = new JTextField();
 		textField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		textField
-				.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
+		textField.setMaximumSize(new Dimension((int) (frameSize.getWidth() * 0.8), (int) (frameSize.getHeight() * 0.1)));
 		textField.setFont(font);
 		textField.addKeyListener(new KeyListener() {
 
