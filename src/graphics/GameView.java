@@ -54,6 +54,7 @@ public class GameView extends JPanel implements Observer {
 	private boolean fullscreen = false;
 	private double offset;
 	private double currentOffset = 0;
+	private boolean gameOver = false;
 	private BufferedImage mapSprite;
 	private BufferedImage bigMapSprite;
 	private BufferedImage currentMapSprite;
@@ -107,7 +108,7 @@ public class GameView extends JPanel implements Observer {
 	/**
 	 * Make the normal and big map sprites
 	 */
-	
+
 	public void makeMap() {
 		mapSprite = Sprite.createMap(resources.getMap());
 		int w = mapSprite.getWidth();
@@ -123,7 +124,7 @@ public class GameView extends JPanel implements Observer {
 	/**
 	 * Set up the sizes of fullscreen and normal sized screen
 	 */
-	
+
 	private void setUpSizes() {
 
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -146,7 +147,7 @@ public class GameView extends JPanel implements Observer {
 		currentMapWidth = ordinaryMapWidth;
 		currentMapHeight = ordinaryMapHeight;
 		currentPlayerSize = ordinaryPlayerSize;
-		
+
 		makeMap();
 
 	}
@@ -156,43 +157,40 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public void paintComponent(Graphics g) {
-		
+
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		//g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
+		// g.clearRect(0, 0, (int) currentWindowWidth, (int)
+		// currentWindowHeight);
 
+		
 		// draw the map sprite (this is the same throughout a game)
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
 		destList = resources.getDestList();
 
-		if (destList != null)
-		{
-			for (Point p : destList)
-			{
-				if (!fullDestList.contains(p))
-				{
+		if (destList != null) {
+			for (Point p : destList) {
+				if (!fullDestList.contains(p)) {
 					fullDestList.add(p);
 				}
 			}
 
-			if (debugPaths)
-			{
+			if (debugPaths) {
 				g.setColor(Color.RED);
 
-				for (int i = 0; i < fullDestList.size() - 1; i++)
-				{
+				for (int i = 0; i < fullDestList.size() - 1; i++) {
 
-					g.drawLine((int) (fullDestList.get(i).getX()*multiplier), (int) (fullDestList.get(i).getY()*multiplier), (int) (fullDestList.get(i + 1).getX()*multiplier),
-							(int) (fullDestList.get(i + 1).getY()*multiplier));
+					g.drawLine((int) (fullDestList.get(i).getX() * multiplier),
+							(int) (fullDestList.get(i).getY() * multiplier),
+							(int) (fullDestList.get(i + 1).getX() * multiplier),
+							(int) (fullDestList.get(i + 1).getY() * multiplier));
 
 				}
 			}
 		}
-
-		 
 
 		// drawing each of the characters on the board
 
@@ -202,9 +200,13 @@ public class GameView extends JPanel implements Observer {
 
 			if (character.isVisible()) {
 
-				// sometimes the sizes will differ between players (e.g. death)
+				// sometimes the sizes will differ between players (e.g.
+				// death)
 				double adjustedPlayerSize = currentPlayerSize;
-
+				if (gameOver) {
+					g.setColor(Color.YELLOW);
+					g.fillRect(600, 200, 500, 500);
+				}
 				BufferedImage frame = null;
 
 				// compare old and new points
@@ -250,7 +252,8 @@ public class GameView extends JPanel implements Observer {
 				int centreX = (int) (newX - character.getRadius());
 				int centreY = (int) (newY - character.getRadius());
 
-				// fancy mathemagic to get the right position even with death or
+				// fancy mathemagic to get the right position even with
+				// death or
 				// different screen size
 
 				int actualX = (int) ((centreX + deathModifier / 2) * currentMultiplier);
@@ -258,7 +261,8 @@ public class GameView extends JPanel implements Observer {
 
 				if (debugPaths) {
 
-					// Only works with one AI at a time atm as it uses shared
+					// Only works with one AI at a time atm as it uses
+					// shared
 					// resource
 					if (character.getPlayerNumber() == 0) {
 
@@ -307,14 +311,14 @@ public class GameView extends JPanel implements Observer {
 				}
 
 				// draw the player!
-					g.drawImage(frame, actualX, (int) (actualY + currentOffset), (int) adjustedPlayerSize,
-							(int) adjustedPlayerSize, this);
-
+				g.drawImage(frame, actualX, (int) (actualY + currentOffset), (int) adjustedPlayerSize,
+						(int) adjustedPlayerSize, this);
 
 				// draw the arrowhead for the player
 
-					g.drawImage(character.getArrow(fullscreen), actualX, (int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)), (int) adjustedPlayerSize,
-							(int) adjustedPlayerSize, this);
+				g.drawImage(character.getArrow(fullscreen), actualX,
+						(int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)),
+						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
 
 				// if the player is dashing, draw the fire sprite
 
@@ -367,15 +371,15 @@ public class GameView extends JPanel implements Observer {
 							(int) ((dashY * currentMultiplier) + currentOffset), this);
 				}
 			}
-
 		}
-		
-		for(Powerup p : resources.getPowerupList()){
-			if(p.isActive()){
+
+		for (Powerup p : resources.getPowerupList()) {
+			if (p.isActive()) {
 				// Don't know why I need to take 3 radiuses away instead of 1
-				g.drawImage(p.getSprite(), (int)((p.getX() - 3*p.getRadius()) * currentMultiplier), (int)((p.getY() - 3*p.getRadius()) * currentMultiplier), this);
+				g.drawImage(p.getSprite(), (int) ((p.getX() - 3 * p.getRadius()) * currentMultiplier),
+						(int) ((p.getY() - 3 * p.getRadius()) * currentMultiplier), this);
 			}
-			
+
 		}
 
 		// draw black bars if the ratio is not 16:9
@@ -387,6 +391,11 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
+		if (resources.gamemode.isGameOver()) {
+			g.setColor(Color.YELLOW);
+			g.fillRect(600, 200, 500, 500);
+		}
+		
 		Toolkit.getDefaultToolkit().sync();
 	}
 
