@@ -78,18 +78,18 @@ public abstract class BaseMenu {
 		return panel;
 	}
 	
-	JPanel addMusicSlider(JPanel panel, MusicPlayer musicPlayer){
+	JPanel addMusicSlider(JPanel panel){
 		JLabel musicLabel = UIRes.menuItems.getLabel("Music Volume");
-		JSlider musicSlider = UIRes.menuItems.getMusicSlider(musicPlayer);
+		JSlider musicSlider = UIRes.menuItems.getMusicSlider();
 		addSpace(panel, 0, 0.05);
 		panel.add(musicLabel);
 		addSpace(panel, 0, 0.01);
 		panel.add(musicSlider);
 		return panel;
 	}
-	 JPanel addAudioSlider(JPanel panel, AudioFile audioPlayer, Resources resources){
+	 JPanel addAudioSlider(JPanel panel){
 		JLabel audioLabel = UIRes.menuItems.getLabel("Audio Volume");
-		JSlider audioSlider = UIRes.menuItems.getAudioSlider(audioPlayer, resources);
+		JSlider audioSlider = UIRes.menuItems.getAudioSlider();
 		addSpace(panel, 0, 0.05);
 		panel.add(audioLabel);
 		addSpace(panel, 0, 0.01);

@@ -13,8 +13,8 @@ public class OptionsMenu extends BaseMenu{
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 		addReturnButton(panel);
-		addMusicSlider(panel, musicPlayer);
-		addAudioSlider(panel, audioPlayer, resources);
+		addMusicSlider(panel);
+		addAudioSlider(panel);
 		addControlsPanel(panel);
 		addResetControlsButton(panel);
 		return panel;

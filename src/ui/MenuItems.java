@@ -153,28 +153,28 @@ public class MenuItems {
 		return usernameButton;
 	}
 	
-	JSlider getMusicSlider(MusicPlayer musicPlayer){
+	JSlider getMusicSlider(){
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_MAX);
 		customiseSlider(musicSlider);
 		musicSlider.addChangeListener(e -> {
 			int volume = musicSlider.getValue();
 			if (volume == 0)
-				musicPlayer.mute();
+				UIRes.musicPlayer.mute();
 			else
-				musicPlayer.setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
+				UIRes.musicPlayer.setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
 		});
 		return musicSlider;
 	}
 	
-	JSlider getAudioSlider(AudioFile audioPlayer, Resources resources){
+	JSlider getAudioSlider(){
 		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_MAX);
 		customiseSlider(audioSlider);
 		audioSlider.addChangeListener(e -> {
 			int volume = audioSlider.getValue();
 			if (volume == 0)
-				resources.setSFXGain(-80);
+				UIRes.resources.setSFXGain(-80);
 			else
-				resources.setSFXGain((int) ((UIRes.VOL_MAX - volume) * (-0.33)));
+				UIRes.resources.setSFXGain((int) ((UIRes.VOL_MAX - volume) * (-0.33)));
 		});
 		return audioSlider;
 	}
