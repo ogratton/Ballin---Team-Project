@@ -96,7 +96,7 @@ public class VeryBasicAI extends Thread
 		lastWaypoint = getCurrentTileCoords();
 		
 		// TODO do stuff with this
-		debug = character.getPlayerNumber() == 1 ? true : false;
+		debug = character.getPlayerNumber() == 0 ? true : false;
 	}
 
 	/**
@@ -116,7 +116,8 @@ public class VeryBasicAI extends Thread
 				// common behaviour goes first
 				commonBehaviour();
 
-				resources.setProjectedPos(projectedPosition());
+				// XXX debug
+				if (debug) resources.setProjectedPos(projectedPosition());
 
 				if (behaviour == Behaviour.POIROT)
 				{
@@ -197,20 +198,29 @@ public class VeryBasicAI extends Thread
 
 		if (waypoints.isEmpty())
 		{
-			System.out.println();
-			System.out.println("made it to destination " + destinations[destI]);
+			if (debug)
+			{
+				System.out.println();
+				System.out.println("made it to destination " + destinations[destI]);
+			}
+
 			destI++;
 			try
 			{
 				Point charPos = getCurrentTileCoords();
-				//System.out.println(charPos);
+				//if (debug) System.out.println(charPos);
 				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
 
-				resources.setDestList(waypoints); // XXX debug
-				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y)); // XXX debug
+				// XXX debug
+				if (debug)
+				{
+					resources.setDestList(waypoints); 
+					resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y));
 
-				System.out.println("pathfinding to point " + destinations[destI]);
-				//System.out.println("waypoints: " + waypoints);
+					System.out.println("pathfinding to point " + destinations[destI]);
+					//System.out.println("waypoints: " + waypoints);
+				}
+
 			}
 			catch (ArrayIndexOutOfBoundsException e)
 			{
@@ -245,18 +255,24 @@ public class VeryBasicAI extends Thread
 		{
 
 			Point charPos = getCurrentTileCoords();
-			Point newDest = getTileCoords(resources.getMap().randPointOnMap());
+			Point newDest = resources.getMap().randPointOnMap();
+			Point newDestTile = getTileCoords(newDest);
 			//System.out.println("going to try to pathfind to " + newDest);
 			while (waypoints.isEmpty())
 			{
 				// keep trying to get a new dest until we get a valid path
 				// just in case point given is dodgy
-				waypoints = convertWaypoints(aStar.search(charPos, newDest));
+				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
 			}
-			//System.out.println("New destination: " + newDest);		
+			
+			if (debug)
+			{
+				//System.out.println("New destination: " + newDest);
+				//System.out.println(waypoints);
+				resources.setDestList(waypoints);
+				resources.setAINextDest(newDest);
+			}
 
-			//System.out.println(waypoints);
-			resources.setDestList(waypoints);
 
 		}
 	}
@@ -301,12 +317,14 @@ public class VeryBasicAI extends Thread
 
 			// pathfind to them
 			Point charPos = getCurrentTileCoords();
-			Point newDest = getTileCoords(new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY()));
+			Point newDest = new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY());
+			Point newDestTile = getTileCoords(newDest);
 			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
-			if (newDest != null)
+			if (newDestTile != null)
 			{
-				waypoints = convertWaypoints(aStar.search(charPos, newDest));
-				System.out.println(waypoints);
+				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
+				resources.setDestList(waypoints);
+				resources.setAINextDest(newDest);
 			}
 			else
 			{
@@ -330,7 +348,7 @@ public class VeryBasicAI extends Thread
 		lastWaypoint = resources.getMap().randPointOnMap(); // safer than null
 
 		// XXX debug
-		resources.setProjectedPos(null);
+		if (debug) resources.setProjectedPos(null);
 
 	}
 
@@ -379,7 +397,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private void moveToWaypoint() throws InterruptedException
 	{
-		//resources.setAINextDest(waypoints.peek()); // XXX debug
+		//if (debug) resources.setAINextDest(waypoints.peek()); // XXX debug
 
 		success = moveTo(waypoints.peek());
 		if (success)
@@ -413,13 +431,17 @@ public class VeryBasicAI extends Thread
 			Vector ab_norm = ab_vec.normal(b);
 
 			//XXX debug
-			//System.out.println(ab_norm);
-			Point onNormal1 = new Point((int) (ab_norm.getCentre().getX() + 100 * ab_norm.getX()),
-					(int) (ab_norm.getCentre().getY() + 100 * ab_norm.getY()));
-			Point onNormal2 = new Point((int) (ab_norm.getCentre().getX() - 100 * ab_norm.getX()),
-					(int) (ab_norm.getCentre().getY() - 100 * ab_norm.getY()));
-			Line normal = new Line(onNormal1, onNormal2);
-			resources.setNormal(normal);
+			if (debug)
+			{
+				//System.out.println(ab_norm);
+				Point onNormal1 = new Point((int) (ab_norm.getCentre().getX() + 100 * ab_norm.getX()),
+						(int) (ab_norm.getCentre().getY() + 100 * ab_norm.getY()));
+				Point onNormal2 = new Point((int) (ab_norm.getCentre().getX() - 100 * ab_norm.getX()),
+						(int) (ab_norm.getCentre().getY() - 100 * ab_norm.getY()));
+				Line normal = new Line(onNormal1, onNormal2);
+				resources.setNormal(normal);
+			}
+
 
 			return ab_norm;
 		}

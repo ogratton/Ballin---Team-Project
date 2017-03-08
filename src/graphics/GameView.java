@@ -257,49 +257,51 @@ public class GameView extends JPanel implements Observer {
 				int actualY = (int) ((centreY + deathModifier / 2) * currentMultiplier);
 
 				if (debugPaths) {
-					g.setColor(Color.WHITE);
-
-					ArrayList<Point> charPoints = pointTrail.get(character);
-
-					for (int i = 0; i < charPoints.size() - 1; i++) {
-						g.drawLine((int) (charPoints.get(i).getX() * currentMultiplier),
-								(int) (charPoints.get(i).getY() * currentMultiplier + currentOffset),
-								(int) (charPoints.get(i + 1).getX() * currentMultiplier),
-								(int) (charPoints.get(i + 1).getY() * currentMultiplier + currentOffset));
-					}
 
 					// Only works with one AI at a time atm as it uses shared
 					// resource
 					if (character.getPlayerNumber() == 0) {
 
 						try {
+
+							g.setColor(Color.WHITE);
+							ArrayList<Point> charPoints = pointTrail.get(character);
+
+							for (int i = 0; i < charPoints.size() - 1; i++) {
+								g.drawLine((int) (charPoints.get(i).getX() * currentMultiplier),
+										(int) (charPoints.get(i).getY() * currentMultiplier + currentOffset),
+										(int) (charPoints.get(i + 1).getX() * currentMultiplier),
+										(int) (charPoints.get(i + 1).getY() * currentMultiplier + currentOffset));
+							}
+
 							g.setColor(Color.GREEN);
 							Point p = resources.getProjectedPos();
 							g.drawLine((int) (character.getX() * currentMultiplier),
 									(int) (character.getY() * currentMultiplier + currentOffset),
 									(int) (p.x * currentMultiplier), (int) (p.y * currentMultiplier + currentOffset));
+
+							g.setColor(Color.RED);
+							Point nd = resources.getAINextdest();
+							if (nd != null) {
+								g.drawOval((int) (nd.x * currentMultiplier),
+										(int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+								g.setColor(Color.CYAN);
+								g.fillOval((int) (nd.x * currentMultiplier),
+										(int) (nd.y * (currentMultiplier + currentOffset)), 10, 10);
+							}
+
+							g.setColor(Color.YELLOW);
+							Line normal = resources.getNormal();
+							if (normal != null) {
+								g.drawLine((int) (normal.a.x * currentMultiplier),
+										(int) (normal.a.y * (currentMultiplier + currentOffset)),
+										(int) (normal.b.x * currentMultiplier),
+										(int) (normal.b.y * (currentMultiplier + currentOffset)));
+							}
+
 						} catch (Exception e) {
 							// skip
 						}
-					}
-
-					g.setColor(Color.RED);
-					Point nd = resources.getAINextdest();
-					if (nd != null) {
-						g.drawOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)),
-								10, 10);
-						g.setColor(Color.CYAN);
-						g.fillOval((int) (nd.x * currentMultiplier), (int) (nd.y * (currentMultiplier + currentOffset)),
-								10, 10);
-					}
-
-					g.setColor(Color.YELLOW);
-					Line normal = resources.getNormal();
-					if (normal != null) {
-						g.drawLine((int) (normal.a.x * currentMultiplier),
-								(int) (normal.a.y * (currentMultiplier + currentOffset)),
-								(int) (normal.b.x * currentMultiplier),
-								(int) (normal.b.y * (currentMultiplier + currentOffset)));
 					}
 
 				}

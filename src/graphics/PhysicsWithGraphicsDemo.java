@@ -48,36 +48,44 @@ public class PhysicsWithGraphicsDemo {
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 		
+		// Player 1 is the actual human
 		Character player = new Character(Character.Class.WIZARD, 1);
 		resources.getMap().spawn(player, new Point(400,400));
 		resources.addPlayerToList(player);
-
+		
+		// player 0 is for our debug paths
 		Character player1 = new Character(Character.Class.WARRIOR, 0);
 		resources.getMap().spawn(player1);
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
-		ai1.setBehaviour("aggressive");
+//		ai1.setBehaviour("aggressive");
 		resources.addPlayerToList(player1);
-
-//		Character player2 = new Character(Character.Class.ARCHER, 2);
-//		resources.getMap().spawn(player2);
-//		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
-//		resources.addPlayerToList(player2);
+		
+		int numPlayers = 2;
+		
+		Character player2 = new Character(Character.Class.ARCHER, numPlayers);
+		resources.getMap().spawn(player2);
+		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
+		resources.addPlayerToList(player2);
+		numPlayers++;
 //
-//		Character player3 = new Character(Character.Class.MONK, 3);
+//		Character player3 = new Character(Character.Class.MONK, numPlayers);
 //		resources.getMap().spawn(player2);
 //		VeryBasicAI ai3 = new VeryBasicAI(resources, player3);
 //		resources.addPlayerToList(player3);
+//		numPlayers++;
 
 		/*for(int i = 0; i < 6; i++){
 			
 			
-			Character playa = new Character(Character.Class.WIZARD, i+3);
+			Character playa = new Character(Character.Class.WIZARD, numPlayers);
 			Point loc = resources.getMap().randPointOnMap();
 			playa.setX(loc.getX());
 			playa.setY(loc.getY());
 			resources.addPlayerToList(playa);
+			numPlayers++;
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
+			ai.setBehaviour("aggressive");
 			ai.start();
 		}*/
 
@@ -87,12 +95,12 @@ public class PhysicsWithGraphicsDemo {
 
 		
 		ai1.start();
-//		ai2.start();
+		ai2.start();
 //		ai3.start();
 		
 		/*Graphics g = new Graphics(resources, null, false);
 		g.start();*/
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		SwingUtilities.invokeLater(new Graphics(resources, null, true));
 
 
 
