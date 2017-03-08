@@ -28,11 +28,13 @@ public class Resources {
 	private int default_left = KeyEvent.VK_A;
 	private int default_right = KeyEvent.VK_D;
 	private int default_dash = KeyEvent.VK_SPACE;
-	private int up = KeyEvent.VK_W;
-	private int down = KeyEvent.VK_S;
-	private int left = KeyEvent.VK_A;
-	private int right = KeyEvent.VK_D;
-	private int dash = KeyEvent.VK_SPACE;
+	private int default_block = KeyEvent.VK_CONTROL;
+	private int up = default_up;
+	private int down = default_down;
+	private int left = default_left;
+	private int right = default_right;
+	private int dash = default_dash;
+	private int block = default_block;
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
@@ -229,6 +231,27 @@ public class Resources {
 	public void setDefaultDash(int default_dash) {
 		this.default_dash = default_dash;
 	}
+	
+	/**
+	 * Get the default block keybinding
+	 * 
+	 * @return the default block keybinding
+	 */
+
+	public int getDefaultBlock() {
+		return default_block;
+	}
+
+	/**
+	 * Set the default block keybinding
+	 * 
+	 * @param default_block
+	 *            the default block keybinding
+	 */
+
+	public void setDefaultBlock(int default_block) {
+		this.default_block = default_block;
+	}
 
 	/**
 	 * Get the up keybinding
@@ -323,16 +346,37 @@ public class Resources {
 	public int getDash() {
 		return dash;
 	}
-
+	
 	/**
 	 * Set the dash keybinding
 	 * 
-	 * @param right
+	 * @param dash
 	 *            the dash keybinding
 	 */
 
 	public void setDash(int dash) {
 		this.dash = dash;
+	}
+
+	/**
+	 * Set the block keybinding
+	 * 
+	 * @param block
+	 *            the block keybinding
+	 */
+
+	public void setBlock(int dash) {
+		this.dash = dash;
+	}
+	
+	/**
+	 * Get the block keybinding
+	 * 
+	 * @return the block keybinding
+	 */
+
+	public int getBlock() {
+		return block;
 	}
 
 	/**
@@ -464,18 +508,7 @@ public class Resources {
 	}
 
 	public void removePowerup(Powerup p) {
-		
-		for(Powerup q : powerupList){
-			if(q.equals(p)){
-				q.setActive(false);
-			}
-		}
-		
-		
-		/*boolean b = powerupList.remove(p);
-		if (b) {
-			System.out.println("Removed powerup");
-		}*/
+		p.setActive(false);
 	}
 
 	public boolean isHockey() {

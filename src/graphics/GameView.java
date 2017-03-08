@@ -84,8 +84,8 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
-		// destList = resources.getDestList();
-		// fullDestList = resources.getDestList();
+		destList = resources.getDestList();
+		fullDestList = resources.getDestList();
 
 		setUpSizes();
 
@@ -166,22 +166,33 @@ public class GameView extends JPanel implements Observer {
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
-		// destList = resources.getDestList();
+		destList = resources.getDestList();
 
-		/*
-		 * for (Point p : destList) { if (!fullDestList.contains(p)) {
-		 * fullDestList.add(p); } }
-		 * 
-		 * if (debugPaths) { g.setColor(Color.RED);
-		 * 
-		 * for (int i = 0; i < fullDestList.size() - 1; i++) {
-		 * 
-		 * g.drawLine((int) fullDestList.get(i).getX(), (int)
-		 * fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
-		 * (int) fullDestList.get(i + 1).getY());
-		 * 
-		 * } }
-		 */
+		if (destList != null)
+		{
+			for (Point p : destList)
+			{
+				if (!fullDestList.contains(p))
+				{
+					fullDestList.add(p);
+				}
+			}
+
+			if (debugPaths)
+			{
+				g.setColor(Color.RED);
+
+				for (int i = 0; i < fullDestList.size() - 1; i++)
+				{
+
+					g.drawLine((int) (fullDestList.get(i).getX()*multiplier), (int) (fullDestList.get(i).getY()*multiplier), (int) (fullDestList.get(i + 1).getX()*multiplier),
+							(int) (fullDestList.get(i + 1).getY()*multiplier));
+
+				}
+			}
+		}
+
+		 
 
 		// drawing each of the characters on the board
 
@@ -259,7 +270,7 @@ public class GameView extends JPanel implements Observer {
 
 					// Only works with one AI at a time atm as it uses shared
 					// resource
-					if (character.getPlayerNumber() == 3) {
+					if (character.getPlayerNumber() == 0) {
 
 						try {
 							g.setColor(Color.GREEN);
@@ -359,7 +370,8 @@ public class GameView extends JPanel implements Observer {
 		
 		for(Powerup p : resources.getPowerupList()){
 			if(p.isActive()){
-				g.drawImage(p.getSprite(), (int)p.getX(), (int)p.getY(), this);
+				// Don't know why I need to take 3 radiuses away instead of 1
+				g.drawImage(p.getSprite(), (int)((p.getX() - 3*p.getRadius()) * currentMultiplier), (int)((p.getY() - 3*p.getRadius()) * currentMultiplier), this);
 			}
 			
 		}

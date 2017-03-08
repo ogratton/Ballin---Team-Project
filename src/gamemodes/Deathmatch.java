@@ -33,7 +33,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 	public void run() {
 		// Start game
-		Physics p = new Physics(resources);
+		Physics p = new Physics(resources, false);
 		p.start();
 		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		
@@ -43,7 +43,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
-				if (timer % 10 == 0) {
+				if (timer % 5 == 0) {
 					spawnPowerup();
 				}
 				timer--;
@@ -69,7 +69,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * Spawn a random powerup in a random location
 	 */
 	private void spawnPowerup() {
-		System.out.println("Spawning powerup");
 		Powerup p = new Powerup();
 		resources.addPowerup(p);
 		resources.getMap().spawnPowerup(p);
