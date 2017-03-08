@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -33,6 +35,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Map map;
 	private Timer timer;
 	private GameView view;
+	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 	private int secondPlayerIndex = 1;
@@ -63,6 +66,11 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		addKeyListener(new TAdapter(resources));
 		setFocusable(true);
+		
+		label = new JLabel();
+		label.setText("hello");
+		label.setFont(new Font("Verdana", Font.PLAIN, 45));
+		
 		timer = new Timer(10, this);
 		timer.start();
 
@@ -95,7 +103,9 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 
-		add(view, BorderLayout.CENTER);
+		
+		
+		add(label, BorderLayout.NORTH);
 		//setUndecorated(true);
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
@@ -112,7 +122,19 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-		repaint();
+
+			repaint();
+			updateScores();
+		
+	}
+	
+	public void updateScores(){
+		ArrayList<Character> scores = resources.gamemode.getOrderedScores();
+		String s = "";
+		for (Character c : scores) {
+			s += "Player " + c.getPlayerNumber() + ": " + c.getScore() + ", ";
+		}
+		label.setText(s);
 	}
 
 	/**
@@ -170,7 +192,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		toggleFullscreen();
 
 	}
-
+	
 	private class TAdapter extends KeyAdapter {
 		
 		private Resources resources;

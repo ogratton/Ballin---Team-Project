@@ -29,6 +29,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Set up game
 		setAllLives(-1);
 		randomRespawn();
+		resources.gamemode = this;
 	}
 
 	public void run() {
