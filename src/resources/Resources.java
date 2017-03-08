@@ -23,7 +23,8 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	
+	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey };
+	public Mode mode;
 	public GameModeFFA gamemode;
 
 	// keybindings
@@ -59,7 +60,6 @@ public class Resources {
 	// puck used in hockey game mode, using character class to make things easy
 	private Puck puck;
 	// are we playing a hockey game?
-	private boolean isHockey = false;
 	private Team[] teams;
 
 	// map
@@ -513,14 +513,6 @@ public class Resources {
 
 	public void removePowerup(Powerup p) {
 		p.setActive(false);
-	}
-
-	public boolean isHockey() {
-		return isHockey;
-	}
-
-	public void setHockey(boolean isHockey) {
-		this.isHockey = isHockey;
 	}
 
 	public Puck getPuck() {

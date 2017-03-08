@@ -20,6 +20,7 @@ import resources.Character;
 import resources.Map;
 import resources.Map.World;
 import resources.Resources;
+import resources.Resources.Mode;
 
 /**
  * Contains everything on the screen that the player can see
@@ -136,6 +137,14 @@ public class GameComponent extends JFrame implements ActionListener {
 		for (Character c : scores) {
 			s += "Player " + c.getPlayerNumber() + ": " + c.getScore() + ", ";
 		}
+		if (resources.mode == Mode.HotPotato) {
+			for (Character c : resources.getPlayerList()) {
+				if (c.hasBomb()) {
+					s += "     Holding bomb: Player " + c.getPlayerNumber();
+				}
+			}
+		}
+		s += "     Stamina: " + resources.getPlayerList().get(0).getStamina();
 		label.setText(s);
 	}
 
@@ -238,10 +247,6 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(firstPlayerIndex).setUp(false);
 			} else if(key == downKey){
 				characters.get(firstPlayerIndex).setDown(false);
-			} else if(key == dashKey){
-				characters.get(firstPlayerIndex).setDashing(false);
-			} else if(key == blockKey){
-				characters.get(firstPlayerIndex).setBlocking(false);
 			}
 			
 			/*switch (key) {
@@ -285,8 +290,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			} else if(key == downKey){
 				characters.get(firstPlayerIndex).setDown(true);
 			} else if(key == dashKey){
-				System.out.println("dash");
-				characters.get(firstPlayerIndex).setDashing(true);
+				characters.get(firstPlayerIndex).requestDashing();
 			} else if(key == blockKey){
 				characters.get(firstPlayerIndex).setBlocking(true);
 			} else if(key == KeyEvent.VK_ESCAPE){

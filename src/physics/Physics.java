@@ -14,10 +14,10 @@ import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
-import resources.NetworkMove;
-import resources.Powerup;
 import resources.Map.Tile;
 import resources.Map.World;
+import resources.Resources.Mode;
+import resources.NetworkMove;
 import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
@@ -67,7 +67,7 @@ public class Physics extends Thread implements ActionListener {
 		resources.incrementGlobalTimer();
 		
 		// if hockey, move puck.
-		if(resources.isHockey()) update(resources.getPuck());
+		if(resources.mode == Mode.Hockey) update(resources.getPuck());
 		
 		for(Character c : resources.getPlayerList()){
 //			if (c.getPlayerNumber() == 1) {
@@ -76,10 +76,17 @@ public class Physics extends Thread implements ActionListener {
 			update(c);
 			for (Character d : resources.getPlayerList()) {
 				// check collisions
-				if (c != d) {
+				if (c != d && !c.isDead() && !d.isDead()) {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
 						collide(c,d,cnd);
+						// If playing hot potato, pass bomb if you have it
+						if (c.hasBomb() && resources.mode == Mode.HotPotato) {
+							c.hasBomb(false);
+							d.hasBomb(true);
+//							System.out.println("Player " + c.getPlayerNumber() + " has passed the bomb to player " 
+//									+ d.getPlayerNumber() + "!");
+						}
 					}
 				}
 			}
@@ -92,7 +99,7 @@ public class Physics extends Thread implements ActionListener {
 					resources.removePowerup(p);
 				}
 			}
-			if (resources.isHockey()) {
+			if (resources.mode == Mode.Hockey) {
 				Puck p = resources.getPuck();
 				CND cnd = detectCollision(c,p);
 				if(cnd.collided) {
@@ -142,8 +149,8 @@ public class Physics extends Thread implements ActionListener {
 		if (c.getBurning() == true) {
 			c.decrementHealth();
 		}
-		// Powerup timer, remove powerup after 10 secs
-		if (c.hasPowerup() && resources.getGlobalTimer() - c.getLastPowerupTime() >= 1000) {
+		// Powerup timer, remove powerup after 5 secs
+		if (c.hasPowerup() && resources.getGlobalTimer() - c.getLastPowerupTime() >= 500) {
 			c.revertPowerup();
 		}
 		// Recharge stamina
@@ -191,6 +198,7 @@ public class Physics extends Thread implements ActionListener {
 		} else { //falling
 			if(dead(c) && !c.isDead()) {
 				c.setDead(true);
+				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
 				death.play();
 				// Calculate score changes
@@ -533,7 +541,7 @@ public class Physics extends Thread implements ActionListener {
 		// Dash in the direction the player is trying to move
 		if (c.getDashTimer() == 0) {
 			double maxSpeed = 2 * c.getMaxDx();
-			System.out.println("Direction dashing: " + c.getMovingDirection());
+			//System.out.println("Direction dashing: " + c.getMovingDirection());
 			switch(c.getMovingDirection()) {
 			case N:
 				c.setDx(0);

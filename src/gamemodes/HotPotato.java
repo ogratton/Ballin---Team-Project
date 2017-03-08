@@ -1,6 +1,7 @@
 package gamemodes;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
@@ -11,28 +12,30 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 /**
- * Play until only one player remains.
+ * Random player is given a bomb to hold. After a few seconds the person holding
+ * the bomb explodes. Collide with other players to pass the bomb. Play until
+ * only one player remains.
  * 
  * @author Luke
  *
  */
-public class LastManStanding extends Thread implements GameModeFFA {
+public class HotPotato extends Thread implements GameModeFFA {
 
-	private int maxLives;
 	private boolean gameOver = false;
 	private Character winner;
 	private Resources resources;
+	private Random rand;
 
-	public LastManStanding(Resources resources, int maxLives) {
-		this.maxLives = maxLives;
+	public HotPotato(Resources resources) {
 		this.resources = resources;
 
 		// Set up game
-		setAllLives(maxLives);
+		setAllLives(1);
 		randomRespawn();
-		
-		resources.mode = Mode.LastManStanding;
+
+		resources.mode = Mode.HotPotato;
 		resources.gamemode = this;
+		this.rand = new Random();
 	}
 
 	public void run() {
@@ -41,9 +44,17 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		p.start();
 		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 
+		int timer = 0; // 10*speed of normal timer
+		placeBomb();
 		while (!isGameOver()) {
 			try {
 				Thread.sleep(100);
+				timer += 1;
+				// Detonate bomb every 5 seconds
+				if (timer % 50 == 0 && playersRemaining() > 1) {
+					explodeBomb();
+					placeBomb();
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -51,17 +62,38 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		System.out.println("WE HAVE A WINNER");
-		System.out.println("Player " + winner.getPlayerNumber() + " survived the longest and reached a score of "
-				+ winner.getScore() + "!");
-		ArrayList<Character> scores = getOrderedScores();
-		for (Character c : scores) {
-			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
-		}
-		System.out.println();
+		System.out.println("Player " + winner.getPlayerNumber() + " survived the gauntlet!");
 		for (Character c : getOrderedTimesOfDeath()) {
-			if (c.getLives() == 0) {
+			if (c.getTimeOfDeath() != -1) {
 				System.out.println(
 						"Player " + c.getPlayerNumber() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
+			}
+		}
+	}
+
+	private void placeBomb() {
+		boolean success = false;
+		int p;
+		ArrayList<Character> players = resources.getPlayerList();
+		Character c;
+		while (!success) {
+			p = rand.nextInt(players.size());
+			c = players.get(p);
+			if (!c.isExploding() && !c.isDead() && !c.hasBomb()) {
+				c.hasBomb(true);
+				System.out.println("Player " + c.getPlayerNumber() + " has been given the bomb!");
+				success = true;
+			}
+		}
+	}
+
+	private void explodeBomb() {
+		for (Character c : resources.getPlayerList()) {
+			if (c.hasBomb()) {
+				c.setExploding(true);
+				c.setTimeOfDeath(resources.getGlobalTimer());
+				System.out.println("Player " + c.getPlayerNumber() + " exploded!");
+				break;
 			}
 		}
 	}
@@ -76,26 +108,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		for (Character c : resources.getPlayerList()) {
 			c.setLives(n);
 		}
-	}
-
-	/**
-	 * @return maxLives
-	 */
-	public int getMaxLives() {
-		return maxLives;
-	}
-
-	/**
-	 * Get the total number of lives of all players
-	 * 
-	 * @return The combined number of lives of all players
-	 */
-	public int getCombinedLives() {
-		int total = 0;
-		for (Character c : resources.getPlayerList()) {
-			total += c.getLives();
-		}
-		return total;
 	}
 
 	/**
@@ -153,17 +165,18 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		scores.sort((a, b) -> (a.getScore() > b.getScore()) ? -1 : (a.getScore() < b.getScore()) ? 1 : 0);
 		return scores;
 	}
-	
+
 	public ArrayList<Character> getOrderedTimesOfDeath() {
 		ArrayList<Character> times = new ArrayList<Character>();
 		times.addAll(resources.getPlayerList());
-		times.sort((a, b) -> (a.getTimeOfDeath() > b.getTimeOfDeath()) ? -1 : (a.getTimeOfDeath() < b.getTimeOfDeath()) ? 1 : 0);
+		times.sort((a, b) -> (a.getTimeOfDeath() > b.getTimeOfDeath()) ? -1
+				: (a.getTimeOfDeath() < b.getTimeOfDeath()) ? 1 : 0);
 		return times;
 	}
 
 	@Override
 	public void resetLives() {
-		setAllLives(maxLives);
+		setAllLives(1);
 	}
 
 	@Override
