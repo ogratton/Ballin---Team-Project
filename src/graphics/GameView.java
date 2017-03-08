@@ -19,9 +19,9 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import ai.pathfinding.Line;
-import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
+import resources.Powerup;
 import resources.Resources;
 
 /**
@@ -46,8 +46,8 @@ public class GameView extends JPanel implements Observer {
 	private double currentPlayerSize;
 	private double currentMapHeight;
 	private double currentMapWidth;
-	private double currentWindowHeight;
-	private double currentWindowWidth;
+	private double currentWindowHeight = 675;
+	private double currentWindowWidth = 1200;
 	private double multiplier;
 	private double currentMultiplier = 1;
 	private boolean notSixteenNine;
@@ -84,8 +84,8 @@ public class GameView extends JPanel implements Observer {
 		points = new HashMap<Character, Point>();
 
 		pointTrail = new HashMap<Character, ArrayList<Point>>();
-		// destList = resources.getDestList();
-		// fullDestList = resources.getDestList();
+		destList = resources.getDestList();
+		fullDestList = resources.getDestList();
 
 		setUpSizes();
 
@@ -146,7 +146,7 @@ public class GameView extends JPanel implements Observer {
 		currentMapWidth = ordinaryMapWidth;
 		currentMapHeight = ordinaryMapHeight;
 		currentPlayerSize = ordinaryPlayerSize;
-
+		
 		makeMap();
 
 	}
@@ -156,32 +156,43 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public void paintComponent(Graphics g) {
-
+		
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
+		//g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
 		// draw the map sprite (this is the same throughout a game)
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
-		// destList = resources.getDestList();
+		destList = resources.getDestList();
 
-		/*
-		 * for (Point p : destList) { if (!fullDestList.contains(p)) {
-		 * fullDestList.add(p); } }
-		 * 
-		 * if (debugPaths) { g.setColor(Color.RED);
-		 * 
-		 * for (int i = 0; i < fullDestList.size() - 1; i++) {
-		 * 
-		 * g.drawLine((int) fullDestList.get(i).getX(), (int)
-		 * fullDestList.get(i).getY(), (int) fullDestList.get(i + 1).getX(),
-		 * (int) fullDestList.get(i + 1).getY());
-		 * 
-		 * } }
-		 */
+		if (destList != null)
+		{
+			for (Point p : destList)
+			{
+				if (!fullDestList.contains(p))
+				{
+					fullDestList.add(p);
+				}
+			}
+
+			if (debugPaths)
+			{
+				g.setColor(Color.RED);
+
+				for (int i = 0; i < fullDestList.size() - 1; i++)
+				{
+
+					g.drawLine((int) (fullDestList.get(i).getX()*multiplier), (int) (fullDestList.get(i).getY()*multiplier), (int) (fullDestList.get(i + 1).getX()*multiplier),
+							(int) (fullDestList.get(i + 1).getY()*multiplier));
+
+				}
+			}
+		}
+
+		 
 
 		// drawing each of the characters on the board
 
@@ -259,7 +270,7 @@ public class GameView extends JPanel implements Observer {
 
 					// Only works with one AI at a time atm as it uses shared
 					// resource
-					if (character.getPlayerNumber() == 3) {
+					if (character.getPlayerNumber() == 0) {
 
 						try {
 							g.setColor(Color.GREEN);
@@ -356,6 +367,14 @@ public class GameView extends JPanel implements Observer {
 			}
 
 		}
+		
+		for(Powerup p : resources.getPowerupList()){
+			if(p.isActive()){
+				// Don't know why I need to take 3 radiuses away instead of 1
+				g.drawImage(p.getSprite(), (int)((p.getX() - 3*p.getRadius()) * currentMultiplier), (int)((p.getY() - 3*p.getRadius()) * currentMultiplier), this);
+			}
+			
+		}
 
 		// draw black bars if the ratio is not 16:9
 
@@ -366,7 +385,7 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
-		//Toolkit.getDefaultToolkit().sync();
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	/**

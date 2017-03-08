@@ -462,6 +462,15 @@ public class Map {
 	 * @param c
 	 */
 	public void spawn(Character c) {
+		spawn(c,randPointOnMap());
+	}
+
+	/**
+	 * Spawns a character on a set point.
+	 * 
+	 * @param c
+	 */
+	public void spawn(Character c, Point p) {
 		//reset all 'character state' flags
 		c.setLastCollidedWith(null, 0);
 		c.setDead(false);
@@ -471,11 +480,11 @@ public class Map {
 		c.setVisible(true);
 		c.setDyingStep(0);
 		c.hasPowerup(false);
+		c.setHealth(100);
 		//set velocity
 		c.setDx(0);
 		c.setDy(0);
-		//set location
-		Point p = randPointOnMap();
+		// set location
 		c.setX(p.x);
 		c.setY(p.y);
 	}
@@ -526,7 +535,6 @@ public class Map {
 	 */
 	public static boolean tileCheck(Tile tile) {
 		return (tile == null || tile == Tile.ABYSS || tile == Tile.EDGE_ABYSS);
-
 	}
 	
 	public double[][] getCostMask()

@@ -79,7 +79,6 @@ public class MapCosts
 		// then convert those proximities to costs
 		evaluateProxMask();
 
-		// TODO plug the costMask into resources (in constructor)
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
@@ -27,11 +28,13 @@ public class Resources {
 	private int default_left = KeyEvent.VK_A;
 	private int default_right = KeyEvent.VK_D;
 	private int default_dash = KeyEvent.VK_SPACE;
-	private int up = KeyEvent.VK_W;
-	private int down = KeyEvent.VK_S;
-	private int left = KeyEvent.VK_A;
-	private int right = KeyEvent.VK_D;
-	private int dash = KeyEvent.VK_SPACE;
+	private int default_block = KeyEvent.VK_CONTROL;
+	private int up = default_up;
+	private int down = default_down;
+	private int left = default_left;
+	private int right = default_right;
+	private int dash = default_dash;
+	private int block = default_block;
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
@@ -41,6 +44,9 @@ public class Resources {
 	// max deaths a character can have.
 	private int maxDeaths = 4;
 
+	private Queue<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
+	private Queue<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
+	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	// powerups in play
@@ -226,6 +232,27 @@ public class Resources {
 	public void setDefaultDash(int default_dash) {
 		this.default_dash = default_dash;
 	}
+	
+	/**
+	 * Get the default block keybinding
+	 * 
+	 * @return the default block keybinding
+	 */
+
+	public int getDefaultBlock() {
+		return default_block;
+	}
+
+	/**
+	 * Set the default block keybinding
+	 * 
+	 * @param default_block
+	 *            the default block keybinding
+	 */
+
+	public void setDefaultBlock(int default_block) {
+		this.default_block = default_block;
+	}
 
 	/**
 	 * Get the up keybinding
@@ -320,16 +347,37 @@ public class Resources {
 	public int getDash() {
 		return dash;
 	}
-
+	
 	/**
 	 * Set the dash keybinding
 	 * 
-	 * @param right
+	 * @param dash
 	 *            the dash keybinding
 	 */
 
 	public void setDash(int dash) {
 		this.dash = dash;
+	}
+
+	/**
+	 * Set the block keybinding
+	 * 
+	 * @param block
+	 *            the block keybinding
+	 */
+
+	public void setBlock(int dash) {
+		this.dash = dash;
+	}
+	
+	/**
+	 * Get the block keybinding
+	 * 
+	 * @return the block keybinding
+	 */
+
+	public int getBlock() {
+		return block;
 	}
 
 	/**
@@ -461,10 +509,7 @@ public class Resources {
 	}
 
 	public void removePowerup(Powerup p) {
-		boolean b = powerupList.remove(p);
-		if (b) {
-			System.out.println("Removed powerup");
-		}
+		p.setActive(false);
 	}
 
 	public boolean isHockey() {
@@ -566,7 +611,39 @@ public class Resources {
 	{
 		this.normal = n;
 	}
+
+	public Queue<NetworkMove> getClientMoves() {
+		return clientMoves;
+	}
+
+	public void setClientMoves(Queue<NetworkMove> clientMoves) {
+		this.clientMoves = clientMoves;
+	}
 	
+	public Queue<NetworkMove> getSentClientMoves() {
+		return sentClientMoves;
+	}
+
+	public void setSentClientMoves(Queue<NetworkMove> sentClientMoves) {
+		this.sentClientMoves = sentClientMoves;
+	}
+	
+	public void transferMoves() {
+		NetworkMove move;
+		while(!clientMoves.isEmpty()) {
+			move = clientMoves.remove();
+			sentClientMoves.offer(move);
+		}
+	}
+	
+	public Character getMyCharacter() {
+		for(int i=0; i<this.getPlayerList().size(); i++) {
+			if(this.getPlayerList().get(i).getId().equals(this.getId())) {
+				return this.getPlayerList().get(i);
+			}
+		}
+		return null;
+	}
 
 	// public static MapReader mapReader = new MapReader();
 	// public static Map.Tile[][] map1 =

@@ -91,10 +91,11 @@ public class PhysicsWithGraphicsDemo {
 		}*/
 
 		// create physics thread
-		Physics p = new Physics(resources);
+		Physics p = new Physics(resources, true);
 		p.start();
 
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
+		ai1.setBehaviour("aggressive");
 		ai1.start();
 		
 		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
@@ -103,8 +104,8 @@ public class PhysicsWithGraphicsDemo {
 		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
 		ai3.start();
 		
-		//Graphics g = new Graphics(resources, null, false);
-		//g.start();
+		/*Graphics g = new Graphics(resources, null, false);
+		g.start();*/
 		SwingUtilities.invokeLater(new Graphics(resources, null, true));
 
 
