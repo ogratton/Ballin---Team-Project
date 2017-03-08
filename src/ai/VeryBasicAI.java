@@ -15,7 +15,6 @@ import resources.Resources;
 
 public class VeryBasicAI extends Thread
 {
-
 	private Character character;
 	private Resources resources;
 
@@ -33,10 +32,11 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private final double fuzziness = 30;
+	private static final double BRAKING_CONSTANT = 30; // 40 seems to be good
+	private static final double FUZZINESS = 30;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
-	private final long tick = 70; // loop every <tick>ms
-	private long prescience = tick * 1; // how many ms ahead we look for our predicted point
+	private static final long TICK = 70; // loop every <tick>ms
+	private static long PRESCIENCE = TICK * 1; // how many ms ahead we look for our predicted point
 
 	private ArrayList<Tile> bad_tiles;
 
@@ -148,7 +148,7 @@ public class VeryBasicAI extends Thread
 				{
 					System.out.println("Behaviour not yet implemented");
 				}
-				Thread.sleep(tick);
+				Thread.sleep(TICK);
 			}
 
 			// Things to do after death
@@ -239,6 +239,8 @@ public class VeryBasicAI extends Thread
 	 */
 	private void rovingBehaviour() throws InterruptedException
 	{
+		// TODO make checks to switch behaviours
+		
 		if (waypoints.isEmpty())
 		{
 
@@ -283,6 +285,7 @@ public class VeryBasicAI extends Thread
 		// 	if we don't have a target to hunt
 		if(waypoints.isEmpty())
 		{
+			System.out.println("Searching for nearest player...");
 			Character nearestPlayer;
 			try
 			{
@@ -291,15 +294,27 @@ public class VeryBasicAI extends Thread
 			catch (NullPointerException e)
 			{
 				// no other players, so probably switch behaviour
+				System.out.println("Nobody around, switching to Roving");
 				setBehaviour(Behaviour.ROVING);
 				return;
 			}
 
 			// pathfind to them
 			Point charPos = getCurrentTileCoords();
-			Point newDest = new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY());
+			Point newDest = getTileCoords(new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY()));
 			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
-			waypoints = convertWaypoints(aStar.search(charPos, newDest));
+			if (newDest != null)
+			{
+				waypoints = convertWaypoints(aStar.search(charPos, newDest));
+				System.out.println(waypoints);
+			}
+			else
+			{
+				// player has died in the time since we found them
+				System.out.println("target lost, switching to roving");
+				setBehaviour(Behaviour.ROVING);
+			}
+			
 		}
 
 		
@@ -330,7 +345,7 @@ public class VeryBasicAI extends Thread
 	private Character scanForNearestPlayer() throws NullPointerException
 	{
 		Character nearestPlayer = null;
-		double SLD_to_nearestPlayer = -1;
+		double SLD_to_nearestPlayer = Double.MAX_VALUE;
 		for (Character player : resources.getPlayerList())
 		{
 			UUID playerID = player.getId();
@@ -455,8 +470,8 @@ public class VeryBasicAI extends Thread
 	 */
 	private Point projectedPosition()
 	{
-		int x = (int) (character.getX() + prescience * character.getDx());
-		int y = (int) (character.getY() + prescience * character.getDy());
+		int x = (int) (character.getX() + PRESCIENCE * character.getDx());
+		int y = (int) (character.getY() + PRESCIENCE * character.getDy());
 
 		int maxX = (int) resources.getMap().getWidth() - 1; // -1 in case of rounding
 		int maxY = (int) resources.getMap().getHeight() - 1;
@@ -656,7 +671,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private boolean fuzzyEqual(double coord1, double coord2)
 	{
-		return (Math.abs(coord1 - coord2) <= fuzziness);
+		return (Math.abs(coord1 - coord2) <= FUZZINESS);
 	}
 
 	/**
@@ -679,7 +694,7 @@ public class VeryBasicAI extends Thread
 	 */
 	private long brakingTime(double velocity)
 	{
-		long bt = (long) (40 * velocity);
+		long bt = (long) (BRAKING_CONSTANT * velocity);
 		//		System.out.println(bt);
 		return bt;
 	}
@@ -821,7 +836,7 @@ public class VeryBasicAI extends Thread
 	 */
 	public void setBehaviour(String behaviour)
 	{
-		switch (behaviour.toLowerCase())
+		switch (behaviour.toLowerCase().trim())
 		{
 			case ("aggressive"):
 				setBehaviour(Behaviour.AGGRESSIVE);

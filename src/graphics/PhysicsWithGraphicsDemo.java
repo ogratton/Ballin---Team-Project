@@ -49,33 +49,24 @@ public class PhysicsWithGraphicsDemo {
 		new MapCosts(resources);
 		
 		Character player = new Character(Character.Class.WIZARD, 1);
-
-		Point coords = new Point(400,400);
-		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
-		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
-		
-		player.setX(coords.x);
-		player.setY(coords.y);
-
-		Character player1 = new Character(Character.Class.WARRIOR, 2);
-
-		player1.setX(534);
-		player1.setY(454);
-
-		Character player2 = new Character(Character.Class.ARCHER, 3);
-
-		player2.setX(780);
-		player2.setY(400);
-
-		Character player3 = new Character(Character.Class.MONK, 4);
-		player3.setX(1023);
-		player3.setY(500);
-
-		
+		resources.getMap().spawn(player, new Point(400,400));
 		resources.addPlayerToList(player);
+
+		Character player1 = new Character(Character.Class.WARRIOR, 0);
+		resources.getMap().spawn(player1);
+		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+		ai1.setBehaviour("aggressive");
 		resources.addPlayerToList(player1);
-		resources.addPlayerToList(player2);
-		resources.addPlayerToList(player3);
+
+//		Character player2 = new Character(Character.Class.ARCHER, 2);
+//		resources.getMap().spawn(player2);
+//		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
+//		resources.addPlayerToList(player2);
+//
+//		Character player3 = new Character(Character.Class.MONK, 3);
+//		resources.getMap().spawn(player2);
+//		VeryBasicAI ai3 = new VeryBasicAI(resources, player3);
+//		resources.addPlayerToList(player3);
 
 		/*for(int i = 0; i < 6; i++){
 			
@@ -94,15 +85,10 @@ public class PhysicsWithGraphicsDemo {
 		Physics p = new Physics(resources, true);
 		p.start();
 
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
-		//ai1.setBehaviour("aggressive");
+		
 		ai1.start();
-		
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
-		ai2.start();
-		
-		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
-		ai3.start();
+//		ai2.start();
+//		ai3.start();
 		
 		/*Graphics g = new Graphics(resources, null, false);
 		g.start();*/

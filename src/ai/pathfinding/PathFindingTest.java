@@ -23,7 +23,7 @@ public class PathFindingTest
 {
 	private static Point startTile = new Point(12, 28);
 	//	private static Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
-	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 44) }; // TODO to test moveAwayFrom Edge
+	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 43) }; // TODO to test moveAwayFrom Edge
 //	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
 
 	public static void main(String[] args)
@@ -46,7 +46,7 @@ public class PathFindingTest
 			e.printStackTrace();
 
 		}
-		resources.setMap(new Map(1200, 675, tiles, Map.World.LAVA, "Test Map"));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 
 		/* SETTING UP THE AI PLAYER */
