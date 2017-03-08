@@ -27,11 +27,13 @@ public class Resources {
 	private int default_left = KeyEvent.VK_A;
 	private int default_right = KeyEvent.VK_D;
 	private int default_dash = KeyEvent.VK_SPACE;
+	private int default_block = KeyEvent.VK_CONTROL;
 	private int up = KeyEvent.VK_W;
 	private int down = KeyEvent.VK_S;
 	private int left = KeyEvent.VK_A;
 	private int right = KeyEvent.VK_D;
 	private int dash = KeyEvent.VK_SPACE;
+	private int block = KeyEvent.VK_CONTROL;
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
