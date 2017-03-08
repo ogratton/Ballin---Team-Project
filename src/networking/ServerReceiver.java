@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -154,13 +155,29 @@ public class ServerReceiver extends Thread {
 					  data = (GameData)message.getObject();
 					  Resources res = resourcesMap.get(session.getId());
 					  CharacterInfo info = ((GameData)message.getObject()).getInfo();
-					  for(int i=0; i<res.getPlayerList().size(); i++) {
-						  resources.Character c = res.getPlayerList().get(i);
-						  if(info.getId().equals(c.getId())) {
-							  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
-							  c.setDashing(info.isDashing());
-							  c.setBlocking(info.isBlocking());
-							  c.setRequestId(info.getRequestId());
+					  Queue<resources.NetworkMove> moves = ((GameData)message.getObject()).getMoves();
+					  resources.NetworkMove move;
+					  while(!moves.isEmpty()) {
+						  for(int i=0; i<res.getPlayerList().size(); i++) {
+							  resources.Character c = res.getPlayerList().get(i);
+							  
+							  if(moves.peek().id.equals(c.getId())) {
+								 move = moves.remove();
+								 c.setX(move.x);
+								 c.setY(move.y);
+								 c.setFalling(move.isFalling);
+								 c.setBlocking(move.isBlocking);
+								 c.setDead(move.isDead);
+								 c.setDashing(move.isDashing);
+								 
+								 res.getClientMoves().offer(move);
+							  }
+//							  if(info.getId().equals(c.getId())) {
+//								  c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
+//								  c.setDashing(info.isDashing());
+//								  c.setBlocking(info.isBlocking());
+//								  c.setRequestId(info.getRequestId());
+//							  }
 						  }
 					  }
 					  
