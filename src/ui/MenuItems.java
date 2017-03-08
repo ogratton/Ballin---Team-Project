@@ -83,7 +83,7 @@ public class MenuItems {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
 		startButton.addActionListener(e -> {
-			PhysicsWithGraphicsDemo.main(null);
+			PhysicsWithGraphicsDemo.start(UIRes.resources);
 		});
 		return startButton;
 	}

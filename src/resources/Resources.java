@@ -366,8 +366,8 @@ public class Resources {
 	 *            the block keybinding
 	 */
 
-	public void setBlock(int dash) {
-		this.dash = dash;
+	public void setBlock(int block) {
+		this.block = block;
 	}
 	
 	/**
