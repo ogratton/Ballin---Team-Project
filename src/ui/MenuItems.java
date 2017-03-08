@@ -84,7 +84,11 @@ public class MenuItems {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
 		startButton.addActionListener(e -> {
-			PlayGame.start(UIRes.resources);;
+			PlayGame.start(UIRes.resources);
+			// XXX change the song
+			UIRes.musicPlayer.changePlaylist("thirty");
+			UIRes.musicPlayer.nextSong();
+			UIRes.musicPlayer.resume();
 		});
 		return startButton;
 	}
