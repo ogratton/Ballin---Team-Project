@@ -87,8 +87,7 @@ public class MenuItems {
 			PlayGame.start(UIRes.resources);
 			// XXX change the song
 			UIRes.musicPlayer.changePlaylist("thirty");
-			UIRes.musicPlayer.nextSong();
-			UIRes.musicPlayer.resume();
+			UIRes.musicPlayer.resumeMusic();
 		});
 		return startButton;
 	}

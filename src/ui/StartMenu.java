@@ -25,7 +25,7 @@ public class StartMenu extends BaseMenu{
 		UIRes.startPanel.setPreferredSize(frame.getSize());
 		frame.add(UIRes.mainPanel);
 		frame.setVisible(true);
-		UIRes.musicPlayer.run();
+		UIRes.musicPlayer.start();
 	}
 
 }

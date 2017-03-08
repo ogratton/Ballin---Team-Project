@@ -55,6 +55,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
+		// TODO pause/change music too
 		System.out.println("WE HAVE A WINNER");
 		getWinner();
 		System.out.println(
