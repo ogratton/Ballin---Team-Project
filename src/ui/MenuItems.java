@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.Random;
 import javax.swing.BoxLayout;
@@ -24,6 +25,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import gamemodes.PlayGame;
+import graphics.sprites.SheetDeets;
+import graphics.sprites.Sprite;
+import graphics.sprites.Sprite.SheetType;
 import networking.Client;
 import networking.Port;
 
@@ -121,20 +125,20 @@ public class MenuItems extends UIRes{
 		return label;
 	}
 	
-	JLabel getRandomSpriteIcon(){
-		BufferedImage icon = iconList[new Random().nextInt(iconList.length)];
+	JLabel getSpriteIcon(int x){
+		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x, SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
 	
 	JPanel getButtonAndIcon(JPanel panel, JButton button){
 		JPanel buttonPanel = new JPanel();
+		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);
-		BorderLayout border = new BorderLayout();
-		buttonPanel.setLayout(border);
-		buttonPanel.add(getRandomSpriteIcon(), BorderLayout.LINE_START);
-		buttonPanel.add(button, BorderLayout.CENTER);
-		buttonPanel.add(getRandomSpriteIcon(), BorderLayout.LINE_END);
+		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
+		buttonPanel.add(getSpriteIcon(x));
+		buttonPanel.add(button);
+		buttonPanel.add(getSpriteIcon(x));
 		panel.add(buttonPanel);
 		return panel;
 	}

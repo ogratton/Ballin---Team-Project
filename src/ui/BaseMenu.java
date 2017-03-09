@@ -49,8 +49,8 @@ public abstract class BaseMenu extends MenuItems{
 		
 	}
 	
-	JPanel addRandomSpriteIcon(JPanel panel){
-		panel.add(getRandomSpriteIcon());
+	JPanel addSpriteIcon(JPanel panel, int x){
+		panel.add(getSpriteIcon(x));
 		return panel;
 	}
 	

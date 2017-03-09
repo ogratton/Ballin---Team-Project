@@ -9,6 +9,7 @@ import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
+import resources.Character;
 import resources.Resources;
 
 public class UIRes {
@@ -29,12 +30,7 @@ public class UIRes {
 	public static final double labelRatio = 0.32;
 	public static final double sliderRatio = 0.25;
 	
-	public static final BufferedImage wizard = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, 0, 50, 50);
-	public static final BufferedImage archer = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, 1, 50, 50);
-	public static final BufferedImage warrior = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, 2, 50, 50);
-	public static final BufferedImage monk = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, 3, 50, 50);
-	
-	public static BufferedImage[] iconList = {wizard,archer,warrior,monk};
+	public static int numberIcons = Character.Class.values().length - 1;
 	
 	public static AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
 	
