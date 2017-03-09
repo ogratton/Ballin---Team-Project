@@ -46,7 +46,7 @@ public class PlayGame {
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1);
 		Character player1 = new Character(Character.Class.ARCHER, 2);
-		Character player2 = new Character(Character.Class.WIZARD, 0);
+		Character player2 = new Character(Character.Class.HORSE, 0);
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
