@@ -375,21 +375,20 @@ public class GameView extends JPanel implements Observer {
 
 		for (Powerup p : resources.getPowerupList()) {
 			if (p.isActive()) {
-				// Don't know why I need to take 3 radiuses away instead of 1
-				g.drawImage(p.getSprite(), (int) ((p.getX() - 3 * p.getRadius()) * currentMultiplier),
-						(int) ((p.getY() - 3 * p.getRadius()) * currentMultiplier), this);
+				g.drawImage(p.getSprite(), (int) ((p.getX() - p.getRadius()) * currentMultiplier),
+						(int) ((p.getY() - p.getRadius()) * currentMultiplier + currentOffset), this);
 			}
 
 		}
 
 		// draw black bars if the ratio is not 16:9
 
-		/*if (notSixteenNine && fullscreen) {
+		if (notSixteenNine && fullscreen) {
 
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, (int) currentWindowWidth, (int) currentOffset);
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
-		}*/
+		}
 
 		if (resources.gamemode.isGameOver()) {
 			g.setColor(Color.YELLOW);
