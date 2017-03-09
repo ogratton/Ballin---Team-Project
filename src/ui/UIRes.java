@@ -1,14 +1,10 @@
 package ui;
 
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import audio.AudioFile;
-import graphics.sprites.SheetDeets;
-import graphics.sprites.Sprite;
-import graphics.sprites.Sprite.SheetType;
 import resources.Character;
 import resources.Resources;
 
@@ -27,7 +23,7 @@ public class UIRes {
 	public static ArrayList<String> controlsList = new ArrayList<String>();
 	public static ArrayList<JButton> buttonsList = new ArrayList<JButton>();
 	public static final double buttonRatio = 0.23;
-	public static final double labelRatio = 0.32;
+	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
 	public static int numberIcons = Character.Class.values().length - 1;

@@ -1,14 +1,8 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
+import java.awt.FlowLayout;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,8 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import audio.MusicPlayer;
+import graphics.sprites.Sprite;
+import resources.Map;
 
 public abstract class BaseMenu extends MenuItems{
 	
@@ -31,22 +26,38 @@ public abstract class BaseMenu extends MenuItems{
 	
 	static JFrame createFrame(){
 		JFrame frame = new JFrame();
-		frame.setSize(width, height);
+		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
+		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
+		frame.setLayout(new BorderLayout());
+		frame.setContentPane(map);
+		frame.setLayout(new FlowLayout());
+		frame.setSize(width, height);
+		customiseMainPanel(frame);
+		frame.add(mainPanel);
 		return frame;
 	}
 	
 	static void customiseMainPanel(JFrame frame){
+		customiseAllPanels(frame);
+		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-		startPanel.setPreferredSize(frame.getSize());
 		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
 		resources.setMusicPlayer(musicPlayer);
 		musicPlayer.start();
 	}
 	
-	static void customisePanels(){
+	static void customisePanel(JPanel panel, JFrame frame){
+		panel.setOpaque(false);
+		panel.setPreferredSize(frame.getSize());
 		
+	}
+	
+	static void customiseAllPanels(JFrame frame){
+		customisePanel(startPanel, frame);
+		customisePanel(optionsPanel, frame);
+
 	}
 	
 	JPanel addSpriteIcon(JPanel panel, int x){
@@ -106,7 +117,7 @@ public abstract class BaseMenu extends MenuItems{
 	JPanel addMusicSlider(JPanel panel){
 		JLabel musicLabel = getLabel("Music Volume");
 		JSlider musicSlider = getMusicSlider();
-		addSpace(panel, 0, 0.05);
+		addSpace(panel, 0, 0.03);
 		panel.add(musicLabel);
 		addSpace(panel, 0, 0.01);
 		panel.add(musicSlider);
@@ -115,7 +126,7 @@ public abstract class BaseMenu extends MenuItems{
 	 JPanel addAudioSlider(JPanel panel){
 		JLabel audioLabel = getLabel("Audio Volume");
 		JSlider audioSlider = getAudioSlider();
-		addSpace(panel, 0, 0.05);
+		addSpace(panel, 0, 0.03);
 		panel.add(audioLabel);
 		addSpace(panel, 0, 0.01);
 		panel.add(audioSlider);
@@ -125,9 +136,9 @@ public abstract class BaseMenu extends MenuItems{
 	 JPanel addControlsPanel(JPanel panel){
 		 JPanel controlPanel = getControlsPanel();
 		 JLabel label = getLabel("Controls");
-		 addSpace(panel, 0, 0.05);
+		 addSpace(panel, 0, 0.03);
 		 panel.add(label);
-		 addSpace(panel, 0, 0.02);
+		 addSpace(panel, 0, 0.01);
 		 panel.add(controlPanel);
 		 return panel;
 	 }
@@ -142,7 +153,6 @@ public abstract class BaseMenu extends MenuItems{
 	 
 	 JPanel addReturnButton(JPanel panel){
 		 JButton backButton = getBackToStartMenuButton();
-		 addSpace(panel, 0, 0.01);
 		 getButtonAndIcon(panel,backButton);
 		 return panel;
 	 }
