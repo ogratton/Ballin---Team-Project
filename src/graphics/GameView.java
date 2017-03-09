@@ -393,6 +393,8 @@ public class GameView extends JPanel implements Observer {
 		if (resources.gamemode.isGameOver()) {
 			g.setColor(Color.YELLOW);
 			g.fillRect(600, 200, 500, 500);
+			g.setColor(Color.RED);
+			g.drawString("you are winner", 650, 650);
 		}
 		
 		Toolkit.getDefaultToolkit().sync();

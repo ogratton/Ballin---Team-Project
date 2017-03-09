@@ -117,6 +117,9 @@ public class SheetDeets {
 		case SPACE:
 			x = 1;
 			break;
+		case CAKE:
+			x = 3;
+			break;
 		}
 
 		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 3);
