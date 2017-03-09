@@ -25,7 +25,7 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK;
+		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 	}; // add to this as we develop more classes.
 
 	// flags for keys pressed.

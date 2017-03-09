@@ -51,6 +51,12 @@ public class SheetDeets {
 		case MONK:
 			x = 3;
 			break;
+		case WITCH:
+			x = 4;
+			break;
+		case HORSE:
+			x = 5;
+			break;
 		case DEFAULT:
 			x = 0;
 			break;
