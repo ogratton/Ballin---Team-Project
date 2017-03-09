@@ -1,17 +1,25 @@
 package ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import audio.AudioFile;
-import audio.MusicPlayer;
-import resources.Resources;
 
-public abstract class BaseMenu {
+import audio.MusicPlayer;
+
+public abstract class BaseMenu extends MenuItems{
 	
 	public static int getScreenWidth() {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
@@ -21,66 +29,83 @@ public abstract class BaseMenu {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 	
-	 static JFrame createFrame(){
+	static JFrame createFrame(){
 		JFrame frame = new JFrame();
-		frame.setSize(UIRes.width, UIRes.height);
+		frame.setSize(width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
 		return frame;
 	}
 	
+	static void customiseMainPanel(JFrame frame){
+		mainPanel.add(startPanel);
+		startPanel.setPreferredSize(frame.getSize());
+		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+		resources.setMusicPlayer(musicPlayer);
+		musicPlayer.start();
+	}
+	
+	static void customisePanels(){
+		
+	}
+	
+	JPanel addRandomSpriteIcon(JPanel panel){
+		panel.add(getRandomSpriteIcon());
+		return panel;
+	}
+	
 	JPanel addGameTitle(JPanel panel){
-		JLabel titleLabel = UIRes.menuItems.getLabel("Ballin'");
+		JLabel titleLabel = getLabel("Ballin'");
 		addSpace(panel, 0, 0.1);
 		panel.add(titleLabel);
 		return panel;
 	}
 
 	JPanel addStartSingleplayerButton(JPanel panel){
-		JButton startButton = UIRes.menuItems.getPlaySingleplayerButton();
+		JButton startButton = getPlaySingleplayerButton();
 		addSpace(panel, 0, 0.1);
-		panel.add(startButton);
+		getButtonAndIcon(panel,startButton);
 		return panel;
 	}
 	
 	JPanel addStartMultiplayerButton(JPanel panel){
-		JButton startButton = UIRes.menuItems.getPlayMultiplayerButton();
+		JButton startButton = getPlayMultiplayerButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(startButton);
+		getButtonAndIcon(panel,startButton);
 		return panel;
 	}
 	
 	JPanel addOptionsButton(JPanel panel){
-		JButton optionsButton = UIRes.menuItems.getOptionsButton();
+		JButton optionsButton = getOptionsButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(optionsButton);
+		getButtonAndIcon(panel,optionsButton);
 		return panel;
 	}
 
 	JPanel addExitButton(JPanel panel){
-		JButton exitButton = UIRes.menuItems.getExitButton();
+		JButton exitButton = getExitButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(exitButton);
+		getButtonAndIcon(panel,exitButton);
 		return panel;
 	}
 	
 	JPanel addSpace(JPanel panel, double widthRatio, double heightRatio){
-		panel.add(Box.createRigidArea(new Dimension((int) (UIRes.width * widthRatio), (int) (UIRes.height * heightRatio))));
+		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
 	}
 	
 	JPanel addUsernameButton(JPanel panel){
-		JLabel usernameLabel = UIRes.menuItems.getLabel("Welcome, Player!");
-		JButton usernameButton = UIRes.menuItems.getUsername(usernameLabel);
+		JLabel usernameLabel = getLabel("Welcome, Player!");
+		JButton usernameButton = getUsername(usernameLabel);
 		panel.add(usernameLabel,0);
 		addSpace(panel, 0, 0.02);
-		panel.add(usernameButton);
+		getButtonAndIcon(panel,usernameButton);
 		return panel;
 	}
 	
 	JPanel addMusicSlider(JPanel panel){
-		JLabel musicLabel = UIRes.menuItems.getLabel("Music Volume");
-		JSlider musicSlider = UIRes.menuItems.getMusicSlider();
+		JLabel musicLabel = getLabel("Music Volume");
+		JSlider musicSlider = getMusicSlider();
 		addSpace(panel, 0, 0.05);
 		panel.add(musicLabel);
 		addSpace(panel, 0, 0.01);
@@ -88,8 +113,8 @@ public abstract class BaseMenu {
 		return panel;
 	}
 	 JPanel addAudioSlider(JPanel panel){
-		JLabel audioLabel = UIRes.menuItems.getLabel("Audio Volume");
-		JSlider audioSlider = UIRes.menuItems.getAudioSlider();
+		JLabel audioLabel = getLabel("Audio Volume");
+		JSlider audioSlider = getAudioSlider();
 		addSpace(panel, 0, 0.05);
 		panel.add(audioLabel);
 		addSpace(panel, 0, 0.01);
@@ -98,26 +123,27 @@ public abstract class BaseMenu {
 	 }
 	 
 	 JPanel addControlsPanel(JPanel panel){
-		 JPanel controlPanel = UIRes.menuItems.getControlsPanel();
-		 JLabel label = UIRes.menuItems.getLabel("Controls");
+		 JPanel controlPanel = getControlsPanel();
+		 JLabel label = getLabel("Controls");
 		 addSpace(panel, 0, 0.05);
 		 panel.add(label);
-		 addSpace(panel, 0, 0.05);
+		 addSpace(panel, 0, 0.02);
 		 panel.add(controlPanel);
 		 return panel;
 	 }
 	 
 	 JPanel addResetControlsButton(JPanel panel){
-		 JButton resetButton = UIRes.menuItems.getResetControlsButton();
+		 JButton resetButton = getResetControlsButton();
 		 addSpace(panel, 0, 0.01);
-		 panel.add(resetButton);
+		 getButtonAndIcon(panel,resetButton);
+		 addSpace(panel, 0, 0.01);
 		 return panel;
 	 }
 	 
 	 JPanel addReturnButton(JPanel panel){
-		 JButton backButton = UIRes.menuItems.getBackToStartMenuButton();
+		 JButton backButton = getBackToStartMenuButton();
 		 addSpace(panel, 0, 0.01);
-		 panel.add(backButton);
+		 getButtonAndIcon(panel,backButton);
 		 return panel;
 	 }
 	

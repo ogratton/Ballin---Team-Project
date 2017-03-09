@@ -2,9 +2,6 @@ package ui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import audio.AudioFile;
-import audio.MusicPlayer;
-import resources.Resources;
 
 public class OptionsMenu extends BaseMenu{
 

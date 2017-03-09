@@ -1,5 +1,7 @@
 package ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -8,10 +10,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
-
+import java.util.Random;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -19,15 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import audio.AudioFile;
-import audio.MusicPlayer;
 import gamemodes.PlayGame;
-import graphics.PhysicsWithGraphicsDemo;
 import networking.Client;
 import networking.Port;
-import resources.Resources;
 
-public class MenuItems {
+public class MenuItems extends UIRes{
 	
 	void allignToCenter(JComponent comp){
 		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -48,7 +48,7 @@ public class MenuItems {
 	}
 	
 	void customiseLabel(JComponent comp){
-		setCustomFont(comp, (int)(UIRes.labelSize.height * UIRes.labelRatio));
+		setCustomFont(comp, (int)(labelSize.height * labelRatio));
 		allignToCenter(comp);
 	}
 	
@@ -58,8 +58,49 @@ public class MenuItems {
 		allignToCenter(comp);
 	}
 	
+	void customiseButton(JButton button){
+		customiseComponent(button, buttonSize, buttonRatio);
+		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
+		button.setOpaque(false);
+		button.setFocusable(false);
+		button.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				button.setForeground(Color.BLUE);
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				button.setForeground(Color.BLACK);
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	
 	void customiseSlider(JSlider slider){
-		customiseComponent(slider, UIRes.buttonSize, UIRes.sliderRatio);
+		customiseComponent(slider, buttonSize, sliderRatio);
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(10);
 		slider.setPaintTicks(true);
@@ -67,11 +108,11 @@ public class MenuItems {
 	}
 	
 	void switchPanel(JPanel newPanel){
-		UIRes.mainPanel.removeAll();
-		UIRes.mainPanel.add(newPanel);
-		newPanel.setPreferredSize(UIRes.mainPanel.getSize());
-		UIRes.mainPanel.revalidate();
-		UIRes.mainPanel.repaint();
+		mainPanel.removeAll();
+		mainPanel.add(newPanel);
+		newPanel.setPreferredSize(mainPanel.getSize());
+		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 	
 	JLabel getLabel(String text){
@@ -80,28 +121,46 @@ public class MenuItems {
 		return label;
 	}
 	
+	JLabel getRandomSpriteIcon(){
+		BufferedImage icon = iconList[new Random().nextInt(iconList.length)];
+		JLabel iconLabel = new JLabel(new ImageIcon(icon));
+		return iconLabel;
+	}
+	
+	JPanel getButtonAndIcon(JPanel panel, JButton button){
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setMaximumSize(buttonSize);
+		BorderLayout border = new BorderLayout();
+		buttonPanel.setLayout(border);
+		buttonPanel.add(getRandomSpriteIcon(), BorderLayout.LINE_START);
+		buttonPanel.add(button, BorderLayout.CENTER);
+		buttonPanel.add(getRandomSpriteIcon(), BorderLayout.LINE_END);
+		panel.add(buttonPanel);
+		return panel;
+	}
+	
 	JButton getPlaySingleplayerButton(){
 		JButton startButton = new JButton("Start Singleplayer Game");
-		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(startButton);
 		startButton.addActionListener(e -> {
-			PlayGame.start(UIRes.resources);
+			PlayGame.start(resources);
 			// button sound effect
-			UIRes.audioPlayer.play();
+			audioPlayer.play();
 			// XXX change the song
-			UIRes.resources.getMusicPlayer().changePlaylist("thirty");
-			UIRes.resources.getMusicPlayer().resumeMusic();
+			resources.getMusicPlayer().changePlaylist("thirty");
+			resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}
 	
 	JButton getPlayMultiplayerButton(){
 		JButton startButton = new JButton("Start Multiplayer Game");
-		customiseComponent(startButton, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(startButton);
 		startButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
 			String input = (String)JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server", JOptionPane.PLAIN_MESSAGE);
 			if (input != null){
-				connectToServer(UIRes.username, "" + Port.number, UIRes.host);				
+				connectToServer(username, "" + Port.number, host);				
 			}
 			else{
 				frame.dispose();
@@ -117,18 +176,18 @@ public class MenuItems {
 	
 	JButton getBackToStartMenuButton(){
 		JButton button = new JButton("Back");
-		customiseComponent(button, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(button);
 		button.addActionListener(e -> {
-			switchPanel(UIRes.startPanel);
+			switchPanel(startPanel);
 		});
 		return button;
 	}
 	
 	JButton getOptionsButton(){
 		JButton optionsButton = new JButton("Options");
-		customiseComponent(optionsButton, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(optionsButton);
 		optionsButton.addActionListener(e -> {
-			switchPanel(UIRes.optionsPanel);
+			switchPanel(optionsPanel);
 		});
 		return optionsButton;
 	}
@@ -138,19 +197,19 @@ public class MenuItems {
 		exitButton.addActionListener(e -> {
 			System.exit(0);
 		});
-		customiseComponent(exitButton, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(exitButton);
 		return exitButton;
 	}
 	
 	JButton getUsername(JLabel label){
 		JButton usernameButton = new JButton("Change username");
-		customiseComponent(usernameButton, UIRes.buttonSize, UIRes.buttonRatio);		
+		customiseButton(usernameButton);		
 		usernameButton.addActionListener(e ->{
 			JFrame frame = new JFrame();
 			String input = (String)JOptionPane.showInputDialog(frame, "Enter your username:", "Input username",JOptionPane.PLAIN_MESSAGE);
 			if(input != null){
-				UIRes.username = input;
-				label.setText("Welcome, " + input + "!");
+				username = input;
+				label.setText("Welcome, " + username + "!");
 			}
 			else{
 				frame.dispose();
@@ -160,27 +219,27 @@ public class MenuItems {
 	}
 	
 	JSlider getMusicSlider(){
-		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_MAX);
+		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
 		musicSlider.addChangeListener(e -> {
 			int volume = musicSlider.getValue();
 			if (volume == 0)
-				UIRes.resources.getMusicPlayer().mute();
+				resources.getMusicPlayer().mute();
 			else
-				UIRes.resources.getMusicPlayer().setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
+				resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
 		});
 		return musicSlider;
 	}
 	
 	JSlider getAudioSlider(){
-		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_MAX);
+		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(audioSlider);
 		audioSlider.addChangeListener(e -> {
 			int volume = audioSlider.getValue();
 			if (volume == 0)
-				UIRes.resources.setSFXGain(-80);
+				resources.setSFXGain(-80);
 			else
-				UIRes.resources.setSFXGain((int) ((UIRes.VOL_MAX - volume) * (-0.33)));
+				resources.setSFXGain((int) ((VOL_MAX - volume) * (-0.33)));
 		});
 		return audioSlider;
 	}
@@ -194,11 +253,11 @@ public class MenuItems {
 		JLabel label = getLabel(buttonLabel);
 		
 		JButton button = new JButton(buttonName);
-		customiseComponent(button, UIRes.buttonSize, UIRes.buttonRatio);
+		customiseButton(button);
 		button.setName(name);
 		setKeyRebindable(button);
-		UIRes.controlsList.add(button.getText());
-		UIRes.buttonsList.add(button);
+		controlsList.add(button.getText());
+		buttonsList.add(button);
 		
 		panel.add(label);
 		panel.add(button);
@@ -210,55 +269,55 @@ public class MenuItems {
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
-		panel.add(getControlButton("Move up:", KeyEvent.getKeyText(UIRes.resources.getDefaultUp()).toUpperCase(), "up"));
-		panel.add(getControlButton("Move down:", KeyEvent.getKeyText(UIRes.resources.getDefaultDown()).toUpperCase(), "down"));
-		panel.add(getControlButton("Move left:", KeyEvent.getKeyText(UIRes.resources.getDefaultLeft()).toUpperCase(), "left"));
-		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(UIRes.resources.getDefaultRight()).toUpperCase(), "right"));
-		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase(), "dash"));
-		panel.add(getControlButton("Block:", KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase(), "block"));
+		panel.add(getControlButton("Move up:", KeyEvent.getKeyText(resources.getDefaultUp()).toUpperCase(), "up"));
+		panel.add(getControlButton("Move down:", KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase(), "down"));
+		panel.add(getControlButton("Move left:", KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase(), "left"));
+		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(), "right"));
+		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase(), "dash"));
+		panel.add(getControlButton("Block:", KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase(), "block"));
 		
 		return panel;
 	}
 	
 	void resetButton(JButton button) {
 		if (button.getName().equals("up")) {
-			UIRes.resources.setUp(UIRes.resources.getDefaultUp());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultUp()).toUpperCase());
+			resources.setUp(resources.getDefaultUp());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultUp()).toUpperCase());
 		} else if (button.getName().equals("down")) {
-			UIRes.resources.setDown(UIRes.resources.getDefaultDown());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultDown()).toUpperCase());
+			resources.setDown(resources.getDefaultDown());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase());
 		} else if (button.getName().equals("left")) {
-			UIRes.resources.setLeft(UIRes.resources.getDefaultLeft());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultLeft()).toUpperCase());
+			resources.setLeft(resources.getDefaultLeft());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase());
 		} else if (button.getName().equals("right")) {
-			UIRes.resources.setRight(UIRes.resources.getDefaultRight());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultRight()).toUpperCase());
+			resources.setRight(resources.getDefaultRight());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase());
 		} else if (button.getName().equals("dash")) {
-			UIRes.resources.setDash(UIRes.resources.getDefaultDash());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase());
+			resources.setDash(resources.getDefaultDash());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase());
 		} else if (button.getName().equals("block")) {
-			UIRes.resources.setBlock(UIRes.resources.getDefaultBlock());
-			button.setText(KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase());
+			resources.setBlock(resources.getDefaultBlock());
+			button.setText(KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase());
 		}
 	}
 	
 	JButton getResetControlsButton(){
-		JButton resetControlsButton = new JButton("Reset controls to default");
-		customiseComponent(resetControlsButton, UIRes.buttonSize, UIRes.buttonRatio);
+		JButton resetControlsButton = new JButton("Reset controls");
+		customiseButton(resetControlsButton);
 		resetControlsButton.addActionListener(e -> {
-			Iterator<JButton> i = UIRes.buttonsList.iterator();
+			Iterator<JButton> i = buttonsList.iterator();
 			while(i.hasNext()){
 				JButton button = i.next();
 				resetButton(button);
 			}
 		
-			UIRes.controlsList.removeAll(UIRes.controlsList);
-			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultUp()));
-			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultDown()));
-			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultLeft()));
-			UIRes.controlsList.add("" + Character.toUpperCase((char) UIRes.resources.getDefaultRight()));
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultDash()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultBlock()).toUpperCase());
+			controlsList.removeAll(controlsList);
+			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
+			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
+			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultLeft()));
+			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
+			controlsList.add(("" + resources.getDefaultDash()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultBlock()).toUpperCase());
 			
 		});
 		return resetControlsButton;
@@ -270,12 +329,12 @@ public class MenuItems {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				UIRes.isPressed = true;
+				isPressed = true;
 				button.addKeyListener(new KeyListener() {
 					@Override
 					public void keyPressed(KeyEvent e) {
-						if (UIRes.isPressed) {
-							UIRes.controlsList.remove(button.getText());
+						if (isPressed) {
+							controlsList.remove(button.getText());
 							if (e.getKeyCode() == KeyEvent.VK_UP) {
 								if (!checkKey("up arrow".toUpperCase()))
 									button.setText("up arrow".toUpperCase());
@@ -305,21 +364,21 @@ public class MenuItems {
 								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
 									button.setText("" + Character.toUpperCase(e.getKeyChar()));
 							}
-							UIRes.isPressed = false;
-							UIRes.controlsList.add(button.getText());
+							isPressed = false;
+							controlsList.add(button.getText());
 
 							if (button.getName().equals("up"))
-								UIRes.resources.setUp(e.getKeyCode());
+								resources.setUp(e.getKeyCode());
 							else if (button.getName().equals("down"))
-								UIRes.resources.setDown(e.getKeyCode());
+								resources.setDown(e.getKeyCode());
 							else if (button.getName().equals("left"))
-								UIRes.resources.setLeft(e.getKeyCode());
+								resources.setLeft(e.getKeyCode());
 							else if (button.getName().equals("right"))
-								UIRes.resources.setRight(e.getKeyCode());
+								resources.setRight(e.getKeyCode());
 							else if (button.getName().equals("dash"))
-								UIRes.resources.setDash(e.getKeyCode());
+								resources.setDash(e.getKeyCode());
 							else if (button.getName().equals("block"))
-								UIRes.resources.setBlock(e.getKeyCode());
+								resources.setBlock(e.getKeyCode());
 						}
 
 					}
@@ -361,7 +420,7 @@ public class MenuItems {
 	}
 
 	boolean checkKey(String string) {
-		if (UIRes.controlsList.contains(string)) {
+		if (controlsList.contains(string)) {
 			JOptionPane.showMessageDialog(new JFrame(),
 					"This key is already assigned for another control. Please assign another key!",
 					"Key already assigned!", JOptionPane.ERROR_MESSAGE);

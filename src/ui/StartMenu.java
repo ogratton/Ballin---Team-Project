@@ -1,5 +1,7 @@
 package ui;
 
+import java.awt.GridLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,14 +25,9 @@ public class StartMenu extends BaseMenu{
 
 	public static void main(String args[]) {
 		JFrame frame = createFrame();
-		UIRes.mainPanel.add(UIRes.startPanel);
-		UIRes.startPanel.setPreferredSize(frame.getSize());
-		frame.add(UIRes.mainPanel);
-		frame.setVisible(true);
-		
-		MusicPlayer musicPlayer = new MusicPlayer(UIRes.resources, "guile");
-		UIRes.resources.setMusicPlayer(musicPlayer);
-		musicPlayer.start();
+		customiseMainPanel(frame);
+		frame.add(mainPanel);
+		frame.setVisible(true);	
 	}
 
 }
