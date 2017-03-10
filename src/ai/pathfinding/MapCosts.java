@@ -13,18 +13,19 @@ public class MapCosts
 	Tile[][] tileMap;
 	int[][] proxMask;
 	double[][] costMask;
+	boolean[][] unreachable;
 
 	int width, height;
 	int biggestDimension;
 
-	public MapCosts(Resources resources)
-	{
+	public MapCosts(Resources resources, Tile[][] tilemap, boolean[][] unreachable) {
 		this.resources = resources;
 		
-		tileMap = resources.getMap().getTiles();
+		tileMap = tilemap;
 		width = tileMap.length;
 		height = tileMap[0].length;
 		biggestDimension = height < width ? width : height;
+		this.unreachable = unreachable;
 
 		genMapCostsMask();
 
@@ -94,12 +95,13 @@ public class MapCosts
 		{
 			for (int j = 0; j < height; j++)
 			{
-				if (proxMask[i][j] == 0)
+				if (!unreachable[i][j] && proxMask[i][j] == 0)
 				{
 					findProx(i, j);
 				}
 			}
 		}
+		printProxMask();
 	}
 
 	/**
@@ -195,6 +197,6 @@ public class MapCosts
 	 */
 	private double costEquation(int x)
 	{
-		return 500 * Math.pow(Math.E, -x); // XXX (arbitrary choice!) 100 * Math.pow(Math.E, -x) + 1
+		return 100 * Math.pow(Math.E, -x); // XXX (arbitrary choice!) 100 * Math.pow(Math.E, -x) + 1
 	}
 }

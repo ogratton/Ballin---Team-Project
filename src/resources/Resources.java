@@ -61,9 +61,6 @@ public class Resources {
 	// map
 	private Map map;
 
-	private int[][] proxMask; // how many tiles away from danger
-	private int[][] costMask; // cost for AI to pathfind there
-
 	// client ID
 	private UUID id;
 	

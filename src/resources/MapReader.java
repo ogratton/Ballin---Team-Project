@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import ai.pathfinding.MapCosts;
+import resources.Map.Tile;
+
 /**
  * Reads a Comma Separated Value file and returns it as an ArrayList of lines
  * Could be done statically but for the dictionary
@@ -17,13 +20,18 @@ public class MapReader
 	private String line = "";
 	private String cvsSplitBy = ",";
 	private String comment = "#";
+	private String unreachable = "'";
 	private  Hashtable<String, Map.Tile> tileDict;
+	private Resources resources;
+	private boolean[][] untouchableTiles;
 
 	/**
 	 * Make a new object and initialise the dictionary of string to enum
 	 */
-	public MapReader()
+	public MapReader(Resources resources)
 	{
+		this.resources = resources;
+		
 		tileDict = new Hashtable<String, Map.Tile>();
 		tileDict.put("a", Map.Tile.ABYSS);
 		tileDict.put("b", Map.Tile.FLAT);
@@ -44,6 +52,7 @@ public class MapReader
 		tileDict.put("q", Map.Tile.EDGE_NESW);
 		tileDict.put("r", Map.Tile.EDGE_ABYSS);
 		tileDict.put("s", Map.Tile.WALL);
+		
 	}
 	
 	/**
@@ -86,17 +95,26 @@ public class MapReader
 		int width = mapString.get(0).length;
 		
 		Map.Tile[][] map = new Map.Tile[height][width];
+		untouchableTiles = new boolean[height][width];
 		
 		for (int i = 0; i < map.length; i++)
 		{
 			String[] row = mapString.get(i);
 			for (int j = 0; j < map[i].length; j++)
 			{
-				map[i][j] = tileDict.get(row[j]);
+				map[i][j] = tileDict.get(row[j].substring(0, 1));
+				untouchableTiles[i][j] = row[j].contains(unreachable);
 			}
 		}
-		
+				
 		return map;
+	}
+	
+	public void setMap(String name) throws IOException
+	{
+		resources.setMap(new Map()); = readMap(name);
+		
+		new MapCosts(resources, untouchableTiles);
 	}
 	
 	/**
@@ -104,10 +122,10 @@ public class MapReader
 	 */
 	public static void main(String[] args)
 	{
-		MapReader mr = new MapReader();	
+		MapReader mr = new MapReader(new Resources());	
 		try
 		{
-			Map.Tile[][] map = mr.readMap("./resources/maps/map1.csv");
+			resources = mr.readMap("./resources/maps/map1.csv");
 			System.out.println("I guess it worked then");
 		}
 		catch (IOException e)
