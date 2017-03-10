@@ -437,7 +437,6 @@ public class MenuItems extends UIRes {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
 			}
 
 		});
