@@ -25,7 +25,7 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK;
+		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 	}; // add to this as we develop more classes.
 
 	// flags for keys pressed.
@@ -94,6 +94,9 @@ public class Character extends Observable implements Collidable_Circle {
 	private Power lastPowerup;
 	private int lastPowerupTime;
 	private boolean hasPowerup = false;
+	private boolean hasBomb = false; // holding bomb in hot potato
+	private boolean exploding = false; // bomb has just exploded
+	private int timeOfDeath = -1;
 
 	private int teamNumber;
 	
@@ -1368,5 +1371,39 @@ public class Character extends Observable implements Collidable_Circle {
 	
 	public boolean getBurning() {
 		return burning;
+	}
+
+	public boolean hasBomb() {
+		return hasBomb;
+	}
+
+	public void hasBomb(boolean hasBomb) {
+		this.hasBomb = hasBomb;
+	}
+
+	public void setExploding(boolean exploding) {
+		this.exploding = exploding;
+		if (exploding) {
+			dead = true;
+			hasBomb = false;
+			decrementLives();
+		}
+	}
+
+	public boolean isExploding() {
+		return this.exploding;
+	}
+
+	public int getTimeOfDeath() {
+		return timeOfDeath;
+	}
+
+	public void setTimeOfDeath(int timeOfDeath) {
+		this.timeOfDeath = timeOfDeath;
+	}
+
+	public void requestDashing() {
+		System.out.println(stamina + ", " + (stamina >= dashStamina) + ", " + dashTimer);
+		setDashing((stamina >= dashStamina));
 	}
 }

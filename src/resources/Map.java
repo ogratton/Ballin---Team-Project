@@ -59,7 +59,7 @@ public class Map {
 	 * world type and swap them out
 	 */
 	public enum World {
-		ICE, LAVA, DESERT, CAVE, SPACE,
+		ICE, LAVA, DESERT, CAVE, SPACE, CAKE;
 	};
 
 	private Tile[][] tiles;

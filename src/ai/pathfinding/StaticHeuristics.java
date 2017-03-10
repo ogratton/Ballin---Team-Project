@@ -22,4 +22,10 @@ public class StaticHeuristics
 		double dist = Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
 		return dist;
 	}
+	
+	public static double manhattan(Point a, Point b)
+	{
+		double dist = (Math.abs(a.getX())-Math.abs(b.getX())) + (Math.abs(a.getY()) - Math.abs(b.getY()));
+		return dist;
+	}
 }

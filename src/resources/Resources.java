@@ -10,6 +10,8 @@ import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
+import audio.MusicPlayer;
+import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
 
@@ -21,6 +23,9 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
+	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey };
+	public Mode mode;
+	public GameModeFFA gamemode;
 
 	// keybindings
 	private int default_up = KeyEvent.VK_W;
@@ -44,8 +49,8 @@ public class Resources {
 	// max deaths a character can have.
 	private int maxDeaths = 4;
 
-	private Queue<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
-	private Queue<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
+	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
+	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
@@ -55,11 +60,12 @@ public class Resources {
 	// puck used in hockey game mode, using character class to make things easy
 	private Puck puck;
 	// are we playing a hockey game?
-	private boolean isHockey = false;
 	private Team[] teams;
 
 	// map
 	private Map map;
+
+	private MusicPlayer musicPlayer;
 
 	// client ID
 	private UUID id;
@@ -363,8 +369,8 @@ public class Resources {
 	 *            the block keybinding
 	 */
 
-	public void setBlock(int dash) {
-		this.dash = dash;
+	public void setBlock(int block) {
+		this.block = block;
 	}
 	
 	/**
@@ -509,14 +515,6 @@ public class Resources {
 		p.setActive(false);
 	}
 
-	public boolean isHockey() {
-		return isHockey;
-	}
-
-	public void setHockey(boolean isHockey) {
-		this.isHockey = isHockey;
-	}
-
 	public Puck getPuck() {
 		return puck;
 	}
@@ -609,19 +607,19 @@ public class Resources {
 		this.normal = n;
 	}
 
-	public Queue<NetworkMove> getClientMoves() {
+	public LinkedList<NetworkMove> getClientMoves() {
 		return clientMoves;
 	}
 
-	public void setClientMoves(Queue<NetworkMove> clientMoves) {
+	public void setClientMoves(LinkedList<NetworkMove> clientMoves) {
 		this.clientMoves = clientMoves;
 	}
 	
-	public Queue<NetworkMove> getSentClientMoves() {
+	public LinkedList<NetworkMove> getSentClientMoves() {
 		return sentClientMoves;
 	}
 
-	public void setSentClientMoves(Queue<NetworkMove> sentClientMoves) {
+	public void setSentClientMoves(LinkedList<NetworkMove> sentClientMoves) {
 		this.sentClientMoves = sentClientMoves;
 	}
 	
@@ -642,8 +640,14 @@ public class Resources {
 		return null;
 	}
 
-	// public static MapReader mapReader = new MapReader();
-	// public static Map.Tile[][] map1 =
-	// mapReader.readMap("./resources/maps/map1.csv");
+	public MusicPlayer getMusicPlayer()
+	{
+		return musicPlayer;
+	}
+	
+	public void setMusicPlayer(MusicPlayer mp)
+	{
+		this.musicPlayer = mp;
+	}
 
 }

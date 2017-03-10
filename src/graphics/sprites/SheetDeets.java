@@ -51,6 +51,12 @@ public class SheetDeets {
 		case MONK:
 			x = 3;
 			break;
+		case WITCH:
+			x = 4;
+			break;
+		case HORSE:
+			x = 5;
+			break;
 		case DEFAULT:
 			x = 0;
 			break;
@@ -117,6 +123,9 @@ public class SheetDeets {
 		case SPACE:
 			x = 1;
 			break;
+		case CAKE:
+			x = 3;
+			break;
 		}
 
 		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 3);
@@ -148,15 +157,10 @@ public class SheetDeets {
 			numX = 8;
 			numY = 1;
 			break;
-		case PUCK:
-			y = 1;
-			numX = 1;
-			numY = 1;
-			break;
 		case POWERUP:
 			y = 1;
-			x = 1;
-			numX = 1;
+			x = 0;
+			numX = 8;
 			numY = 1;
 			break;
 			
@@ -170,9 +174,16 @@ public class SheetDeets {
 		
 		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
 		
-		return set;
+		switch(p){
+		case Speed:
+			return Sprite.getSprite(set, 1, 0, MISC_SIZEX, MISC_SIZEY);	
+		case Mass:
+			return Sprite.getSprite(set, 2, 0, MISC_SIZEX, MISC_SIZEY);
+		default:
+			return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);	 
+		}
 		
-		//return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);		
+		//	
 		
 	}
 

@@ -41,12 +41,12 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.LAVA, "Map"));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Map"));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1);
 		Character player1 = new Character(Character.Class.ARCHER, 2);
-		Character player2 = new Character(Character.Class.WIZARD, 0);
+		Character player2 = new Character(Character.Class.HORSE, 0);
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
@@ -59,6 +59,7 @@ public class PlayGame {
 		// Create game mode (starts physics and graphics)
 		//LastManStanding mode = new LastManStanding(resources, 5);
 		Deathmatch mode = new Deathmatch(resources);
+		//HotPotato mode = new HotPotato(resources);
 		mode.start();
 	}
 }

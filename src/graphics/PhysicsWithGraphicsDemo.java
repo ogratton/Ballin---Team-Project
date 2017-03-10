@@ -48,61 +48,55 @@ public class PhysicsWithGraphicsDemo {
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 		
+		// Player 1 is the actual human
 		Character player = new Character(Character.Class.WIZARD, 1);
-
-		Point coords = new Point(400,400);
-		Point tile = resources.getMap().tileCoords(coords.x, coords.y);
-		coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
-		
-		player.setX(coords.x);
-		player.setY(coords.y);
-
-		Character player1 = new Character(Character.Class.WARRIOR, 2);
-
-		player1.setX(534);
-		player1.setY(454);
-
-		Character player2 = new Character(Character.Class.ARCHER, 3);
-
-		player2.setX(780);
-		player2.setY(400);
-
-		Character player3 = new Character(Character.Class.MONK, 4);
-		player3.setX(1023);
-		player3.setY(500);
-
-		
+		resources.getMap().spawn(player, new Point(400,400));
 		resources.addPlayerToList(player);
+		
+		// player 0 is for our debug paths
+		Character player1 = new Character(Character.Class.WARRIOR, 0);
+		resources.getMap().spawn(player1);
+		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+//		ai1.setBehaviour("aggressive");
 		resources.addPlayerToList(player1);
+		
+		int numPlayers = 2;
+		
+		Character player2 = new Character(Character.Class.ARCHER, numPlayers);
+		resources.getMap().spawn(player2);
+		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
 		resources.addPlayerToList(player2);
-		resources.addPlayerToList(player3);
+		numPlayers++;
+//
+//		Character player3 = new Character(Character.Class.MONK, numPlayers);
+//		resources.getMap().spawn(player2);
+//		VeryBasicAI ai3 = new VeryBasicAI(resources, player3);
+//		resources.addPlayerToList(player3);
+//		numPlayers++;
 
 		/*for(int i = 0; i < 6; i++){
 			
 			
-			Character playa = new Character(Character.Class.WIZARD, i+3);
+			Character playa = new Character(Character.Class.WIZARD, numPlayers);
 			Point loc = resources.getMap().randPointOnMap();
 			playa.setX(loc.getX());
 			playa.setY(loc.getY());
 			resources.addPlayerToList(playa);
+			numPlayers++;
 			
 			VeryBasicAI ai = new VeryBasicAI(resources, playa);
+			ai.setBehaviour("aggressive");
 			ai.start();
 		}*/
 
 		// create physics thread
-		Physics p = new Physics(resources, true);
+		Physics p = new Physics(resources, false);
 		p.start();
 
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player2);
-		ai1.setBehaviour("aggressive");
+		
 		ai1.start();
-		
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player3);
 		ai2.start();
-		
-		VeryBasicAI ai3 = new VeryBasicAI(resources, player1);
-		ai3.start();
+//		ai3.start();
 		
 		/*Graphics g = new Graphics(resources, null, false);
 		g.start();*/
