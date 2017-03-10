@@ -84,7 +84,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
-		//mapView = new MapView(resources);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -104,7 +103,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 
-		
+		label.setHorizontalAlignment(JLabel.CENTER);
 		
 		add(label, BorderLayout.NORTH);
 		setUndecorated(true);

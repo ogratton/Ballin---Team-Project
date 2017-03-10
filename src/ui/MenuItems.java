@@ -41,7 +41,7 @@ public class MenuItems extends UIRes{
 	void setCustomFont(JComponent comp, int size){
 		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
