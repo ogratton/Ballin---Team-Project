@@ -72,7 +72,7 @@ public class NetworkingDemo {
 		
 
 		// create physics thread
-		Physics p = new Physics(resources, true);
+		Physics p = new Physics(resources, false);
 		p.start();
 
 		resourcesMap.put(session.getId(), resources);

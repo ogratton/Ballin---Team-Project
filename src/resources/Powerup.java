@@ -8,7 +8,7 @@ import graphics.sprites.SheetDeets;
 
 public class Powerup extends Observable implements Collidable_Circle {
 
-	private int radius = 5;
+	private int radius = 21;
 	private double x, y = 0;
 	private CollidableType type = CollidableType.Powerup;
 	private BufferedImage sprite = null;

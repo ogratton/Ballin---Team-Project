@@ -13,13 +13,13 @@ import resources.Resources;
  * @author Oliver Gratton
  * 
  */
-public class MusicPlayer implements Runnable
+public class MusicPlayer extends Thread
 {
 
 	private ArrayList<AudioFile> musicFiles;
 	private int currentSongIndex;
-	private boolean running;
-	private boolean paused;
+	private volatile boolean running;
+	private volatile boolean paused;
 	private float gain;
 	private Resources resources;
 
@@ -54,9 +54,44 @@ public class MusicPlayer implements Runnable
 		gain = 0;
 
 	}
+	
+	/**
+	 * Play the next song if the current has finished
+	 */
+	@Override
+	public void run()
+	{
+		running = true;
+		musicFiles.get(currentSongIndex).play(gain);
+		System.out.println("Now Playing: " + nowPlaying());
+		while (true)
+		{
+			
+			if (running)
+			{
+//				System.out.println("music is running");
+				if (musicFiles.get(currentSongIndex).isStopped())
+				{
+					nextSong();
+				}
+			}
+
+			// not necessary if AudioFile.playState is volatile
+			// or there's other stuff going on to keep pc busy
+			// but good to have
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
-	 * replace the current playlist with another
+	 * stop music and replace the current playlist with another
 	 * this will need to be followed by a resume call
 	 * 
 	 * @param files filenames (minus wav extension) of songs
@@ -68,6 +103,7 @@ public class MusicPlayer implements Runnable
 		paused_at = 0;
 		currentSongIndex = 0;
 		running = false;
+		paused = true;
 
 		ArrayList<AudioFile> tempMusicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
@@ -76,7 +112,6 @@ public class MusicPlayer implements Runnable
 		}
 
 		musicFiles = tempMusicFiles;
-
 	}
 
 	/**
@@ -157,7 +192,7 @@ public class MusicPlayer implements Runnable
 	/**
 	 * pause the current song and store where we paused it
 	 */
-	public void pause()
+	public void pauseMusic()
 	{
 		paused_at = musicFiles.get(currentSongIndex).pause();
 		paused = true;
@@ -166,7 +201,7 @@ public class MusicPlayer implements Runnable
 	/**
 	 * resume playing where we left off
 	 */
-	public void resume()
+	public void resumeMusic()
 	{
 		if (paused)
 		{
@@ -176,7 +211,6 @@ public class MusicPlayer implements Runnable
 			paused_at = 0;
 			System.out.println("Now Playing: " + nowPlaying());
 		}
-
 	}
 
 	/**
@@ -187,7 +221,6 @@ public class MusicPlayer implements Runnable
 		pre_mute_gain = gain;
 		gain = -100000;
 		setGain(gain);
-
 	}
 
 	/**
@@ -216,36 +249,6 @@ public class MusicPlayer implements Runnable
 	public float getGain()
 	{
 		return gain;
-	}
-
-	/**
-	 * Play the next song if the current has finished
-	 */
-	@Override
-	public void run()
-	{
-		running = true;
-		musicFiles.get(currentSongIndex).play(gain);
-		System.out.println("Now Playing: " + nowPlaying());
-		while (running)
-		{
-			//if (!song.isPlaying() && !song.isPaused())
-			if (musicFiles.get(currentSongIndex).isStopped())
-			{
-				nextSong();
-			}
-
-			// not necessary if AudioFile.playing is volatile
-			// but good to have
-			try
-			{
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
 	}
 
 }

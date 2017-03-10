@@ -27,9 +27,9 @@ import networking.Client;
 import networking.Port;
 import resources.Resources;
 
-public class MainMenu extends JFrame {
+public class OldMenu extends JFrame {
 
-	MainMenu() {
+	OldMenu() {
 		JFrame frame = new JFrame();
 		resources = new Resources();
 		mPanel = new JPanel();
@@ -546,7 +546,7 @@ public class MainMenu extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		MainMenu menu = new MainMenu();
+		OldMenu menu = new OldMenu();
 	}
 
 }

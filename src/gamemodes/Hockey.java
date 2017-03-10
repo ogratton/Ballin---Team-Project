@@ -34,7 +34,7 @@ public class Hockey extends Thread implements GameModeTeams {
 
 	public void run() {
 		// Start game
-		Physics p = new Physics(resources);
+		Physics p = new Physics(resources, false);
 		p.start();
 		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 		while (!isGameOver()) {

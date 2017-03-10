@@ -63,7 +63,10 @@ public void run() {
     try {
     	while(message.getCommand() != Command.QUIT) {
     		message = (Message)server.readUnshared();
-    		System.out.println("Client: " + message.getNote());
+    		if(message.getObject().getClass().getName() == "networking.GameData" && ((GameData)message.getObject()).getMoves() != null) {
+    			System.out.println("Client: " + ((GameData)message.getObject()).getMoves().size());
+    		}
+    		
     		switch(message.getCommand()) {
     		case SESSION:
     			switch(message.getNote()) {
@@ -162,7 +165,7 @@ public void run() {
 					new MapCosts(resources);
     				cModel.setResources(resources);
     				
-    				Physics p = new Physics(resources, false);
+    				Physics p = new Physics(resources, true);
     				p.start();
     				
     				// create ui thread
@@ -229,7 +232,7 @@ public void run() {
         						}
         					}
         				}
-        				Queue<NetworkMove> temp = new LinkedList<NetworkMove>();
+        				LinkedList<NetworkMove> temp = new LinkedList<NetworkMove>();
         				character = resources.getMyCharacter();
         				while(!sentClientMoves.isEmpty()) {
         					move = sentClientMoves.remove();
