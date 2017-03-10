@@ -41,7 +41,7 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Map"));
+		resources.setMap(new Map(1200, 675, tiles, Map.World.CAKE, "Map"));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1);
@@ -52,9 +52,11 @@ public class PlayGame {
 		resources.addPlayerToList(player2);
 		// Create AIs
 		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+		player1.setAI(ai1);
 		ai1.start();
 		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
 		ai2.start();
+		player2.setAI(ai2);
 		
 		// Create game mode (starts physics and graphics)
 		//LastManStanding mode = new LastManStanding(resources, 5);

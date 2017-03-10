@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
+
+import ai.VeryBasicAI;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -27,6 +30,9 @@ public class Character extends Observable implements Collidable_Circle {
 	public enum Class {
 		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 	}; // add to this as we develop more classes.
+	
+	private boolean isAI = false;
+	private VeryBasicAI ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -1405,5 +1411,22 @@ public class Character extends Observable implements Collidable_Circle {
 	public void requestDashing() {
 		System.out.println(stamina + ", " + (stamina >= dashStamina) + ", " + dashTimer);
 		setDashing((stamina >= dashStamina));
+	}
+
+	public boolean isAI() {
+		return isAI;
+	}
+
+	public void setAI(boolean isAI) {
+		this.isAI = isAI;
+	}
+
+	public VeryBasicAI getAI() {
+		return ai;
+	}
+
+	public void setAI(VeryBasicAI ai) {
+		setAI(true);
+		this.ai = ai;
 	}
 }
