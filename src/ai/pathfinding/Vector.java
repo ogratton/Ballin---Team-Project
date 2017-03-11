@@ -106,35 +106,64 @@ public class Vector
 
 		return bool;
 	}
-	
+
 	/**
 	 * Work out the y coord on the vector from the centre given x
+	 * 
 	 * @param x
 	 * @return
 	 */
 	private double getYfromX(double x)
 	{
 		double xFromCentre = x - centre.getX();
-		double times = xFromCentre/this.dx;
-		double y = centre.getY() + (this.dy*times);
-		
+		double times = xFromCentre / this.dx;
+		double y = centre.getY() + (this.dy * times);
+
 		return y;
 	}
-	
+
 	/**
 	 * Work out the x coord on the vector from the centre given y
+	 * 
 	 * @param y
 	 * @return
 	 */
 	private double getXfromY(double y)
 	{
 		double yFromCentre = y - centre.getY();
-		double times = yFromCentre/this.dy;
-		double x = centre.getX() + (this.dx*times);
-		
+		double times = yFromCentre / this.dy;
+		double x = centre.getX() + (this.dx * times);
+
 		return x;
 	}
 
+	/**
+	 * Test if another vector is pointing in the same direction as this
+	 * 
+	 * @param v another vector
+	 * @return true if yes
+	 */
+	public boolean equalDirection(Vector v)
+	{
+		// XXX check this value is sensible (i've no idea)
+		double fuzziness = 0.4;
+		return fuzzyEqual(v.dx,this.dx, fuzziness) && fuzzyEqual(v.dy, this.dy, fuzziness);
+	}
+	
+	/**
+	 * Are two doubles almost equal
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private boolean fuzzyEqual(double a, double b, double fuzziness)
+	{
+		return (Math.abs(a - b) <= fuzziness);
+	}
+
+	/**
+	 * Overwrites the Object toString method
+	 */
 	public String toString()
 	{
 		return "[ " + dx + " " + dy + " ]";

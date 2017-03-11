@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 import ai.pathfinding.MapCosts;
 import physics.Physics;
 import resources.Character;
@@ -56,7 +56,7 @@ public class PhysicsWithGraphicsDemo {
 		// player 0 is for our debug paths
 		Character player1 = new Character(Character.Class.WARRIOR, 0);
 		resources.getMap().spawn(player1);
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+		BasicAI ai1 = new BasicAI(resources, player1);
 //		ai1.setBehaviour("aggressive");
 		resources.addPlayerToList(player1);
 		
@@ -64,7 +64,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		Character player2 = new Character(Character.Class.ARCHER, numPlayers);
 		resources.getMap().spawn(player2);
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
+		BasicAI ai2 = new BasicAI(resources, player2);
 		resources.addPlayerToList(player2);
 		numPlayers++;
 //

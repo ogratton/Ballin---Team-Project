@@ -7,7 +7,7 @@ import java.util.Date;
 
 import javax.swing.Timer;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import resources.Character;
@@ -129,7 +129,7 @@ public class Physics extends Thread implements ActionListener {
 				c.decrementLives();
 				if(!client) resources.getMap().spawn(c);
 				if (c.isAI()) {
-					VeryBasicAI ai = new VeryBasicAI(resources, c);
+					BasicAI ai = new BasicAI(resources, c);
 					ai.start();
 				}
 			}
