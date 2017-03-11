@@ -224,7 +224,7 @@ public class AStarSearch
 				}
 				else
 				{
-					System.out.println(currentVector + " != " + lastVector);
+//					System.out.println(currentVector + " != " + lastVector);
 				}
 				lastVector = currentVector;
 			}
