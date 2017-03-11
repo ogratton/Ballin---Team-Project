@@ -41,12 +41,12 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAKE, "Map"));
+		resources.setMap(new Map(1200, 650, tiles, Map.World.CAKE, "Map"));
 		new MapCosts(resources);
 		// Create and add players
-		Character player = new Character(Character.Class.WIZARD, 1);
-		Character player1 = new Character(Character.Class.ARCHER, 2);
-		Character player2 = new Character(Character.Class.HORSE, 0);
+		Character player = new Character(Character.Class.WIZARD, 1, "You!");
+		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");
+		Character player2 = new Character(Character.Class.HORSE, 0, "CPU2");
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
@@ -57,6 +57,14 @@ public class PlayGame {
 		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
 		ai2.start();
 		player2.setAI(ai2);
+		
+		for(int i = 3; i < 8; i++){
+			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
+			resources.addPlayerToList(character);
+			VeryBasicAI ai = new VeryBasicAI(resources, character);
+			character.setAI(ai);
+			ai.start();
+		}
 		
 		// Create game mode (starts physics and graphics)
 		//LastManStanding mode = new LastManStanding(resources, 5);
