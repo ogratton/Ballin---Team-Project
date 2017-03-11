@@ -41,7 +41,7 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAKE, "Map"));
+		resources.setMap(new Map(1200, 650, tiles, Map.World.CAKE, "Map"));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "You!");

@@ -164,7 +164,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		if (fullScreen) {
 
 			view.setFullScreen(false);
-			getContentPane().setPreferredSize(new Dimension(1200, 675));
+			getContentPane().setPreferredSize(new Dimension(1200, 625));
 			pack();
 			setLocationRelativeTo(null);
 			fullScreen = false;
