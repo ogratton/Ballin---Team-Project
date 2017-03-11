@@ -3,11 +3,8 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.io.IOException;
 
-import javax.swing.SwingUtilities;
-
 import ai.VeryBasicAI;
-import graphics.Graphics;
-import physics.Physics;
+import gamemodes.DebugMode;
 import resources.Character;
 import resources.Map;
 import resources.MapReader;
@@ -64,11 +61,9 @@ public class PathFindingTest
 
 		/* STARTING THINGS UP */
 		
-		Physics p = new Physics(resources, true);
-		p.start();
+		DebugMode mode = new DebugMode(resources);
+		mode.start();
+
 		ai.start();
-
-		SwingUtilities.invokeLater(new Graphics(resources, null, true));
-
 	}
 }
