@@ -108,6 +108,8 @@ public class Character extends Observable implements Collidable_Circle {
 	
 	private int requestId;
 	
+	private String name;
+	
 	public int getRequestId() {
 		return requestId;
 	}
@@ -120,7 +122,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Default character with default sprite
 	 */
 	public Character() {
-		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0);
+		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0, "Player");
 	}
 
 	/**
@@ -130,7 +132,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the class
 	 */
 	public Character(Class c) {
-		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0, "Player");
 	}
 
 	/**
@@ -142,10 +144,14 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the player number
 	 */
 	public Character(Class c, int playerNo) {
-		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, "Player");
+	}
+	
+	public Character(Class c, int playerNo, String name) {
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo) {
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo, String name) {
 		this(false, false, false, false, false, false, false, // control flags
 				mass, x, // x
 				y, // y
@@ -155,7 +161,7 @@ public class Character extends Observable implements Collidable_Circle {
 																									// (TODO:
 																									// calculate
 																									// this)
-				default_restitution, radius, direction, classType, playerNo);
+				default_restitution, radius, direction, classType, playerNo, name);
 		
 				// XXX set temp UUID for single player
 				// overwritten by networking
@@ -165,7 +171,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// master constructor. Any other constructors should eventually call this.
 	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
 			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
-			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo) {
+			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo, String name) {
 		// new Character();
 		this.up = up;
 		this.right = right;
@@ -218,6 +224,7 @@ public class Character extends Observable implements Collidable_Circle {
 		directionFrame = 0;
 		falling = false;
 		dead = false;
+		this.name = name;
 	}
 
 	public UUID getId() {
@@ -1344,6 +1351,8 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 		
 		bigArrow = resize(arrow, multiplier);
+		
+		currentFrame = bigRollingSprites.get(0);
 
 	}
 	
@@ -1428,5 +1437,17 @@ public class Character extends Observable implements Collidable_Circle {
 	public void setAI(VeryBasicAI ai) {
 		setAI(true);
 		this.ai = ai;
+	}
+	
+	public BufferedImage getCurrentFrame(){
+		return this.currentFrame;
+	}
+	
+	public BufferedImage getFirstFrame(){
+		return this.rollingSprites.get(0);
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 }
