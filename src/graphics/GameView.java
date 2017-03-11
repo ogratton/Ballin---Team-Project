@@ -161,10 +161,8 @@ public class GameView extends JPanel implements Observer {
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		// g.clearRect(0, 0, (int) currentWindowWidth, (int)
-		// currentWindowHeight);
+		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
-		
 		// draw the map sprite (this is the same throughout a game)
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
@@ -396,7 +394,7 @@ public class GameView extends JPanel implements Observer {
 			g.setColor(Color.RED);
 			g.drawString("you are winner", 650, 650);
 		}
-		
+
 		Toolkit.getDefaultToolkit().sync();
 	}
 

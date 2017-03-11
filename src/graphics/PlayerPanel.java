@@ -9,11 +9,22 @@ import javax.swing.JPanel;
 import resources.Character;
 import resources.Resources;
 
+/**
+ * Class to display a panel detailing all players in game
+ * @author George Kaye
+ *
+ */
+
 public class PlayerPanel extends JPanel {
 
 	private Resources resources;
 	private ArrayList<PlayerInfo> boxes;
 
+	/**
+	 * Create a new player panel
+	 * @param resources the resources object
+	 */
+	
 	public PlayerPanel(Resources resources) {
 
 		super();
@@ -34,9 +45,13 @@ public class PlayerPanel extends JPanel {
 			
 		}
 		
-		setPreferredSize(new Dimension(1920, 100));
+		setPreferredSize(new Dimension(1600, 100));
 		
 	}
+	
+	/**
+	 * Set the order of the players within the panel
+	 */
 	
 	public void setOrder(){
 		

@@ -103,7 +103,10 @@ public class Character extends Observable implements Collidable_Circle {
 	private boolean hasBomb = false; // holding bomb in hot potato
 	private boolean exploding = false; // bomb has just exploded
 	private int timeOfDeath = -1;
-
+	private int kills = 0;
+	private int deaths = 0;
+	private int suicides = 0;
+	
 	private int teamNumber;
 	
 	private int requestId;
@@ -1449,5 +1452,29 @@ public class Character extends Observable implements Collidable_Circle {
 	
 	public String getName(){
 		return this.name;
+	}
+
+	public int getKills() {
+		return this.kills;
+	}
+	
+	public int getDeaths(){
+		return this.deaths;
+	}
+	
+	public int getSuicides(){
+		return this.suicides;
+	}
+	
+	public void incrementKills(){
+		this.kills++;
+	}
+	
+	public void incrementSuicides(){
+		this.suicides++;
+	}
+	
+	public void incrementDeaths(){
+		this.deaths++;
 	}
 }

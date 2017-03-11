@@ -36,7 +36,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Map map;
 	private Timer timer;
 	private GameView view;
-	private PlayerPanel players;
+	private TopBar bar;
 	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
@@ -60,6 +60,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
+		super();
+		
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
@@ -73,7 +75,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		label.setText("hello");
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
-		players = new PlayerPanel(resources);
+		bar = new TopBar(resources);
 		
 		timer = new Timer(10, this);
 		timer.start();
@@ -111,7 +113,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 		
 		//add(label, BorderLayout.NORTH);
-		add(players, BorderLayout.NORTH);
+		add(bar, BorderLayout.NORTH);
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
@@ -134,7 +136,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 			repaint();
 			updateScores();
-			players.setOrder();
+			bar.setOrder();
+			bar.updateStats();
 		
 	}
 	

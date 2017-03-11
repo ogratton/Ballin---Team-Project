@@ -213,10 +213,13 @@ public class Physics extends Thread implements ActionListener {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
+					lastCollidedWith.incrementKills();
+					c.incrementDeaths();
 				} else {
 					// take 2 points away from c
 					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
 					c.incrementScore(-2);
+					c.incrementSuicides();
 				}
 				c.setLastCollidedWith(null, 0);
 				if (c.hasPowerup()) {
