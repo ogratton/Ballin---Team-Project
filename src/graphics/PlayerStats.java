@@ -27,11 +27,13 @@ public class PlayerStats extends JPanel {
 		stamina = new JLabel("Stamina: " + character.getStamina());
 		kda = new JLabel("K/D/S: " + character.getKills() + "/" + character.getDeaths() + "/" + character.getSuicides());
 		
+		stamina.setHorizontalAlignment(JLabel.CENTER);
+		kda.setHorizontalAlignment(JLabel.CENTER);
+		
 		stamina.setFont(setFont(20));
 		kda.setFont(setFont(20));
 		
-		stamina.setHorizontalAlignment(JLabel.CENTER);
-		kda.setHorizontalAlignment(JLabel.CENTER);
+		
 		
 		add(stamina);
 		add(kda);
