@@ -216,7 +216,7 @@ public class AStarSearch
 				Vector currentVector = new Vector(lastWaypoint, sparse.get(i));
 				if (lastVector != null && currentVector.equalDirection(lastVector))
 				{
-					System.out.println(currentVector + " ~= " + lastVector);
+//					System.out.println(currentVector + " ~= " + lastVector);
 					// remove the last waypoint from the list, as it is too similar to the current one
 					sparse.remove(i-1);
 					// we also need to move i back a step now
