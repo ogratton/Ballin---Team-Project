@@ -5,7 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -32,7 +32,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 	
 	private boolean isAI = false;
-	private VeryBasicAI ai;
+	private BasicAI ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -1430,11 +1430,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.isAI = isAI;
 	}
 
-	public VeryBasicAI getAI() {
+	public BasicAI getAI() {
 		return ai;
 	}
 
-	public void setAI(VeryBasicAI ai) {
+	public void setAI(BasicAI ai) {
 		setAI(true);
 		this.ai = ai;
 	}

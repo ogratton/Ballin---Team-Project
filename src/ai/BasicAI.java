@@ -19,7 +19,7 @@ import resources.Resources;
  * @author Oliver Gratton
  *
  */
-public class VeryBasicAI extends Thread
+public class BasicAI extends Thread
 {
 	private Character character;
 	private Resources resources;
@@ -85,7 +85,7 @@ public class VeryBasicAI extends Thread
 	 * 
 	 */
 
-	public VeryBasicAI(Resources resources, Character character)
+	public BasicAI(Resources resources, Character character)
 	{
 		this.character = character;
 		this.resources = resources;

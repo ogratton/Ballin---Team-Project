@@ -2,7 +2,7 @@ package gamemodes;
 
 import java.io.IOException;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 import ai.pathfinding.MapCosts;
 import resources.Character;
 import resources.Map;
@@ -51,17 +51,17 @@ public class PlayGame {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 		// Create AIs
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+		BasicAI ai1 = new BasicAI(resources, player1);
 		player1.setAI(ai1);
 		ai1.start();
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
+		BasicAI ai2 = new BasicAI(resources, player2);
 		ai2.start();
 		player2.setAI(ai2);
 		
 		for(int i = 3; i < 8; i++){
 			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
 			resources.addPlayerToList(character);
-			VeryBasicAI ai = new VeryBasicAI(resources, character);
+			BasicAI ai = new BasicAI(resources, character);
 			character.setAI(ai);
 			ai.start();
 		}

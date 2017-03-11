@@ -3,7 +3,7 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.io.IOException;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 import gamemodes.DebugMode;
 import resources.Character;
 import resources.Map;
@@ -25,14 +25,14 @@ public class PathFindingTest
 
 	private static boolean followSetPoints = false;
 	
-	private static void testPoirot(Character player, VeryBasicAI ai)
+	private static void testPoirot(Character player, BasicAI ai)
 	{
 		ai.setBehaviour("poirot"); // so we can feed it our own waypoints
 		ai.setDestinations(destinations);
 		player.setAI(ai);
 	}
 	
-	private static void testRoving(Character player, VeryBasicAI ai)
+	private static void testRoving(Character player, BasicAI ai)
 	{
 		ai.setBehaviour("roving");
 		player.setAI(ai);
@@ -70,7 +70,7 @@ public class PathFindingTest
 		player.setPlayerNumber(0); // must be 0 otherwise no debug drawn
 		resources.addPlayerToList(player);
 
-		VeryBasicAI ai = new VeryBasicAI(resources, player);
+		BasicAI ai = new BasicAI(resources, player);
 		if (followSetPoints)
 		{
 			testPoirot(player, ai);
