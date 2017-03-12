@@ -20,6 +20,7 @@ import resources.Character;
 import resources.Map;
 import resources.Map.World;
 import resources.Resources;
+import resources.Resources.Mode;
 
 /**
  * Contains everything on the screen that the player can see
@@ -35,6 +36,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Map map;
 	private Timer timer;
 	private GameView view;
+	private TopBar bar;
 	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
@@ -58,6 +60,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
+		super();
+		
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
@@ -71,6 +75,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		label.setText("hello");
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
+		bar = new TopBar(resources);
+		
 		timer = new Timer(10, this);
 		timer.start();
 
@@ -83,7 +89,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
-		//mapView = new MapView(resources);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -103,16 +108,22 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 
+		label.setHorizontalAlignment(JLabel.CENTER);
 		
 		
-		add(label, BorderLayout.NORTH);
-		//setUndecorated(true);
-		//setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
+		//add(label, BorderLayout.NORTH);
+		add(bar, BorderLayout.NORTH);
+		setUndecorated(true);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
+		add(view, BorderLayout.CENTER);
+		
 		toggleFullscreen();
 		
 		setVisible(true);
+		pack();
 	}
 
 	// All code below here is for testing
@@ -125,6 +136,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 			repaint();
 			updateScores();
+			bar.setOrder();
+			bar.updateStats();
 		
 	}
 	
@@ -134,6 +147,14 @@ public class GameComponent extends JFrame implements ActionListener {
 		for (Character c : scores) {
 			s += "Player " + c.getPlayerNumber() + ": " + c.getScore() + ", ";
 		}
+		if (resources.mode == Mode.HotPotato) {
+			for (Character c : resources.getPlayerList()) {
+				if (c.hasBomb()) {
+					s += "     Holding bomb: Player " + c.getPlayerNumber();
+				}
+			}
+		}
+		s += "     Stamina: " + resources.getPlayerList().get(0).getStamina();
 		label.setText(s);
 	}
 
@@ -146,7 +167,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		if (fullScreen) {
 
 			view.setFullScreen(false);
-			getContentPane().setPreferredSize(new Dimension(1200, 675));
+			getContentPane().setPreferredSize(new Dimension(1200, 625));
 			pack();
 			setLocationRelativeTo(null);
 			fullScreen = false;
@@ -182,6 +203,9 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.LAVA;
 			break;
 		case LAVA:
+			newWorld = Map.World.CAKE;
+			break;
+		case CAKE:
 			newWorld = Map.World.CAVE;
 			break;
 		}
@@ -236,10 +260,6 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(firstPlayerIndex).setUp(false);
 			} else if(key == downKey){
 				characters.get(firstPlayerIndex).setDown(false);
-			} else if(key == dashKey){
-				characters.get(firstPlayerIndex).setDashing(false);
-			} else if(key == blockKey){
-				characters.get(firstPlayerIndex).setBlocking(false);
 			}
 			
 			/*switch (key) {
@@ -283,8 +303,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			} else if(key == downKey){
 				characters.get(firstPlayerIndex).setDown(true);
 			} else if(key == dashKey){
-				System.out.println("dash");
-				characters.get(firstPlayerIndex).setDashing(true);
+				characters.get(firstPlayerIndex).requestDashing();
 			} else if(key == blockKey){
 				characters.get(firstPlayerIndex).setBlocking(true);
 			} else if(key == KeyEvent.VK_ESCAPE){

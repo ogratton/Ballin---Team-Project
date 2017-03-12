@@ -37,7 +37,7 @@ public class GameView extends JPanel implements Observer {
 	private HashMap<Character, Point> points;
 	private double ordinaryPlayerSize = 50;
 	private double fullScreenPlayerSize;
-	private double ordinaryMapHeight = 675;
+	private double ordinaryMapHeight = 650;
 	private double fullScreenMapHeight;
 	private double ordinaryMapWidth = 1200;
 	private double fullScreenMapWidth;
@@ -46,7 +46,7 @@ public class GameView extends JPanel implements Observer {
 	private double currentPlayerSize;
 	private double currentMapHeight;
 	private double currentMapWidth;
-	private double currentWindowHeight = 675;
+	private double currentWindowHeight = 650;
 	private double currentWindowWidth = 1200;
 	private double multiplier;
 	private double currentMultiplier = 1;
@@ -101,7 +101,7 @@ public class GameView extends JPanel implements Observer {
 			}
 		}
 
-		setPreferredSize(new Dimension(1200, 675));
+		setPreferredSize(new Dimension(1200, 625));
 
 	}
 
@@ -161,10 +161,8 @@ public class GameView extends JPanel implements Observer {
 		super.paintComponent(g);
 		// clear the screen to prepare for the next frame
 
-		// g.clearRect(0, 0, (int) currentWindowWidth, (int)
-		// currentWindowHeight);
+		g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
-		
 		// draw the map sprite (this is the same throughout a game)
 
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
@@ -375,9 +373,8 @@ public class GameView extends JPanel implements Observer {
 
 		for (Powerup p : resources.getPowerupList()) {
 			if (p.isActive()) {
-				// Don't know why I need to take 3 radiuses away instead of 1
-				g.drawImage(p.getSprite(), (int) ((p.getX() - 3 * p.getRadius()) * currentMultiplier),
-						(int) ((p.getY() - 3 * p.getRadius()) * currentMultiplier), this);
+				g.drawImage(p.getSprite(), (int) ((p.getX() - p.getRadius()) * currentMultiplier),
+						(int) ((p.getY() - p.getRadius()) * currentMultiplier + currentOffset), this);
 			}
 
 		}
@@ -394,8 +391,10 @@ public class GameView extends JPanel implements Observer {
 		if (resources.gamemode.isGameOver()) {
 			g.setColor(Color.YELLOW);
 			g.fillRect(600, 200, 500, 500);
+			g.setColor(Color.RED);
+			g.drawString("you are winner", 650, 650);
 		}
-		
+
 		Toolkit.getDefaultToolkit().sync();
 	}
 

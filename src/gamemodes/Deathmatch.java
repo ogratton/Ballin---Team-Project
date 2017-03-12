@@ -9,6 +9,7 @@ import physics.Physics;
 import resources.Character;
 import resources.Powerup;
 import resources.Resources;
+import resources.Resources.Mode;
 
 /**
  * Play until the timer runs out.
@@ -18,10 +19,11 @@ import resources.Resources;
  */
 public class Deathmatch extends Thread implements GameModeFFA {
 
-	private boolean gameOver = false;
 	private Character winner;
 	private Resources resources;
 	private int timer = 30;
+	
+	private String victoryMusic = "grandma";
 
 	public Deathmatch(Resources resources) {
 		this.resources = resources;
@@ -29,6 +31,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Set up game
 		setAllLives(-1);
 		randomRespawn();
+		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 	}
 
@@ -47,14 +50,17 @@ public class Deathmatch extends Thread implements GameModeFFA {
 				if (timer % 5 == 0) {
 					spawnPowerup();
 				}
-				timer--;
 				Thread.sleep(1000);
+				timer--;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		// Game has ended
 		p.pause();
+		// TODO pause/change music too
+		resources.getMusicPlayer().changePlaylist(victoryMusic);
+		resources.getMusicPlayer().resumeMusic();
 		System.out.println("WE HAVE A WINNER");
 		getWinner();
 		System.out.println(

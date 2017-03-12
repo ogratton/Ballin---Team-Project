@@ -1,17 +1,20 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import audio.AudioFile;
 import audio.MusicPlayer;
-import resources.Resources;
+import graphics.sprites.Sprite;
+import resources.Map;
 
-public abstract class BaseMenu {
+public abstract class BaseMenu extends MenuItems{
 	
 	public static int getScreenWidth() {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
@@ -21,76 +24,109 @@ public abstract class BaseMenu {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 	
-	 static JFrame createFrame(){
+	static JFrame createFrame(){
 		JFrame frame = new JFrame();
-		frame.setSize(UIRes.width, UIRes.height);
+		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation((getScreenWidth() - frame.getWidth()) / 2, (getScreenHeight() - frame.getHeight()) / 2);
+		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
+		frame.setLayout(new BorderLayout());
+		frame.setContentPane(map);
+		frame.setLayout(new FlowLayout());
+		frame.setSize(width, height);
+		customiseMainPanel(frame);
+		frame.add(mainPanel);
 		return frame;
 	}
 	
+	static void customiseMainPanel(JFrame frame){
+		customiseAllPanels(frame);
+		mainPanel.setOpaque(false);
+		mainPanel.add(startPanel);
+		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+		resources.setMusicPlayer(musicPlayer);
+		musicPlayer.start();
+	}
+	
+	static void customisePanel(JPanel panel, JFrame frame){
+		panel.setOpaque(false);
+		panel.setPreferredSize(frame.getSize());
+		
+	}
+	
+	static void customiseAllPanels(JFrame frame){
+		customisePanel(startPanel, frame);
+		customisePanel(optionsPanel, frame);
+
+	}
+	
+	JPanel addSpriteIcon(JPanel panel, int x){
+		panel.add(getSpriteIcon(x));
+		return panel;
+	}
+	
 	JPanel addGameTitle(JPanel panel){
-		JLabel titleLabel = UIRes.menuItems.getLabel("Ballin'");
+		JLabel titleLabel = getLabel("Ballin'");
 		addSpace(panel, 0, 0.1);
 		panel.add(titleLabel);
 		return panel;
 	}
 
 	JPanel addStartSingleplayerButton(JPanel panel){
-		JButton startButton = UIRes.menuItems.getPlaySingleplayerButton();
+		JButton startButton = getPlaySingleplayerButton();
 		addSpace(panel, 0, 0.1);
-		panel.add(startButton);
+		getButtonAndIcon(panel,startButton);
 		return panel;
 	}
 	
 	JPanel addStartMultiplayerButton(JPanel panel){
-		JButton startButton = UIRes.menuItems.getPlayMultiplayerButton();
+		JButton startButton = getPlayMultiplayerButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(startButton);
+		getButtonAndIcon(panel,startButton);
 		return panel;
 	}
 	
 	JPanel addOptionsButton(JPanel panel){
-		JButton optionsButton = UIRes.menuItems.getOptionsButton();
+		JButton optionsButton = getOptionsButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(optionsButton);
+		getButtonAndIcon(panel,optionsButton);
 		return panel;
 	}
 
 	JPanel addExitButton(JPanel panel){
-		JButton exitButton = UIRes.menuItems.getExitButton();
+		JButton exitButton = getExitButton();
 		addSpace(panel, 0, 0.02);
-		panel.add(exitButton);
+		getButtonAndIcon(panel,exitButton);
 		return panel;
 	}
 	
 	JPanel addSpace(JPanel panel, double widthRatio, double heightRatio){
-		panel.add(Box.createRigidArea(new Dimension((int) (UIRes.width * widthRatio), (int) (UIRes.height * heightRatio))));
+		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
 	}
 	
 	JPanel addUsernameButton(JPanel panel){
-		JLabel usernameLabel = UIRes.menuItems.getLabel("Welcome, Player!");
-		JButton usernameButton = UIRes.menuItems.getUsername(usernameLabel);
+		JLabel usernameLabel = getLabel("Welcome, Player!");
+		JButton usernameButton = getUsername(usernameLabel);
 		panel.add(usernameLabel,0);
 		addSpace(panel, 0, 0.02);
-		panel.add(usernameButton);
+		getButtonAndIcon(panel,usernameButton);
 		return panel;
 	}
 	
 	JPanel addMusicSlider(JPanel panel){
-		JLabel musicLabel = UIRes.menuItems.getLabel("Music Volume");
-		JSlider musicSlider = UIRes.menuItems.getMusicSlider();
-		addSpace(panel, 0, 0.05);
+		JLabel musicLabel = getLabel("Music Volume");
+		JSlider musicSlider = getMusicSlider();
+		addSpace(panel, 0, 0.03);
 		panel.add(musicLabel);
 		addSpace(panel, 0, 0.01);
 		panel.add(musicSlider);
 		return panel;
 	}
 	 JPanel addAudioSlider(JPanel panel){
-		JLabel audioLabel = UIRes.menuItems.getLabel("Audio Volume");
-		JSlider audioSlider = UIRes.menuItems.getAudioSlider();
-		addSpace(panel, 0, 0.05);
+		JLabel audioLabel = getLabel("Audio Volume");
+		JSlider audioSlider = getAudioSlider();
+		addSpace(panel, 0, 0.03);
 		panel.add(audioLabel);
 		addSpace(panel, 0, 0.01);
 		panel.add(audioSlider);
@@ -98,26 +134,26 @@ public abstract class BaseMenu {
 	 }
 	 
 	 JPanel addControlsPanel(JPanel panel){
-		 JPanel controlPanel = UIRes.menuItems.getControlsPanel();
-		 JLabel label = UIRes.menuItems.getLabel("Controls");
-		 addSpace(panel, 0, 0.05);
+		 JPanel controlPanel = getControlsPanel();
+		 JLabel label = getLabel("Controls");
+		 addSpace(panel, 0, 0.03);
 		 panel.add(label);
-		 addSpace(panel, 0, 0.05);
+		 addSpace(panel, 0, 0.01);
 		 panel.add(controlPanel);
 		 return panel;
 	 }
 	 
 	 JPanel addResetControlsButton(JPanel panel){
-		 JButton resetButton = UIRes.menuItems.getResetControlsButton();
+		 JButton resetButton = getResetControlsButton();
 		 addSpace(panel, 0, 0.01);
-		 panel.add(resetButton);
+		 getButtonAndIcon(panel,resetButton);
+		 addSpace(panel, 0, 0.01);
 		 return panel;
 	 }
 	 
 	 JPanel addReturnButton(JPanel panel){
-		 JButton backButton = UIRes.menuItems.getBackToStartMenuButton();
-		 addSpace(panel, 0, 0.01);
-		 panel.add(backButton);
+		 JButton backButton = getBackToStartMenuButton();
+		 getButtonAndIcon(panel,backButton);
 		 return panel;
 	 }
 	

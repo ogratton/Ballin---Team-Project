@@ -161,7 +161,7 @@ public void run() {
 						e.printStackTrace();
 					}
 					
-					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
+					resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
 					new MapCosts(resources);
     				cModel.setResources(resources);
     				

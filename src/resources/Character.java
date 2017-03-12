@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
+
+import ai.BasicAI;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -25,8 +28,11 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK;
+		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 	}; // add to this as we develop more classes.
+	
+	private boolean isAI = false;
+	private BasicAI ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -94,10 +100,18 @@ public class Character extends Observable implements Collidable_Circle {
 	private Power lastPowerup;
 	private int lastPowerupTime;
 	private boolean hasPowerup = false;
-
+	private boolean hasBomb = false; // holding bomb in hot potato
+	private boolean exploding = false; // bomb has just exploded
+	private int timeOfDeath = -1;
+	private int kills = 0;
+	private int deaths = 0;
+	private int suicides = 0;
+	
 	private int teamNumber;
 	
 	private int requestId;
+	
+	private String name;
 	
 	public int getRequestId() {
 		return requestId;
@@ -111,7 +125,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Default character with default sprite
 	 */
 	public Character() {
-		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0);
+		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0, "Player");
 	}
 
 	/**
@@ -121,7 +135,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the class
 	 */
 	public Character(Class c) {
-		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0, "Player");
 	}
 
 	/**
@@ -133,10 +147,14 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the player number
 	 */
 	public Character(Class c, int playerNo) {
-		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, "Player");
+	}
+	
+	public Character(Class c, int playerNo, String name) {
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo) {
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo, String name) {
 		this(false, false, false, false, false, false, false, // control flags
 				mass, x, // x
 				y, // y
@@ -146,7 +164,7 @@ public class Character extends Observable implements Collidable_Circle {
 																									// (TODO:
 																									// calculate
 																									// this)
-				default_restitution, radius, direction, classType, playerNo);
+				default_restitution, radius, direction, classType, playerNo, name);
 		
 				// XXX set temp UUID for single player
 				// overwritten by networking
@@ -156,7 +174,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// master constructor. Any other constructors should eventually call this.
 	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
 			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
-			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo) {
+			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo, String name) {
 		// new Character();
 		this.up = up;
 		this.right = right;
@@ -209,6 +227,7 @@ public class Character extends Observable implements Collidable_Circle {
 		directionFrame = 0;
 		falling = false;
 		dead = false;
+		this.name = name;
 	}
 
 	public UUID getId() {
@@ -1335,6 +1354,8 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 		
 		bigArrow = resize(arrow, multiplier);
+		
+		currentFrame = bigRollingSprites.get(0);
 
 	}
 	
@@ -1368,5 +1389,92 @@ public class Character extends Observable implements Collidable_Circle {
 	
 	public boolean getBurning() {
 		return burning;
+	}
+
+	public boolean hasBomb() {
+		return hasBomb;
+	}
+
+	public void hasBomb(boolean hasBomb) {
+		this.hasBomb = hasBomb;
+	}
+
+	public void setExploding(boolean exploding) {
+		this.exploding = exploding;
+		if (exploding) {
+			dead = true;
+			hasBomb = false;
+			decrementLives();
+		}
+	}
+
+	public boolean isExploding() {
+		return this.exploding;
+	}
+
+	public int getTimeOfDeath() {
+		return timeOfDeath;
+	}
+
+	public void setTimeOfDeath(int timeOfDeath) {
+		this.timeOfDeath = timeOfDeath;
+	}
+
+	public void requestDashing() {
+		System.out.println(stamina + ", " + (stamina >= dashStamina) + ", " + dashTimer);
+		setDashing((stamina >= dashStamina));
+	}
+
+	public boolean isAI() {
+		return isAI;
+	}
+
+	public void setAI(boolean isAI) {
+		this.isAI = isAI;
+	}
+
+	public BasicAI getAI() {
+		return ai;
+	}
+
+	public void setAI(BasicAI ai) {
+		setAI(true);
+		this.ai = ai;
+	}
+	
+	public BufferedImage getCurrentFrame(){
+		return this.currentFrame;
+	}
+	
+	public BufferedImage getFirstFrame(){
+		return this.rollingSprites.get(0);
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+
+	public int getKills() {
+		return this.kills;
+	}
+	
+	public int getDeaths(){
+		return this.deaths;
+	}
+	
+	public int getSuicides(){
+		return this.suicides;
+	}
+	
+	public void incrementKills(){
+		this.kills++;
+	}
+	
+	public void incrementSuicides(){
+		this.suicides++;
+	}
+	
+	public void incrementDeaths(){
+		this.deaths++;
 	}
 }

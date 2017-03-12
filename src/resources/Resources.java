@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.UUID;
 
 import ai.pathfinding.Line;
+import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
@@ -22,7 +23,8 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	
+	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
+	public Mode mode;
 	public GameModeFFA gamemode;
 
 	// keybindings
@@ -58,14 +60,12 @@ public class Resources {
 	// puck used in hockey game mode, using character class to make things easy
 	private Puck puck;
 	// are we playing a hockey game?
-	private boolean isHockey = false;
 	private Team[] teams;
 
 	// map
 	private Map map;
 
-	private int[][] proxMask; // how many tiles away from danger
-	private int[][] costMask; // cost for AI to pathfind there
+	private MusicPlayer musicPlayer;
 
 	// client ID
 	private UUID id;
@@ -515,14 +515,6 @@ public class Resources {
 		p.setActive(false);
 	}
 
-	public boolean isHockey() {
-		return isHockey;
-	}
-
-	public void setHockey(boolean isHockey) {
-		this.isHockey = isHockey;
-	}
-
 	public Puck getPuck() {
 		return puck;
 	}
@@ -648,8 +640,14 @@ public class Resources {
 		return null;
 	}
 
-	// public static MapReader mapReader = new MapReader();
-	// public static Map.Tile[][] map1 =
-	// mapReader.readMap("./resources/maps/map1.csv");
+	public MusicPlayer getMusicPlayer()
+	{
+		return musicPlayer;
+	}
+	
+	public void setMusicPlayer(MusicPlayer mp)
+	{
+		this.musicPlayer = mp;
+	}
 
 }
