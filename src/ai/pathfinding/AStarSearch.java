@@ -171,6 +171,10 @@ public class AStarSearch
 	 */
 	private LinkedList<Point> sparsifyPath(LinkedList<Point> dense, int gap)
 	{
+		if (dense.isEmpty())
+		{
+			return dense;
+		}
 		LinkedList<Point> sparse = new LinkedList<Point>();
 		Point destination = dense.getLast();
 		int init_size = dense.size();
