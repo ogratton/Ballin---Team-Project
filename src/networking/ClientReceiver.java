@@ -63,9 +63,9 @@ public void run() {
     try {
     	while(message.getCommand() != Command.QUIT) {
     		message = (Message)server.readUnshared();
-    		if(message.getObject().getClass().getName() == "networking.GameData" && ((GameData)message.getObject()).getMoves() != null) {
-    			System.out.println("Client: " + ((GameData)message.getObject()).getMoves().size());
-    		}
+//    		if(message.getObject().getClass().getName() == "networking.GameData" && ((GameData)message.getObject()).getMoves() != null) {
+//    			System.out.println("Client: " + ((GameData)message.getObject()).getMoves().size());
+//    		}
     		
     		switch(message.getCommand()) {
     		case SESSION:
@@ -216,6 +216,7 @@ public void run() {
         				Queue<NetworkMove> sentClientMoves = resources.getSentClientMoves();
         				//System.out.println("Got Here");
         				while(!moves.isEmpty() && moves != null) {
+        					System.out.println("Move size: " + moves.size());
         					for(int i=0; i<players.size(); i++) {
         						character = players.get(i);
         						if(moves.peek().id != null && moves.peek().id.equals(character.getId())) {
