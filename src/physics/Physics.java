@@ -420,7 +420,7 @@ public class Physics extends Thread implements ActionListener {
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
 		// XXX play SFX
-		boing.play();
+//		boing.play();
 		
 	}
 	

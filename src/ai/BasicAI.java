@@ -38,7 +38,7 @@ public class BasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private static final double BRAKING_CONSTANT = 50; // how many ms to brake for. 40-50 seems good
+	private static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
 	private static final double FUZZINESS = 30;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
 	private static final long TICK = 70; // loop every <tick>ms
