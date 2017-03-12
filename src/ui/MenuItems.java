@@ -165,7 +165,8 @@ public class MenuItems extends UIRes {
 			PlayGame.start(resources);
 			// button sound effect
 			audioPlayer.play();
-			// XXX change the song
+			// change the song
+			// TODO volume defined by user is not kept here...
 			resources.getMusicPlayer().changePlaylist("thirty");
 			resources.getMusicPlayer().resumeMusic();
 		});

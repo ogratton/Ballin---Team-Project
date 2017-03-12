@@ -207,7 +207,7 @@ public class MusicPlayer extends Thread
 		{
 			running = true;
 			paused = false;
-			musicFiles.get(currentSongIndex).resume(paused_at);
+			musicFiles.get(currentSongIndex).resume(paused_at, gain);
 			paused_at = 0;
 			System.out.println("Now Playing: " + nowPlaying());
 		}
@@ -244,7 +244,7 @@ public class MusicPlayer extends Thread
 	}
 
 	/**
-	 * @return urrent absolute gain value
+	 * @return current absolute gain value
 	 */
 	public float getGain()
 	{
