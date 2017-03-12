@@ -13,7 +13,13 @@ import resources.Character;
 import resources.Map.Tile;
 import resources.Resources;
 
-public class VeryBasicAI extends Thread
+/**
+ * An AI that takes control of a Character
+ * and dynamically switches between a series of behaviours
+ * @author Oliver Gratton
+ *
+ */
+public class BasicAI extends Thread
 {
 	private Character character;
 	private Resources resources;
@@ -32,7 +38,7 @@ public class VeryBasicAI extends Thread
 	private Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	private static final double BRAKING_CONSTANT = 30; // 40 seems to be good
+	private static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
 	private static final double FUZZINESS = 30;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
 	private static final long TICK = 70; // loop every <tick>ms
@@ -79,7 +85,7 @@ public class VeryBasicAI extends Thread
 	 * 
 	 */
 
-	public VeryBasicAI(Resources resources, Character character)
+	public BasicAI(Resources resources, Character character)
 	{
 		this.character = character;
 		this.resources = resources;
@@ -95,7 +101,7 @@ public class VeryBasicAI extends Thread
 
 		lastWaypoint = getCurrentTileCoords();
 		
-		// TODO do stuff with this
+		// XXX debug
 		debug = character.getPlayerNumber() == 0 ? true : false;
 	}
 
@@ -451,14 +457,6 @@ public class VeryBasicAI extends Thread
 		}
 
 	}
-
-	/**
-	 * @return The type of tile the AI is standing on
-	 */
-	//	private Tile getCurrentTile()
-	//	{
-	//		return resources.getMap().tileAt(character.getX(), character.getY());
-	//	}
 	
 	/**
 	 * @return the AI's location in character coords (not tiles)

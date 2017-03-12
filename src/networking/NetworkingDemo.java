@@ -42,15 +42,13 @@ public class NetworkingDemo {
 			
 		}
 		
-		Map map = new Map(1200, 675, tiles, Map.World.CAVE, "");
+		Map map = new Map(1200, 650, tiles, Map.World.CAVE, "");
 		
 		
 		Character newPlayer;
 		Resources resources = new Resources();
 		resources.setMap(map);
 		new MapCosts(resources);
-		
-
 		
 		
 		List<ClientInformation> clients = session.getAllClients();

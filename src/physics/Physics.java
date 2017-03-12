@@ -7,6 +7,7 @@ import java.util.Date;
 
 import javax.swing.Timer;
 
+import ai.BasicAI;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import resources.Character;
@@ -108,12 +109,26 @@ public class Physics extends Thread implements ActionListener {
 			}
 			
 			// for networking
-			NetworkMove m = new NetworkMove();
-			m.x = c.getX();
-			m.y = c.getY();
-			m.t = new Date();
-			m.id = resources.getId();
-			resources.getClientMoves().add(m);
+			if(client) {
+				NetworkMove m = new NetworkMove();
+				m.x = c.getX();
+				m.y = c.getY();
+				m.t = new Date();
+				m.isBlocking = c.isBlocking();
+				m.isDashing = c.isDashing();
+				m.isDead = c.isDead();
+				m.isFalling = c.isFalling();
+				m.id = resources.getId();
+				
+				if(resources.getClientMoves().size() < 1) {
+					resources.getClientMoves().add(m);
+				}
+				else {
+					if(!(resources.getClientMoves().peekLast().x == m.x && resources.getClientMoves().peekLast().y == m.y)) {
+						resources.getClientMoves().add(m);
+					}
+				}
+			}
 		}
 	}
 
@@ -127,7 +142,10 @@ public class Physics extends Thread implements ActionListener {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
 				if(!client) resources.getMap().spawn(c);
-				
+				if (c.isAI()) {
+					BasicAI ai = new BasicAI(resources, c);
+					ai.start();
+				}
 			}
 		}
 		
@@ -209,10 +227,13 @@ public class Physics extends Thread implements ActionListener {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
+					lastCollidedWith.incrementKills();
+					c.incrementDeaths();
 				} else {
 					// take 2 points away from c
 					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
 					c.incrementScore(-2);
+					c.incrementSuicides();
 				}
 				c.setLastCollidedWith(null, 0);
 				if (c.hasPowerup()) {
@@ -413,7 +434,7 @@ public class Physics extends Thread implements ActionListener {
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
 		// XXX play SFX
-		boing.play();
+//		boing.play();
 		
 	}
 	

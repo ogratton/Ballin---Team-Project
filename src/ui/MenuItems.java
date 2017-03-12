@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -14,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.security.SecureRandom;
 import java.util.Iterator;
-import java.util.Random;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,17 +29,17 @@ import graphics.sprites.Sprite.SheetType;
 import networking.Client;
 import networking.Port;
 
-public class MenuItems extends UIRes{
-	
-	void allignToCenter(JComponent comp){
+public class MenuItems extends UIRes {
+
+	void allignToCenter(JComponent comp) {
 		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
-	
-	void setCustomFont(JComponent comp, int size){
+
+	void setCustomFont(JComponent comp, int size) {
 		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -51,178 +49,196 @@ public class MenuItems extends UIRes{
 		comp.setFont(customFont);
 	}
 	
-	void customiseLabel(JComponent comp){
-		setCustomFont(comp, (int)(labelSize.height * labelRatio));
-		allignToCenter(comp);
+	Color getRandomColour(){
+		SecureRandom rand = new SecureRandom();
+		int r = rand.nextInt(255);
+		int g = rand.nextInt(255);
+		int b = rand.nextInt(255);
+		Color color = new Color(r,g,b);
+		return color;
 	}
-	
-	void customiseComponent(JComponent comp, Dimension size, double ratio){
+
+	void customiseLabel(JComponent comp) {
+		setCustomFont(comp, (int) (labelSize.height * labelRatio));
+		allignToCenter(comp);
+		comp.setForeground(Color.BLACK);
+	}
+
+	void customiseComponent(JComponent comp, Dimension size, double ratio) {
 		comp.setMaximumSize(size);
-		setCustomFont(comp, (int)(size.height * ratio));
+		setCustomFont(comp, (int) (size.height * ratio));
 		allignToCenter(comp);
+		comp.setOpaque(false);
+		comp.setForeground(Color.BLACK);
 	}
-	
-	void customiseButton(JButton button){
+
+	void customiseButton(JButton button, boolean addListener) {
 		customiseComponent(button, buttonSize, buttonRatio);
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
 		button.setOpaque(false);
 		button.setFocusable(false);
-		button.addMouseListener(new MouseListener(){
+		button.setForeground(Color.BLACK);
+		if (addListener) {
+			button.addMouseListener(new MouseListener() {
 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					// TODO Auto-generated method stub
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				button.setForeground(Color.BLUE);
-				
-			}
+				}
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				button.setForeground(Color.BLACK);
-				
-			}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					button.setForeground(getRandomColour());
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+				}
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
+				@Override
+				public void mouseExited(MouseEvent e) {
+					button.setForeground(Color.BLACK);
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
+		}
 	}
-	
-	void customiseSlider(JSlider slider){
+
+	void customiseSlider(JSlider slider) {
 		customiseComponent(slider, buttonSize, sliderRatio);
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(10);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 	}
-	
-	void switchPanel(JPanel newPanel){
+
+	void switchPanel(JPanel newPanel) {
 		mainPanel.removeAll();
 		mainPanel.add(newPanel);
 		newPanel.setPreferredSize(mainPanel.getSize());
 		mainPanel.revalidate();
 		mainPanel.repaint();
 	}
-	
-	JLabel getLabel(String text){
+
+	JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
 		customiseLabel(label);
 		return label;
 	}
-	
-	JLabel getSpriteIcon(int x){
-		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x, SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+
+	JLabel getSpriteIcon(int x) {
+		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
+				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
-	
-	JPanel getButtonAndIcon(JPanel panel, JButton button){
+
+	JPanel getButtonAndIcon(JPanel panel, JButton button) {
 		JPanel buttonPanel = new JPanel();
 		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);
-		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(getSpriteIcon(x));
 		buttonPanel.add(button);
 		buttonPanel.add(getSpriteIcon(x));
+		buttonPanel.setOpaque(false);
 		panel.add(buttonPanel);
 		return panel;
 	}
-	
-	JButton getPlaySingleplayerButton(){
+
+	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
-		customiseButton(startButton);
+		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
 			// button sound effect
 			audioPlayer.play();
-			// XXX change the song
+			// change the song
+			// TODO volume defined by user is not kept here...
 			resources.getMusicPlayer().changePlaylist("thirty");
 			resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}
-	
-	JButton getPlayMultiplayerButton(){
+
+	JButton getPlayMultiplayerButton() {
 		JButton startButton = new JButton("Start Multiplayer Game");
-		customiseButton(startButton);
+		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
-			String input = (String)JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server", JOptionPane.PLAIN_MESSAGE);
-			if (input != null){
-				connectToServer(username, "" + Port.number, host);				
-			}
-			else{
+			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
+				connectToServer(username, "" + Port.number, host);
+			} else {
 				frame.dispose();
 			}
 		});
 		return startButton;
 	}
-	
-	void connectToServer(String username, String port, String host){
+
+	void connectToServer(String username, String port, String host) {
 		Client client = new Client(username, port, host);
 		client.start();
 	}
-	
-	JButton getBackToStartMenuButton(){
+
+	JButton getBackToStartMenuButton() {
 		JButton button = new JButton("Back");
-		customiseButton(button);
+		customiseButton(button, true);
 		button.addActionListener(e -> {
 			switchPanel(startPanel);
 		});
 		return button;
 	}
-	
-	JButton getOptionsButton(){
+
+	JButton getOptionsButton() {
 		JButton optionsButton = new JButton("Options");
-		customiseButton(optionsButton);
+		customiseButton(optionsButton, true);
 		optionsButton.addActionListener(e -> {
 			switchPanel(optionsPanel);
 		});
 		return optionsButton;
 	}
-	
-	JButton getExitButton(){
+
+	JButton getExitButton() {
 		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(e -> {
 			System.exit(0);
 		});
-		customiseButton(exitButton);
+		customiseButton(exitButton, true);
 		return exitButton;
 	}
-	
-	JButton getUsername(JLabel label){
+
+	JButton getUsername(JLabel label) {
 		JButton usernameButton = new JButton("Change username");
-		customiseButton(usernameButton);		
-		usernameButton.addActionListener(e ->{
+		customiseButton(usernameButton, true);
+		usernameButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
-			String input = (String)JOptionPane.showInputDialog(frame, "Enter your username:", "Input username",JOptionPane.PLAIN_MESSAGE);
-			if(input != null){
+			String input = (String) JOptionPane.showInputDialog(frame, "Enter your username:", "Input username",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
 				username = input;
 				label.setText("Welcome, " + username + "!");
-			}
-			else{
+			} else {
 				frame.dispose();
 			}
 		});
 		return usernameButton;
 	}
-	
-	JSlider getMusicSlider(){
+
+	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
 		musicSlider.addChangeListener(e -> {
@@ -234,8 +250,8 @@ public class MenuItems extends UIRes{
 		});
 		return musicSlider;
 	}
-	
-	JSlider getAudioSlider(){
+
+	JSlider getAudioSlider() {
 		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(audioSlider);
 		audioSlider.addChangeListener(e -> {
@@ -247,29 +263,33 @@ public class MenuItems extends UIRes{
 		});
 		return audioSlider;
 	}
-	
-	JPanel getControlButton(String buttonLabel, String buttonName, String name){
-		JPanel panel = new JPanel();	
+
+	JPanel getControlButton(String buttonLabel, String buttonName, String name) {
+		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension((int)(width * 0.85), (int)(height * 0.1)));
+		panel.setOpaque(false);
 		GridLayout controlsGrid = new GridLayout(0, 2);
 		panel.setLayout(controlsGrid);
 		panel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		
+
 		JLabel label = getLabel(buttonLabel);
 		
 		JButton button = new JButton(buttonName);
-		customiseButton(button);
+		customiseButton(button, false);
+		button.setFocusable(true);
 		button.setName(name);
 		setKeyRebindable(button);
 		controlsList.add(button.getText());
 		buttonsList.add(button);
-		
+
 		panel.add(label);
 		panel.add(button);
 		return panel;
 	}
-	
-	JPanel getControlsPanel(){
+
+	JPanel getControlsPanel() {
 		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension((int)(width*0.85), (int)(height*0.32)));
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
@@ -279,10 +299,11 @@ public class MenuItems extends UIRes{
 		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(), "right"));
 		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase(), "dash"));
 		panel.add(getControlButton("Block:", KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase(), "block"));
-		
+
+		panel.setOpaque(false);
 		return panel;
 	}
-	
+
 	void resetButton(JButton button) {
 		if (button.getName().equals("up")) {
 			resources.setUp(resources.getDefaultUp());
@@ -304,17 +325,17 @@ public class MenuItems extends UIRes{
 			button.setText(KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase());
 		}
 	}
-	
-	JButton getResetControlsButton(){
+
+	JButton getResetControlsButton() {
 		JButton resetControlsButton = new JButton("Reset controls");
-		customiseButton(resetControlsButton);
+		customiseButton(resetControlsButton, true);
 		resetControlsButton.addActionListener(e -> {
 			Iterator<JButton> i = buttonsList.iterator();
-			while(i.hasNext()){
+			while (i.hasNext()) {
 				JButton button = i.next();
 				resetButton(button);
 			}
-		
+
 			controlsList.removeAll(controlsList);
 			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
 			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
@@ -322,11 +343,11 @@ public class MenuItems extends UIRes{
 			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
 			controlsList.add(("" + resources.getDefaultDash()).toUpperCase());
 			controlsList.add(("" + resources.getDefaultBlock()).toUpperCase());
-			
+
 		});
 		return resetControlsButton;
 	}
-	
+
 	void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
@@ -402,12 +423,12 @@ public class MenuItems extends UIRes{
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-
+				button.setForeground(getRandomColour());
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				button.setForeground(Color.BLACK);
 			}
 
 			@Override
@@ -417,7 +438,6 @@ public class MenuItems extends UIRes{
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
 			}
 
 		});

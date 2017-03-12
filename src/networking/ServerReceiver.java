@@ -154,13 +154,15 @@ public class ServerReceiver extends Thread {
 					  
 					  data = (GameData)message.getObject();
 					  Resources res = resourcesMap.get(session.getId());
-					  CharacterInfo info = ((GameData)message.getObject()).getInfo();
-					  Queue<resources.NetworkMove> moves = ((GameData)message.getObject()).getMoves();
+					  Queue<resources.NetworkMove> moves = data.getMoves();
 					  resources.NetworkMove move;
+					  System.out.println("No. of Moves Server: " + moves.size());
 					  while(!moves.isEmpty()) {
 						  for(int i=0; i<res.getPlayerList().size(); i++) {
 							  resources.Character c = res.getPlayerList().get(i);
-							  
+							  if(moves.isEmpty()) {
+								  break;
+							  }
 							  if(moves.peek().id.equals(c.getId())) {
 								 move = moves.remove();
 								 c.setX(move.x);
