@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import ai.pathfinding.MapCosts;
+import gamemodes.Deathmatch;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -165,12 +166,8 @@ public void run() {
 					new MapCosts(resources);
     				cModel.setResources(resources);
     				
-    				Physics p = new Physics(resources, true);
-    				p.start();
-    				
-    				// create ui thread
-    				Graphics g = new Graphics(resources, updater, false);
-    				g.start();
+    				Deathmatch mode = new Deathmatch(resources, true);
+    				mode.start();
     				
     				break;
     			case UPDATE:
@@ -178,7 +175,7 @@ public void run() {
     				if(cModel.getResources() != null) {
     					gameData = (GameData)message.getObject();
         				//List<CharacterInfo> charactersList = gameData.getCharactersList();
-    					Queue<NetworkMove> moves = gameData.getMoves();
+    					LinkedList<NetworkMove> moves = (LinkedList<NetworkMove>)gameData.getMoves();
         				resources = cModel.getResources();
         				List<resources.Character> players = resources.getPlayerList();
         				
@@ -213,12 +210,16 @@ public void run() {
         				//}
         				Character character;
         				NetworkMove move;
-        				Queue<NetworkMove> sentClientMoves = resources.getSentClientMoves();
-        				//System.out.println("Got Here");
-        				while(!moves.isEmpty() && moves != null) {
-        					System.out.println("Move size: " + moves.size());
+        				LinkedList<NetworkMove> sentClientMoves = resources.getSentClientMoves();
+        				//System.out.println("Size: " + moves.size());
+        				while(!moves.isEmpty()) {
         					for(int i=0; i<players.size(); i++) {
+        						if(moves.isEmpty()) {
+        							break;
+        						}
         						character = players.get(i);
+        						//System.out.println("Move ID: " + moves.peek().id);
+        						//System.out.println("Character ID: " + character.getId());
         						if(moves.peek().id != null && moves.peek().id.equals(character.getId())) {
         							move = moves.remove();
         							character.setX(move.x);
@@ -227,25 +228,34 @@ public void run() {
         							character.setBlocking(move.isBlocking);
         							character.setDashing(move.isDashing);
         							character.setDead(move.isDead);
-        							if(moves.peek().t.equals(sentClientMoves.peek().t)) {
+        							if(!(sentClientMoves.isEmpty()) && move.t.equals(sentClientMoves.peek().t)) {
         								sentClientMoves.remove();
         							}
         						}
         					}
         				}
-        				LinkedList<NetworkMove> temp = new LinkedList<NetworkMove>();
+        				//LinkedList<NetworkMove> temp = new LinkedList<NetworkMove>();
         				character = resources.getMyCharacter();
-        				while(!sentClientMoves.isEmpty()) {
-        					move = sentClientMoves.remove();
+//        				while(!(sentClientMoves.isEmpty())) {
+//        					move = sentClientMoves.remove();
+//        					character.setX(move.x);
+//							character.setY(move.y);
+//							character.setFalling(move.isFalling);
+//							character.setBlocking(move.isBlocking);
+//							character.setDashing(move.isDashing);
+//							character.setDead(move.isDead);
+//							temp.offer(move);
+//        				}
+//        				resources.setSentClientMoves(temp);
+        				move = sentClientMoves.peekLast();
+        				if(move != null) {
         					character.setX(move.x);
-							character.setY(move.y);
-							character.setFalling(move.isFalling);
-							character.setBlocking(move.isBlocking);
-							character.setDashing(move.isDashing);
-							character.setDead(move.isDead);
-							temp.offer(move);
+            				character.setY(move.y);
+    						character.setFalling(move.isFalling);
+    						character.setBlocking(move.isBlocking);
+    						character.setDashing(move.isDashing);
+    						character.setDead(move.isDead);
         				}
-        				resources.setSentClientMoves(temp);
     				}
     				break;
     			default:
