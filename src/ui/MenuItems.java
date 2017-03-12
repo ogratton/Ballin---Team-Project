@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,8 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.ObjectOutputStream;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,12 +28,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 import gamemodes.PlayGame;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
 import networking.Client;
+import networking.ClientInformation;
+import networking.Command;
+import networking.ConnectionDataModel;
+import networking.Message;
+import networking.Note;
 import networking.Port;
+import networking.Session;
+import resources.Map;
+import resources.Character;
 
 public class MenuItems extends UIRes {
 
@@ -39,7 +58,9 @@ public class MenuItems extends UIRes {
 	void setCustomFont(JComponent comp, int size) {
 		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
+			customFont = Font
+					.createFont(Font.TRUETYPE_FONT,
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -48,20 +69,20 @@ public class MenuItems extends UIRes {
 		}
 		comp.setFont(customFont);
 	}
-	
-	Color getRandomColour(){
+
+	Color getRandomColour() {
 		SecureRandom rand = new SecureRandom();
 		int r = rand.nextInt(255);
 		int g = rand.nextInt(255);
 		int b = rand.nextInt(255);
-		Color color = new Color(r,g,b);
+		Color color = new Color(r, g, b);
 		return color;
 	}
 
 	void customiseLabel(JComponent comp) {
 		setCustomFont(comp, (int) (labelSize.height * labelRatio));
 		allignToCenter(comp);
-		comp.setForeground(Color.BLACK);
+		comp.setForeground(colour);
 	}
 
 	void customiseComponent(JComponent comp, Dimension size, double ratio) {
@@ -69,7 +90,7 @@ public class MenuItems extends UIRes {
 		setCustomFont(comp, (int) (size.height * ratio));
 		allignToCenter(comp);
 		comp.setOpaque(false);
-		comp.setForeground(Color.BLACK);
+		comp.setForeground(colour);
 	}
 
 	void customiseButton(JButton button, boolean addListener) {
@@ -78,7 +99,7 @@ public class MenuItems extends UIRes {
 		button.setContentAreaFilled(false);
 		button.setOpaque(false);
 		button.setFocusable(false);
-		button.setForeground(Color.BLACK);
+		button.setForeground(colour);
 		if (addListener) {
 			button.addMouseListener(new MouseListener() {
 
@@ -96,7 +117,7 @@ public class MenuItems extends UIRes {
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					button.setForeground(Color.BLACK);
+					button.setForeground(colour);
 
 				}
 
@@ -122,14 +143,6 @@ public class MenuItems extends UIRes {
 		slider.setMinorTickSpacing(10);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
-	}
-
-	void switchPanel(JPanel newPanel) {
-		mainPanel.removeAll();
-		mainPanel.add(newPanel);
-		newPanel.setPreferredSize(mainPanel.getSize());
-		mainPanel.revalidate();
-		mainPanel.repaint();
 	}
 
 	JLabel getLabel(String text) {
@@ -251,6 +264,158 @@ public class MenuItems extends UIRes {
 		return musicSlider;
 	}
 
+	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
+		List<Session> sessions = cModel.getAllSessions();
+		Iterator<Session> iterator = sessions.iterator();
+		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode" };
+		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+		while (iterator.hasNext()) {
+			Object[] lobbyInfo = { "ID: " + iterator.next().getId(), null, null, null, null };
+			model.addRow(lobbyInfo);
+		}
+		return model;
+	}
+
+	JTable getSessionTable(DefaultTableModel model) {
+		JTable table = new JTable(model);
+		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setOpaque(true);
+		table.setFillsViewportHeight(true);
+
+		return table;
+	}
+
+	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
+		DefaultTableModel tableModel = getSessionTableModel(cModel);
+		table.setModel(tableModel);
+		return table;
+	}
+
+	JButton joinSessionButton(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Join");
+		button.addActionListener(e -> {
+			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
+						cModel.getSessionId(), cModel.getHighlightedSessionId());
+				try {
+					toServer.reset();
+					toServer.writeUnshared(joinMessage);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		});
+
+		customiseButton(button, true);
+		return button;
+	}
+
+	JButton createSessionButton(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Create Lobby");
+		button.addActionListener(e -> {
+			JFrame frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Object[] inputs = createLobbyWizard();
+			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
+					JOptionPane.OK_CANCEL_OPTION);
+			if (optionPane == JOptionPane.OK_OPTION) {
+				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
+						cModel.getClientInformation());
+
+				try {
+					toServer.reset();
+					toServer.writeUnshared(createMessage);
+					updateSessionTable(cModel, table);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		customiseButton(button, true);
+		return button;
+	}
+
+	JButton refreshSessionList(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Refresh");
+		button.addActionListener(e -> {
+			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(),
+					null);
+			try {
+				toServer.writeUnshared(message);
+				updateSessionTable(cModel, table);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		customiseButton(button, true);
+		return button;
+	}
+
+	Object[] createLobbyWizard() {
+		JLabel lobbyNameLabel = new JLabel("Lobby name: ");
+
+		JLabel gameModeLabel = new JLabel("Game mode: ");
+		Choice gameModeChoice = new Choice();
+
+		JLabel mapLabel = new JLabel("Map: ");
+		Choice mapChoice = new Choice();
+		for (Map.World map : Map.World.values()) {
+			mapChoice.add(map + "");
+		}
+		customiseLabel(lobbyNameLabel);
+		customiseLabel(gameModeLabel);
+		customiseLabel(mapLabel);
+		Object[] inputs = { lobbyNameLabel, new JTextField(username + "'s lobby"), gameModeLabel, gameModeChoice,
+				mapLabel, mapChoice };
+
+		return inputs;
+	}
+	
+//	JTable getLobbyTableModel(ConnectionDataModel cModel){
+//		List<Session> sessions = cModel.getAllSessions();
+//		String[] columnNames = { "Player", "Character", "Ready"};
+//		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+//		if (cModel.getHighlightedSessionId() != null) {
+//			UUID sessionId = cModel.getHighlightedSessionId();
+//			Session session = cModel.getSession(sessionId);
+//			clients = session.getAllClients();
+//		}
+//		else {
+//			clients = new ArrayList<ClientInformation>();
+//		}
+//		return model;		
+//	}
+	
+	JPanel addPlayerToLobby(JPanel panel, String playerName){
+		JPanel playerPanel = new JPanel();
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+		JLabel playerLabel = new JLabel(playerName);
+		
+		Choice characterClass = new Choice();
+		for(Character.Class character : Character.Class.values()){
+			characterClass.add(character + "");
+		}
+		
+		playerPanel.add(playerLabel);
+		playerPanel.add(characterClass);
+		panel.add(playerPanel);
+		return panel;
+	}
+	
+	JButton backToLobbyListPanel(ConnectionDataModel cModel, ObjectOutputStream toServer){
+		JButton button = new JButton("Leave Lobby");
+		customiseButton(button, true);
+		button.addActionListener(e -> {
+			SessionListMenu lobbyList = new SessionListMenu();
+			JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
+			switchPanel(lobby);
+		});
+		return button;
+		
+	}
+
 	JSlider getAudioSlider() {
 		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(audioSlider);
@@ -266,14 +431,14 @@ public class MenuItems extends UIRes {
 
 	JPanel getControlButton(String buttonLabel, String buttonName, String name) {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int)(width * 0.85), (int)(height * 0.1)));
+		panel.setMaximumSize(new Dimension((int) (width * 0.85), (int) (height * 0.1)));
 		panel.setOpaque(false);
 		GridLayout controlsGrid = new GridLayout(0, 2);
 		panel.setLayout(controlsGrid);
 		panel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 
 		JLabel label = getLabel(buttonLabel);
-		
+
 		JButton button = new JButton(buttonName);
 		customiseButton(button, false);
 		button.setFocusable(true);
@@ -289,14 +454,17 @@ public class MenuItems extends UIRes {
 
 	JPanel getControlsPanel() {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int)(width*0.85), (int)(height*0.32)));
+		panel.setMaximumSize(new Dimension((int) (width * 0.85), (int) (height * 0.32)));
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
 		panel.add(getControlButton("Move up:", KeyEvent.getKeyText(resources.getDefaultUp()).toUpperCase(), "up"));
-		panel.add(getControlButton("Move down:", KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase(), "down"));
-		panel.add(getControlButton("Move left:", KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase(), "left"));
-		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(), "right"));
+		panel.add(
+				getControlButton("Move down:", KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase(), "down"));
+		panel.add(
+				getControlButton("Move left:", KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase(), "left"));
+		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(),
+				"right"));
 		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase(), "dash"));
 		panel.add(getControlButton("Block:", KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase(), "block"));
 
@@ -337,10 +505,10 @@ public class MenuItems extends UIRes {
 			}
 
 			controlsList.removeAll(controlsList);
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultLeft()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
+			controlsList.add(("" + resources.getDefaultUp()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultDown()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultLeft()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultRight()).toUpperCase());
 			controlsList.add(("" + resources.getDefaultDash()).toUpperCase());
 			controlsList.add(("" + resources.getDefaultBlock()).toUpperCase());
 
@@ -386,8 +554,8 @@ public class MenuItems extends UIRes {
 									button.setText("alt".toUpperCase());
 							} else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
 									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9'))) {
-								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
-									button.setText("" + Character.toUpperCase(e.getKeyChar()));
+								if (!checkKey(("" + (e.getKeyChar())).toUpperCase()))
+									button.setText(("" + e.getKeyChar()).toUpperCase());
 							}
 							isPressed = false;
 							controlsList.add(button.getText());
@@ -428,7 +596,7 @@ public class MenuItems extends UIRes {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				button.setForeground(Color.BLACK);
+				button.setForeground(colour);
 			}
 
 			@Override
