@@ -109,12 +109,26 @@ public class Physics extends Thread implements ActionListener {
 			}
 			
 			// for networking
-			NetworkMove m = new NetworkMove();
-			m.x = c.getX();
-			m.y = c.getY();
-			m.t = new Date();
-			m.id = resources.getId();
-			resources.getClientMoves().add(m);
+			if(client) {
+				NetworkMove m = new NetworkMove();
+				m.x = c.getX();
+				m.y = c.getY();
+				m.t = new Date();
+				m.isBlocking = c.isBlocking();
+				m.isDashing = c.isDashing();
+				m.isDead = c.isDead();
+				m.isFalling = c.isFalling();
+				m.id = resources.getId();
+				
+				if(resources.getClientMoves().size() < 1) {
+					resources.getClientMoves().add(m);
+				}
+				else {
+					if(!(resources.getClientMoves().peekLast().x == m.x && resources.getClientMoves().peekLast().y == m.y)) {
+						resources.getClientMoves().add(m);
+					}
+				}
+			}
 		}
 	}
 
