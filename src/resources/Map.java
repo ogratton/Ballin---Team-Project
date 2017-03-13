@@ -33,8 +33,6 @@ public class Map {
 	// that effect will override the ice one.
 
 	// any walls.
-	// keep walls to the top-most map; lower level ones are
-	// not guaranteed to be accounted for in calculations.
 	private ArrayList<Wall> walls;
 
 	private String name;
@@ -498,8 +496,8 @@ public class Map {
 		puck.setDyingStep(0);
 		puck.setDx(0);
 		puck.setDy(0);
-		//TODO Get middle of map for puck spawn point
-		Point p = new Point(200,200);
+		//Get middle of map for puck spawn point
+		Point p = new Point(width/2,height/2);
 		puck.setX(p.x);
 		puck.setY(p.y);
 	}

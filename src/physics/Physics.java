@@ -324,7 +324,7 @@ public class Physics extends Thread implements ActionListener {
 		Heading corner = Heading.STILL; // No corners
 		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY() - c.getRadius());
 		if(t2 == Tile.WALL) {//wall is north east of char (bottom-left corner of the wall)
-			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY() - c.getRadius());
+			Point wallCoords = resources.getMap().tileCoords(c.getX() + c.getRadius(), c.getY() - c.getRadius());
 			cnd = detectCollision(c, wallCoords);
 			if(cnd.collided) {
 				collide(c, Wall.wall, cnd);
@@ -332,7 +332,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY() - c.getRadius());
 		if(t2 == Tile.WALL) {///wall is north west of char (bottom-right corner of the wall)
-			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY() - c.getRadius());
+			Point wallCoords = resources.getMap().tileCoords(c.getX() - c.getRadius(), c.getY() - c.getRadius());
 			cnd = detectCollision(c, wallCoords);
 			if(cnd.collided) {
 				collide(c, Wall.wall, cnd);
@@ -340,7 +340,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY() + c.getRadius());
 		if(t2 == Tile.WALL) {///wall is south east of char (top-left corner of the wall)
-			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY() + c.getRadius());
+			Point wallCoords = resources.getMap().tileCoords(c.getX() + c.getRadius(), c.getY() + c.getRadius());
 			cnd = detectCollision(c, wallCoords);
 			if(cnd.collided) {
 				collide(c, Wall.wall, cnd);
@@ -348,7 +348,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY() + c.getRadius());
 		if(t2 == Tile.WALL) {///wall is south west of char (top-right corner of the wall)
-			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY() + c.getRadius());
+			Point wallCoords = resources.getMap().tileCoords(c.getX() - c.getRadius(), c.getY() + c.getRadius());
 			cnd = detectCollision(c, wallCoords);
 			if(cnd.collided) {
 				collide(c, Wall.wall, cnd);
@@ -443,7 +443,7 @@ public class Physics extends Thread implements ActionListener {
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
 		// XXX play SFX
-//		boing.play();
+		if(!Resources.silent) boing.play();
 		
 	}
 	
@@ -498,56 +498,10 @@ public class Physics extends Thread implements ActionListener {
 	 * @param topLeft coords of top-left corner of wall
 	 * @return collision variable.
 	 */
-	private CND detectCollision(Collidable_Circle c, Point topLeft) {
-		// topLeft is the top-left point of the wall.
-		Point bottomRight = new Point(topLeft);
-		bottomRight.translate(SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);
-		Point middle = new Point(topLeft);
-		middle.translate(SheetDeets.TILES_SIZEX/2, SheetDeets.TILES_SIZEY/2);
-		Point p1 = null,p2 = null;
-		int r2 = (int) Math.pow(c.getRadius(), 2);
-		double dMin  = 0;
-		CND cnd = new CND();
+	private CND detectCollision(Collidable_Circle c, Point tileCoords) {
+		// tileCoords is the coordinate of the tile in the tile coordinate system
 		
-		if(c.getX() < topLeft.getX()) { // x is to left of wall
-			dMin += Math.pow(c.getX() - topLeft.getX(), 2);
-			p1 = topLeft;
-			p2 = new Point(topLeft);
-			p2.translate(0, SheetDeets.TILES_SIZEY);
-		} else if(c.getX() > bottomRight.getX()) { // x is to right of wall
-			dMin += Math.pow(c.getX() - bottomRight.getX(), 2);
-			p1 = bottomRight;
-			p2 = new Point(topLeft);
-			p2.translate(SheetDeets.TILES_SIZEX, 0);
-		}
-		
-		if(c.getY() < topLeft.getY()) { // y is above wall
-			dMin += Math.pow(c.getY() - topLeft.getY(), 2);
-			p1 = topLeft;
-			p2 = new Point(topLeft);
-			p2.translate(SheetDeets.TILES_SIZEX, 0);
-		} else if(c.getY() > bottomRight.getY()) { // y is below wall
-			dMin += Math.pow(c.getY() - bottomRight.getY(), 2);
-			p1 = bottomRight;
-			p2 = new Point(topLeft);
-			p2.translate(0, SheetDeets.TILES_SIZEY);
-		}
-		
-		if(dMin <= r2) {
-			cnd.collided = true;
-			// calculate collision normal, then point of collision & collision depth
-			double dx = c.getX() - middle.getX();
-			double dy = c.getY() - middle.getY();
-			double dx2 = Math.pow(dx, 2);
-			double dy2 = Math.pow(dy, 2);
-			double distance = Math.sqrt(dx2 + dy2);
-			cnd.collisionNormal.x = dx/distance;
-			cnd.collisionNormal.y = dy/distance;
-			/* until positionalCorrection is necessary, leave out (massively inefficient).
-			Point intersection = lineSegmentIntersection(new Point((int) c.getX(), (int) c.getY()), middle, p1, p2);
-			cnd.collisionDepth = distance - Math.sqrt(Math.pow(intersection.getX(), 2) + Math.pow(intersection.getY(), 2));
-			*/
-		}
+		CND cnd = detectCollision(c, new Wall(resources.getMap().tileCoordsToMapCoords(tileCoords.x, tileCoords.y)));
 		
 		return cnd;
 	}
