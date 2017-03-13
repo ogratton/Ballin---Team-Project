@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -56,10 +59,13 @@ public class MenuItems extends UIRes {
 	}
 
 	Color getRandomColour() {
+		int r = 0, g = 0, b = 0;
 		SecureRandom rand = new SecureRandom();
-		int r = rand.nextInt(255);
-		int g = rand.nextInt(255);
-		int b = rand.nextInt(255);
+		while ((r < 150 && g < 150) || (b < 150 & g < 150) || (r < 150 & b < 150)) {
+			r = rand.nextInt(255);
+			g = rand.nextInt(255);
+			b = rand.nextInt(255);
+		}
 		Color color = new Color(r, g, b);
 		return color;
 	}
@@ -251,11 +257,12 @@ public class MenuItems extends UIRes {
 
 	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
 		List<Session> sessions = cModel.getAllSessions();
+		System.out.println(sessions.size());
 		Iterator<Session> iterator = sessions.iterator();
 		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 		while (iterator.hasNext()) {
-			Object[] lobbyInfo = { "ID: " + iterator.next().getId(), null, null, null, null };
+			Object[] lobbyInfo = { iterator.next().getId(), null, mapName, null};
 			model.addRow(lobbyInfo);
 		}
 		return model;
@@ -273,6 +280,7 @@ public class MenuItems extends UIRes {
 
 	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
 		DefaultTableModel tableModel = getSessionTableModel(cModel);
+		table.removeAll();
 		table.setModel(tableModel);
 		return table;
 	}
@@ -303,6 +311,17 @@ public class MenuItems extends UIRes {
 			JFrame frame = new JFrame();
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			Object[] inputs = createLobbyWizard();
+			mapName = ((Choice) inputs[5]).getSelectedItem();
+			((Choice) inputs[5]).addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if(e.getStateChange() == e.SELECTED){
+						mapName = ((Choice) inputs[5]).getSelectedItem();
+					System.out.println(mapName);}
+
+				}
+			});
 			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (optionPane == JOptionPane.OK_OPTION) {
@@ -343,12 +362,16 @@ public class MenuItems extends UIRes {
 
 		JLabel gameModeLabel = new JLabel("Game mode: ");
 		Choice gameModeChoice = new Choice();
+		gameMode = gameModeChoice.getSelectedItem();
+		System.out.println(gameMode);
 
 		JLabel mapLabel = new JLabel("Map: ");
 		Choice mapChoice = new Choice();
 		for (Map.World map : Map.World.values()) {
 			mapChoice.add(map + "");
 		}
+
+		System.out.println(mapName);
 		customiseLabel(lobbyNameLabel);
 		customiseLabel(gameModeLabel);
 		customiseLabel(mapLabel);
@@ -357,48 +380,48 @@ public class MenuItems extends UIRes {
 
 		return inputs;
 	}
-	
-//	JTable getLobbyTableModel(ConnectionDataModel cModel){
-//		List<Session> sessions = cModel.getAllSessions();
-//		String[] columnNames = { "Player", "Character", "Ready"};
-//		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-//		if (cModel.getHighlightedSessionId() != null) {
-//			UUID sessionId = cModel.getHighlightedSessionId();
-//			Session session = cModel.getSession(sessionId);
-//			clients = session.getAllClients();
-//		}
-//		else {
-//			clients = new ArrayList<ClientInformation>();
-//		}
-//		return model;		
-//	}
-	
-	JPanel addPlayerToLobby(JPanel panel, String playerName){
+
+	// JTable getLobbyTableModel(ConnectionDataModel cModel){
+	// List<Session> sessions = cModel.getAllSessions();
+	// String[] columnNames = { "Player", "Character", "Ready"};
+	// DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+	// if (cModel.getHighlightedSessionId() != null) {
+	// UUID sessionId = cModel.getHighlightedSessionId();
+	// Session session = cModel.getSession(sessionId);
+	// clients = session.getAllClients();
+	// }
+	// else {
+	// clients = new ArrayList<ClientInformation>();
+	// }
+	// return model;
+	// }
+
+	JPanel addPlayerToLobby(JPanel panel, String playerName) {
 		JPanel playerPanel = new JPanel();
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
 		JLabel playerLabel = new JLabel(playerName);
-		
+
 		Choice characterClass = new Choice();
-		for(Character.Class character : Character.Class.values()){
+		for (Character.Class character : Character.Class.values()) {
 			characterClass.add(character + "");
 		}
-		
+
 		playerPanel.add(playerLabel);
 		playerPanel.add(characterClass);
 		panel.add(playerPanel);
 		return panel;
 	}
-	
-	JButton backToLobbyListPanel(ConnectionDataModel cModel, ObjectOutputStream toServer){
+
+	JButton backToLobbyListPanel(ConnectionDataModel cModel, ObjectOutputStream toServer) {
 		JButton button = new JButton("Leave Lobby");
 		customiseButton(button, true);
 		button.addActionListener(e -> {
-			//SessionListMenu lobbyList = new SessionListMenu();
-		//	JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
-		//	switchPanel(lobby);
+			// SessionListMenu lobbyList = new SessionListMenu();
+			// JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
+			// switchPanel(lobby);
 		});
 		return button;
-		
+
 	}
 
 	JSlider getAudioSlider() {

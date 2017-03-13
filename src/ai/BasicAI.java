@@ -304,6 +304,9 @@ public class BasicAI extends Thread
 	 */
 	private void aggressiveBehaviour() throws InterruptedException
 	{
+		// TODO AI doesn't know what to do when it reaches the player so keeps pathfinding to them
+		// causing lag. Try dashing when they are close but I have a feeling it won't be good
+		
 		// 	if we don't have a target to hunt
 		if(waypoints.isEmpty())
 		{

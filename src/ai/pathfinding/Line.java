@@ -3,9 +3,9 @@ package ai.pathfinding;
 import java.awt.Point;
 
 /**
- * XXX TODO remove when done fixing overshooting
+ * XXX Only for debugging
  * A line from point a to b
- * Only for debugging
+ * 
  * @author Oliver Gratton
  *
  */

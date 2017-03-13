@@ -31,6 +31,10 @@ public class UIRes {
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
+	public static String lobbyName;
+	public static String gameMode;
+	public static String mapName;
+	
 	public static final Color colour = Color.BLACK;
 	
 	public static int numberIcons = Character.Class.values().length - 1;
@@ -44,7 +48,7 @@ public class UIRes {
 	public static JPanel startPanel = start.getStartMenuPanel();
 	public static JPanel optionsPanel = options.getOptionsPanel();
 	
-	public  static void switchPanel(JPanel newPanel) {
+	public static void switchPanel(JPanel newPanel) {
 		mainPanel.removeAll();
 		mainPanel.add(newPanel);
 		newPanel.setPreferredSize(mainPanel.getSize());
