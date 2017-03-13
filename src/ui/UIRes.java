@@ -2,8 +2,12 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import audio.AudioFile;
 import resources.Character;
@@ -40,12 +44,27 @@ public class UIRes {
 	public static JPanel startPanel = start.getStartMenuPanel();
 	public static JPanel optionsPanel = options.getOptionsPanel();
 	
-	public  static void switchPanel(JPanel newPanel) {
+	public static void switchPanel(JPanel newPanel) {
 		mainPanel.removeAll();
 		mainPanel.add(newPanel);
 		newPanel.setPreferredSize(mainPanel.getSize());
 		mainPanel.revalidate();
 		mainPanel.repaint();
+	}
+	
+	public static void setCustomFont(JComponent comp, int size) {
+		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
+		try {
+			customFont = Font
+					.createFont(Font.TRUETYPE_FONT,
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
+					.deriveFont((float) size);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(customFont);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		comp.setFont(customFont);
 	}
 
 }
