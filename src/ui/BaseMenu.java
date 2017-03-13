@@ -3,15 +3,22 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.io.ObjectOutputStream;
+
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTable;
+
 import audio.MusicPlayer;
 import graphics.sprites.Sprite;
+import networking.ConnectionDataModel;
 import resources.Map;
 
 public abstract class BaseMenu extends MenuItems{
@@ -154,6 +161,19 @@ public abstract class BaseMenu extends MenuItems{
 	 JPanel addReturnButton(JPanel panel){
 		 JButton backButton = getBackToStartMenuButton();
 		 getButtonAndIcon(panel,backButton);
+		 return panel;
+	 }
+	 
+	 JPanel addLobbyListButtons(JPanel panel, JTable table, ConnectionDataModel cdmodel, ObjectOutputStream toServer){
+		 JPanel buttonsPanel = new JPanel();
+		 JButton joinLobby = joinSessionButton(cdmodel, toServer);
+		 JButton createLobby = createSessionButton(table, cdmodel, toServer);
+		 JButton refreshLobby = refreshSessionList(table, cdmodel, toServer);
+		 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+		 getButtonAndIcon(buttonsPanel, joinLobby);
+		 getButtonAndIcon(buttonsPanel, createLobby);
+		 getButtonAndIcon(buttonsPanel, refreshLobby);
+		 panel.add(buttonsPanel);
 		 return panel;
 	 }
 	

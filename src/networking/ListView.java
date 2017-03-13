@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 public class ListView extends JPanel implements Observer {
 
@@ -51,6 +54,7 @@ public class ListView extends JPanel implements Observer {
 		}
 		
 		sessionList.setModel(sessionModel);
+		
 		
 		JScrollPane listScroller = new JScrollPane(sessionList);
 		listScroller.setPreferredSize(new Dimension(150, 80));

@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.swing.JPanel;
+
 import ai.pathfinding.MapCosts;
 import gamemodes.Deathmatch;
 import graphics.Graphics;
@@ -23,6 +25,8 @@ import resources.Character;
 import resources.MapReader;
 import resources.NetworkMove;
 import resources.Resources;
+import ui.SessionListMenu;
+import ui.UIRes;
 
 // Gets messages from other clients via the server (by the
 // ServerSender thread).
@@ -107,8 +111,11 @@ public void run() {
     		case SEND_ID:
     			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
     			// Create a thread for the GUI:
-    		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), toServer);
-    		    gui.start();
+    			SessionListMenu lobbyList = new SessionListMenu();
+    			JPanel lobbyListPanel = lobbyList.getLobbyListPanel(cModel, toServer);
+    			UIRes.switchPanel(lobbyListPanel);
+//    		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), toServer);
+//    		    gui.start();
     			break;
     		case GAME:
     			GameData gameData;
