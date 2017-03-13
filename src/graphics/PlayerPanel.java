@@ -30,9 +30,9 @@ public class PlayerPanel extends JPanel {
 		super();
 		this.resources = resources;
 
-		setLayout(new GridLayout(2, 4));
+		setLayout(new GridLayout(2, 1));
 		
-		ArrayList<Character> characters = resources.getPlayerList();
+		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
 		boxes = new ArrayList<>();
 		
 		int i = 0;
@@ -41,7 +41,7 @@ public class PlayerPanel extends JPanel {
 			
 			PlayerInfo box = new PlayerInfo(c);
 			boxes.add(box);
-			add(box, i%4, i/4);
+			add(box, i/4, i%4);
 			
 		}
 		
@@ -54,13 +54,13 @@ public class PlayerPanel extends JPanel {
 	 */
 	
 	public void setOrder(){
-		/*
+		
 		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
 		
 		for(int i  = 0; i < characters.size(); i++){
 			
 			boxes.get(characters.size() - 1 - i).setCharacter(characters.get(i));
-		}*/
+		}
 		
 	}
 

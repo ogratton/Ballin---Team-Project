@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import resources.Character;
-import ui.UIRes;
 
 public class PlayerStats extends JPanel {
 
@@ -31,8 +30,8 @@ public class PlayerStats extends JPanel {
 		stamina.setHorizontalAlignment(JLabel.CENTER);
 		kda.setHorizontalAlignment(JLabel.CENTER);
 		
-		UIRes.setCustomFont(stamina, 20);
-		UIRes.setCustomFont(kda, 20);
+		stamina.setFont(setFont(20));
+		kda.setFont(setFont(20));
 		
 		
 		

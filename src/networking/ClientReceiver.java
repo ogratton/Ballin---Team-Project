@@ -157,7 +157,7 @@ public void run() {
     				
     				//make the map the default just in case the following fails
 			        resources.Map.Tile[][] tiles = null;	
-					MapReader mr = new MapReader(resources);	
+					MapReader mr = new MapReader();	
 					try
 					{
 						tiles = mr.readMap("./resources/maps/map1.csv");
@@ -169,10 +169,12 @@ public void run() {
 						e.printStackTrace();
 					}
 					
+					resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
+					new MapCosts(resources);
     				cModel.setResources(resources);
     				
-    			//	Deathmatch mode = new Deathmatch(resources, true);
-    			//	mode.start();
+//    				Deathmatch mode = new Deathmatch(resources, true);
+//    				mode.start();
     				
     				break;
     			case UPDATE:

@@ -13,34 +13,27 @@ public class MapCosts
 	Tile[][] tileMap;
 	int[][] proxMask;
 	double[][] costMask;
-	boolean[][] unreachable;
 
 	int width, height;
 	int biggestDimension;
 
-	public MapCosts(Resources resources, boolean[][] unreachable) {
-		this(resources, resources.getMap().getTiles(), unreachable);
-	}
-	
-	public MapCosts(Resources resources, Tile[][] tilemap, boolean[][] unreachable) {
+	public MapCosts(Resources resources)
+	{
 		this.resources = resources;
 		
-		tileMap = tilemap;
+		tileMap = resources.getMap().getTiles();
 		width = tileMap.length;
 		height = tileMap[0].length;
 		biggestDimension = height < width ? width : height;
-		this.unreachable = unreachable;
-		System.out.println(6);
 
 		genMapCostsMask();
 
+//		printProxMask();
+//		System.out.println();
+//		printCostMask(); // debug
 		
 		resources.getMap().setProxMask(proxMask);
 		resources.getMap().setCostMask(costMask);
-
-//		printProxMask();
-////		System.out.println();
-//		printCostMask(); // debug
 	}
 
 	@SuppressWarnings("unused")
@@ -79,8 +72,10 @@ public class MapCosts
 	 */
 	private void genMapCostsMask()
 	{
+
 		// first see how close all the tiles are to the edge		
 		genProxMask();
+
 		// then convert those proximities to costs
 		evaluateProxMask();
 
@@ -99,7 +94,7 @@ public class MapCosts
 		{
 			for (int j = 0; j < height; j++)
 			{
-				if (!unreachable[i][j] && proxMask[i][j] == 0)
+				if (proxMask[i][j] == 0)
 				{
 					findProx(i, j);
 				}
@@ -124,7 +119,7 @@ public class MapCosts
 		}
 		for (int level = 1; level < biggestDimension; level++)
 		{
-			System.out.println(level);
+			
 			TreeSet<Tile> neighbours = new TreeSet<Tile>();
 
 			// for every surrounding tile <level> tiles away

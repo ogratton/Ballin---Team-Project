@@ -168,14 +168,16 @@ public class MenuItems extends UIRes {
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
-			if(!Resources.silent) { // play music
+			
+			if (!Resources.silent)
+			{
 				// button sound effect
 				audioPlayer.play();
 				// change the song
-				// TODO volume defined by user is not kept here...
 				resources.getMusicPlayer().changePlaylist("thirty");
 				resources.getMusicPlayer().resumeMusic();
 			}
+			
 		});
 		return startButton;
 	}
@@ -248,13 +250,17 @@ public class MenuItems extends UIRes {
 	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
-		musicSlider.addChangeListener(e -> {
+		if (!Resources.silent)
+		{
+			musicSlider.addChangeListener(e -> {
 			int volume = musicSlider.getValue();
 			if (volume == 0)
 				resources.getMusicPlayer().mute();
 			else
 				resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
 		});
+		}
+		
 		return musicSlider;
 	}
 

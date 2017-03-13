@@ -2,7 +2,7 @@ package resources;
 
 public interface Collidable_Circle extends Collidable {
 	public enum CollidableType {
-		Character, Puck, Powerup, Wall
+		Character, Puck, Powerup
 	};
 	public void setX(double x);
 	public void setY(double y);

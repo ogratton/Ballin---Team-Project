@@ -22,12 +22,13 @@ import resources.Map.Tile;
  *   so I've put them here for ease of access.
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
-
 public class Resources {
+	
+	public static final boolean silent = false; // so alex can run the game :)
+	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	public Mode mode;
 	public GameModeFFA gamemode;
-	public static final boolean silent = false; // don't initialise music classes!
 
 	// keybindings
 	private int default_up = KeyEvent.VK_W;
@@ -56,7 +57,6 @@ public class Resources {
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
-	
 	// powerups in play
 	private ArrayList<Powerup> powerupList = new ArrayList<Powerup>();
 
@@ -94,9 +94,6 @@ public class Resources {
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
-	private Line normal;
-	private boolean scoreChanged = false;
-	
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
@@ -601,6 +598,8 @@ public class Resources {
 		AINextDest = nd;
 	}
 	
+	private Line normal;
+	
 	public Line getNormal()
 	{
 		return normal;
@@ -654,12 +653,4 @@ public class Resources {
 		this.musicPlayer = mp;
 	}
 
-	public void setScoreChanged(boolean change){
-		this.scoreChanged = change;
-	}
-	
-	public boolean getScoreChanged(){
-		return this.scoreChanged;
-	}
-	
 }

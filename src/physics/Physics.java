@@ -9,7 +9,9 @@ import javax.swing.Timer;
 
 import ai.BasicAI;
 import audio.AudioFile;
+import graphics.sprites.SheetDeets;
 import resources.Character;
+import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
@@ -36,10 +38,9 @@ public class Physics extends Thread implements ActionListener {
 	public Physics(Resources resources, boolean client){
 		this.resources = resources;
 		this.client = client;
-		if(!Resources.silent) {
-			boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
-			death = new AudioFile(resources, "resources/audio/death.wav", "Death");
-		}
+		
+		boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
+		death = new AudioFile(resources, "resources/audio/death.wav", "Death");
 	}
 	
 	@Override
@@ -132,7 +133,7 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * calculate speed and location of a character.
+	 * calculate speed and location of a character. Assumes no collisions.
 	 * @param c
 	 */
 	private void update(Character c) {
@@ -143,9 +144,7 @@ public class Physics extends Thread implements ActionListener {
 				if(!client) resources.getMap().spawn(c);
 				if (c.isAI()) {
 					BasicAI ai = new BasicAI(resources, c);
-					c.setAI(ai);
 					ai.start();
-					
 				}
 			}
 		}
@@ -219,7 +218,7 @@ public class Physics extends Thread implements ActionListener {
 				c.setDead(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
-				if(!Resources.silent) death.play();
+				if (!Resources.silent) death.play();
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
@@ -227,12 +226,9 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
-					c.incrementScore(-1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();
-
-					
 				} else {
 					// take 2 points away from c
 					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
@@ -243,8 +239,6 @@ public class Physics extends Thread implements ActionListener {
 				if (c.hasPowerup()) {
 					c.revertPowerup();
 				}
-				
-				resources.setScoreChanged(true);
 			}
 		}
 		//System.out.println("Got here");
@@ -318,17 +312,37 @@ public class Physics extends Thread implements ActionListener {
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
 		CND cnd = null;
-		Point wallCoords = resources.getMap().tileCoords(c.getX(), c.getY());
-		for(int i = -1; i < 2; i++) {
-			for(int j = -1; j < 2; j++) {
-				if(resources.getMap().getTiles()[wallCoords.x + i][wallCoords.y + j] == Tile.WALL) {
-					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(wallCoords.x, wallCoords.y));
-					cnd = detectCollision(c, wall);
-					//positionalCorrection(c,wall,cnd);
-					if(cnd.collided) {
-						collide(c, wall, cnd);
-					}
-				}
+		Heading corner = Heading.STILL; // No corners
+		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY() - c.getRadius());
+		if(t2 == Tile.WALL) {//wall is north east of char (bottom-left corner of the wall)
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY() - c.getRadius());
+			cnd = detectCollision(c, wallCoords);
+			if(cnd.collided) {
+				collide(c, Wall.wall, cnd);
+			}
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY() - c.getRadius());
+		if(t2 == Tile.WALL) {///wall is north west of char (bottom-right corner of the wall)
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY() - c.getRadius());
+			cnd = detectCollision(c, wallCoords);
+			if(cnd.collided) {
+				collide(c, Wall.wall, cnd);
+			}
+		}
+		t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY() + c.getRadius());
+		if(t2 == Tile.WALL) {///wall is south east of char (top-left corner of the wall)
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() + c.getRadius(), c.getY() + c.getRadius());
+			cnd = detectCollision(c, wallCoords);
+			if(cnd.collided) {
+				collide(c, Wall.wall, cnd);
+			}
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY() + c.getRadius());
+		if(t2 == Tile.WALL) {///wall is south west of char (top-right corner of the wall)
+			Point wallCoords = resources.getMap().tileCoordsOnMap(c.getX() - c.getRadius(), c.getY() + c.getRadius());
+			cnd = detectCollision(c, wallCoords);
+			if(cnd.collided) {
+				collide(c, Wall.wall, cnd);
 			}
 		}
 	}
@@ -420,7 +434,7 @@ public class Physics extends Thread implements ActionListener {
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
 		// XXX play SFX
-		if(!Resources.silent) boing.play();
+//		boing.play();
 		
 	}
 	
@@ -447,19 +461,6 @@ public class Physics extends Thread implements ActionListener {
 //	  A.position -= A.inv_mass * correction
 //	  B.position += B.inv_mass * correction
 //	}
-	private void positionalCorrection(Collidable_Circle c, Collidable_Circle d, CND cnd) {
-		final double percent = 0.2;
-		final double slop = 0.01; // how much intersection is ignored?
-		double val = (Math.max(cnd.collisionDepth - slop, 0.0) / (c.getInvMass() + d.getInvMass())) * percent;
-		double correction_x = val * cnd.collisionNormal.x;
-		double correction_y = val * cnd.collisionNormal.y;
-
-		c.setDx(c.getDx() + (c.getInvMass() * correction_x));
-		c.setDy(c.getDy() + (c.getInvMass() * correction_y));
-
-		d.setDx(d.getDx() - (d.getInvMass() * correction_x));
-		d.setDy(d.getDy() - (d.getInvMass() * correction_y));
-	}
 	
 	private CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
 		CND cnd = new CND();
@@ -480,6 +481,80 @@ public class Physics extends Thread implements ActionListener {
 			}
 		}
 		return cnd;
+	}
+
+	/**
+	 * detects collisions between character and wall
+	 * @param c
+	 * @param topLeft coords of top-left corner of wall
+	 * @return collision variable.
+	 */
+	private CND detectCollision(Collidable_Circle c, Point topLeft) {
+		// topLeft is the top-left point of the wall.
+		Point bottomRight = new Point(topLeft);
+		bottomRight.translate(SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);
+		Point middle = new Point(topLeft);
+		middle.translate(SheetDeets.TILES_SIZEX/2, SheetDeets.TILES_SIZEY/2);
+		Point p1 = null,p2 = null;
+		int r2 = (int) Math.pow(c.getRadius(), 2);
+		double dMin  = 0;
+		CND cnd = new CND();
+		
+		if(c.getX() < topLeft.getX()) { // x is to left of wall
+			dMin += Math.pow(c.getX() - topLeft.getX(), 2);
+			p1 = topLeft;
+			p2 = new Point(topLeft);
+			p2.translate(0, SheetDeets.TILES_SIZEY);
+		} else if(c.getX() > bottomRight.getX()) { // x is to right of wall
+			dMin += Math.pow(c.getX() - bottomRight.getX(), 2);
+			p1 = bottomRight;
+			p2 = new Point(topLeft);
+			p2.translate(SheetDeets.TILES_SIZEX, 0);
+		}
+		
+		if(c.getY() < topLeft.getY()) { // y is above wall
+			dMin += Math.pow(c.getY() - topLeft.getY(), 2);
+			p1 = topLeft;
+			p2 = new Point(topLeft);
+			p2.translate(SheetDeets.TILES_SIZEX, 0);
+		} else if(c.getY() > bottomRight.getY()) { // y is below wall
+			dMin += Math.pow(c.getY() - bottomRight.getY(), 2);
+			p1 = bottomRight;
+			p2 = new Point(topLeft);
+			p2.translate(0, SheetDeets.TILES_SIZEY);
+		}
+		
+		if(dMin <= r2) {
+			cnd.collided = true;
+			// calculate collision normal, then point of collision & collision depth
+			double dx = c.getX() - middle.getX();
+			double dy = c.getY() - middle.getY();
+			double dx2 = Math.pow(dx, 2);
+			double dy2 = Math.pow(dy, 2);
+			double distance = Math.sqrt(dx2 + dy2);
+			cnd.collisionNormal.x = dx/distance;
+			cnd.collisionNormal.y = dy/distance;
+			/* until positionalCorrection is necessary, leave out (massively inefficient).
+			Point intersection = lineSegmentIntersection(new Point((int) c.getX(), (int) c.getY()), middle, p1, p2);
+			cnd.collisionDepth = distance - Math.sqrt(Math.pow(intersection.getX(), 2) + Math.pow(intersection.getY(), 2));
+			*/
+		}
+		
+		return cnd;
+	}
+	
+	private Point lineSegmentIntersection(Point p1, Point p2, Point q1, Point q2) {
+		Point intersection = new Point(p1);
+		int dx1 = p2.x - p1.x;
+		int dy1 = p2.y - p1.y;
+		int dx2 = q2.x - q1.x;
+		int dy2 = q2.y - q1.y;
+		double s = (-dy1 * (p1.x - q1.x) + dx1 * (p1.y - q1.y)) / (-dx2 * dy1 + dx1 * dy2);
+		double t = ( dx2 * (p1.y - q1.y) - dy2 * (p1.x - q1.x)) / (-dx2 * dy1 + dx1 * dy2);
+		if(s >= 0 && s <= 1 && t >= 0 && t <= 1) {
+			intersection.translate((int)(t*dx1), (int)(t*dy1));
+		}
+		return intersection;
 	}
 	
 	private void dash(Character c) {
