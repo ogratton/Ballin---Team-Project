@@ -49,6 +49,7 @@ import networking.Note;
 import networking.Port;
 import networking.Session;
 import resources.Map;
+import resources.Resources;
 import resources.Character;
 
 public class MenuItems extends UIRes {
@@ -167,12 +168,14 @@ public class MenuItems extends UIRes {
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
-			// button sound effect
-			audioPlayer.play();
-			// change the song
-			// TODO volume defined by user is not kept here...
-			resources.getMusicPlayer().changePlaylist("thirty");
-			resources.getMusicPlayer().resumeMusic();
+			if(!Resources.silent) { // play music
+				// button sound effect
+				audioPlayer.play();
+				// change the song
+				// TODO volume defined by user is not kept here...
+				resources.getMusicPlayer().changePlaylist("thirty");
+				resources.getMusicPlayer().resumeMusic();
+			}
 		});
 		return startButton;
 	}

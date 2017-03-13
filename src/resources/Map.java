@@ -512,7 +512,6 @@ public class Map {
 	
 	public Point randPointOnMap()
 	{
-		System.out.println("random!");
 		//set location 		
 		double randX = 0.0;
 		double randY = 0.0;

@@ -27,6 +27,7 @@ public class Resources {
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	public Mode mode;
 	public GameModeFFA gamemode;
+	public static final boolean silent = false; // don't initialise music classes!
 
 	// keybindings
 	private int default_up = KeyEvent.VK_W;
@@ -96,7 +97,6 @@ public class Resources {
 	private boolean scoreChanged = false;
 	
 	public Resources() {
-
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
 		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are
