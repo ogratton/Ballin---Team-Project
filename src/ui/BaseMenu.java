@@ -3,36 +3,35 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.io.ObjectOutputStream;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTable;
 
 import audio.MusicPlayer;
 import graphics.sprites.Sprite;
-import networking.ConnectionDataModel;
 import resources.Map;
 import resources.Resources;
 
-public abstract class BaseMenu extends MenuItems{
-	
-	public static int getScreenWidth() {
+public abstract class BaseMenu extends MenuItems
+{
+
+	public static int getScreenWidth()
+	{
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	}
 
-	public static int getScreenHeight() {
+	public static int getScreenHeight()
+	{
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
-	
-	static JFrame createFrame(){
+
+	static JFrame createFrame()
+	{
 		JFrame frame = new JFrame();
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
 		frame.setResizable(false);
@@ -46,85 +45,100 @@ public abstract class BaseMenu extends MenuItems{
 		frame.add(mainPanel);
 		return frame;
 	}
-	
-	static void customiseMainPanel(JFrame frame){
+
+	static void customiseMainPanel(JFrame frame)
+	{
 		customiseAllPanels(frame);
 		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-		if(!Resources.silent) {
+
+		if (!Resources.silent)
+		{
 			MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
 			resources.setMusicPlayer(musicPlayer);
 			musicPlayer.start();
 		}
+
 	}
-	
-	static void customisePanel(JPanel panel, JFrame frame){
+
+	static void customisePanel(JPanel panel, JFrame frame)
+	{
 		panel.setOpaque(false);
 		panel.setPreferredSize(frame.getSize());
-		
+
 	}
-	
-	static void customiseAllPanels(JFrame frame){
+
+	static void customiseAllPanels(JFrame frame)
+	{
 		customisePanel(startPanel, frame);
 		customisePanel(optionsPanel, frame);
 
 	}
-	
-	JPanel addSpriteIcon(JPanel panel, int x){
+
+	JPanel addSpriteIcon(JPanel panel, int x)
+	{
 		panel.add(getSpriteIcon(x));
 		return panel;
 	}
-	
-	JPanel addGameTitle(JPanel panel){
+
+	JPanel addGameTitle(JPanel panel)
+	{
 		JLabel titleLabel = getLabel("Ballin'");
 		addSpace(panel, 0, 0.1);
 		panel.add(titleLabel);
 		return panel;
 	}
 
-	JPanel addStartSingleplayerButton(JPanel panel){
+	JPanel addStartSingleplayerButton(JPanel panel)
+	{
 		JButton startButton = getPlaySingleplayerButton();
 		addSpace(panel, 0, 0.1);
-		getButtonAndIcon(panel,startButton);
-		return panel;
-	}
-	
-	JPanel addStartMultiplayerButton(JPanel panel){
-		JButton startButton = getPlayMultiplayerButton();
-		addSpace(panel, 0, 0.02);
-		getButtonAndIcon(panel,startButton);
-		return panel;
-	}
-	
-	JPanel addOptionsButton(JPanel panel){
-		JButton optionsButton = getOptionsButton();
-		addSpace(panel, 0, 0.02);
-		getButtonAndIcon(panel,optionsButton);
+		getButtonAndIcon(panel, startButton);
 		return panel;
 	}
 
-	JPanel addExitButton(JPanel panel){
-		JButton exitButton = getExitButton();
+	JPanel addStartMultiplayerButton(JPanel panel)
+	{
+		JButton startButton = getPlayMultiplayerButton();
 		addSpace(panel, 0, 0.02);
-		getButtonAndIcon(panel,exitButton);
+		getButtonAndIcon(panel, startButton);
 		return panel;
 	}
-	
-	JPanel addSpace(JPanel panel, double widthRatio, double heightRatio){
+
+	JPanel addOptionsButton(JPanel panel)
+	{
+		JButton optionsButton = getOptionsButton();
+		addSpace(panel, 0, 0.02);
+		getButtonAndIcon(panel, optionsButton);
+		return panel;
+	}
+
+	JPanel addExitButton(JPanel panel)
+	{
+		JButton exitButton = getExitButton();
+		addSpace(panel, 0, 0.02);
+		getButtonAndIcon(panel, exitButton);
+		return panel;
+	}
+
+	JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
+	{
 		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
 	}
-	
-	JPanel addUsernameButton(JPanel panel){
+
+	JPanel addUsernameButton(JPanel panel)
+	{
 		JLabel usernameLabel = getLabel("Welcome, Player!");
 		JButton usernameButton = getUsername(usernameLabel);
-		panel.add(usernameLabel,0);
+		panel.add(usernameLabel, 0);
 		addSpace(panel, 0, 0.02);
-		getButtonAndIcon(panel,usernameButton);
+		getButtonAndIcon(panel, usernameButton);
 		return panel;
 	}
-	
-	JPanel addMusicSlider(JPanel panel){
+
+	JPanel addMusicSlider(JPanel panel)
+	{
 		JLabel musicLabel = getLabel("Music Volume");
 		JSlider musicSlider = getMusicSlider();
 		addSpace(panel, 0, 0.03);
@@ -133,7 +147,9 @@ public abstract class BaseMenu extends MenuItems{
 		panel.add(musicSlider);
 		return panel;
 	}
-	 JPanel addAudioSlider(JPanel panel){
+
+	JPanel addAudioSlider(JPanel panel)
+	{
 		JLabel audioLabel = getLabel("Audio Volume");
 		JSlider audioSlider = getAudioSlider();
 		addSpace(panel, 0, 0.03);
@@ -179,5 +195,4 @@ public abstract class BaseMenu extends MenuItems{
 //		 panel.add(buttonsPanel);
 //		 return panel;
 //	 }
-	
 }

@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
 import resources.Character;
-import ui.UIRes;
 
 /**
  * Class to hold a panel containing player information for the top of the screen
@@ -40,9 +39,7 @@ public class PlayerInfo extends JPanel {
 	 */
 	
 	public void paintComponent(Graphics g) {
-		
-		g.clearRect(0, 0, this.getWidth(), this.getHeight());
-		
+
 		// draw the arrowhead and player picture
 		g.drawImage(character.getArrow(false), 0, -15, this);
 		g.drawImage(character.getFirstFrame(), 50, 0, this);
@@ -61,14 +58,35 @@ public class PlayerInfo extends JPanel {
 		}
 		
 		// get the custom font working on all machines
-		UIRes.setCustomFont(this, size);		
+		g.setFont(setFont(size));		
 		
 		// draw the character name and score
 		g.drawString(character.getName(), 150, 33);
 		
-		UIRes.setCustomFont(this, 20);
+		g.setFont(setFont(20));
 		g.drawString(character.getScore() + "", 300, 33);
 
+	}
+
+	/**
+	 * Set the custom font based on size
+	 * @param size the size
+	 * @return the font
+	 */
+	
+	public Font setFont(int size){
+		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
+		try {
+			customFont = Font
+					.createFont(Font.TRUETYPE_FONT,
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
+					.deriveFont(Font.PLAIN, size);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(customFont);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return customFont;
 	}
 	
 	/**
@@ -78,6 +96,7 @@ public class PlayerInfo extends JPanel {
 	
 	public void setCharacter(Character c) {
 		this.character = c;
+		repaint();
 	}
 
 }

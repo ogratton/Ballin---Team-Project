@@ -9,7 +9,9 @@ import javax.swing.Timer;
 
 import ai.BasicAI;
 import audio.AudioFile;
+import graphics.sprites.SheetDeets;
 import resources.Character;
+import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
@@ -36,7 +38,7 @@ public class Physics extends Thread implements ActionListener {
 	public Physics(Resources resources, boolean client){
 		this.resources = resources;
 		this.client = client;
-		if(!Resources.silent) {
+		if(!Resources.silent){
 			boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
 			death = new AudioFile(resources, "resources/audio/death.wav", "Death");
 		}
@@ -132,7 +134,7 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * calculate speed and location of a character.
+	 * calculate speed and location of a character. Assumes no collisions.
 	 * @param c
 	 */
 	private void update(Character c) {
@@ -143,9 +145,7 @@ public class Physics extends Thread implements ActionListener {
 				if(!client) resources.getMap().spawn(c);
 				if (c.isAI()) {
 					BasicAI ai = new BasicAI(resources, c);
-					c.setAI(ai);
 					ai.start();
-					
 				}
 			}
 		}
@@ -219,7 +219,7 @@ public class Physics extends Thread implements ActionListener {
 				c.setDead(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
-				if(!Resources.silent) death.play();
+				if (!Resources.silent) death.play();
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
@@ -227,12 +227,9 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
-					c.incrementScore(-1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();
-
-					
 				} else {
 					// take 2 points away from c
 					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
@@ -243,8 +240,6 @@ public class Physics extends Thread implements ActionListener {
 				if (c.hasPowerup()) {
 					c.revertPowerup();
 				}
-				
-				resources.setScoreChanged(true);
 			}
 		}
 		//System.out.println("Got here");
@@ -318,19 +313,21 @@ public class Physics extends Thread implements ActionListener {
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
 		CND cnd = null;
-		Point wallCoords = resources.getMap().tileCoords(c.getX(), c.getY());
-		for(int i = -1; i < 2; i++) {
-			for(int j = -1; j < 2; j++) {
-				if(resources.getMap().getTiles()[wallCoords.x + i][wallCoords.y + j] == Tile.WALL) {
-					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(wallCoords.x, wallCoords.y));
+		//topleft point:
+		Point p = resources.getMap().tileCoords(c.getX() - c.getRadius(), c.getY() - c.getRadius());
+		//check each point:
+		for(int x = -1; x < 2; x++) {
+			for(int y = -1; y < 2; y++) {
+				if(resources.getMap().getTiles()[p.x + x][p.y + y] == Tile.WALL) {
+					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(p.x + x, p.y + y));
 					cnd = detectCollision(c, wall);
-					//positionalCorrection(c,wall,cnd);
 					if(cnd.collided) {
 						collide(c, wall, cnd);
 					}
 				}
 			}
 		}
+		
 	}
 	
 	/**
@@ -420,7 +417,7 @@ public class Physics extends Thread implements ActionListener {
 		d.setDy(d.getDy() - (d.getInvMass() * impulsey));
 		
 		// XXX play SFX
-		if(!Resources.silent) boing.play();
+//		boing.play();
 		
 	}
 	
@@ -447,19 +444,6 @@ public class Physics extends Thread implements ActionListener {
 //	  A.position -= A.inv_mass * correction
 //	  B.position += B.inv_mass * correction
 //	}
-	private void positionalCorrection(Collidable_Circle c, Collidable_Circle d, CND cnd) {
-		final double percent = 0.2;
-		final double slop = 0.01; // how much intersection is ignored?
-		double val = (Math.max(cnd.collisionDepth - slop, 0.0) / (c.getInvMass() + d.getInvMass())) * percent;
-		double correction_x = val * cnd.collisionNormal.x;
-		double correction_y = val * cnd.collisionNormal.y;
-
-		c.setDx(c.getDx() + (c.getInvMass() * correction_x));
-		c.setDy(c.getDy() + (c.getInvMass() * correction_y));
-
-		d.setDx(d.getDx() - (d.getInvMass() * correction_x));
-		d.setDy(d.getDy() - (d.getInvMass() * correction_y));
-	}
 	
 	private CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
 		CND cnd = new CND();
@@ -481,7 +465,7 @@ public class Physics extends Thread implements ActionListener {
 		}
 		return cnd;
 	}
-	
+
 	private void dash(Character c) {
 		c.setBlocking(false);
 		// Dash in the direction the player is trying to move

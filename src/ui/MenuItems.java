@@ -3,24 +3,15 @@ package ui;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.ObjectOutputStream;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,24 +25,20 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
 
 import gamemodes.PlayGame;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
 import networking.Client;
-import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Port;
-import networking.Session;
+import resources.Character;
 import resources.Map;
 import resources.Resources;
-import resources.Character;
 
 public class MenuItems extends UIRes {
 
@@ -169,14 +156,16 @@ public class MenuItems extends UIRes {
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
-			if(!Resources.silent) { // play music
+			
+			if (!Resources.silent)
+			{
 				// button sound effect
 				audioPlayer.play();
 				// change the song
-				// TODO volume defined by user is not kept here...
 				resources.getMusicPlayer().changePlaylist("thirty");
 				resources.getMusicPlayer().resumeMusic();
 			}
+			
 		});
 		return startButton;
 	}
@@ -249,13 +238,17 @@ public class MenuItems extends UIRes {
 	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
-		musicSlider.addChangeListener(e -> {
+		if (!Resources.silent)
+		{
+			musicSlider.addChangeListener(e -> {
 			int volume = musicSlider.getValue();
 			if (volume == 0)
 				resources.getMusicPlayer().mute();
 			else
 				resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
 		});
+		}
+		
 		return musicSlider;
 	}
 	

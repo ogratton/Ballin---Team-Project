@@ -1,4 +1,5 @@
 package resources;
+
 import java.awt.Point;
 
 import graphics.sprites.SheetDeets;
@@ -7,16 +8,11 @@ public class Wall implements Collidable_Circle {
 	private double x;
 	private double y;
 
-	public Wall(Point p) {
-		this.x = p.x;
-		this.y = p.y;
+	public Wall(Point coords) {
+		x = coords.x;
+		y = coords.y;
 	}
 	
-	public void setCoords(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
-
 	@Override
 	public final double getInvMass() {
 		//infinite mass
@@ -56,12 +52,11 @@ public class Wall implements Collidable_Circle {
 	@Override
 	public void setX(double x) {
 		this.x = x;
-		
 	}
 
 	@Override
 	public void setY(double y) {
-		this.y = y;
+		this.y = y;		
 	}
 
 	@Override
@@ -80,7 +75,8 @@ public class Wall implements Collidable_Circle {
 	}
 
 	@Override
-	public final void setDead(boolean dead) {		
+	public final void setDead(boolean dead) {
+		
 	}
 
 	@Override
@@ -115,26 +111,33 @@ public class Wall implements Collidable_Circle {
 
 	@Override
 	public final int getLastCollidedTime() {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public final void setVisible(boolean visible) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public final boolean isVisible() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public final void setDyingStep(int step) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public final int getDyingStep() {
+		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	
 }

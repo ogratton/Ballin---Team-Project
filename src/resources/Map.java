@@ -33,6 +33,8 @@ public class Map {
 	// that effect will override the ice one.
 
 	// any walls.
+	// keep walls to the top-most map; lower level ones are
+	// not guaranteed to be accounted for in calculations.
 	private ArrayList<Wall> walls;
 
 	private String name;
@@ -93,19 +95,7 @@ public class Map {
 	 */
 
 	public Map(int width, int height, Tile[][] tile, World world, String name) {
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, genWalls(tile), tile, world, name);
-	}
-
-	private static ArrayList<Wall> genWalls(Tile[][] tile) {
-		ArrayList<Wall> walls = new ArrayList<Wall>();
-		for(int i = 0; i < tile.length; i++) {
-			for(int j = 0; j < tile.length; j++) {
-				if(tile[i][j] == Tile.WALL) {
-					walls.add(  new Wall( new Point(i, j) )  );
-				}
-			}
-		}
-		return walls;
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world, name);
 	}
 
 	/**
@@ -139,6 +129,7 @@ public class Map {
 		tileSet = SheetDeets.getTileSetFromWorld(world);
 
 		for (int i = 0; i < height; i++) {
+
 			for (int j = 0; j < width; j++) {
 				tiles[i][j] = Tile.FLAT;
 			}
@@ -164,7 +155,7 @@ public class Map {
 	 *            the array of tiles
 	 */
 
-	private Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
+	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
 			Tile[][] tile, World worldType, String name) {
 		this.origin = origin;
 		this.width = width;
@@ -507,8 +498,8 @@ public class Map {
 		puck.setDyingStep(0);
 		puck.setDx(0);
 		puck.setDy(0);
-		//Get middle of map for puck spawn point
-		Point p = new Point(width/2,height/2);
+		//TODO Get middle of map for puck spawn point
+		Point p = new Point(200,200);
 		puck.setX(p.x);
 		puck.setY(p.y);
 	}
@@ -570,5 +561,5 @@ public class Map {
 	public String getName(){
 		return this.name;
 	}
-
+	
 }

@@ -46,7 +46,7 @@ public class PathFindingTest
 		Resources resources = new Resources();
 		// make the map the default just in case the following fails
 		Map.Tile[][] tiles = null;
-		MapReader mr = new MapReader(resources);
+		MapReader mr = new MapReader();
 		try
 		{
 			tiles = mr.readMap("./resources/maps/map0.csv");
@@ -58,12 +58,8 @@ public class PathFindingTest
 			e.printStackTrace();
 
 		}
-<<<<<<< HEAD
-		resources.setMap(new Map(1200, 675, tiles, Map.World.LAVA, "Map1"));
-=======
 		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
->>>>>>> 00b07de847d1c09233c4d95da86c2e9755dbb156
 
 		/* SETTING UP THE AI PLAYER */
 

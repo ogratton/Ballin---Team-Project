@@ -16,6 +16,7 @@ import resources.Resources;
 /**
  * An AI that takes control of a Character
  * and dynamically switches between a series of behaviours
+ * 
  * @author Oliver Gratton
  *
  */
@@ -62,7 +63,6 @@ public class BasicAI extends Thread
 	Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 	int destI = 0; // destination index
 	private boolean debug;
-	
 
 	/*
 	 * Notes:
@@ -100,7 +100,7 @@ public class BasicAI extends Thread
 		aStar = new AStarSearch(resources);
 
 		lastWaypoint = getCurrentTileCoords();
-		
+
 		// XXX debug
 		debug = character.getPlayerNumber() == 0 ? true : false;
 	}
@@ -117,13 +117,15 @@ public class BasicAI extends Thread
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
 			Thread.sleep(1000);
 
-			while (!character.isDead())
+			while (!character.isDead()) // TODO change to true
 			{
+
 				// common behaviour goes first
 				commonBehaviour();
 
 				// XXX debug
-				if (debug) resources.setProjectedPos(projectedPosition());
+				if (debug)
+					resources.setProjectedPos(projectedPosition());
 
 				if (behaviour == Behaviour.POIROT)
 				{
@@ -156,9 +158,9 @@ public class BasicAI extends Thread
 					System.out.println("Behaviour not yet implemented");
 				}
 				Thread.sleep(TICK);
+
 			}
 
-			// Things to do after death
 			funeral();
 
 		}
@@ -220,7 +222,7 @@ public class BasicAI extends Thread
 				// XXX debug
 				if (debug)
 				{
-					resources.setDestList(waypoints); 
+					resources.setDestList(waypoints);
 					resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y));
 
 					System.out.println("pathfinding to point " + destinations[destI]);
@@ -256,7 +258,7 @@ public class BasicAI extends Thread
 	private void rovingBehaviour() throws InterruptedException
 	{
 		// TODO make checks to switch behaviours
-		
+
 		if (waypoints.isEmpty())
 		{
 
@@ -270,7 +272,7 @@ public class BasicAI extends Thread
 				// just in case point given is dodgy
 				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
 			}
-			
+
 			if (debug)
 			{
 				//System.out.println("New destination: " + newDest);
@@ -278,7 +280,6 @@ public class BasicAI extends Thread
 				resources.setDestList(waypoints);
 				resources.setAINextDest(newDest);
 			}
-
 
 		}
 	}
@@ -306,9 +307,9 @@ public class BasicAI extends Thread
 	{
 		// TODO AI doesn't know what to do when it reaches the player so keeps pathfinding to them
 		// causing lag. Try dashing when they are close but I have a feeling it won't be good
-		
+
 		// 	if we don't have a target to hunt
-		if(waypoints.isEmpty())
+		if (waypoints.isEmpty())
 		{
 			System.out.println("Searching for nearest player...");
 			Character nearestPlayer;
@@ -326,7 +327,7 @@ public class BasicAI extends Thread
 
 			// pathfind to them
 			Point charPos = getCurrentTileCoords();
-			Point newDest = new Point((int)nearestPlayer.getX(), (int)nearestPlayer.getY());
+			Point newDest = new Point((int) nearestPlayer.getX(), (int) nearestPlayer.getY());
 			Point newDestTile = getTileCoords(newDest);
 			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
 			if (newDestTile != null)
@@ -341,10 +342,9 @@ public class BasicAI extends Thread
 				System.out.println("target lost, switching to roving");
 				setBehaviour(Behaviour.ROVING);
 			}
-			
+
 		}
 
-		
 	}
 
 	/**
@@ -357,7 +357,8 @@ public class BasicAI extends Thread
 		lastWaypoint = resources.getMap().randPointOnMap(); // safer than null
 
 		// XXX debug
-		if (debug) resources.setProjectedPos(null);
+		if (debug)
+			resources.setProjectedPos(null);
 
 	}
 
@@ -451,7 +452,6 @@ public class BasicAI extends Thread
 				resources.setNormal(normal);
 			}
 
-
 			return ab_norm;
 		}
 		else
@@ -460,7 +460,7 @@ public class BasicAI extends Thread
 		}
 
 	}
-	
+
 	/**
 	 * @return the AI's location in character coords (not tiles)
 	 */
