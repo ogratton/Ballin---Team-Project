@@ -55,26 +55,15 @@ public class MenuItems extends UIRes {
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
 
-	void setCustomFont(JComponent comp, int size) {
-		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
-		try {
-			customFont = Font
-					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
-					.deriveFont((float) size);
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(customFont);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		comp.setFont(customFont);
-	}
-
 	Color getRandomColour() {
+		int r = 0, g = 0, b = 0;
 		SecureRandom rand = new SecureRandom();
-		int r = rand.nextInt(255);
-		int g = rand.nextInt(255);
-		int b = rand.nextInt(255);
+		while((r < 150 && g < 150)  || (b < 150 & g < 150) || (r < 150 & b < 150)){
+			r = rand.nextInt(255);
+			g = rand.nextInt(255);
+			b = rand.nextInt(255);	
+		}
+		//System.out.println(r + " " + g + " " + b);
 		Color color = new Color(r, g, b);
 		return color;
 	}
@@ -177,11 +166,11 @@ public class MenuItems extends UIRes {
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
 			// button sound effect
-//			audioPlayer.play();
+			audioPlayer.play();
 			// change the song
 			// TODO volume defined by user is not kept here...
-//			resources.getMusicPlayer().changePlaylist("thirty");
-//			resources.getMusicPlayer().resumeMusic();
+			resources.getMusicPlayer().changePlaylist("thirty");
+			resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}
@@ -408,9 +397,9 @@ public class MenuItems extends UIRes {
 		JButton button = new JButton("Leave Lobby");
 		customiseButton(button, true);
 		button.addActionListener(e -> {
-			SessionListMenu lobbyList = new SessionListMenu();
-			JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
-			switchPanel(lobby);
+			//SessionListMenu lobbyList = new SessionListMenu();
+		//	JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
+		//	switchPanel(lobby);
 		});
 		return button;
 		

@@ -114,7 +114,7 @@ public class MapReader
 	public void setMap(String name) throws IOException
 	{
 		Tile[][] tiles = readMap(name);
-		resources.setMap(new Map(tiles.length * SheetDeets.TILES_SIZEX, tiles[0].length * SheetDeets.TILES_SIZEY, tiles, World.CAKE, name));
+		resources.setMap(new Map(tiles[0].length * SheetDeets.TILES_SIZEX, tiles.length * SheetDeets.TILES_SIZEY, tiles, World.CAKE, name));
 		new MapCosts(resources, untouchableTiles);
 	}
 	
