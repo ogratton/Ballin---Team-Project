@@ -37,6 +37,10 @@ public class UIRes {
 	
 	public static final Color colour = Color.BLACK;
 	
+	public static int numberSessions = 0;
+	public static JPanel sessionsPanel = new JPanel();
+	public static ArrayList<JPanel> sessionList = new ArrayList<JPanel>();
+	
 	public static int numberIcons = Character.Class.values().length - 1;
 	
 	public static AudioFile audioPlayer = Resources.silent? null : new AudioFile(resources, "resources/audio/ding.wav", "Ding");

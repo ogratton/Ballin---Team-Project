@@ -15,13 +15,15 @@ public class SessionListMenu extends BaseMenu{
 	
 	public JPanel getLobbyListPanel(ConnectionDataModel cdmodel, ObjectOutputStream toServer){
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-		DefaultTableModel tableModel = getSessionTableModel(cdmodel);
-		JTable lobbyTable = getSessionTable(tableModel);
-		JScrollPane scroll = new JScrollPane(lobbyTable);
-		addReturnButton(panel);
-		addLobbyListButtons(panel, lobbyTable, cdmodel, toServer);
-		panel.add(scroll);
+		panel.setLayout(new BorderLayout());
+		panel.add(createSessionButton(panel), BorderLayout.EAST);
+		panel.add(sessionsPanel, BorderLayout.CENTER);
+//		DefaultTableModel tableModel = getSessionTableModel(cdmodel);
+//		JTable lobbyTable = getSessionTable(tableModel);
+//		JScrollPane scroll = new JScrollPane(lobbyTable);
+//		addReturnButton(panel);
+//		addLobbyListButtons(panel, lobbyTable, cdmodel, toServer);
+//		panel.add(scroll);
 		return panel;
 	}
 

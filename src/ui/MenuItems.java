@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -257,36 +258,94 @@ public class MenuItems extends UIRes {
 		});
 		return musicSlider;
 	}
+	
+	JPanel getSessionInfo(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		JLabel sessionName = new JLabel("Session");
+		JLabel hostName = new JLabel("Host Name");
+		JLabel mapName = new JLabel("Map Name");
+		JLabel gameModeName = new JLabel("Game Mode");
+		JLabel numberPlayers = new JLabel("0/8");
+		panel.add(Box.createHorizontalGlue());
+		panel.add(sessionName);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(hostName);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(mapName);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(gameModeName);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(numberPlayers);
+		panel.add(Box.createHorizontalGlue());
+		panel.setFocusable(true);
+		Color background = panel.getBackground();
+		
+		panel.addMouseListener(new MouseListener(){
 
-	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
-		List<Session> sessions = cModel.getAllSessions();
-		System.out.println(sessions.size());
-		Iterator<Session> iterator = sessions.iterator();
-		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode" };
-		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-		while (iterator.hasNext()) {
-			Object[] lobbyInfo = { iterator.next().getId(), null, mapName, null};
-			model.addRow(lobbyInfo);
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				System.out.println(panel.isFocusOwner());
+				for(int i = 0; i < sessionList.size(); i++){
+					if(sessionList.get(i).isFocusOwner())
+						sessionList.get(i).setBackground(background);
+				}
+				panel.requestFocus();
+				panel.setBackground(Color.RED);
+			}
+			
+			@Override public void mouseEntered(MouseEvent arg0) {}
+			@Override public void mouseExited(MouseEvent arg0) {}
+			@Override public void mousePressed(MouseEvent arg0) {}
+			@Override public void mouseReleased(MouseEvent arg0) {}
+			
+		});
+		panel.requestFocus();
+		return panel;
+	}
+	
+	JPanel getSessionsTable(JPanel panel){
+		panel.removeAll();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		for(int i = 0; i < numberSessions; i++){
+			JPanel session = getSessionInfo();
+			sessionList.add(session);
+			panel.add(session);
 		}
-		return model;
+		panel.repaint();
+		panel.revalidate();
+		return panel;
 	}
 
-	JTable getSessionTable(DefaultTableModel model) {
-		JTable table = new JTable(model);
-		table.setDefaultEditor(Object.class, null);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setOpaque(true);
-		table.setFillsViewportHeight(true);
-
-		return table;
-	}
-
-	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
-		DefaultTableModel tableModel = getSessionTableModel(cModel);
-		table.removeAll();
-		table.setModel(tableModel);
-		return table;
-	}
+//	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
+//		List<Session> sessions = cModel.getAllSessions();
+//		System.out.println(sessions.size());
+//		Iterator<Session> iterator = sessions.iterator();
+//		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode", "No. of players" };
+//		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+//		while (iterator.hasNext()) {
+//			Object[] lobbyInfo = { iterator.next().getId(), null, mapName, null};
+//			model.addRow(lobbyInfo);
+//		}
+//		return model;
+//	}
+//
+//	JTable getSessionTable(DefaultTableModel model) {
+//		JTable table = new JTable(model);
+//		table.setDefaultEditor(Object.class, null);
+//		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		table.setOpaque(true);
+//		table.setFillsViewportHeight(true);
+//
+//		return table;
+//	}
+//
+//	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
+//		DefaultTableModel tableModel = getSessionTableModel(cModel);
+//		table.removeAll();
+//		table.setModel(tableModel);
+//		return table;
+//	}
 
 	JButton joinSessionButton(ConnectionDataModel cModel, ObjectOutputStream toServer) {
 		JButton button = new JButton("Join");
@@ -308,37 +367,42 @@ public class MenuItems extends UIRes {
 		return button;
 	}
 
-	JButton createSessionButton(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	//JButton createSessionButton(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	JButton createSessionButton(JPanel panel) {	
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
-			JFrame frame = new JFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Object[] inputs = createLobbyWizard();
-			mapName = ((Choice) inputs[5]).getSelectedItem();
-			((Choice) inputs[5]).addItemListener(new ItemListener() {
-
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if(e.getStateChange() == e.SELECTED){
-						mapName = ((Choice) inputs[5]).getSelectedItem();
-					System.out.println(mapName);}
-
-				}
-			});
-			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
-					JOptionPane.OK_CANCEL_OPTION);
-			if (optionPane == JOptionPane.OK_OPTION) {
-				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
-						cModel.getClientInformation());
-
-				try {
-					toServer.reset();
-					toServer.writeUnshared(createMessage);
-					updateSessionTable(cModel, table);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
+			
+			numberSessions++;
+			sessionsPanel = getSessionsTable(sessionsPanel);
+			
+//			JFrame frame = new JFrame();
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			Object[] inputs = createLobbyWizard();
+//			mapName = ((Choice) inputs[5]).getSelectedItem();
+//			((Choice) inputs[5]).addItemListener(new ItemListener() {
+//
+//				@Override
+//				public void itemStateChanged(ItemEvent e) {
+//					if(e.getStateChange() == e.SELECTED){
+//						mapName = ((Choice) inputs[5]).getSelectedItem();
+//					System.out.println(mapName);}
+//
+//				}
+//			});
+//			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
+//					JOptionPane.OK_CANCEL_OPTION);
+//			if (optionPane == JOptionPane.OK_OPTION) {
+//				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
+//						cModel.getClientInformation());
+//
+//				try {
+//					toServer.reset();
+//					toServer.writeUnshared(createMessage);
+//					//updateSessionTable(cModel, table);
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			}
 		});
 		customiseButton(button, true);
 		return button;
@@ -351,7 +415,7 @@ public class MenuItems extends UIRes {
 					null);
 			try {
 				toServer.writeUnshared(message);
-				updateSessionTable(cModel, table);
+				//updateSessionTable(cModel, table);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -587,15 +651,8 @@ public class MenuItems extends UIRes {
 
 					}
 
-					@Override
-					public void keyReleased(KeyEvent e) {
-
-					}
-
-					@Override
-					public void keyTyped(KeyEvent e) {
-
-					}
+					@Override public void keyReleased(KeyEvent e) {}
+					@Override public void keyTyped(KeyEvent e) {}
 				});
 
 			}
@@ -610,14 +667,8 @@ public class MenuItems extends UIRes {
 				button.setForeground(colour);
 			}
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
+			@Override public void mousePressed(MouseEvent e) {}
+			@Override public void mouseReleased(MouseEvent e) {}
 
 		});
 	}
