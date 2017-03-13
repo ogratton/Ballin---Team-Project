@@ -173,8 +173,8 @@ public void run() {
 					new MapCosts(resources);
     				cModel.setResources(resources);
     				
-    				Deathmatch mode = new Deathmatch(resources, true);
-    				mode.start();
+    			//	Deathmatch mode = new Deathmatch(resources, true);
+    			//	mode.start();
     				
     				break;
     			case UPDATE:
