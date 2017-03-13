@@ -38,9 +38,10 @@ public class Physics extends Thread implements ActionListener {
 	public Physics(Resources resources, boolean client){
 		this.resources = resources;
 		this.client = client;
-		
-		boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
-		death = new AudioFile(resources, "resources/audio/death.wav", "Death");
+		if(!Resources.silent){
+			boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
+			death = new AudioFile(resources, "resources/audio/death.wav", "Death");
+		}
 	}
 	
 	@Override

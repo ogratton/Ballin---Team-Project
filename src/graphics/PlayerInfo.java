@@ -79,7 +79,7 @@ public class PlayerInfo extends JPanel {
 		try {
 			customFont = Font
 					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
 					.deriveFont(Font.PLAIN, size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);

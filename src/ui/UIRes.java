@@ -39,7 +39,7 @@ public class UIRes {
 	
 	public static int numberIcons = Character.Class.values().length - 1;
 	
-	public static AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, "resources/audio/ding.wav", "Ding");
 	
 	public static StartMenu start = new StartMenu();
 	public static OptionsMenu options = new OptionsMenu();
