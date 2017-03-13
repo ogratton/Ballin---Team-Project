@@ -560,5 +560,5 @@ public class Map {
 	public String getName(){
 		return this.name;
 	}
-	
+
 }

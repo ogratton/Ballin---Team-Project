@@ -50,9 +50,9 @@ public abstract class BaseMenu extends MenuItems{
 		customiseAllPanels(frame);
 		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
-		resources.setMusicPlayer(musicPlayer);
-		musicPlayer.start();
+//		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+//		resources.setMusicPlayer(musicPlayer);
+//		musicPlayer.start();
 	}
 	
 	static void customisePanel(JPanel panel, JFrame frame){

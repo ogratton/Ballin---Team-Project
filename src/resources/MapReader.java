@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import ai.pathfinding.MapCosts;
+import graphics.sprites.SheetDeets;
 import resources.Map.Tile;
+import resources.Map.World;
 
 /**
  * Reads a Comma Separated Value file and returns it as an ArrayList of lines
@@ -21,7 +23,7 @@ public class MapReader
 	private String cvsSplitBy = ",";
 	private String comment = "#";
 	private String unreachable = "'";
-	private  Hashtable<String, Map.Tile> tileDict;
+	private Hashtable<String, Map.Tile> tileDict;
 	private Resources resources;
 	private boolean[][] untouchableTiles;
 
@@ -106,14 +108,13 @@ public class MapReader
 				untouchableTiles[i][j] = row[j].contains(unreachable);
 			}
 		}
-				
 		return map;
 	}
 	
 	public void setMap(String name) throws IOException
 	{
-		resources.setMap(new Map()); = readMap(name);
-		
+		Tile[][] tiles = readMap(name);
+		resources.setMap(new Map(tiles.length * SheetDeets.TILES_SIZEX, tiles[0].length * SheetDeets.TILES_SIZEY, tiles, World.CAKE, name));
 		new MapCosts(resources, untouchableTiles);
 	}
 	
@@ -125,7 +126,7 @@ public class MapReader
 		MapReader mr = new MapReader(new Resources());	
 		try
 		{
-			resources = mr.readMap("./resources/maps/map1.csv");
+			mr.setMap("./resources/maps/map0.csv");
 			System.out.println("I guess it worked then");
 		}
 		catch (IOException e)

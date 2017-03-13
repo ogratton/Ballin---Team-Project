@@ -28,10 +28,10 @@ public class PlayGame {
 		// Create default map in case the following fails
 		Map.Tile[][] tiles = null;	
 		// Create map
-		MapReader mr = new MapReader();	
+		MapReader mr = new MapReader(resources);	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			mr.setMap("./resources/maps/map1.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -41,8 +41,6 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 650, tiles, Map.World.CAKE, "Map"));
-		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");
 		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");

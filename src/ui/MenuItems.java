@@ -60,7 +60,7 @@ public class MenuItems extends UIRes {
 		try {
 			customFont = Font
 					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -177,11 +177,11 @@ public class MenuItems extends UIRes {
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
 			// button sound effect
-			audioPlayer.play();
+//			audioPlayer.play();
 			// change the song
 			// TODO volume defined by user is not kept here...
-			resources.getMusicPlayer().changePlaylist("thirty");
-			resources.getMusicPlayer().resumeMusic();
+//			resources.getMusicPlayer().changePlaylist("thirty");
+//			resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}

@@ -31,7 +31,7 @@ public class PhysicsWithGraphicsDemo {
 		
 		// make the map the default just in case the following fails
 		Map.Tile[][] tiles = null;	
-		MapReader mr = new MapReader();	
+		MapReader mr = new MapReader(resources);	
 		try
 		{
 			tiles = mr.readMap("./resources/maps/map1.csv");
@@ -43,10 +43,6 @@ public class PhysicsWithGraphicsDemo {
 			e.printStackTrace();
 			
 		}
-		
-		
-		resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
-		new MapCosts(resources);
 		
 		// Player 1 is the actual human
 		Character player = new Character(Character.Class.WIZARD, 1);

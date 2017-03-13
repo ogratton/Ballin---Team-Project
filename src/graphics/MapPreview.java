@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import resources.Map;
 import resources.Map.Tile;
 import resources.MapReader;
+import resources.Resources;
 
 public class MapPreview extends JPanel {
 
@@ -41,7 +42,7 @@ public class MapPreview extends JPanel {
 
 				Tile t = map.tileAt(i, j);
 
-				if (t.equals(Tile.ABYSS) || t.equals(Tile.EDGE_ABYSS)) {
+				if (t == Tile.ABYSS || t == Tile.EDGE_ABYSS || t == null) {
 					g.setColor(Color.BLACK);
 				} else {
 					g.setColor(Color.GREEN);
@@ -63,10 +64,10 @@ public class MapPreview extends JPanel {
 
 		ArrayList<Map> maps = new ArrayList<Map>();
 
+		MapReader mr = new MapReader(new Resources());
 		for (int i = 0; i < listOfFiles.length; i++) {
 
 			Map.Tile[][] tiles = null;
-			MapReader mr = new MapReader();
 			try {
 				tiles = mr.readMap(root + listOfFiles[i].getName());
 				System.out.println("Map Loaded");
