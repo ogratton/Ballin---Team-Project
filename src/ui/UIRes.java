@@ -31,6 +31,10 @@ public class UIRes {
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
+	public static String lobbyName;
+	public static String gameMode;
+	public static String mapName;
+	
 	public static final Color colour = Color.BLACK;
 	
 	public static int numberIcons = Character.Class.values().length - 1;

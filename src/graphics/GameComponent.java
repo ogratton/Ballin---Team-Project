@@ -61,7 +61,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
 		super();
-		
+
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
@@ -70,13 +70,15 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		addKeyListener(new TAdapter(resources));
 		setFocusable(true);
-		
+
 		label = new JLabel();
 		label.setText("hello");
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
-		
+
 		bar = new TopBar(resources);
-		
+
+		view = new GameView(resources, debugPaths);
+
 		timer = new Timer(10, this);
 		timer.start();
 
@@ -87,8 +89,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		this.width = width;
 		this.height = height;
-
-		view = new GameView(resources, debugPaths);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -107,21 +107,18 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 		}
 
-
 		label.setHorizontalAlignment(JLabel.CENTER);
-		
-		
-		
-		//add(label, BorderLayout.NORTH);
+
+		// add(label, BorderLayout.NORTH);
 		add(bar, BorderLayout.NORTH);
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-	
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+
 		add(view, BorderLayout.CENTER);
-		
+
 		toggleFullscreen();
-		
+
 		setVisible(true);
 		pack();
 	}
@@ -134,28 +131,14 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
-			repaint();
-			updateScores();
+		view.repaint();
+
+		if (resources.getScoreChanged()) {
 			bar.setOrder();
 			bar.updateStats();
-		
-	}
-	
-	public void updateScores(){
-		ArrayList<Character> scores = resources.gamemode.getOrderedScores();
-		String s = "";
-		for (Character c : scores) {
-			s += "Player " + c.getPlayerNumber() + ": " + c.getScore() + ", ";
+			resources.setScoreChanged(false);
 		}
-		if (resources.mode == Mode.HotPotato) {
-			for (Character c : resources.getPlayerList()) {
-				if (c.hasBomb()) {
-					s += "     Holding bomb: Player " + c.getPlayerNumber();
-				}
-			}
-		}
-		s += "     Stamina: " + resources.getPlayerList().get(0).getStamina();
-		label.setText(s);
+
 	}
 
 	/**
@@ -184,10 +167,10 @@ public class GameComponent extends JFrame implements ActionListener {
 			fullScreen = true;
 
 		}
-		
+
 		setFocusable(true);
 		requestFocus();
-		
+
 	}
 
 	public void cycleWorld() {
@@ -216,9 +199,9 @@ public class GameComponent extends JFrame implements ActionListener {
 		toggleFullscreen();
 
 	}
-	
+
 	private class TAdapter extends KeyAdapter {
-		
+
 		private Resources resources;
 		private int leftKey;
 		private int rightKey;
@@ -226,138 +209,86 @@ public class GameComponent extends JFrame implements ActionListener {
 		private int downKey;
 		private int dashKey;
 		private int blockKey;
-		
+
 		public TAdapter(Resources resources) {
 			this.resources = resources;
-			
-			
+
 			setUpControls();
-			
+
 		}
-		
-		public void setUpControls(){
-			
+
+		public void setUpControls() {
+
 			leftKey = resources.getLeft();
 			rightKey = resources.getRight();
 			upKey = resources.getUp();
 			downKey = resources.getDown();
-			
+
 			blockKey = resources.getBlock();
 			dashKey = resources.getDash();
-			
+
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			
+
 			int key = e.getKeyCode();
-			
-			if(key == leftKey){
-				characters.get(firstPlayerIndex).setLeft(false);
-			} else if(key == rightKey){
-				characters.get(firstPlayerIndex).setRight(false);
-			} else if(key == upKey){
-				characters.get(firstPlayerIndex).setUp(false);
-			} else if(key == downKey){
-				characters.get(firstPlayerIndex).setDown(false);
+
+			/*
+			 * if(key == leftKey){
+			 * characters.get(firstPlayerIndex).setLeft(false); } else if(key ==
+			 * rightKey){ characters.get(firstPlayerIndex).setRight(false); }
+			 * else if(key == upKey){
+			 * characters.get(firstPlayerIndex).setUp(false); } else if(key ==
+			 * downKey){ characters.get(firstPlayerIndex).setDown(false); }
+			 */
+
+			if (key == leftKey) {
+				resources.getMyCharacter().setLeft(false);
+			} else if (key == rightKey) {
+				resources.getMyCharacter().setRight(false);
+			} else if (key == upKey) {
+				resources.getMyCharacter().setUp(false);
+			} else if (key == downKey) {
+				resources.getMyCharacter().setDown(false);
 			}
-			
-			/*switch (key) {
-			case KeyEvent.VK_A:
-				characters.get(firstPlayerIndex).setLeft(false);
-				break;
-			case KeyEvent.VK_D:
-				characters.get(firstPlayerIndex).setRight(false);
-				break;
-			case KeyEvent.VK_W:
-				characters.get(firstPlayerIndex).setUp(false);
-				break;
-			case KeyEvent.VK_S:
-				characters.get(firstPlayerIndex).setDown(false);
-				break;
-			case KeyEvent.VK_UP:
-				characters.get(secondPlayerIndex).setUp(false);
-				break;
-			case KeyEvent.VK_DOWN:
-				characters.get(secondPlayerIndex).setDown(false);
-				break;
-			case KeyEvent.VK_LEFT:
-				characters.get(secondPlayerIndex).setLeft(false);
-				break;
-			case KeyEvent.VK_RIGHT:
-				characters.get(secondPlayerIndex).setRight(false);
-				break;
-			}*/
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
-			
-			if(key == leftKey){
-				characters.get(firstPlayerIndex).setLeft(true);
-			} else if(key == rightKey){
-				characters.get(firstPlayerIndex).setRight(true);
-			} else if(key == upKey){
-				characters.get(firstPlayerIndex).setUp(true);
-			} else if(key == downKey){
-				characters.get(firstPlayerIndex).setDown(true);
-			} else if(key == dashKey){
-				characters.get(firstPlayerIndex).requestDashing();
-			} else if(key == blockKey){
-				characters.get(firstPlayerIndex).setBlocking(true);
-			} else if(key == KeyEvent.VK_ESCAPE){
+
+			/*
+			 * if(key == leftKey){
+			 * characters.get(firstPlayerIndex).setLeft(true); } else if(key ==
+			 * rightKey){ characters.get(firstPlayerIndex).setRight(true); }
+			 * else if(key == upKey){
+			 * characters.get(firstPlayerIndex).setUp(true); } else if(key ==
+			 * downKey){ characters.get(firstPlayerIndex).setDown(true); } else
+			 * if(key == dashKey){
+			 * characters.get(firstPlayerIndex).requestDashing(); } else if(key
+			 * == blockKey){ characters.get(firstPlayerIndex).setBlocking(true);
+			 * } else if(key == KeyEvent.VK_ESCAPE){ System.exit(0); } else
+			 * if(key == KeyEvent.VK_Z){ cycleWorld(); }
+			 */
+
+			if (key == leftKey) {
+				resources.getMyCharacter().setLeft(true);
+			} else if (key == rightKey) {
+				resources.getMyCharacter().setRight(true);
+			} else if (key == upKey) {
+				resources.getMyCharacter().setUp(true);
+			} else if (key == downKey) {
+				resources.getMyCharacter().setDown(true);
+			} else if (key == dashKey) {
+				resources.getMyCharacter().requestDashing();
+			} else if (key == blockKey) {
+				resources.getMyCharacter().setBlocking(true);
+			} else if (key == KeyEvent.VK_ESCAPE) {
 				System.exit(0);
-			} else if(key == KeyEvent.VK_Z){
+			} else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
 			}
-			
-			/*switch (key) {
-			case KeyEvent.VK_A:
-				characters.get(firstPlayerIndex).setLeft(true);
-				break;
-			case KeyEvent.VK_D:
-				characters.get(firstPlayerIndex).setRight(true);
-				break;
-			case KeyEvent.VK_W:
-				characters.get(firstPlayerIndex).setUp(true);
-				break;
-			case KeyEvent.VK_S:
-				characters.get(firstPlayerIndex).setDown(true);
-				break;
-			case KeyEvent.VK_UP:
-				characters.get(secondPlayerIndex).setUp(true);
-				break;
-			case KeyEvent.VK_DOWN:
-				characters.get(secondPlayerIndex).setDown(true);
-				break;
-			case KeyEvent.VK_LEFT:
-				characters.get(secondPlayerIndex).setLeft(true);
-				break;
-			case KeyEvent.VK_RIGHT:
-				characters.get(secondPlayerIndex).setRight(true);
-				break;
-			case KeyEvent.VK_SHIFT:
-				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(firstPlayerIndex).setDashing(true);
-				} else {
-					characters.get(secondPlayerIndex).setDashing(true);
-				}
-				break;
-			case KeyEvent.VK_CONTROL:
-				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(firstPlayerIndex).setBlocking(true);
-				} else {
-					characters.get(secondPlayerIndex).setBlocking(true);
-				}
-				break;
-			case KeyEvent.VK_ESCAPE:
-				System.exit(0);
-				break;
-			case KeyEvent.VK_Z:
-				cycleWorld();
-				break;
-			}*/
 
 		}
 	}

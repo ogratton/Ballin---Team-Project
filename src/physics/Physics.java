@@ -136,6 +136,7 @@ public class Physics extends Thread implements ActionListener {
 	 * calculate speed and location of a character. Assumes no collisions.
 	 * @param c
 	 */
+	@SuppressWarnings("deprecation")
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		if(c.isDead() && c.getLives() != 0) {
@@ -144,7 +145,9 @@ public class Physics extends Thread implements ActionListener {
 				if(!client) resources.getMap().spawn(c);
 				if (c.isAI()) {
 					BasicAI ai = new BasicAI(resources, c);
+					c.setAI(ai);
 					ai.start();
+					
 				}
 			}
 		}
@@ -226,9 +229,12 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
+					c.incrementScore(-1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();
+
+					
 				} else {
 					// take 2 points away from c
 					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
@@ -239,6 +245,8 @@ public class Physics extends Thread implements ActionListener {
 				if (c.hasPowerup()) {
 					c.revertPowerup();
 				}
+				
+				resources.setScoreChanged(true);
 			}
 		}
 		//System.out.println("Got here");
