@@ -408,9 +408,9 @@ public class MenuItems extends UIRes {
 		JButton button = new JButton("Leave Lobby");
 		customiseButton(button, true);
 		button.addActionListener(e -> {
-			SessionListMenu lobbyList = new SessionListMenu();
-			JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
-			switchPanel(lobby);
+			//SessionListMenu lobbyList = new SessionListMenu();
+		//	JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
+		//	switchPanel(lobby);
 		});
 		return button;
 		
