@@ -9,6 +9,11 @@ import java.util.TreeSet;
 import resources.Map.Tile;
 import resources.Resources;
 
+/**
+ * Perform A* search on a 2D array of tiles
+ * @author Oliver Gratton
+ *
+ */
 public class AStarSearch
 {
 	private PriorityQueue<SearchNode> frontier;
@@ -29,6 +34,12 @@ public class AStarSearch
 		height = resources.getMap().getCostMask()[0].length;
 	}
 
+	/**
+	 * Returns a list of waypoints between the start and goal points
+	 * @param start
+	 * @param goal
+	 * @return
+	 */
 	public LinkedList<Point> search(Point start, Point goal)
 	{
 		// reset all the fields
@@ -77,7 +88,7 @@ public class AStarSearch
 		// make as sparse as possible so that the only
 		// elements are corners.
 		// this may be awkward with linked lists
-		ll = sparsifyPath(ll);
+		ll = smoothPath(ll);
 		return ll;
 	}
 
@@ -133,17 +144,6 @@ public class AStarSearch
 	}
 
 	/**
-	 * Get the type of tile at a given grid reference
-	 * 
-	 * @param location
-	 * @return
-	 */
-//	private Tile getTileType(Point location)
-//	{
-//		return resources.getMap().tileAt(location.getX(), location.getY());
-//	}
-
-	/**
 	 * When we have found the goal as a search node, follow the parents back to
 	 * the source
 	 * Builds the list from the front so we don't need to reverse it
@@ -164,20 +164,19 @@ public class AStarSearch
 	}
 
 	/**
-	 * Remove all intermediate waypoints in a linked list so that the only ones
-	 * that
-	 * remain are 'corner' points.
+	 * Keep only every "gap"th waypoint
 	 * 
 	 * @param dense the dense linked list to be pruned
 	 * @return a less dense list of waypoints for the AI to follow
 	 */
-	private LinkedList<Point> sparsifyPath(LinkedList<Point> dense)
+	private LinkedList<Point> sparsifyPath(LinkedList<Point> dense, int gap)
 	{
-		// TODO to be replaced by a rudimentary smoothing algorithm
-
-		// temporary dumb way to keep only every <gap>th point:
+		if (dense.isEmpty())
+		{
+			return dense;
+		}
 		LinkedList<Point> sparse = new LinkedList<Point>();
-		int gap = 3;
+		Point destination = dense.getLast();
 		int init_size = dense.size();
 
 		for (int position = 0; dense.size() > 1; position += gap)
@@ -189,11 +188,55 @@ public class AStarSearch
 				{
 					sparse.addLast(temp);
 				}
-
 			}
-
 		}
+		
+		sparse.addLast(destination);
 
+		return sparse;
+	}
+	
+	/**
+	 * Smooth the path found by A* to make it look more natural
+	 * @param jagged path raw from A*
+	 * @return a smoothed version of jagged
+	 */
+	private LinkedList<Point> smoothPath(LinkedList<Point> jagged)
+	{
+		LinkedList<Point> sparse = sparsifyPath(jagged, 3); // only keep every third waypoint
+		
+		// TODO
+		// if normal is same/nearly the same as the last, we can get rid of the last
+		
+		Point lastWaypoint = null;
+		Vector lastVector = null;
+		int i = 0; // index of current waypoint
+		
+		while(sparse.size() > 1 && i < sparse.size())
+		{
+			// every time after the first
+			if (lastWaypoint != null)
+			{
+				Vector currentVector = new Vector(lastWaypoint, sparse.get(i));
+				if (lastVector != null && currentVector.equalDirection(lastVector))
+				{
+//					System.out.println(currentVector + " ~= " + lastVector);
+					// remove the last waypoint from the list, as it is too similar to the current one
+					sparse.remove(i-1);
+					// we also need to move i back a step now
+					i--;
+				}
+				else
+				{
+//					System.out.println(currentVector + " != " + lastVector);
+				}
+				lastVector = currentVector;
+			}
+			
+			lastWaypoint = sparse.get(i);
+			i++;
+		}
+		
 		return sparse;
 	}
 

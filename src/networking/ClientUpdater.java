@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -14,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import resources.NetworkMove;
 import resources.Resources;
 
 public class ClientUpdater extends JPanel implements Observer {
@@ -60,7 +63,11 @@ public class ClientUpdater extends JPanel implements Observer {
 //			charactersList.add(info);
 //		}
 		
-		GameData data = new GameData(resourcesMap.get(sessionId).getClientMoves());
+		//System.out.println("No. of Moves Server: " + resourcesMap.get(sessionId).getClientMoves().size());
+		Queue<NetworkMove> q = new LinkedList<NetworkMove>();
+		q.addAll(resourcesMap.get(sessionId).getClientMoves());
+		GameData data = new GameData(q);
+		resourcesMap.get(sessionId).getClientMoves().clear();
 		Message message = new Message(Command.GAME, Note.UPDATE, null, null, sessionId, sessionId, data);
 		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 		ClientInformation client;

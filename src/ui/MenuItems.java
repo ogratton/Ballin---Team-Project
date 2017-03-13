@@ -1,6 +1,6 @@
 package ui;
 
-import java.awt.BorderLayout;
+import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,9 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.ObjectOutputStream;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
+import java.util.List;
+import java.util.UUID;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,24 +28,39 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 import gamemodes.PlayGame;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
 import networking.Client;
+import networking.ClientInformation;
+import networking.Command;
+import networking.ConnectionDataModel;
+import networking.Message;
+import networking.Note;
 import networking.Port;
+import networking.Session;
+import resources.Map;
+import resources.Character;
 
-public class MenuItems extends UIRes{
-	
-	void allignToCenter(JComponent comp){
+public class MenuItems extends UIRes {
+
+	void allignToCenter(JComponent comp) {
 		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
-	
-	void setCustomFont(JComponent comp, int size){
+
+	void setCustomFont(JComponent comp, int size) {
 		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/04b.ttf"))
+			customFont = Font
+					.createFont(Font.TRUETYPE_FONT,
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
@@ -50,179 +69,189 @@ public class MenuItems extends UIRes{
 		}
 		comp.setFont(customFont);
 	}
-	
-	void customiseLabel(JComponent comp){
-		setCustomFont(comp, (int)(labelSize.height * labelRatio));
-		allignToCenter(comp);
+
+	Color getRandomColour() {
+		SecureRandom rand = new SecureRandom();
+		int r = rand.nextInt(255);
+		int g = rand.nextInt(255);
+		int b = rand.nextInt(255);
+		Color color = new Color(r, g, b);
+		return color;
 	}
-	
-	void customiseComponent(JComponent comp, Dimension size, double ratio){
+
+	void customiseLabel(JComponent comp) {
+		setCustomFont(comp, (int) (labelSize.height * labelRatio));
+		allignToCenter(comp);
+		comp.setForeground(colour);
+	}
+
+	void customiseComponent(JComponent comp, Dimension size, double ratio) {
 		comp.setMaximumSize(size);
-		setCustomFont(comp, (int)(size.height * ratio));
+		setCustomFont(comp, (int) (size.height * ratio));
 		allignToCenter(comp);
+		comp.setOpaque(false);
+		comp.setForeground(colour);
 	}
-	
-	void customiseButton(JButton button){
+
+	void customiseButton(JButton button, boolean addListener) {
 		customiseComponent(button, buttonSize, buttonRatio);
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
 		button.setOpaque(false);
 		button.setFocusable(false);
-		button.addMouseListener(new MouseListener(){
+		button.setForeground(colour);
+		if (addListener) {
+			button.addMouseListener(new MouseListener() {
 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					// TODO Auto-generated method stub
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				button.setForeground(Color.BLUE);
-				
-			}
+				}
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				button.setForeground(Color.BLACK);
-				
-			}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					button.setForeground(getRandomColour());
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+				}
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
+				@Override
+				public void mouseExited(MouseEvent e) {
+					button.setForeground(colour);
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
+		}
 	}
-	
-	void customiseSlider(JSlider slider){
+
+	void customiseSlider(JSlider slider) {
 		customiseComponent(slider, buttonSize, sliderRatio);
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(10);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 	}
-	
-	void switchPanel(JPanel newPanel){
-		mainPanel.removeAll();
-		mainPanel.add(newPanel);
-		newPanel.setPreferredSize(mainPanel.getSize());
-		mainPanel.revalidate();
-		mainPanel.repaint();
-	}
-	
-	JLabel getLabel(String text){
+
+	JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
 		customiseLabel(label);
 		return label;
 	}
-	
-	JLabel getSpriteIcon(int x){
-		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x, SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+
+	JLabel getSpriteIcon(int x) {
+		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
+				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
-	
-	JPanel getButtonAndIcon(JPanel panel, JButton button){
+
+	JPanel getButtonAndIcon(JPanel panel, JButton button) {
 		JPanel buttonPanel = new JPanel();
 		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);
-		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(getSpriteIcon(x));
 		buttonPanel.add(button);
 		buttonPanel.add(getSpriteIcon(x));
+		buttonPanel.setOpaque(false);
 		panel.add(buttonPanel);
 		return panel;
 	}
-	
-	JButton getPlaySingleplayerButton(){
+
+	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
-		customiseButton(startButton);
+		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
 			// button sound effect
 			audioPlayer.play();
-			// XXX change the song
+			// change the song
+			// TODO volume defined by user is not kept here...
 			resources.getMusicPlayer().changePlaylist("thirty");
 			resources.getMusicPlayer().resumeMusic();
 		});
 		return startButton;
 	}
-	
-	JButton getPlayMultiplayerButton(){
+
+	JButton getPlayMultiplayerButton() {
 		JButton startButton = new JButton("Start Multiplayer Game");
-		customiseButton(startButton);
+		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
-			String input = (String)JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server", JOptionPane.PLAIN_MESSAGE);
-			if (input != null){
-				connectToServer(username, "" + Port.number, host);				
-			}
-			else{
+			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
+				connectToServer(username, "" + Port.number, host);
+			} else {
 				frame.dispose();
 			}
 		});
 		return startButton;
 	}
-	
-	void connectToServer(String username, String port, String host){
+
+	void connectToServer(String username, String port, String host) {
 		Client client = new Client(username, port, host);
 		client.start();
 	}
-	
-	JButton getBackToStartMenuButton(){
+
+	JButton getBackToStartMenuButton() {
 		JButton button = new JButton("Back");
-		customiseButton(button);
+		customiseButton(button, true);
 		button.addActionListener(e -> {
 			switchPanel(startPanel);
 		});
 		return button;
 	}
-	
-	JButton getOptionsButton(){
+
+	JButton getOptionsButton() {
 		JButton optionsButton = new JButton("Options");
-		customiseButton(optionsButton);
+		customiseButton(optionsButton, true);
 		optionsButton.addActionListener(e -> {
 			switchPanel(optionsPanel);
 		});
 		return optionsButton;
 	}
-	
-	JButton getExitButton(){
+
+	JButton getExitButton() {
 		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(e -> {
 			System.exit(0);
 		});
-		customiseButton(exitButton);
+		customiseButton(exitButton, true);
 		return exitButton;
 	}
-	
-	JButton getUsername(JLabel label){
+
+	JButton getUsername(JLabel label) {
 		JButton usernameButton = new JButton("Change username");
-		customiseButton(usernameButton);		
-		usernameButton.addActionListener(e ->{
+		customiseButton(usernameButton, true);
+		usernameButton.addActionListener(e -> {
 			JFrame frame = new JFrame();
-			String input = (String)JOptionPane.showInputDialog(frame, "Enter your username:", "Input username",JOptionPane.PLAIN_MESSAGE);
-			if(input != null){
+			String input = (String) JOptionPane.showInputDialog(frame, "Enter your username:", "Input username",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
 				username = input;
 				label.setText("Welcome, " + username + "!");
-			}
-			else{
+			} else {
 				frame.dispose();
 			}
 		});
 		return usernameButton;
 	}
-	
-	JSlider getMusicSlider(){
+
+	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
 		musicSlider.addChangeListener(e -> {
@@ -234,8 +263,160 @@ public class MenuItems extends UIRes{
 		});
 		return musicSlider;
 	}
+
+	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
+		List<Session> sessions = cModel.getAllSessions();
+		Iterator<Session> iterator = sessions.iterator();
+		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode" };
+		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+		while (iterator.hasNext()) {
+			Object[] lobbyInfo = { "ID: " + iterator.next().getId(), null, null, null, null };
+			model.addRow(lobbyInfo);
+		}
+		return model;
+	}
+
+	JTable getSessionTable(DefaultTableModel model) {
+		JTable table = new JTable(model);
+		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setOpaque(true);
+		table.setFillsViewportHeight(true);
+
+		return table;
+	}
+
+	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
+		DefaultTableModel tableModel = getSessionTableModel(cModel);
+		table.setModel(tableModel);
+		return table;
+	}
+
+	JButton joinSessionButton(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Join");
+		button.addActionListener(e -> {
+			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
+						cModel.getSessionId(), cModel.getHighlightedSessionId());
+				try {
+					toServer.reset();
+					toServer.writeUnshared(joinMessage);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		});
+
+		customiseButton(button, true);
+		return button;
+	}
+
+	JButton createSessionButton(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Create Lobby");
+		button.addActionListener(e -> {
+			JFrame frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Object[] inputs = createLobbyWizard();
+			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
+					JOptionPane.OK_CANCEL_OPTION);
+			if (optionPane == JOptionPane.OK_OPTION) {
+				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
+						cModel.getClientInformation());
+
+				try {
+					toServer.reset();
+					toServer.writeUnshared(createMessage);
+					updateSessionTable(cModel, table);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		customiseButton(button, true);
+		return button;
+	}
+
+	JButton refreshSessionList(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+		JButton button = new JButton("Refresh");
+		button.addActionListener(e -> {
+			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(),
+					null);
+			try {
+				toServer.writeUnshared(message);
+				updateSessionTable(cModel, table);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		customiseButton(button, true);
+		return button;
+	}
+
+	Object[] createLobbyWizard() {
+		JLabel lobbyNameLabel = new JLabel("Lobby name: ");
+
+		JLabel gameModeLabel = new JLabel("Game mode: ");
+		Choice gameModeChoice = new Choice();
+
+		JLabel mapLabel = new JLabel("Map: ");
+		Choice mapChoice = new Choice();
+		for (Map.World map : Map.World.values()) {
+			mapChoice.add(map + "");
+		}
+		customiseLabel(lobbyNameLabel);
+		customiseLabel(gameModeLabel);
+		customiseLabel(mapLabel);
+		Object[] inputs = { lobbyNameLabel, new JTextField(username + "'s lobby"), gameModeLabel, gameModeChoice,
+				mapLabel, mapChoice };
+
+		return inputs;
+	}
 	
-	JSlider getAudioSlider(){
+//	JTable getLobbyTableModel(ConnectionDataModel cModel){
+//		List<Session> sessions = cModel.getAllSessions();
+//		String[] columnNames = { "Player", "Character", "Ready"};
+//		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+//		if (cModel.getHighlightedSessionId() != null) {
+//			UUID sessionId = cModel.getHighlightedSessionId();
+//			Session session = cModel.getSession(sessionId);
+//			clients = session.getAllClients();
+//		}
+//		else {
+//			clients = new ArrayList<ClientInformation>();
+//		}
+//		return model;		
+//	}
+	
+	JPanel addPlayerToLobby(JPanel panel, String playerName){
+		JPanel playerPanel = new JPanel();
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+		JLabel playerLabel = new JLabel(playerName);
+		
+		Choice characterClass = new Choice();
+		for(Character.Class character : Character.Class.values()){
+			characterClass.add(character + "");
+		}
+		
+		playerPanel.add(playerLabel);
+		playerPanel.add(characterClass);
+		panel.add(playerPanel);
+		return panel;
+	}
+	
+	JButton backToLobbyListPanel(ConnectionDataModel cModel, ObjectOutputStream toServer){
+		JButton button = new JButton("Leave Lobby");
+		customiseButton(button, true);
+		button.addActionListener(e -> {
+			SessionListMenu lobbyList = new SessionListMenu();
+			JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
+			switchPanel(lobby);
+		});
+		return button;
+		
+	}
+
+	JSlider getAudioSlider() {
 		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(audioSlider);
 		audioSlider.addChangeListener(e -> {
@@ -247,42 +428,50 @@ public class MenuItems extends UIRes{
 		});
 		return audioSlider;
 	}
-	
-	JPanel getControlButton(String buttonLabel, String buttonName, String name){
-		JPanel panel = new JPanel();	
+
+	JPanel getControlButton(String buttonLabel, String buttonName, String name) {
+		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension((int) (width * 0.85), (int) (height * 0.1)));
+		panel.setOpaque(false);
 		GridLayout controlsGrid = new GridLayout(0, 2);
 		panel.setLayout(controlsGrid);
 		panel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		
+
 		JLabel label = getLabel(buttonLabel);
-		
+
 		JButton button = new JButton(buttonName);
-		customiseButton(button);
+		customiseButton(button, false);
+		button.setFocusable(true);
 		button.setName(name);
 		setKeyRebindable(button);
 		controlsList.add(button.getText());
 		buttonsList.add(button);
-		
+
 		panel.add(label);
 		panel.add(button);
 		return panel;
 	}
-	
-	JPanel getControlsPanel(){
+
+	JPanel getControlsPanel() {
 		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension((int) (width * 0.85), (int) (height * 0.32)));
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
 		panel.add(getControlButton("Move up:", KeyEvent.getKeyText(resources.getDefaultUp()).toUpperCase(), "up"));
-		panel.add(getControlButton("Move down:", KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase(), "down"));
-		panel.add(getControlButton("Move left:", KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase(), "left"));
-		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(), "right"));
+		panel.add(
+				getControlButton("Move down:", KeyEvent.getKeyText(resources.getDefaultDown()).toUpperCase(), "down"));
+		panel.add(
+				getControlButton("Move left:", KeyEvent.getKeyText(resources.getDefaultLeft()).toUpperCase(), "left"));
+		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(resources.getDefaultRight()).toUpperCase(),
+				"right"));
 		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(resources.getDefaultDash()).toUpperCase(), "dash"));
 		panel.add(getControlButton("Block:", KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase(), "block"));
-		
+
+		panel.setOpaque(false);
 		return panel;
 	}
-	
+
 	void resetButton(JButton button) {
 		if (button.getName().equals("up")) {
 			resources.setUp(resources.getDefaultUp());
@@ -304,29 +493,29 @@ public class MenuItems extends UIRes{
 			button.setText(KeyEvent.getKeyText(resources.getDefaultBlock()).toUpperCase());
 		}
 	}
-	
-	JButton getResetControlsButton(){
+
+	JButton getResetControlsButton() {
 		JButton resetControlsButton = new JButton("Reset controls");
-		customiseButton(resetControlsButton);
+		customiseButton(resetControlsButton, true);
 		resetControlsButton.addActionListener(e -> {
 			Iterator<JButton> i = buttonsList.iterator();
-			while(i.hasNext()){
+			while (i.hasNext()) {
 				JButton button = i.next();
 				resetButton(button);
 			}
-		
+
 			controlsList.removeAll(controlsList);
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultUp()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultDown()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultLeft()));
-			controlsList.add("" + Character.toUpperCase((char) resources.getDefaultRight()));
+			controlsList.add(("" + resources.getDefaultUp()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultDown()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultLeft()).toUpperCase());
+			controlsList.add(("" + resources.getDefaultRight()).toUpperCase());
 			controlsList.add(("" + resources.getDefaultDash()).toUpperCase());
 			controlsList.add(("" + resources.getDefaultBlock()).toUpperCase());
-			
+
 		});
 		return resetControlsButton;
 	}
-	
+
 	void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
@@ -365,8 +554,8 @@ public class MenuItems extends UIRes{
 									button.setText("alt".toUpperCase());
 							} else if (((e.getKeyChar() >= 'a') && (e.getKeyChar() <= 'z'))
 									|| ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9'))) {
-								if (!checkKey("" + Character.toUpperCase(e.getKeyChar())))
-									button.setText("" + Character.toUpperCase(e.getKeyChar()));
+								if (!checkKey(("" + (e.getKeyChar())).toUpperCase()))
+									button.setText(("" + e.getKeyChar()).toUpperCase());
 							}
 							isPressed = false;
 							controlsList.add(button.getText());
@@ -402,12 +591,12 @@ public class MenuItems extends UIRes{
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-
+				button.setForeground(getRandomColour());
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-
+				button.setForeground(colour);
 			}
 
 			@Override
@@ -417,7 +606,6 @@ public class MenuItems extends UIRes{
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
 			}
 
 		});

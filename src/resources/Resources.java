@@ -23,7 +23,7 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey };
+	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	public Mode mode;
 	public GameModeFFA gamemode;
 

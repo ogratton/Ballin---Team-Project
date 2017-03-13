@@ -2,7 +2,7 @@ package gamemodes;
 
 import java.io.IOException;
 
-import ai.VeryBasicAI;
+import ai.BasicAI;
 import ai.pathfinding.MapCosts;
 import resources.Character;
 import resources.Map;
@@ -41,20 +41,30 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Map"));
+		resources.setMap(new Map(1200, 650, tiles, Map.World.CAKE, "Map"));
 		new MapCosts(resources);
 		// Create and add players
-		Character player = new Character(Character.Class.WIZARD, 1);
-		Character player1 = new Character(Character.Class.ARCHER, 2);
-		Character player2 = new Character(Character.Class.HORSE, 0);
+		Character player = new Character(Character.Class.WIZARD, 1, "Player");
+		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");
+		Character player2 = new Character(Character.Class.HORSE, 0, "CPU2");
 		resources.addPlayerToList(player);
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 		// Create AIs
-		VeryBasicAI ai1 = new VeryBasicAI(resources, player1);
+		BasicAI ai1 = new BasicAI(resources, player1);
+		player1.setAI(ai1);
 		ai1.start();
-		VeryBasicAI ai2 = new VeryBasicAI(resources, player2);
+		BasicAI ai2 = new BasicAI(resources, player2);
 		ai2.start();
+		player2.setAI(ai2);
+		
+		for(int i = 3; i < 8; i++){
+			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
+			resources.addPlayerToList(character);
+			BasicAI ai = new BasicAI(resources, character);
+			character.setAI(ai);
+			ai.start();
+		}
 		
 		// Create game mode (starts physics and graphics)
 		//LastManStanding mode = new LastManStanding(resources, 5);

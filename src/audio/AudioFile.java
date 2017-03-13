@@ -96,6 +96,7 @@ public class AudioFile implements LineListener
 
 	/**
 	 * Play the clip with specified gain level
+	 * Relative to slider input defined in menu by user
 	 * (0 is normal, -ve numbers decrease volume)
 	 * 
 	 * @param gain gain to apply to clip
@@ -171,7 +172,7 @@ public class AudioFile implements LineListener
 	/**
 	 * resume where we left
 	 */
-	public void resume(int pos)
+	public void resume(int pos, float gain)
 	{
 		// for a wav file at 44100hz, this sets it back a second
 		// but seems to actually set it back where it really was
@@ -190,6 +191,8 @@ public class AudioFile implements LineListener
 			return;
 		}
 		clip.setFramePosition(res_pos);
+		int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+		gainControl.setValue(gain + offset); 
 		clip.start();
 		playState = PlayState.PLAYING;
 	}

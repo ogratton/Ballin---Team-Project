@@ -36,6 +36,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Map map;
 	private Timer timer;
 	private GameView view;
+	private TopBar bar;
 	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
@@ -59,6 +60,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
+		super();
+		
 		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
@@ -72,6 +75,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		label.setText("hello");
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
+		bar = new TopBar(resources);
+		
 		timer = new Timer(10, this);
 		timer.start();
 
@@ -84,7 +89,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.height = height;
 
 		view = new GameView(resources, debugPaths);
-		//mapView = new MapView(resources);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -104,9 +108,12 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 
+		label.setHorizontalAlignment(JLabel.CENTER);
 		
 		
-		add(label, BorderLayout.NORTH);
+		
+		//add(label, BorderLayout.NORTH);
+		add(bar, BorderLayout.NORTH);
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
@@ -116,6 +123,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		toggleFullscreen();
 		
 		setVisible(true);
+		pack();
 	}
 
 	// All code below here is for testing
@@ -128,6 +136,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 			repaint();
 			updateScores();
+			bar.setOrder();
+			bar.updateStats();
 		
 	}
 	
@@ -157,7 +167,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		if (fullScreen) {
 
 			view.setFullScreen(false);
-			getContentPane().setPreferredSize(new Dimension(1200, 675));
+			getContentPane().setPreferredSize(new Dimension(1200, 625));
 			pack();
 			setLocationRelativeTo(null);
 			fullScreen = false;

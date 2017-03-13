@@ -52,7 +52,7 @@ public class ServerSender extends Thread {
 //			String name = it.next().getValue().getClass().toString();
 			
 			toClient.writeUnshared(msg);
-			System.out.println("Command: " + msg.getCommand() + " Note: " + msg.getNote());
+			//System.out.println("Command: " + msg.getCommand() + " Note: " + msg.getNote());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
