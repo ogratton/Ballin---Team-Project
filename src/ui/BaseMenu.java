@@ -167,17 +167,17 @@ public abstract class BaseMenu extends MenuItems{
 		 return panel;
 	 }
 	 
-	 JPanel addLobbyListButtons(JPanel panel, JTable table, ConnectionDataModel cdmodel, ObjectOutputStream toServer){
-		 JPanel buttonsPanel = new JPanel();
-		 JButton joinLobby = joinSessionButton(cdmodel, toServer);
-		 JButton createLobby = createSessionButton(table, cdmodel, toServer);
-		 JButton refreshLobby = refreshSessionList(table, cdmodel, toServer);
-		 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
-		 getButtonAndIcon(buttonsPanel, joinLobby);
-		 getButtonAndIcon(buttonsPanel, createLobby);
-		 getButtonAndIcon(buttonsPanel, refreshLobby);
-		 panel.add(buttonsPanel);
-		 return panel;
-	 }
+//	 JPanel addLobbyListButtons(JPanel panel, JTable table, ConnectionDataModel cdmodel, ObjectOutputStream toServer){
+//		 JPanel buttonsPanel = new JPanel();
+//		 JButton joinLobby = joinSessionButton(cdmodel, toServer);
+//		 JButton createLobby = createSessionButton(table, cdmodel, toServer);
+//		 JButton refreshLobby = refreshSessionList(table, cdmodel, toServer);
+//		 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+//		 getButtonAndIcon(buttonsPanel, joinLobby);
+//		 getButtonAndIcon(buttonsPanel, createLobby);
+//		 getButtonAndIcon(buttonsPanel, refreshLobby);
+//		 panel.add(buttonsPanel);
+//		 return panel;
+//	 }
 	
 }
