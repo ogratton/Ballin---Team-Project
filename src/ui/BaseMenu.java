@@ -20,6 +20,7 @@ import audio.MusicPlayer;
 import graphics.sprites.Sprite;
 import networking.ConnectionDataModel;
 import resources.Map;
+import resources.Resources;
 
 public abstract class BaseMenu extends MenuItems{
 	
@@ -50,9 +51,11 @@ public abstract class BaseMenu extends MenuItems{
 		customiseAllPanels(frame);
 		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-//		MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
-//		resources.setMusicPlayer(musicPlayer);
-//		musicPlayer.start();
+		if(!Resources.silent) {
+			MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+			resources.setMusicPlayer(musicPlayer);
+			musicPlayer.start();
+		}
 	}
 	
 	static void customisePanel(JPanel panel, JFrame frame){

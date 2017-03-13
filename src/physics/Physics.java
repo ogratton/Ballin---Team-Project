@@ -9,9 +9,7 @@ import javax.swing.Timer;
 
 import ai.BasicAI;
 import audio.AudioFile;
-import graphics.sprites.SheetDeets;
 import resources.Character;
-import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
@@ -134,10 +132,9 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * calculate speed and location of a character. Assumes no collisions.
+	 * calculate speed and location of a character.
 	 * @param c
 	 */
-	@SuppressWarnings("deprecation")
 	private void update(Character c) {
 		// if dead, don't do anything (yet):
 		if(c.isDead() && c.getLives() != 0) {
@@ -327,6 +324,7 @@ public class Physics extends Thread implements ActionListener {
 				if(resources.getMap().getTiles()[wallCoords.x + i][wallCoords.y + j] == Tile.WALL) {
 					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(wallCoords.x, wallCoords.y));
 					cnd = detectCollision(c, wall);
+					//positionalCorrection(c,wall,cnd);
 					if(cnd.collided) {
 						collide(c, wall, cnd);
 					}
@@ -449,6 +447,19 @@ public class Physics extends Thread implements ActionListener {
 //	  A.position -= A.inv_mass * correction
 //	  B.position += B.inv_mass * correction
 //	}
+	private void positionalCorrection(Collidable_Circle c, Collidable_Circle d, CND cnd) {
+		final double percent = 0.2;
+		final double slop = 0.01; // how much intersection is ignored?
+		double val = (Math.max(cnd.collisionDepth - slop, 0.0) / (c.getInvMass() + d.getInvMass())) * percent;
+		double correction_x = val * cnd.collisionNormal.x;
+		double correction_y = val * cnd.collisionNormal.y;
+
+		c.setDx(c.getDx() + (c.getInvMass() * correction_x));
+		c.setDy(c.getDy() + (c.getInvMass() * correction_y));
+
+		d.setDx(d.getDx() - (d.getInvMass() * correction_x));
+		d.setDy(d.getDy() - (d.getInvMass() * correction_y));
+	}
 	
 	private CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
 		CND cnd = new CND();
