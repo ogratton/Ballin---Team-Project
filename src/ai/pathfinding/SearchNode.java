@@ -21,7 +21,7 @@ public class SearchNode
 	}
 
 	/**
-	 * Recursive contructor
+	 * Recursive constructor
 	 * 
 	 * @param location
 	 * @param type
