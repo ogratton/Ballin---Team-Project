@@ -56,6 +56,7 @@ public class Resources {
 	
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
+	
 	// powerups in play
 	private ArrayList<Powerup> powerupList = new ArrayList<Powerup>();
 

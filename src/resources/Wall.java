@@ -4,7 +4,6 @@ import java.awt.Point;
 import graphics.sprites.SheetDeets;
 
 public class Wall implements Collidable_Circle {
-	public static Wall wall = new Wall(new Point(0,0));
 	private double x;
 	private double y;
 
@@ -12,39 +11,44 @@ public class Wall implements Collidable_Circle {
 		this.x = p.x;
 		this.y = p.y;
 	}
+	
+	public void setCoords(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
 
 	@Override
-	public double getInvMass() {
+	public final double getInvMass() {
 		//infinite mass
 		return 0;
 	}
 
 	@Override
-	public double getRestitution() {
+	public final double getRestitution() {
 		//very bouncy
 		return 10;
 	}
 
 	@Override
-	public double getDx() {
+	public final double getDx() {
 		// no movement
 		return 0;
 	}
 
 	@Override
-	public double getDy() {
+	public final double getDy() {
 		// no movement
 		return 0;
 	}
 
 	@Override
-	public void setDx(double dx) {
+	public final void setDx(double dx) {
 		// HAHAHAHAHAAAA!
 		
 	}
 
 	@Override
-	public void setDy(double dx) {
+	public final void setDy(double dx) {
 		// MUAHAHAHAHA!
 		
 	}
@@ -67,71 +71,70 @@ public class Wall implements Collidable_Circle {
 
 	@Override
 	public double getY() {
-		// TODO Auto-generated method stub
 		return y;
 	}
 
 	@Override
-	public int getRadius() {
+	public final int getRadius() {
 		return SheetDeets.TILES_SIZEX / 2;
 	}
 
 	@Override
-	public void setDead(boolean dead) {		
+	public final void setDead(boolean dead) {		
 	}
 
 	@Override
-	public boolean isDead() {
+	public final boolean isDead() {
 		return false;
 	}
 
 	@Override
-	public void setFalling(boolean falling) {
+	public final void setFalling(boolean falling) {
 		
 	}
 
 	@Override
-	public boolean isFalling() {
+	public final boolean isFalling() {
 		return false;
 	}
 
 	@Override
-	public CollidableType getType() {
+	public final CollidableType getType() {
 		return CollidableType.Wall;
 	}
 
 	@Override
-	public void setLastCollidedWith(Character c, int time) {
+	public final void setLastCollidedWith(Character c, int time) {
 		
 	}
 
 	@Override
-	public Character getLastCollidedWith() {
+	public final Character getLastCollidedWith() {
 		return null;
 	}
 
 	@Override
-	public int getLastCollidedTime() {
+	public final int getLastCollidedTime() {
 		return 0;
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
+	public final void setVisible(boolean visible) {
 		
 	}
 
 	@Override
-	public boolean isVisible() {
+	public final boolean isVisible() {
 		return true;
 	}
 
 	@Override
-	public void setDyingStep(int step) {
+	public final void setDyingStep(int step) {
 		
 	}
 
 	@Override
-	public int getDyingStep() {
+	public final int getDyingStep() {
 		return 0;
 	}
 }

@@ -93,7 +93,19 @@ public class Map {
 	 */
 
 	public Map(int width, int height, Tile[][] tile, World world, String name) {
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world, name);
+		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, genWalls(tile), tile, world, name);
+	}
+
+	private static ArrayList<Wall> genWalls(Tile[][] tile) {
+		ArrayList<Wall> walls = new ArrayList<Wall>();
+		for(int i = 0; i < tile.length; i++) {
+			for(int j = 0; j < tile.length; j++) {
+				if(tile[i][j] == Tile.WALL) {
+					walls.add(  new Wall( new Point(i, j) )  );
+				}
+			}
+		}
+		return walls;
 	}
 
 	/**
@@ -127,7 +139,6 @@ public class Map {
 		tileSet = SheetDeets.getTileSetFromWorld(world);
 
 		for (int i = 0; i < height; i++) {
-
 			for (int j = 0; j < width; j++) {
 				tiles[i][j] = Tile.FLAT;
 			}
@@ -153,7 +164,7 @@ public class Map {
 	 *            the array of tiles
 	 */
 
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
+	private Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
 			Tile[][] tile, World worldType, String name) {
 		this.origin = origin;
 		this.width = width;
