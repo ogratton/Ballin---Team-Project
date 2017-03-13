@@ -270,6 +270,7 @@ public class Map {
 
 		switch (tile) {
 		case ABYSS:
+		case WALL:
 			a = 0;
 			b = 0;
 			break;

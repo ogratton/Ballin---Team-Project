@@ -31,7 +31,7 @@ public class PlayGame {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/asteroid.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -45,6 +45,9 @@ public class PlayGame {
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");
+		
+		resources.setId(player.getId());
+		
 		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");
 		Character player2 = new Character(Character.Class.HORSE, 0, "CPU2");
 		resources.addPlayerToList(player);
@@ -67,8 +70,8 @@ public class PlayGame {
 		}
 		
 		// Create game mode (starts physics and graphics)
-		//LastManStanding mode = new LastManStanding(resources, 5);
-		Deathmatch mode = new Deathmatch(resources);
+		LastManStanding mode = new LastManStanding(resources, 5);
+		//Deathmatch mode = new Deathmatch(resources);
 		//HotPotato mode = new HotPotato(resources);
 		mode.start();
 	}

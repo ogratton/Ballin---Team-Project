@@ -52,12 +52,12 @@ public class UIRes {
 		mainPanel.repaint();
 	}
 	
-	void setCustomFont(JComponent comp, int size) {
+	public static void setCustomFont(JComponent comp, int size) {
 		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
 		try {
 			customFont = Font
 					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
+							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);

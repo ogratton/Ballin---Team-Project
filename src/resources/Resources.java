@@ -22,6 +22,7 @@ import resources.Map.Tile;
  *   so I've put them here for ease of access.
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
+
 public class Resources {
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	public Mode mode;
@@ -91,7 +92,11 @@ public class Resources {
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
+	private Line normal;
+	private boolean scoreChanged = false;
+	
 	public Resources() {
+
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
 		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are
@@ -595,8 +600,6 @@ public class Resources {
 		AINextDest = nd;
 	}
 	
-	private Line normal;
-	
 	public Line getNormal()
 	{
 		return normal;
@@ -650,4 +653,12 @@ public class Resources {
 		this.musicPlayer = mp;
 	}
 
+	public void setScoreChanged(boolean change){
+		this.scoreChanged = change;
+	}
+	
+	public boolean getScoreChanged(){
+		return this.scoreChanged;
+	}
+	
 }

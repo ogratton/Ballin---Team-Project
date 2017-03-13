@@ -55,21 +55,6 @@ public class MenuItems extends UIRes {
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
 
-	void setCustomFont(JComponent comp, int size) {
-		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
-		try {
-			customFont = Font
-					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
-					.deriveFont((float) size);
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(customFont);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		comp.setFont(customFont);
-	}
-
 	Color getRandomColour() {
 		SecureRandom rand = new SecureRandom();
 		int r = rand.nextInt(255);
