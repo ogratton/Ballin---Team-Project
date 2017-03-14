@@ -270,7 +270,6 @@ public class Map {
 
 		switch (tile) {
 		case ABYSS:
-		case WALL:
 			a = 0;
 			b = 0;
 			break;
@@ -342,6 +341,9 @@ public class Map {
 			a = 5;
 			b = 2;
 			break;
+		case WALL:
+			a = 0;
+			b = 3;
 		}
 
 		return Sprite.getSprite(tileSet, a, b, SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);

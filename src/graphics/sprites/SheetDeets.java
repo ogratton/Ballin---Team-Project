@@ -127,7 +127,7 @@ public class SheetDeets {
 			break;
 		}
 
-		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 3);
+		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 4);
 	}
 
 	// MISCELLANEOUS TILES
