@@ -2,7 +2,6 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -12,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -35,7 +33,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	private Timer timer;
 	private LayeredPane layers;
 	private TopBar bar;
-	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 
@@ -56,28 +53,20 @@ public class GameComponent extends JFrame implements ActionListener {
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
 		super();
-
+		
+		this.resources = resources;
+		this.characters = resources.getPlayerList();
+		
 		setLayout(new BorderLayout());
 
-		// This code block below is just for testing!
-
+		// create a new key adapter and set listener
 		addKeyListener(new TAdapter(resources));
 		setFocusable(true);
 		
-		label = new JLabel();
-		label.setText("hello");
-		label.setFont(new Font("Verdana", Font.PLAIN, 45));
-		
+		// create the elements of the game
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths);
 		
-		
-
-		// End test code block
-		this.resources = resources;
-
-		characters = resources.getPlayerList();
-
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
 				model.addObserver(layers.getView());
@@ -95,32 +84,31 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 		}
 
-
-		label.setHorizontalAlignment(JLabel.CENTER);
-		
-		
-		
-		add(label, BorderLayout.NORTH);
 		add(bar, BorderLayout.NORTH);
+		
+		// fullscreen stuff
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
 		add(layers, BorderLayout.CENTER);
 		
+		// make the game fullscreen
 		toggleFullscreen();
 		
+		// start the timer to send actionevents
 		timer = new Timer(10, this);
 		timer.start();
 		
+		// make everything visible and the right size
 		setVisible(true);
 		pack();
+		
 	}
 
-	// All code below here is for testing
 
 	/**
-	 * Testing keyboard inputs
+	 * What to do on each tick
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -165,6 +153,10 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 	}
 
+	/**
+	 * Cycle between worlds. Debug function, not for final product
+	 */
+	
 	public void cycleWorld() {
 
 		World world = resources.getMap().getWorldType();
@@ -198,6 +190,12 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 	
+	/**
+	 * Key adapter to receive input from keyboard
+	 * @author George Kaye (ish)
+	 *
+	 */
+	
 	private class TAdapter extends KeyAdapter {
 		
 		private Resources resources;
@@ -208,13 +206,21 @@ public class GameComponent extends JFrame implements ActionListener {
 		private int dashKey;
 		private int blockKey;
 		
+		/**
+		 * Create a new keyadapter, setting up custom controls
+		 * @param resources the resources object
+		 */
+		
 		public TAdapter(Resources resources) {
+			
 			this.resources = resources;
-			
-			
 			setUpControls();
 			
 		}
+		
+		/**
+		 * Set the controls for this component, based on how they are set in resources
+		 */
 		
 		public void setUpControls(){
 			
@@ -242,33 +248,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			} else if(key == downKey){
 				characters.get(firstPlayerIndex).setDown(false);
 			}
-			
-			/*switch (key) {
-			case KeyEvent.VK_A:
-				characters.get(firstPlayerIndex).setLeft(false);
-				break;
-			case KeyEvent.VK_D:
-				characters.get(firstPlayerIndex).setRight(false);
-				break;
-			case KeyEvent.VK_W:
-				characters.get(firstPlayerIndex).setUp(false);
-				break;
-			case KeyEvent.VK_S:
-				characters.get(firstPlayerIndex).setDown(false);
-				break;
-			case KeyEvent.VK_UP:
-				characters.get(secondPlayerIndex).setUp(false);
-				break;
-			case KeyEvent.VK_DOWN:
-				characters.get(secondPlayerIndex).setDown(false);
-				break;
-			case KeyEvent.VK_LEFT:
-				characters.get(secondPlayerIndex).setLeft(false);
-				break;
-			case KeyEvent.VK_RIGHT:
-				characters.get(secondPlayerIndex).setRight(false);
-				break;
-			}*/
 		}
 
 		@Override
@@ -287,10 +266,12 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(firstPlayerIndex).requestDashing();
 			} else if(key == blockKey){
 				characters.get(firstPlayerIndex).setBlocking(true);
-			} else if(key == KeyEvent.VK_ESCAPE){
+			} else if(key == KeyEvent.VK_BACK_SPACE){
 				System.exit(0);
 			} else if(key == KeyEvent.VK_Z){
 				cycleWorld();
+			} else if(key == KeyEvent.VK_ESCAPE){
+				layers.switchLayers();
 			}
 		}
 	}

@@ -160,12 +160,8 @@ public class GameView extends JPanel implements Observer {
 	public void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
-		// clear the screen to prepare for the next frame
-
-		//g.clearRect(0, 0, (int) currentWindowWidth, (int) currentWindowHeight);
 
 		// draw the map sprite (this is the same throughout a game)
-
 		g.drawImage(currentMapSprite, 0, (int) currentOffset, this);
 
 		destList = resources.getDestList();
