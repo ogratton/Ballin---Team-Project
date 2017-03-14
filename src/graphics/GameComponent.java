@@ -292,54 +292,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			} else if(key == KeyEvent.VK_Z){
 				cycleWorld();
 			}
-			
-			/*switch (key) {
-			case KeyEvent.VK_A:
-				characters.get(firstPlayerIndex).setLeft(true);
-				break;
-			case KeyEvent.VK_D:
-				characters.get(firstPlayerIndex).setRight(true);
-				break;
-			case KeyEvent.VK_W:
-				characters.get(firstPlayerIndex).setUp(true);
-				break;
-			case KeyEvent.VK_S:
-				characters.get(firstPlayerIndex).setDown(true);
-				break;
-			case KeyEvent.VK_UP:
-				characters.get(secondPlayerIndex).setUp(true);
-				break;
-			case KeyEvent.VK_DOWN:
-				characters.get(secondPlayerIndex).setDown(true);
-				break;
-			case KeyEvent.VK_LEFT:
-				characters.get(secondPlayerIndex).setLeft(true);
-				break;
-			case KeyEvent.VK_RIGHT:
-				characters.get(secondPlayerIndex).setRight(true);
-				break;
-			case KeyEvent.VK_SHIFT:
-				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(firstPlayerIndex).setDashing(true);
-				} else {
-					characters.get(secondPlayerIndex).setDashing(true);
-				}
-				break;
-			case KeyEvent.VK_CONTROL:
-				if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
-					characters.get(firstPlayerIndex).setBlocking(true);
-				} else {
-					characters.get(secondPlayerIndex).setBlocking(true);
-				}
-				break;
-			case KeyEvent.VK_ESCAPE:
-				System.exit(0);
-				break;
-			case KeyEvent.VK_Z:
-				cycleWorld();
-				break;
-			}*/
-
 		}
 	}
 
