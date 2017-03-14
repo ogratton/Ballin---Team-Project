@@ -1,15 +1,10 @@
 package graphics;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
+import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
-import graphics.sprites.SheetDeets;
 import resources.Character;
-import ui.UIRes;
 
 /**
  * Class to hold a panel containing player information for the top of the screen
@@ -22,9 +17,9 @@ import ui.UIRes;
 public class PlayerInfo extends JPanel {
 
 	private Character character;
-	private boolean start = true;
-	private boolean powerup = false;
-
+	private SpriteHalf sprites;
+	private TextHalf text;
+	
 	/**
 	 * Create a new player info panel
 	 * 
@@ -35,37 +30,40 @@ public class PlayerInfo extends JPanel {
 	public PlayerInfo(Character character) {
 
 		super();
+		
+		setLayout(new BorderLayout());
+		
 		this.character = character;
-		this.start = true;
 
+		text = new TextHalf(character);
+		sprites = new SpriteHalf(character);
+		
+		add(text,BorderLayout.CENTER);
+		add(sprites,BorderLayout.WEST);
+		
+	}
+	
+	public void updateScore(){
+		text.updateScore();
 	}
 
 	/**
 	 * Paint the player info panel
 	 */
 
-	public void paintComponent(Graphics g) {
-		
+	/*public void paintComponent(Graphics g) {
+
 		super.paintComponent(g);
-		
-		//g.clearRect(100, 0, this.getWidth(), this.getHeight());
 
 		// draw the arrowhead and player picture
 
-		//if(start)
 		g.drawImage(character.getArrow(false), 0, -15, this);
 		g.drawImage(character.getFirstFrame(), 50, 0, this);
-		start = false;
 
 		// draw the powerup if there is one
-		if (character.hasPowerup() && !powerup) {
 
-			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
-
-		} else if(powerup){
-			
-			g.clearRect(100, 0, 50, 50);	
-			powerup = false;
+		if (character.hasPowerup()) {
+			//g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
 		}
 
 		int size = 20;
@@ -83,8 +81,12 @@ public class PlayerInfo extends JPanel {
 		UIRes.setCustomFont(this, 20);
 		g.drawString(character.getScore() + "", 300, 33);
 
-	}
+	}*/
 
+	public void paint(){
+		sprites.repaint();
+	}
+	
 	/**
 	 * Set the character this panel is detailing
 	 * 

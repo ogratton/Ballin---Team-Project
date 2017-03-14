@@ -11,6 +11,7 @@ import resources.Resources;
 
 /**
  * Class to display a panel detailing all players in game
+ * 
  * @author George Kaye
  *
  */
@@ -22,31 +23,50 @@ public class PlayerPanel extends JPanel {
 
 	/**
 	 * Create a new player panel
-	 * @param resources the resources object
+	 * 
+	 * @param resources
+	 *            the resources object
 	 */
-	
+
 	public PlayerPanel(Resources resources) {
 
 		super();
 		this.resources = resources;
 
 		setLayout(new GridLayout(2, 1));
-		
+
 		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
 		boxes = new ArrayList<>();
-		
+
 		int i = 0;
-		
-		for(Character c : characters){
-			
+
+		for (Character c : characters) {
+
 			PlayerInfo box = new PlayerInfo(c);
 			boxes.add(box);
-			add(box, i/4, i%4);
-			
+			add(box, i / 4, i % 4);
+
 		}
-		
+
 		setPreferredSize(new Dimension(1600, 100));
-		
+
 	}
 
+	public void paint(){
+		for(PlayerInfo box : boxes){
+			box.paint();
+		}
+	}
+	
+	/**
+	 * Update all the scores in the boxes
+	 */
+	
+	public void updateScores() {
+		for (PlayerInfo box : boxes) {
+
+			box.updateScore();
+		}
+
+	}
 }

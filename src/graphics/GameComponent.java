@@ -78,8 +78,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		bar = new TopBar(resources);
 		view = new GameView(resources, debugPaths);
 		
-		timer = new Timer(10, this);
-		timer.start();
+		
 
 		// End test code block
 		this.resources = resources;
@@ -112,7 +111,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 		
 		
-		//add(label, BorderLayout.NORTH);
+		add(label, BorderLayout.NORTH);
 		add(bar, BorderLayout.NORTH);
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -121,6 +120,9 @@ public class GameComponent extends JFrame implements ActionListener {
 		add(view, BorderLayout.CENTER);
 		
 		toggleFullscreen();
+		
+		timer = new Timer(10, this);
+		timer.start();
 		
 		setVisible(true);
 		pack();
@@ -134,9 +136,11 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
-			view.repaint();
-			//updateScores();
+			repaint();
+			bar.paint();
+			bar.updateScores();
 			bar.updateStats();
+			
 		
 	}
 	
