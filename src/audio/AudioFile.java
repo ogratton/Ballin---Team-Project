@@ -207,9 +207,12 @@ public class AudioFile implements LineListener
 		{
 			// gets called every time the clip starts again
 			playState = PlayState.PLAYING;
+			System.out.println("beginning!");
 		}
 		else if (event.getType() == LineEvent.Type.STOP)
+//		else if (clip.getMicrosecondLength() - clip.getMicrosecondPosition() <= 100) // test value
 		{
+			System.out.println(clip.getMicrosecondLength()/1000.0);
 			// gets called every time the clip is stopped/ends
 			if (playState != PlayState.PAUSED)
 			{
