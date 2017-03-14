@@ -236,7 +236,6 @@ public class GameView extends JPanel implements Observer {
 
 						deathModifier = (int) (step);
 						adjustedPlayerSize -= deathModifier;
-						character.incDyingStep();
 					} else {
 						adjustedPlayerSize = 0;
 						adjustedPlayerSize = 0;
