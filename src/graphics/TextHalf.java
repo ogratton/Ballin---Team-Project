@@ -23,6 +23,9 @@ public class TextHalf extends JPanel {
 		name = new JLabel(character.getName());
 		score = new JLabel(character.getScore() + "");
 		
+		name.setHorizontalAlignment(JLabel.CENTER);
+		score.setHorizontalAlignment(JLabel.CENTER);
+		
 		UIRes.setCustomFont(name, 20);
 		UIRes.setCustomFont(score, 20);
 		

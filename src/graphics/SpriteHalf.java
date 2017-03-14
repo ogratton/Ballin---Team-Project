@@ -18,25 +18,23 @@ public class SpriteHalf extends JPanel {
 		this.character = character;
 		repaint();
 		
-		setPreferredSize(new Dimension(100, 50));
+		setPreferredSize(new Dimension(175, 50));
 		
 	}
 
 	public void paintComponent(Graphics g) {
-
-		System.out.println("its paintin time");
 		
 		super.paintComponent(g);
 		
-		g.drawImage(character.getArrow(false), 0, -15, this);
-		g.drawImage(character.getFirstFrame(), 50, 0, this);
+		g.drawImage(character.getArrow(false), 25, -15, this);
+		g.drawImage(character.getFirstFrame(), 75, 0, this);
 		
 		if (character.hasPowerup()) {
 
-			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
+			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 125, 0, this);
 			powerupPresent = true;
 		} else if (powerupPresent) {
-			g.clearRect(100, 0, 50, 50);
+			g.clearRect(125, 0, 50, 50);
 			powerupPresent = false;
 		}
 	}
