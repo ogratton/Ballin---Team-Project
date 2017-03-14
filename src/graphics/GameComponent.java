@@ -20,7 +20,6 @@ import resources.Character;
 import resources.Map;
 import resources.Map.World;
 import resources.Resources;
-import resources.Resources.Mode;
 
 /**
  * Contains everything on the screen that the player can see
@@ -33,19 +32,15 @@ import resources.Resources.Mode;
 public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
-	private Map map;
 	private Timer timer;
-	private GameView view;
+	private LayeredPane layers;
 	private TopBar bar;
 	private JLabel label;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
-	private int secondPlayerIndex = 1;
 
 	private boolean fullScreen = false;
-	private boolean debugPaths = false;
 
-	int width, height;
 	int oldValueX, newValueX, oldValueY, newValueY;
 
 	/**
@@ -61,8 +56,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
 		super();
-		
-		this.debugPaths = debugPaths;
 
 		setLayout(new BorderLayout());
 
@@ -76,7 +69,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
 		bar = new TopBar(resources);
-		view = new GameView(resources, debugPaths);
+		layers = new LayeredPane(resources, debugPaths);
 		
 		
 
@@ -85,13 +78,9 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		characters = resources.getPlayerList();
 
-		this.width = width;
-		this.height = height;
-
-
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
-				model.addObserver(view);
+				model.addObserver(layers.getView());
 				if (model.getId().equals(resources.getId())) {
 					model.addObserver(updater);
 				}
@@ -117,7 +106,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 	
-		add(view, BorderLayout.CENTER);
+		add(layers, BorderLayout.CENTER);
 		
 		toggleFullscreen();
 		
@@ -136,7 +125,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
-			repaint();
+			layers.repaint();
 			bar.paint();
 			bar.updateScores();
 			bar.updateStats();
@@ -144,23 +133,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		
 	}
 	
-	public void updateScores(){
-		ArrayList<Character> scores = resources.gamemode.getOrderedScores();
-		String s = "";
-		for (Character c : scores) {
-			s += "Player " + c.getPlayerNumber() + ": " + c.getScore() + ", ";
-		}
-		if (resources.mode == Mode.HotPotato) {
-			for (Character c : resources.getPlayerList()) {
-				if (c.hasBomb()) {
-					s += "     Holding bomb: Player " + c.getPlayerNumber();
-				}
-			}
-		}
-		s += "     Stamina: " + resources.getPlayerList().get(0).getStamina();
-		label.setText(s);
-	}
-
 	/**
 	 * Switch between fullscreen and windowed
 	 */
@@ -169,7 +141,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		if (fullScreen) {
 
-			view.setFullScreen(false);
+			layers.getView().setFullScreen(false);
 			getContentPane().setPreferredSize(new Dimension(1200, 625));
 			pack();
 			setLocationRelativeTo(null);
@@ -181,7 +153,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			int width = gd.getDisplayMode().getWidth();
 			int height = gd.getDisplayMode().getHeight();
 			setLocation(0, 0);
-			view.setFullScreen(true);
+			layers.getView().setFullScreen(true);
 			getContentPane().setPreferredSize(new Dimension(width, height));
 			pack();
 			fullScreen = true;
@@ -211,10 +183,16 @@ public class GameComponent extends JFrame implements ActionListener {
 		case CAKE:
 			newWorld = Map.World.CAVE;
 			break;
+		case DESERT:
+			break;
+		case ICE:
+			break;
+		default:
+			break;
 		}
 
 		resources.getMap().setWorldType(newWorld);
-		view.makeMap();
+		layers.getView().makeMap();
 		fullScreen = false;
 		toggleFullscreen();
 

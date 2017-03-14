@@ -29,6 +29,7 @@ public class SpriteInspector {
 
 }
 
+@SuppressWarnings("serial")
 class Panel extends JPanel implements ActionListener {
 
 	private Resources resources;

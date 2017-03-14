@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import resources.Resources;
 
+@SuppressWarnings("serial")
 public class TopBar extends JPanel {
 
 	private PlayerPanel players;

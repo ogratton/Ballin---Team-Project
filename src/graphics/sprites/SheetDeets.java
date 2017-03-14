@@ -1,7 +1,6 @@
 package graphics.sprites;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import resources.Character;
 import resources.Map;
@@ -162,6 +161,10 @@ public class SheetDeets {
 			x = 0;
 			numX = 8;
 			numY = 1;
+			break;
+		case PUCK:
+			break;
+		default:
 			break;
 			
 		}

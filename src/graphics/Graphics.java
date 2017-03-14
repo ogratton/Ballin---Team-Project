@@ -1,7 +1,5 @@
 package graphics;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 import networking.Updater;
@@ -25,7 +23,7 @@ public class Graphics extends Thread {
 	
 	public void run() {
 		
-		GameComponent comp = new GameComponent(resources, 1200, 675, updater, debugPaths);
+		GameComponent comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							

@@ -17,6 +17,7 @@ import resources.Map;
 import resources.Map.Tile;
 import resources.MapReader;
 
+@SuppressWarnings("serial")
 public class MapPreview extends JPanel {
 
 	private ArrayList<Map> maps;
@@ -96,7 +97,7 @@ public class MapPreview extends JPanel {
 	private class TAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
-			int key = e.getKeyCode();
+			
 		}
 
 		@Override

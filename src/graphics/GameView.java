@@ -77,8 +77,9 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public GameView(Resources resources, boolean debugPaths) {
+	
 		super();
-
+		
 		this.resources = resources;
 		this.debugPaths = debugPaths;
 
@@ -446,5 +447,5 @@ public class GameView extends JPanel implements Observer {
 		setPreferredSize(new Dimension((int) (currentMapWidth + currentOffset * 2),
 				(int) (currentMapHeight + currentOffset * 2)));
 	}
-
+	
 }
