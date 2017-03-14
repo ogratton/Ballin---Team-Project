@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -16,6 +17,8 @@ public class SpriteHalf extends JPanel {
 		
 		this.character = character;
 		repaint();
+		
+		setPreferredSize(new Dimension(100, 50));
 		
 	}
 
