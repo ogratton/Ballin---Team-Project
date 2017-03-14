@@ -27,7 +27,8 @@ public class Resources {
 	public static final boolean silent = true; // so alex can run the game :)
 	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
-	public Mode mode;
+	// Deathmatch by default
+	public Mode mode = Mode.Deathmatch;
 	public GameModeFFA gamemode;
 
 	// keybindings

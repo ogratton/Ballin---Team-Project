@@ -45,6 +45,7 @@ public class PlayGame {
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");
+		// Will want a way to choose how many AIs to add
 		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");
 		Character player2 = new Character(Character.Class.HORSE, 0, "CPU2");
 		resources.addPlayerToList(player);
@@ -65,11 +66,21 @@ public class PlayGame {
 			character.setAI(ai);
 			ai.start();
 		}
-		
-		// Create game mode (starts physics and graphics)
-		//LastManStanding mode = new LastManStanding(resources, 5);
-		Deathmatch mode = new Deathmatch(resources);
-		//HotPotato mode = new HotPotato(resources);
-		mode.start();
+		GameModeFFA mode;
+		switch(resources.mode) {
+		case Deathmatch:
+			mode = new Deathmatch(resources);
+			break;
+		case LastManStanding:
+			mode = new LastManStanding(resources, 5);
+			break;
+		case HotPotato:
+			mode = new HotPotato(resources);
+			break;
+		default:
+			mode = new Deathmatch(resources);
+			break;
+		}
+		((Thread) mode).start();
 	}
 }
