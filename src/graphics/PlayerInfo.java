@@ -22,58 +22,76 @@ import ui.UIRes;
 public class PlayerInfo extends JPanel {
 
 	private Character character;
+	private boolean start = true;
+	private boolean powerup = false;
 
 	/**
 	 * Create a new player info panel
-	 * @param character the character
+	 * 
+	 * @param character
+	 *            the character
 	 */
-	
+
 	public PlayerInfo(Character character) {
-		
+
 		super();
 		this.character = character;
+		this.start = true;
 
 	}
 
 	/**
 	 * Paint the player info panel
 	 */
-	
+
 	public void paintComponent(Graphics g) {
+		
+		super.paintComponent(g);
+		
+		//g.clearRect(100, 0, this.getWidth(), this.getHeight());
 
 		// draw the arrowhead and player picture
+
+		//if(start)
 		g.drawImage(character.getArrow(false), 0, -15, this);
 		g.drawImage(character.getFirstFrame(), 50, 0, this);
+		start = false;
 
 		// draw the powerup if there is one
-		if (character.hasPowerup()) {
+		if (character.hasPowerup() && !powerup) {
 
 			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
 
+		} else if(powerup){
+			
+			g.clearRect(100, 0, 50, 50);	
+			powerup = false;
 		}
 
 		int size = 20;
-		
-		if(character.getName().length() > 9){
-			size = 27 - (int)(character.getName().length() * 1.1);
+
+		if (character.getName().length() > 9) {
+			size = 27 - (int) (character.getName().length() * 1.1);
 		}
-		
+
 		// get the custom font working on all machines
-		UIRes.setCustomFont(this, size);	
-		
+		UIRes.setCustomFont(this, size);
+
 		// draw the character name and score
 		g.drawString(character.getName(), 150, 33);
-		
+
 		UIRes.setCustomFont(this, 20);
 		g.drawString(character.getScore() + "", 300, 33);
 
 	}
-	
+
 	/**
 	 * Set the character this panel is detailing
-	 * @param c the character
+	 * 
+	 * @param c
+	 *            the character
 	 */
-	
+
 	public void setCharacter(Character c) {
 		this.character = c;
 	}

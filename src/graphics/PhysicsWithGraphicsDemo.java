@@ -17,6 +17,7 @@ import resources.Resources;
  * I try and smash graphics with physics. It works ish
  */
 
+@Deprecated
 public class PhysicsWithGraphicsDemo {
 
 	public static void main(String[] args){

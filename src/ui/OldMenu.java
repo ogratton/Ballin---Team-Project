@@ -27,6 +27,7 @@ import networking.Client;
 import networking.Port;
 import resources.Resources;
 
+@Deprecated
 public class OldMenu extends JFrame {
 
 	OldMenu() {

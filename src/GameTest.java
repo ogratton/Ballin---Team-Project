@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import audio.MusicPlayer;
 import resources.Resources;
 
+@Deprecated
 public class GameTest extends JFrame {
 
 	private static Resources resources;

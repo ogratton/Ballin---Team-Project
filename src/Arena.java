@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@Deprecated
 public class Arena extends JPanel implements ActionListener {
 
 	private Timer timer;

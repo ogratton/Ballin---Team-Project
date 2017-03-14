@@ -105,4 +105,10 @@ public class DebugMode extends Thread implements GameModeFFA
 
 	}
 
+	@Override
+	public int getTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

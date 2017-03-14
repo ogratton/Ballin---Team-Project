@@ -17,6 +17,11 @@ public interface GameModeFFA {
 	public Character getWinner();
 	
 	/**
+	 * @return The time left in the game
+	 */
+	public int getTime();
+	
+	/**
 	 * @return An ArrayList of all characters, order by descending score
 	 */
 	public ArrayList<Character> getOrderedScores();

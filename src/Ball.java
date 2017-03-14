@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import audio.AudioFile;
 import resources.Resources;
 
+@Deprecated
 public class Ball {
 
 	private double dx;

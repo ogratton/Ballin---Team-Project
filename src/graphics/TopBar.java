@@ -18,15 +18,11 @@ public class TopBar extends JPanel {
 		setLayout(new BorderLayout());
 		
 		players = new PlayerPanel(resources);
-		stats = new PlayerStats(resources.getPlayerList().get(0));
+		stats = new PlayerStats(resources.getPlayerList().get(0), resources);
 		
 		add(players, BorderLayout.CENTER);
 		add(stats, BorderLayout.EAST);
 		
-	}
-	
-	public void setOrder(){
-		players.setOrder();
 	}
 	
 	public void updateStats(){

@@ -76,6 +76,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		label.setFont(new Font("Verdana", Font.PLAIN, 45));
 		
 		bar = new TopBar(resources);
+		view = new GameView(resources, debugPaths);
 		
 		timer = new Timer(10, this);
 		timer.start();
@@ -88,7 +89,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		this.width = width;
 		this.height = height;
 
-		view = new GameView(resources, debugPaths);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -134,9 +134,8 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
-			repaint();
-			updateScores();
-			bar.setOrder();
+			view.repaint();
+			//updateScores();
 			bar.updateStats();
 		
 	}

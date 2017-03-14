@@ -48,20 +48,5 @@ public class PlayerPanel extends JPanel {
 		setPreferredSize(new Dimension(1600, 100));
 		
 	}
-	
-	/**
-	 * Set the order of the players within the panel
-	 */
-	
-	public void setOrder(){
-		
-		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
-		
-		for(int i  = 0; i < characters.size(); i++){
-			
-			boxes.get(characters.size() - 1 - i).setCharacter(characters.get(i));
-		}
-		
-	}
 
 }
