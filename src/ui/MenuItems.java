@@ -2,8 +2,10 @@ package ui;
 
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -20,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -63,6 +66,12 @@ public class MenuItems extends UIRes {
 		setCustomFont(comp, (int) (labelSize.height * labelRatio));
 		allignToCenter(comp);
 		comp.setForeground(colour);
+	}
+	
+	void customiseLabel(JLabel label, int size){
+		setCustomFont(label, size);
+		allignToCenter(label);
+		label.setForeground(colour);
 	}
 
 	void customiseComponent(JComponent comp, Dimension size, double ratio) {
@@ -128,6 +137,12 @@ public class MenuItems extends UIRes {
 	JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
 		customiseLabel(label);
+		return label;
+	}
+	
+	JLabel getLabel(String text, int size) {
+		JLabel label = new JLabel(text);
+		customiseLabel(label, size);
 		return label;
 	}
 
@@ -217,6 +232,15 @@ public class MenuItems extends UIRes {
 		customiseButton(exitButton, true);
 		return exitButton;
 	}
+	
+	JButton getResumeToGameButton(JLayeredPane layeredPanel, JPanel panel){
+		JButton button = new JButton("Resume");
+		button.addActionListener(e ->{
+			layeredPanel.setLayer(panel, JLayeredPane.MODAL_LAYER);
+		});
+		customiseButton(button, true);
+		return button;
+	}
 
 	JButton getUsername(JLabel label) {
 		JButton usernameButton = new JButton("Change username");
@@ -254,12 +278,13 @@ public class MenuItems extends UIRes {
 	
 	JPanel getSessionInfo(){
 		JPanel panel = new JPanel();
+		panel.setName("Session id");
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel sessionName = new JLabel("Session");
-		JLabel hostName = new JLabel("Host Name");
-		JLabel mapName = new JLabel("Map Name");
-		JLabel gameModeName = new JLabel("Game Mode");
-		JLabel numberPlayers = new JLabel("0/8");
+		JLabel sessionName = getLabel("Session", 20);
+		JLabel hostName = getLabel("Host Name", 20);
+		JLabel mapName = getLabel("Map Name", 20);
+		JLabel gameModeName = getLabel("Game Mode", 20);
+		JLabel numberPlayers = getLabel("0/8", 20);
 		panel.add(Box.createHorizontalGlue());
 		panel.add(sessionName);
 		panel.add(Box.createHorizontalGlue());

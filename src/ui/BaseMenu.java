@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
@@ -180,6 +181,12 @@ public abstract class BaseMenu extends MenuItems
 	 JPanel addReturnButton(JPanel panel){
 		 JButton backButton = getBackToStartMenuButton();
 		 getButtonAndIcon(panel,backButton);
+		 return panel;
+	 }
+	 
+	 JPanel addResumeToGameButton(JLayeredPane layeredPane, JPanel panel){
+		 JButton resumeButton = getResumeToGameButton(layeredPane, panel);
+		 getButtonAndIcon(panel, resumeButton);
 		 return panel;
 	 }
 	 
