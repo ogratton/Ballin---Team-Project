@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import resources.Character;
+import ui.UIRes;
 
 public class PlayerStats extends JPanel {
 
@@ -30,10 +31,8 @@ public class PlayerStats extends JPanel {
 		stamina.setHorizontalAlignment(JLabel.CENTER);
 		kda.setHorizontalAlignment(JLabel.CENTER);
 		
-		stamina.setFont(setFont(20));
-		kda.setFont(setFont(20));
-		
-		
+		UIRes.setCustomFont(stamina, 20);
+		UIRes.setCustomFont(kda, 20);
 		
 		add(stamina);
 		add(kda);
@@ -45,26 +44,5 @@ public class PlayerStats extends JPanel {
 		stamina.setText("Stamina: " + character.getStamina());
 		kda.setText("K/D/S: " + character.getKills() + "/" + character.getDeaths() + "/" + character.getSuicides());
 		
-	}
-	
-	/**
-	 * Set the custom font based on size
-	 * @param size the size
-	 * @return the font
-	 */
-	
-	public Font setFont(int size){
-		Font customFont = new Font("Comic Sans", Font.PLAIN, 14);
-		try {
-			customFont = Font
-					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.ttf"))
-					.deriveFont(Font.PLAIN, size);
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(customFont);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return customFont;
 	}
 }
