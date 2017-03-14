@@ -16,9 +16,9 @@ import resources.Resources;
  *
  */
 
+@SuppressWarnings("serial")
 public class PlayerPanel extends JPanel {
 
-	private Resources resources;
 	private ArrayList<PlayerInfo> boxes;
 
 	/**
@@ -31,7 +31,6 @@ public class PlayerPanel extends JPanel {
 	public PlayerPanel(Resources resources) {
 
 		super();
-		this.resources = resources;
 
 		setLayout(new GridLayout(2, 1));
 

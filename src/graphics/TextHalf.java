@@ -8,11 +8,23 @@ import javax.swing.JPanel;
 import resources.Character;
 import ui.UIRes;
 
+/**
+ * The text half of a panel detailing a player
+ * @author George Kaye
+ *
+ */
+
+@SuppressWarnings("serial")
 public class TextHalf extends JPanel {
 
 	private Character character;
 	private JLabel name;
 	private JLabel score;
+	
+	/**
+	 * Create a new text half
+	 * @param character the character being detailed
+	 */
 	
 	public TextHalf(Character character) {
 		
@@ -33,6 +45,10 @@ public class TextHalf extends JPanel {
 		add(score, BorderLayout.EAST);
 		
 	}
+	
+	/**
+	 * Update the score on the panel
+	 */
 	
 	public void updateScore(){
 		

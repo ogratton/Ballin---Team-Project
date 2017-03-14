@@ -5,12 +5,14 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import resources.Character;
 import resources.Resources;
 import resources.Resources.Mode;
 import ui.UIRes;
 
+@SuppressWarnings("serial")
 public class PlayerStats extends JPanel {
 
 	private Character character;
@@ -42,6 +44,7 @@ public class PlayerStats extends JPanel {
 		// this doesn't work. why
 		stamina.setHorizontalAlignment(JLabel.CENTER);
 		kda.setHorizontalAlignment(JLabel.CENTER);
+		time.setHorizontalAlignment(JLabel.CENTER);
 		
 		// set the font for the labels
 		UIRes.setCustomFont(stamina, 20);
@@ -56,6 +59,8 @@ public class PlayerStats extends JPanel {
 		if(resources.mode == Mode.Deathmatch){
 			add(time);
 		}
+		
+		setBorder(new EmptyBorder(15, 35, 25, 25));
 		
 	}
 	

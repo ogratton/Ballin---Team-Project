@@ -8,11 +8,24 @@ import javax.swing.JPanel;
 import graphics.sprites.SheetDeets;
 import resources.Character;
 
+/**
+ * The sprite half of a player info panel
+ * Containing player picture, powerup and hot potato
+ * @author George Kaye
+ *
+ */
+
+@SuppressWarnings("serial")
 public class SpriteHalf extends JPanel {
 
 	private Character character;
 	private boolean powerupPresent = false;
 
+	/**
+	 * Create a new sprite half
+	 * @param character the character detailed by the panel
+	 */
+	
 	public SpriteHalf(Character character) {
 		
 		this.character = character;
@@ -22,6 +35,10 @@ public class SpriteHalf extends JPanel {
 		
 	}
 
+	/**
+	 * Repaint the panel
+	 */
+	
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
