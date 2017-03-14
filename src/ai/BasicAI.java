@@ -42,7 +42,7 @@ public class BasicAI extends Thread
 	private static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
 	private static final double FUZZINESS = 30;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
-	private static final long TICK = 70; // loop every <tick>ms
+	private static final long TICK = 30; // loop every <tick>ms
 	private static long PRESCIENCE = TICK * 1; // how many ms ahead we look for our predicted point
 
 	private ArrayList<Tile> bad_tiles;
@@ -57,6 +57,8 @@ public class BasicAI extends Thread
 	private Vector normalToNextWaypoint;
 
 	private boolean success = true; // we start off a winner (because we need to be motivated to look for new goals) 
+	
+	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
 	// XXX debug stuff
 	// this is setting things up for the debug Detective
@@ -92,6 +94,10 @@ public class BasicAI extends Thread
 
 		// the tiles we don't want to step on
 		bad_tiles = resources.getBadTiles();
+		
+		non_edge = new ArrayList<Tile>();
+		non_edge.addAll(bad_tiles);
+		non_edge.add(Tile.FLAT);
 
 		waypoints = new LinkedList<Point>();
 
@@ -179,7 +185,8 @@ public class BasicAI extends Thread
 	 */
 	private void commonBehaviour() throws InterruptedException
 	{
-		if (projectedTile() != Tile.FLAT)
+		//		if (projectedTile() != Tile.FLAT)
+		if (isEdge(getCurrentTile()))
 		{
 			//Thread.sleep(reaction_time);
 			moveAwayFromEdge();
@@ -363,6 +370,25 @@ public class BasicAI extends Thread
 	}
 
 	// BELOW ARE A LOAD OF HELPER FUNCTIONS
+
+	/**
+	 * @return The type of tile the AI is standing on 
+	 */
+	private Tile getCurrentTile()
+	{
+		return resources.getMap().tileAt(character.getX(), character.getY());
+	}
+	
+	/**
+	 * Is a tile a (walkable) edge tile?
+	 * 
+	 * @param tile
+	 * @return true or false
+	 */
+	private boolean isEdge(Tile tile)
+	{
+		return !non_edge.contains(tile);
+	}
 
 	/**
 	 * TODO this will need to be adapted for teams
@@ -580,10 +606,12 @@ public class BasicAI extends Thread
 			// They must not use the same +&- conventions as dy and dx 	
 			// Or I'm being silly 		
 			// But either way, this works: 		
-			Tile tile_down = resources.getMap().tileAt(column - 2, row);
-			Tile tile_up = resources.getMap().tileAt(column + 2, row);
-			Tile tile_right = resources.getMap().tileAt(column, row - 2);
-			Tile tile_left = resources.getMap().tileAt(column, row + 2);
+			int tilesAway = 1;
+			
+			Tile tile_down = resources.getMap().tileAt(column - tilesAway, row);
+			Tile tile_up = resources.getMap().tileAt(column + tilesAway, row);
+			Tile tile_right = resources.getMap().tileAt(column, row - tilesAway);
+			Tile tile_left = resources.getMap().tileAt(column, row + tilesAway);
 			if (!isWalkable(tile_left))
 			{
 				character.setRight(true);

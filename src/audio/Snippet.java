@@ -7,15 +7,12 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * BASIC
  * A properly looping sound file
- * Could all be done in a main method if you wanted
- * without threads but still using Thread.sleep()
  * 
  * @author Oliver Gratton
  *
  */
-@Deprecated
+//@Deprecated
 public class Snippet extends Thread
 {
 	Clip clip;
@@ -49,7 +46,8 @@ public class Snippet extends Thread
 			}
 			catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				clip.stop();
+				break;
 			} 
 			clip.setFramePosition(0);
 			System.out.println("reset");
@@ -58,9 +56,14 @@ public class Snippet extends Thread
 	
 	public static void main(String[] args) throws Exception
 	{
-
 		String file = "grandma";
 		Snippet snip = new Snippet(file);
 		snip.start();
+		
+		Thread.sleep(15000); // stops after 15 seconds
+		
+		snip.interrupt();
+		
+		System.out.println("stopped");
 	}
 }

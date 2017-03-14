@@ -204,9 +204,7 @@ public class AStarSearch
 	private LinkedList<Point> smoothPath(LinkedList<Point> jagged)
 	{
 		LinkedList<Point> sparse = sparsifyPath(jagged, 3); // only keep every third waypoint
-		
-		// TODO
-		// if normal is same/nearly the same as the last, we can get rid of the last
+	
 		
 		Point lastWaypoint = null;
 		Vector lastVector = null;
@@ -225,10 +223,6 @@ public class AStarSearch
 					sparse.remove(i-1);
 					// we also need to move i back a step now
 					i--;
-				}
-				else
-				{
-//					System.out.println(currentVector + " != " + lastVector);
 				}
 				lastVector = currentVector;
 			}

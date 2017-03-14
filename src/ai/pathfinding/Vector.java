@@ -146,7 +146,7 @@ public class Vector
 	public boolean equalDirection(Vector v)
 	{
 		// XXX check this value is sensible (i've no idea)
-		double fuzziness = 0.4;
+		double fuzziness = 0.35;
 		return fuzzyEqual(v.dx,this.dx, fuzziness) && fuzzyEqual(v.dy, this.dy, fuzziness);
 	}
 	

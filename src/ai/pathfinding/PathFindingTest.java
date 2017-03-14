@@ -32,9 +32,9 @@ public class PathFindingTest
 		player.setAI(ai);
 	}
 	
-	private static void testRoving(Character player, BasicAI ai)
+	private static void testOther(Character player, BasicAI ai, String behaviour)
 	{
-		ai.setBehaviour("roving");
+		ai.setBehaviour(behaviour);
 		player.setAI(ai);
 	}
 	
@@ -58,16 +58,22 @@ public class PathFindingTest
 			e.printStackTrace();
 
 		}
-		resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
+		resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 
 		/* SETTING UP THE AI PLAYER */
 
 		Point startCoords = new Point(resources.getMap().tileCoordsToMapCoords(startTile.x, startTile.y));
+		
+		Character controlled = new Character(Character.Class.HORSE, 1);
+		controlled.setX(400);
+		controlled.setY(400);
+		resources.addPlayerToList(controlled);
+		
 		Character player = new Character(Character.Class.WIZARD, 0);
 		player.setX(startCoords.getX());
 		player.setY(startCoords.getY());
-		player.setPlayerNumber(0); // must be 0 otherwise no debug drawn
+//		player.setPlayerNumber(0); // must be 0 otherwise no debug drawn
 		resources.addPlayerToList(player);
 
 		BasicAI ai = new BasicAI(resources, player);
@@ -77,7 +83,7 @@ public class PathFindingTest
 		}
 		else
 		{
-			testRoving(player, ai);
+			testOther(player, ai, "potato");
 		}
 		
 		
