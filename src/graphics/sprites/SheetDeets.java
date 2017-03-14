@@ -114,7 +114,7 @@ public class SheetDeets {
 			x = 2;
 			break;
 		case ICE:
-			x = 0;
+			x = 4;
 			break;
 		case DESERT:
 			x = 0;
