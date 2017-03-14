@@ -54,7 +54,7 @@ public abstract class BaseMenu extends MenuItems
 
 		if (!Resources.silent)
 		{
-			MusicPlayer musicPlayer = new MusicPlayer(resources, "guile");
+			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma");
 			resources.setMusicPlayer(musicPlayer);
 			musicPlayer.start();
 		}
