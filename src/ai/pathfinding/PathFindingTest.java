@@ -49,7 +49,8 @@ public class PathFindingTest
 		MapReader mr = new MapReader();
 		try
 		{
-			tiles = mr.readMap("./resources/maps/walls.csv"); // note: poirot won't like walls.csv cos there are walls in his way
+			// if following set points we must be on a map for which the points are a viable route
+			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/walls.csv"); 
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -82,7 +83,7 @@ public class PathFindingTest
 		}
 		else
 		{
-			testOther(player, ai, "roving");
+			testOther(player, ai, "aggressive");
 		}
 		
 		
