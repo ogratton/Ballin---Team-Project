@@ -32,7 +32,7 @@ public class PlayGame {
 		try
 		{
 
-			tiles = mr.readMap("./resources/maps/potato2.csv");
+			tiles = mr.readMap("./resources/maps/asteroid.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)

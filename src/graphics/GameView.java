@@ -24,6 +24,7 @@ import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
 import resources.Resources;
+import resources.Character.Heading;
 
 /**
  * Class where all the rendering happens
@@ -222,7 +223,7 @@ public class GameView extends JPanel implements Observer {
 				} else {
 					frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
 				}
-				
+
 				points.put(character, new Point(newX, newY));
 
 				if (debugPaths) {
@@ -332,7 +333,11 @@ public class GameView extends JPanel implements Observer {
 
 					int dashMult = 30;
 
-					switch (character.getDirection()) {
+					if (character.getDashDirection() == Heading.STILL) {
+						character.setDashDirection(character.getDirection());
+					}
+
+					switch (character.getDashDirection()) {
 					case N:
 						dashX = newX - character.getRadius();
 						dashY = newY - character.getRadius() + dashMult + 15;
@@ -370,8 +375,10 @@ public class GameView extends JPanel implements Observer {
 
 					}
 
-					g.drawImage(character.getDashSprite(fullscreen), (int) (dashX * currentMultiplier),
+					g.drawImage(character.getDashSprite(fullscreen, character.getDashDirection()), (int) (dashX * currentMultiplier),
 							(int) ((dashY * currentMultiplier) + currentOffset), this);
+				} else {
+					character.setDashDirection(Heading.STILL);
 				}
 			}
 		}

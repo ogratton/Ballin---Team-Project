@@ -115,7 +115,7 @@ class Panel extends JPanel implements ActionListener {
 			}
 
 			if(dashX != 0 && dashY != 0)
-				g.drawImage(character.getDashSprite(false), dashX, dashY, 50, 50, this);
+				g.drawImage(character.getDashSprite(false, character.getDashDirection()), dashX, dashY, 50, 50, this);
 		}
 
 	}

@@ -75,6 +75,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private BufferedImage currentFrame;
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
+	private Heading dashDirection = Heading.STILL;
 	
 
 	// So we can control how long a character dashes/blocks for
@@ -322,13 +323,46 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return the dash sprite
 	 */
 
-	public BufferedImage getDashSprite(boolean fullscreen) {
+	public BufferedImage getDashSprite(boolean fullscreen, Heading direction) {
 		
+		int frame = 0;
+		
+		switch(direction)
+		{
+		case E:
+			frame = 2;
+			break;
+		case N:
+			frame = 0;
+			break;
+		case NE:
+			frame = 1;
+			break;
+		case NW:
+			frame = 7;
+			break;
+		case S:
+			frame = 4;
+			break;
+		case SE:
+			frame = 3;
+			break;
+		case SW:
+			frame = 5;
+			break;
+		case W:
+			frame = 6;
+			break;
+		case STILL:
+		default:
+			break;
+		
+		}
 		if(fullscreen){
-			return this.bigDashSprites.get(directionFrame);
+			return this.bigDashSprites.get(frame);
 		}
 		
-		return this.dashSprites.get(directionFrame);
+		return this.dashSprites.get(frame);
 
 	}
 
@@ -1009,6 +1043,24 @@ public class Character extends Observable implements Collidable_Circle {
 	 */
 	public boolean isDashing() {
 		return this.dashing;
+	}
+	
+	/**
+	 * Set the direction the character is dashing
+	 * @param direction the direction the character is dashing
+	 */
+	
+	public void setDashDirection(Heading direction){
+		this.dashDirection = direction;
+	}
+	
+	/**
+	 * Get the direction the character is dashing
+	 * @return the direction the character is dashing
+	 */
+	
+	public Heading getDashDirection(){
+		return this.dashDirection;
 	}
 
 	/**

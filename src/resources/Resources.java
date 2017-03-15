@@ -27,7 +27,7 @@ public class Resources {
 	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	// Deathmatch by default
-	public Mode mode = Mode.HotPotato;
+	public Mode mode = Mode.LastManStanding;
 	public GameModeFFA gamemode;
 
 	// keybindings
