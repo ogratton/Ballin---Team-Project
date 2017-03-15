@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Queue;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import resources.NetworkMove;
+import com.esotericsoftware.kryonet.Connection;
+
 import resources.Resources;
 
 public class ClientUpdater extends JPanel implements Observer {
@@ -25,9 +23,10 @@ public class ClientUpdater extends JPanel implements Observer {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UUID sessionId;
-	private ConcurrentMap<UUID, Resources> resourcesMap;
-	private ConcurrentMap<UUID, Session> sessions;
+	private String sessionId;
+	private ConcurrentMap<String, Resources> resourcesMap;
+	private ConcurrentMap<String, Session> sessions;
+	private ConcurrentMap<String, Connection> connections;
 	
 /**
  * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
@@ -36,11 +35,12 @@ public class ClientUpdater extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public ClientUpdater(UUID sessionId, ConcurrentMap<UUID, Resources> resourcesMap, ConcurrentMap<UUID, Session> sessions) {
+	public ClientUpdater(String sessionId, ConcurrentMap<String, Resources> resourcesMap, ConcurrentMap<String, Session> sessions, ConcurrentMap<String, Connection> connections) {
 		super();
 		this.sessionId = sessionId;
 		this.resourcesMap = resourcesMap;
 		this.sessions = sessions;
+		this.connections = connections;
 	}
 
 /**
@@ -53,39 +53,31 @@ public class ClientUpdater extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		//System.out.println("Updated");
-//		List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
-//		List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
-//		resources.Character c;
-//		for(int i=0; i<characters.size(); i++) {
-//			c = characters.get(i);
-//			//System.out.println("X: " + c.getX());
-//			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getRequestId());
-//			charactersList.add(info);
-//		}
+		List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
+		List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+		resources.Character c;
+		for(int i=0; i<characters.size(); i++) {
+			c = characters.get(i);
+			//System.out.println("X: " + c.getX());
+			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getRequestId());
+			charactersList.add(info);
+		}
 		
-		//System.out.println("No. of Moves Server: " + resourcesMap.get(sessionId).getClientMoves().size());
-		Queue<NetworkMove> q = new LinkedList<NetworkMove>();
-		q.addAll(resourcesMap.get(sessionId).getClientMoves());
-		GameData data = new GameData(q);
-		resourcesMap.get(sessionId).getClientMoves().clear();
-		Message message = new Message(Command.GAME, Note.UPDATE, null, null, sessionId, sessionId, data);
+		GameData data = new GameData(charactersList);
+		Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
 		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 		ClientInformation client;
 		for(int i = 0; i<clients.size(); i++) {
 			client = clients.get(i);
-			client.getQueue().offer(message);
+			connections.get(client.getId()).sendUDP(message);
 		}
 	}
 	
-	public UUID getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 
-	public void setSessionId(UUID sessionId) {
+	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
 }
-
-
-
-

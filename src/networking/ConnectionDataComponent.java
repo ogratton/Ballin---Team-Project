@@ -5,6 +5,8 @@ import java.io.PrintStream;
 
 import javax.swing.JPanel;
 
+import com.esotericsoftware.kryonet.Client;
+
 public class ConnectionDataComponent extends JPanel {
 	private ConnectionDataModel model;
 	
@@ -14,17 +16,15 @@ public class ConnectionDataComponent extends JPanel {
 	 * @param model The model which the GUI controllers and views are observing.
 	 * @param toServer The output stream to the server to which the buttons in the GUI are sending their commands to.
 	 */
-	public ConnectionDataComponent(ConnectionDataModel model, ObjectOutputStream toServer)
+	public ConnectionDataComponent(ConnectionDataModel model, Client client)
 	{
 		super();
 		this.model = model;
-		SessionButtons sessionButtons = new SessionButtons(model, toServer);
-		ReceivedMessageBox receivedMessages = new ReceivedMessageBox(model);
-		MessageBox messageBox = new MessageBox(model, toServer);
+		SessionButtons sessionButtons = new SessionButtons(model, client);
 		ListView lists = new ListView(model);
 		SessionView sessionView = new SessionView(model);
-		ControlButtons controls = new ControlButtons(model, toServer);
-		GameButtons gameButtons = new GameButtons(model, toServer);
+		ControlButtons controls = new ControlButtons(model, client);
+		GameButtons gameButtons = new GameButtons(model, client);
 		
 		//JPanel messagePanel = new JPanel();
 		//messagePanel.setLayout(new BorderLayout());
@@ -43,7 +43,6 @@ public class ConnectionDataComponent extends JPanel {
 		listPanel.add(lists, BorderLayout.CENTER);
 		
 		model.addObserver(sessionButtons);
-		model.addObserver(messageBox);
 		model.addObserver(lists);
 		model.addObserver(sessionView);
 		model.addObserver(controls);

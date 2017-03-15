@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.UUID;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -60,7 +59,7 @@ public class ListView extends JPanel implements Observer {
 		listScroller.setPreferredSize(new Dimension(150, 80));
 		sessionList.addListSelectionListener(e -> {
 			if(sessionList.getSelectedValue() != null) {
-				UUID sessionId = parseId((String)sessionList.getSelectedValue());
+				String sessionId = parseId((String)sessionList.getSelectedValue());
 				System.out.println(sessionId);
 				System.out.println(cModel.getSession(sessionId).getAllClients().size());
 				cModel.setHighlightedSessionId(sessionId);
@@ -77,7 +76,7 @@ public class ListView extends JPanel implements Observer {
 		clientListScroller.setPreferredSize(new Dimension(250, 80));
 		clientList.addListSelectionListener(e->{
 			if(clientList.getSelectedValue() != null) {
-				UUID clientId = parseId((String)clientList.getSelectedValue());
+				String clientId = parseId((String)clientList.getSelectedValue());
 				cModel.setHighlightedClientId(clientId);
 				System.out.println("Client ID: " + clientId);
 			}
@@ -106,7 +105,7 @@ public class ListView extends JPanel implements Observer {
 		
 		List<ClientInformation> clients;
 		if (cModel.getHighlightedSessionId() != null) {
-			UUID sessionId = cModel.getHighlightedSessionId();
+			String sessionId = cModel.getHighlightedSessionId();
 			Session session = cModel.getSession(sessionId);
 			clients = session.getAllClients();
 		}
@@ -123,9 +122,9 @@ public class ListView extends JPanel implements Observer {
 		repaint();
 	}
 	
-	private static UUID parseId(String s) {
+	private static String parseId(String s) {
 		String[] split = s.split(":");
-		UUID id = UUID.fromString(split[1].substring(1));
+		String id = (split[1].substring(1));
 		return id;
 	}
 
