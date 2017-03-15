@@ -114,10 +114,10 @@ public class SheetDeets {
 			x = 2;
 			break;
 		case ICE:
-			x = 0;
+			x = 4;
 			break;
 		case DESERT:
-			x = 0;
+			x = 5;
 			break;
 		case SPACE:
 			x = 1;
@@ -127,13 +127,13 @@ public class SheetDeets {
 			break;
 		}
 
-		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 3);
+		return Sprite.getSprite(TILES, 0, x, TILES_SIZEX * 6, TILES_SIZEY * 4);
 	}
 
 	// MISCELLANEOUS TILES
 
 	public enum Misc {
-		DASH, PUCK, POWERUP;
+		DASH, PUCK, POWERUP, EXPLOSION;
 	};
 
 	public static final BufferedImage MISC = Sprite.loadSpriteSheet(Sprite.SheetType.MISC);
@@ -164,6 +164,11 @@ public class SheetDeets {
 			break;
 		case PUCK:
 			break;
+		case EXPLOSION:
+			y = 3;
+			x = 0;
+			numX = 1;
+			numY = 1;
 		default:
 			break;
 			
