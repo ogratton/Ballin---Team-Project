@@ -217,7 +217,7 @@ public class GameView extends JPanel implements Observer {
 
 				if (character.isExploding()) {
 
-					//frame = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.EXPLOSION);
+					frame = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.EXPLOSION);
 
 				} else {
 					frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);

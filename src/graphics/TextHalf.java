@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import resources.Character;
 import ui.UIRes;
@@ -37,6 +38,8 @@ public class TextHalf extends JPanel {
 		
 		name.setHorizontalAlignment(JLabel.LEFT);
 		score.setHorizontalAlignment(JLabel.CENTER);
+		
+		score.setBorder(new EmptyBorder(0, 0, 0, 25));
 		
 		UIRes.setCustomFont(name, 20);
 		UIRes.setCustomFont(score, 20);
