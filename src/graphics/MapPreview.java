@@ -42,9 +42,16 @@ public class MapPreview extends JPanel {
 
 				Tile t = map.tileAt(i, j);
 
-				if (t.equals(Tile.ABYSS) || t.equals(Tile.EDGE_ABYSS)) {
+				if (t == null || t == (Tile.ABYSS) || t == (Tile.EDGE_ABYSS))
+				{
 					g.setColor(Color.BLACK);
-				} else {
+				} 
+				else if (t == Tile.WALL)
+				{
+					g.setColor(Color.RED);
+				}
+				else 
+				{
 					g.setColor(Color.GREEN);
 				}
 

@@ -31,7 +31,7 @@ public class PlayGame {
 		MapReader mr = new MapReader();	
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
+			tiles = mr.readMap("./resources/maps/walls.csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
