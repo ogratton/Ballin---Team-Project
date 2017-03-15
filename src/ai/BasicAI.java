@@ -40,9 +40,9 @@ public class BasicAI extends Thread
 
 	//	private int raycast_length = 10;
 	private static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
-	private static final double FUZZINESS = 30;
+	private static final double FUZZINESS = 20;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
-	private static final long TICK = 30; // loop every <tick>ms
+	private static final long TICK = 20; // loop every <tick>ms
 	private static long PRESCIENCE = TICK * 1; // how many ms ahead we look for our predicted point
 
 	private ArrayList<Tile> bad_tiles;
@@ -121,7 +121,7 @@ public class BasicAI extends Thread
 		try
 		{
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
-			Thread.sleep(1000);
+			Thread.sleep(500);
 
 			while (!character.isDead()) // TODO change to true
 			{
