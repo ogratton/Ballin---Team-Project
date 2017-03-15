@@ -107,7 +107,7 @@ public class MapReader
 		MapReader mr = new MapReader();	
 		try
 		{
-			Map.Tile[][] map = mr.readMap("./resources/maps/map1.csv");
+			Map.Tile[][] map = mr.readMap("./resources/maps/potato2.csv");
 			System.out.println("I guess it worked then");
 		}
 		catch (IOException e)
