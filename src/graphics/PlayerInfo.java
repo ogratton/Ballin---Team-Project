@@ -1,8 +1,10 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import resources.Character;
 
@@ -38,6 +40,8 @@ public class PlayerInfo extends JPanel {
 		
 		add(text,BorderLayout.CENTER);
 		add(sprites,BorderLayout.WEST);
+		
+		setBorder(new LineBorder(Color.BLACK, 1));
 		
 	}
 	
