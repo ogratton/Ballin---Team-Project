@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Queue;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.esotericsoftware.kryonet.Client;
 
 import resources.Resources;
 
@@ -23,7 +23,7 @@ public class Updater extends JPanel implements Observer {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
-	private ObjectOutputStream toServer;
+	private Client client;
 	private Resources resources;
 	private boolean oldUp, oldRight, oldLeft, oldDown, oldDashing, oldBlocking = false;
 	
@@ -34,10 +34,10 @@ public class Updater extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public Updater(ConnectionDataModel cModel, ObjectOutputStream toServer, Resources resources) {
+	public Updater(ConnectionDataModel cModel, Client client, Resources resources) {
 		super();
 		this.cModel = cModel;
-		this.toServer = toServer;
+		this.client = client;
 		this.resources = resources;
 	}
 
@@ -52,20 +52,23 @@ public class Updater extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		List<resources.Character> characters = resources.getPlayerList();
 		for(int i=0; i<characters.size(); i++) {
-			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i)) && resources.getId() != null) {
-				//CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
-				//resources.getRequests().add(info);
-				//System.out.println("Request ID sent: " + resources.getRequestId());
+			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {		
+				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
 				
-				Queue<resources.NetworkMove> q = new LinkedList<resources.NetworkMove>();
-				q.addAll(resources.getClientMoves());
-				GameData gameData = new GameData(q);
-				System.out.println("No. of Moves: " + gameData.getMoves().size());
-				resources.transferMoves();
-				//resources.getClientMoves().clear();
+				info.sendDashing = hasDashingChanged(characters.get(i).isDashing()) ? true : false;
+				info.sendBlocking = hasBlockingChanged(characters.get(i).isBlocking()) ? true : false;
+				
+//				if(info.sendDashing) {
+//					System.out.println("dashing sent by client");
+//				}
+				
+				resources.getRequests().add(info);
+				
+				//System.out.println("Request ID sent: " + resources.getRequestId());
+				GameData gameData = new GameData(info);
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
 				try {
-					toServer.writeUnshared(message);
+					client.sendUDP(message);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -87,8 +90,8 @@ public class Updater extends JPanel implements Observer {
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			oldDashing = c.isDashing();
-			oldBlocking = c.isBlocking();
+			//oldDashing = c.isDashing();
+			//oldBlocking = c.isBlocking();
 			return true;
 		}
 		else {
@@ -96,8 +99,30 @@ public class Updater extends JPanel implements Observer {
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			oldDashing = c.isDashing();
-			oldBlocking = c.isBlocking();
+			//oldDashing = c.isDashing();
+			//oldBlocking = c.isBlocking();
+			return false;
+		}
+	}
+	
+	private boolean hasDashingChanged(boolean dash) {
+		if(dash != oldDashing) {
+			oldDashing = dash;
+			return true;
+		}
+		else {
+			oldDashing = dash;
+			return false;
+		}
+	}
+	
+	private boolean hasBlockingChanged(boolean blocking) {
+		if(blocking != oldBlocking) {
+			oldBlocking = blocking;
+			return true;
+		}
+		else {
+			oldBlocking = blocking;
 			return false;
 		}
 	}

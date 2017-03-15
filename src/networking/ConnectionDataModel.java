@@ -6,7 +6,6 @@ import resources.Resources;
 
 import java.util.Map;
 import java.util.Observable;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConnectionDataModel extends Observable {
@@ -17,11 +16,11 @@ public class ConnectionDataModel extends Observable {
 		this.data = data;
 	}
 	
-	public UUID getMyId() {
+	public String getMyId() {
 		return data.getClientInformation().getId();
 	}
 	
-	public void setMyId(UUID id) {
+	public void setMyId(String id) {
 		data.getClientInformation().setId(id);
 		setChanged();
 		notifyObservers();
@@ -37,21 +36,21 @@ public class ConnectionDataModel extends Observable {
 		notifyObservers();
 	}
 	
-	public ConcurrentMap<UUID, Session> getSessionsTable() {
+	public ConcurrentMap<String, Session> getSessionsTable() {
 		return data.getSessionsTable();
 	}
 	
-	public void setSessionsTable(ConcurrentMap<UUID, Session> sessions) {
+	public void setSessionsTable(ConcurrentMap<String, Session> sessions) {
 		data.setSessionsTable(sessions);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public UUID getSessionId() {
+	public String getSessionId() {
 		return this.data.getSessionId();
 	}
 	
-	public synchronized void setSessionId(UUID id) {
+	public synchronized void setSessionId(String id) {
 		this.data.setSessionId(id);
 		setChanged();
 		notifyObservers();
@@ -61,41 +60,41 @@ public class ConnectionDataModel extends Observable {
 		return this.data;
 	}
 	
-	public synchronized void addClient(UUID sessionId, UUID clientId, ClientInformation client) {
+	public synchronized void addClient(String sessionId, String clientId, ClientInformation client) {
 		this.data.addClient(sessionId, clientId, client);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized void removeClient(UUID sessionId, UUID clientId) {
+	public synchronized void removeClient(String sessionId, String clientId) {
 		this.data.removeClient(sessionId, clientId);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized Session getSession(UUID sessionId) {
+	public synchronized Session getSession(String sessionId) {
 		return data.getSession(sessionId);
 	}
 	
-	public synchronized ClientInformation getClient(UUID sessionId, UUID clientId) {
+	public synchronized ClientInformation getClient(String sessionId, String clientId) {
 		return this.data.getClient(sessionId, clientId);
 	}
 	
-	public synchronized UUID getHighlightedSessionId() {
+	public synchronized String getHighlightedSessionId() {
 		return this.data.getHighlightedSessionId();
 	}
 	
-	public synchronized void setHighlightedSessionId(UUID id) {
+	public synchronized void setHighlightedSessionId(String id) {
 		this.data.setHiglightedSessionId(id);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public synchronized UUID getHighlightedClientId() {
+	public synchronized String getHighlightedClientId() {
 		return this.data.getHighlightedClientId();
 	}
 	
-	public synchronized void setHighlightedClientId(UUID id) {
+	public synchronized void setHighlightedClientId(String id) {
 		this.data.setHighlightedClientId(id);
 		setChanged();
 		notifyObservers();
@@ -111,11 +110,11 @@ public class ConnectionDataModel extends Observable {
 		notifyObservers();
 	}
 	
-	public synchronized UUID getTargetId() {
+	public synchronized String getTargetId() {
 		return data.getTargetId();
 	}
 	
-	public synchronized void setTargetId(UUID id) {
+	public synchronized void setTargetId(String id) {
 		data.setTargetId(id);
 		setChanged();
 		notifyObservers();
@@ -133,11 +132,11 @@ public class ConnectionDataModel extends Observable {
 		data.setGameInProgress(bool);
 	}
 	
-	public Map<UUID, Character> getCharacters() {
+	public Map<String, Character> getCharacters() {
 		return data.getCharacters();
 	}
 
-	public void setCharacters(Map<UUID, Character> characters) {
+	public void setCharacters(Map<String, Character> characters) {
 		data.setCharacters(characters);
 		setChanged();
 		notifyObservers();

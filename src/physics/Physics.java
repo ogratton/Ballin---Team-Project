@@ -142,7 +142,7 @@ public class Physics extends Thread implements ActionListener {
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
-				if(!client) resources.getMap().spawn(c);
+				if(!client && c.getLives() != 0) resources.getMap().spawn(c);
 				if (c.isAI()) {
 					BasicAI ai = new BasicAI(resources, c);
 					ai.start();

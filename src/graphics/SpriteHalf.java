@@ -20,6 +20,7 @@ public class SpriteHalf extends JPanel {
 
 	private Character character;
 	private boolean powerupPresent = false;
+	private boolean bombPresent = false;
 
 	/**
 	 * Create a new sprite half
@@ -53,6 +54,15 @@ public class SpriteHalf extends JPanel {
 		} else if (powerupPresent) {
 			g.clearRect(125, 0, 50, 50);
 			powerupPresent = false;
+		}
+		
+		if (character.hasBomb()) {
+
+			g.drawImage(SheetDeets.getBombSprite(), 125, 0, this);
+			bombPresent = true;
+		} else if (bombPresent) {
+			g.clearRect(125, 0, 50, 50);
+			bombPresent = false;
 		}
 	}
 

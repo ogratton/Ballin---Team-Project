@@ -1,35 +1,36 @@
 package networking;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import resources.Resources;
 
-public class Session implements Serializable {
+public class Session {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1929781468355749346L;
-	private UUID id;
-	private ConcurrentMap<UUID, ClientInformation> clients;
+	private String id;
+	private ConcurrentMap<String, ClientInformation> clients;
+	private ConcurrentMap<String, ClientInformation> serializedClients;
 	private boolean gameInProgress;
 	//private Resources resources;
 	
-	public Session(ConcurrentMap<UUID, ClientInformation> clients) {
-		this.id = UUID.randomUUID();
+	public Session() {
+		
+	}
+	
+	public Session(ConcurrentMap<String, ClientInformation> clients) {
+		this.id = UUID.randomUUID().toString();
 		this.clients = clients;
 		this.gameInProgress = false;
 		//this.resources = new Resources();
 	}
 	
-	public Session(UUID id, ConcurrentMap<UUID, ClientInformation> clients, boolean gameInProgress) {
+	public Session(String id, ConcurrentMap<String, ClientInformation> clients, boolean gameInProgress) {
 		this.id = id;
 		this.clients = clients;
 		this.gameInProgress = gameInProgress;
@@ -56,23 +57,23 @@ public class Session implements Serializable {
 		this.gameInProgress = gameInProgress;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
-	public ClientInformation getClient(UUID id) {
+	public ClientInformation getClient(String id) {
 		return clients.get(id);
 	}
 	
-	public void addClient(UUID id, ClientInformation client) {
+	public void addClient(String id, ClientInformation client) {
 		clients.put(id, client);
 	}
 	
-	public void removeClient(UUID id) {
+	public void removeClient(String id) {
 		clients.remove(id);
 	}
 	
