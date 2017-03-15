@@ -18,7 +18,7 @@ import resources.Resources;
  */
 public class PathFindingTest
 {
-	private static Point startTile = new Point(12, 28);
+	private static Point startTile = new Point(12, 25);
 	//	private static Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 	//	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 43) }; // TODO to test moveAwayFrom Edge
 	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
@@ -49,7 +49,8 @@ public class PathFindingTest
 		MapReader mr = new MapReader();
 		try
 		{
-			tiles = mr.readMap("./resources/maps/map0.csv");
+			// if following set points we must be on a map for which the points are a viable route
+			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/walls.csv"); 
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -73,7 +74,6 @@ public class PathFindingTest
 		Character player = new Character(Character.Class.WIZARD, 0);
 		player.setX(startCoords.getX());
 		player.setY(startCoords.getY());
-//		player.setPlayerNumber(0); // must be 0 otherwise no debug drawn
 		resources.addPlayerToList(player);
 
 		BasicAI ai = new BasicAI(resources, player);
@@ -83,7 +83,7 @@ public class PathFindingTest
 		}
 		else
 		{
-			testOther(player, ai, "potato");
+			testOther(player, ai, "aggressive");
 		}
 		
 		

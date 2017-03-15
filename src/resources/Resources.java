@@ -27,7 +27,7 @@ public class Resources {
 	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	// Deathmatch by default
-	public Mode mode = Mode.Deathmatch;
+	public Mode mode = Mode.HotPotato;
 	public GameModeFFA gamemode;
 
 	// keybindings
@@ -97,8 +97,8 @@ public class Resources {
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
-		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are
-										// implemented
+		bad_tiles.add(Tile.EDGE_ABYSS);
+		bad_tiles.add(Tile.WALL);
 	}
 
 	public String getId() {

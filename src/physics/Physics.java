@@ -142,7 +142,7 @@ public class Physics extends Thread implements ActionListener {
 		if(c.isDead() && c.getLives() != 0) {
 			if(c.getDyingStep() >= 50) { //the last dyingStep is 50
 				c.decrementLives();
-				if(!client) resources.getMap().spawn(c);
+				if(!client && c.getLives() != 0) resources.getMap().spawn(c);
 				if (c.isAI()) {
 					BasicAI ai = new BasicAI(resources, c);
 					ai.start();
@@ -175,13 +175,14 @@ public class Physics extends Thread implements ActionListener {
 		}
 		// Recharge stamina
 		c.incrementStamina();
-		// If a special button has been pressed, perform the ability if possible
-		if (special(c) && !c.isFalling()){
-			return;
-		}
 		if(!c.isFalling()) { //moving
 			// check for wall collisions:
 			calculateWallCollisions(c);
+			
+			// If a special button has been pressed, perform the ability if possible
+			if (special(c)){
+				return;
+			}
 			// calculate speed
 			if (c.isLeft() && c.getDx() > -c.getMaxDx()) {
 				c.setDx(c.getDx() - c.getAcc());
@@ -313,20 +314,25 @@ public class Physics extends Thread implements ActionListener {
 	
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
-		CND cnd = null;
-		//topleft point:
-		Point p = resources.getMap().tileCoords(c.getX() - c.getRadius(), c.getY() - c.getRadius());
-		//check each point:
-		for(int x = -1; x < 2; x++) {
-			for(int y = -1; y < 2; y++) {
-				if(resources.getMap().getTiles()[p.x + x][p.y + y] == Tile.WALL) {
-					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(p.x + x, p.y + y));
-					cnd = detectCollision(c, wall);
-					if(cnd.collided) {
-						collide(c, wall, cnd);
-					}
-				}
-			}
+		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) { // right edge
+			if(c.getDx() < 0.1) c.setDx(1);
+			c.setDx(0 - Math.abs(c.getDx()));
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) { // left edge
+			if(c.getDx() < 0.1) c.setDx(1);
+			c.setDx(Math.abs(c.getDx()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+		if(t2 == Tile.WALL) { // bottom edge
+			if(c.getDy() < 0.1) c.setDx(1);
+			c.setDy(0 - Math.abs(c.getDy()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+		if(t2 == Tile.WALL) { // top edge
+			if(c.getDy() < 0.1) c.setDx(1);
+			c.setDy(Math.abs(c.getDy()));
 		}
 		
 	}
