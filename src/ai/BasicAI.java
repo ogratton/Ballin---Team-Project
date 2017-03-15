@@ -47,7 +47,7 @@ public class BasicAI extends Thread
 
 	private ArrayList<Tile> bad_tiles;
 
-	private UUID id;
+	private String id;
 
 	private AStarSearch aStar;
 
@@ -361,16 +361,16 @@ public class BasicAI extends Thread
 		}
 		else
 		{
+			// dash when we are close to the target
+			if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
+			{
+				character.setDashing(true);
+			}
 			// if the player has moved considerably since we targeted them
-			if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 100) // XXX 100 is experimental threshold
+			else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 100) // XXX 100 is experimental threshold
 			{
 				// force recalculation next tick by clearing our waypoints
 				waypoints.clear();
-			}
-			// dash when we are close to the target
-			if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 50) // XXX 50 is experimental threshold
-			{
-				character.setDashing(true);
 			}
 		}
 
@@ -424,7 +424,7 @@ public class BasicAI extends Thread
 		double SLD_to_nearestPlayer = Double.MAX_VALUE;
 		for (Character player : resources.getPlayerList())
 		{
-			UUID playerID = player.getId();
+			String playerID = player.getId();
 			// don't hunt ourselves
 			if (!id.equals(playerID))
 			{
