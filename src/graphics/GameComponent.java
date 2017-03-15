@@ -173,9 +173,10 @@ public class GameComponent extends JFrame implements ActionListener {
 			newWorld = Map.World.CAKE;
 			break;
 		case CAKE:
-			newWorld = Map.World.ICE;
+			newWorld = Map.World.DESERT;
 			break;
 		case DESERT:
+			newWorld = Map.World.ICE;
 			break;
 		case ICE:
 			newWorld = Map.World.CAVE;

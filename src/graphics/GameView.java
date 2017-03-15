@@ -19,6 +19,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import ai.pathfinding.Line;
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
@@ -77,9 +78,9 @@ public class GameView extends JPanel implements Observer {
 	 */
 
 	public GameView(Resources resources, boolean debugPaths) {
-	
+
 		super();
-		
+
 		this.resources = resources;
 		this.debugPaths = debugPaths;
 
@@ -214,7 +215,14 @@ public class GameView extends JPanel implements Observer {
 
 				// get the next frame of the character
 
-				frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
+				if (character.isExploding()) {
+
+					frame = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.EXPLOSION);
+
+				} else {
+					frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
+				}
+				
 				points.put(character, new Point(newX, newY));
 
 				if (debugPaths) {
@@ -305,6 +313,7 @@ public class GameView extends JPanel implements Observer {
 				}
 
 				// draw the player!
+
 				g.drawImage(frame, actualX, (int) (actualY + currentOffset), (int) adjustedPlayerSize,
 						(int) adjustedPlayerSize, this);
 
@@ -442,5 +451,5 @@ public class GameView extends JPanel implements Observer {
 		setPreferredSize(new Dimension((int) (currentMapWidth + currentOffset * 2),
 				(int) (currentMapHeight + currentOffset * 2)));
 	}
-	
+
 }
