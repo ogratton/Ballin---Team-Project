@@ -147,9 +147,8 @@ public class Physics extends Thread implements ActionListener {
 					BasicAI ai = new BasicAI(resources, c);
 					ai.start();
 				}
-			} else {
-				c.incDyingStep();
 			}
+			c.incDyingStep();
 		}
 		
 		// find terrain type:
