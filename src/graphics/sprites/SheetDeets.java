@@ -189,9 +189,19 @@ public class SheetDeets {
 			return Sprite.getSprite(set, 2, 0, MISC_SIZEX, MISC_SIZEY);
 		default:
 			return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);	 
-		}
+		}	
 		
-		//	
+	}
+	
+	/**
+	 * Get the bomb sprite
+	 * @return the bomb sprite
+	 */
+	
+	public static BufferedImage getBombSprite(){
+		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
+		
+		return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);	
 		
 	}
 

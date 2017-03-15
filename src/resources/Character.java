@@ -1400,11 +1400,11 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	public void setExploding(boolean exploding) {
+		System.out.println(name + ", lives: " + lives);
 		this.exploding = exploding;
 		if (exploding) {
 			dead = true;
 			hasBomb = false;
-			decrementLives();
 		}
 	}
 

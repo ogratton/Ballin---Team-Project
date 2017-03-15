@@ -62,11 +62,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		System.out.println("WE HAVE A WINNER");
-		System.out.println("Player " + winner.getPlayerNumber() + " survived the gauntlet!");
+		System.out.println(winner.getName() + " survived the gauntlet!");
 		for (Character c : getOrderedTimesOfDeath()) {
 			if (c.getTimeOfDeath() != -1) {
-				System.out.println(
-						"Player " + c.getPlayerNumber() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
+				System.out.println(c.getName() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
 			}
 		}
 	}
