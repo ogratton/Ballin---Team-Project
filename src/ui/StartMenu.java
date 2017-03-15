@@ -10,7 +10,6 @@ public class StartMenu extends BaseMenu{
 		JPanel panel = new JPanel();
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
-		customisePanelVisibility(panel);
 		addGameTitle(panel);
 		addStartSingleplayerButton(panel);
 		addStartMultiplayerButton(panel);

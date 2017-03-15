@@ -2,10 +2,8 @@ package ui;
 
 import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -30,6 +28,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import gamemodes.PlayGame;
+import graphics.GameComponent;
+import graphics.LayeredPane;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
@@ -233,10 +233,11 @@ public class MenuItems extends UIRes {
 		return exitButton;
 	}
 	
-	JButton getResumeToGameButton(JLayeredPane layeredPanel, JPanel panel){
+	JButton getResumeToGameButton(JPanel panel){
 		JButton button = new JButton("Resume");
 		button.addActionListener(e ->{
-			layeredPanel.setLayer(panel, JLayeredPane.MODAL_LAYER);
+			GameComponent.layers.setLayer(panel, new Integer(10));
+			LayeredPane.menuShowing = !LayeredPane.menuShowing;
 		});
 		customiseButton(button, true);
 		return button;
@@ -447,7 +448,9 @@ public class MenuItems extends UIRes {
 
 		JLabel gameModeLabel = new JLabel("Game mode: ");
 		Choice gameModeChoice = new Choice();
-		gameMode = gameModeChoice.getSelectedItem();
+			for (Resources.Mode gameMode : Resources.Mode.values()){
+				gameModeChoice.add(gameMode + "");
+			}
 		System.out.println(gameMode);
 
 		JLabel mapLabel = new JLabel("Map: ");

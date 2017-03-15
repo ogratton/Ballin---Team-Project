@@ -184,8 +184,8 @@ public abstract class BaseMenu extends MenuItems
 		 return panel;
 	 }
 	 
-	 JPanel addResumeToGameButton(JLayeredPane layeredPane, JPanel panel){
-		 JButton resumeButton = getResumeToGameButton(layeredPane, panel);
+	 JPanel addResumeToGameButton(JPanel panel, JPanel panel2){
+		 JButton resumeButton = getResumeToGameButton(panel2);
 		 getButtonAndIcon(panel, resumeButton);
 		 return panel;
 	 }

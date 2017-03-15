@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.Timer;
 
 import networking.Updater;
@@ -33,7 +34,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	private ArrayList<Character> characters;
 	private Timer timer;
-	private LayeredPane layers;
+	public static LayeredPane layers;
 	private TopBar bar;
 	private JLabel label;
 	private Resources resources;
@@ -291,6 +292,12 @@ public class GameComponent extends JFrame implements ActionListener {
 				System.exit(0);
 			} else if(key == KeyEvent.VK_Z){
 				cycleWorld();
+			} else if(key == KeyEvent.VK_P){
+				if(LayeredPane.menuShowing)
+					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
+				else
+					layers.setLayer(LayeredPane.inGameMenu, new Integer(10));
+				LayeredPane.menuShowing = !LayeredPane.menuShowing;
 			}
 		}
 	}

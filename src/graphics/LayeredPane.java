@@ -4,8 +4,10 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
 import resources.Resources;
+import ui.InGameMenu;
 
 /**
  * Wrapper class to store the various views the player can switch through during
@@ -18,8 +20,9 @@ import resources.Resources;
 @SuppressWarnings("serial")
 public class LayeredPane extends JLayeredPane {
 
-	private GameView view;
-	private boolean menuShowing = false;
+	public GameView view;
+	public static boolean menuShowing = false;
+	public static JPanel inGameMenu;
 
 	/**
 	 * Create a new layered pane wrapper
@@ -40,9 +43,14 @@ public class LayeredPane extends JLayeredPane {
 
 		view = new GameView(resources, debugPaths);
 		view.setBounds(0, 0, x, y);
+		
+		InGameMenu menu = new InGameMenu();
+		inGameMenu = menu.getInGameMenuPanel(); 
+		inGameMenu.setBounds(((x - 400) / 2) , ((y - 400) / 2), 400, 400);
 
-		add(view, new Integer(10));
-
+		add(inGameMenu, new Integer(10));
+		add(view, new Integer(15));
+		
 		setVisible(true);
 
 	}
@@ -63,22 +71,6 @@ public class LayeredPane extends JLayeredPane {
 
 	public void repaint() {
 		view.repaint();
-	}
-
-	/**
-	 * Switch the layers of the pane, so that the menu can be shown or vice
-	 * versa
-	 */
-
-	public void switchLayers() {
-
-		if (menuShowing) {
-			setLayer(view, new Integer(10));
-			menuShowing = false;
-		} else {
-			setLayer(view, new Integer(20));
-			menuShowing = true;
-		}
 	}
 
 }
