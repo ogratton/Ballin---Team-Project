@@ -23,6 +23,11 @@ public class StaticHeuristics
 		return dist;
 	}
 	
+	/**
+	 * @param a
+	 * @param b
+	 * @return the Manhattan distance between two points, a and b
+	 */
 	public static double manhattan(Point a, Point b)
 	{
 		double dist = (Math.abs(a.getX())-Math.abs(b.getX())) + (Math.abs(a.getY()) - Math.abs(b.getY()));
