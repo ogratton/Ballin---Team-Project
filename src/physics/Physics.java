@@ -147,9 +147,8 @@ public class Physics extends Thread implements ActionListener {
 					BasicAI ai = new BasicAI(resources, c);
 					ai.start();
 				}
-			} else {
-				c.incDyingStep();
 			}
+			c.incDyingStep();
 		}
 		
 		// find terrain type:
@@ -314,20 +313,21 @@ public class Physics extends Thread implements ActionListener {
 	
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
-		CND cnd = null;
-		//topleft point:
-		Point p = resources.getMap().tileCoords(c.getX() - c.getRadius(), c.getY() - c.getRadius());
-		//check each point:
-		for(int x = -1; x < 2; x++) {
-			for(int y = -1; y < 2; y++) {
-				if(resources.getMap().getTiles()[p.x + x][p.y + y] == Tile.WALL) {
-					Wall wall = new Wall(resources.getMap().tileCoordsToMapCoords(p.x + x, p.y + y));
-					cnd = detectCollision(c, wall);
-					if(cnd.collided) {
-						collide(c, wall, cnd);
-					}
-				}
-			}
+		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) { // right edge
+			c.setDx(0 - Math.abs(c.getDx()));
+		}
+		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+		if(t2 == Tile.WALL) { // left edge
+			c.setDx(Math.abs(c.getDx()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+		if(t2 == Tile.WALL) { // bottom edge
+			c.setDy(0 - Math.abs(c.getDy()));
+		}			
+		t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+		if(t2 == Tile.WALL) { // top edge
+			c.setDy(Math.abs(c.getDy()));
 		}
 		
 	}
