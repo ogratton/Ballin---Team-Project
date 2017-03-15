@@ -71,7 +71,7 @@ public class Wall implements Collidable_Circle {
 
 	@Override
 	public final int getRadius() {
-		return SheetDeets.TILES_SIZEX / 2;
+		return SheetDeets.TILES_SIZEX;
 	}
 
 	@Override
