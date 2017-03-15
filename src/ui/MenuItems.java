@@ -33,12 +33,10 @@ import graphics.LayeredPane;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
-import networking.Client;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
-import networking.Port;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
@@ -193,7 +191,7 @@ public class MenuItems extends UIRes {
 			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
 					JOptionPane.PLAIN_MESSAGE);
 			if (input != null) {
-				connectToServer(username, "" + Port.number, host);
+				//connectToServer(username, "" + Port.number, host);
 			} else {
 				frame.dispose();
 			}
@@ -202,8 +200,8 @@ public class MenuItems extends UIRes {
 	}
 
 	void connectToServer(String username, String port, String host) {
-		Client client = new Client(username, port, host);
-		client.start();
+		//Client client = new Client(username, port, host);
+		//client.start();
 	}
 
 	JButton getBackToStartMenuButton() {

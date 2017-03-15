@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 
 import ai.pathfinding.Line;
 import audio.MusicPlayer;
@@ -72,7 +71,7 @@ public class Resources {
 	private MusicPlayer musicPlayer;
 
 	// client ID
-	private UUID id;
+	private String id;
 	
 	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
 
@@ -102,11 +101,11 @@ public class Resources {
 		bad_tiles.add(Tile.WALL);
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	

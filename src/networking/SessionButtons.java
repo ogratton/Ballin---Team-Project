@@ -9,6 +9,8 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.esotericsoftware.kryonet.Client;
+
 public class SessionButtons extends JPanel implements Observer {
 
 	/**
@@ -27,7 +29,7 @@ public class SessionButtons extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public SessionButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	public SessionButtons(ConnectionDataModel cModel, Client client) {
 		super();
 		
 		this.cModel = cModel;
@@ -35,10 +37,9 @@ public class SessionButtons extends JPanel implements Observer {
 		joinSession = new JButton("Join Session");
 		joinSession.addActionListener(e -> {
 			if(cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null, cModel.getSessionId(), cModel.getHighlightedSessionId());
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "", cModel.getSessionId(), cModel.getHighlightedSessionId());
 				try {
-					toServer.reset();
-					toServer.writeUnshared(joinMessage);
+					client.sendTCP(joinMessage);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -47,10 +48,12 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		createSession = new JButton("Create Session");
 		createSession.addActionListener(e -> {
-			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null, cModel.getClientInformation());
+			//System.out.println("ID: " + cModel.getMyId());
+			//System.out.println("ClientInformation" + cModel.getClientInformation().toString());
+			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "", cModel.getClientInformation());	
 			try {
-				toServer.reset();
-				toServer.writeUnshared(createMessage);
+				client.sendTCP(createMessage);
+				System.out.println("Session creation sent.");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -58,13 +61,9 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		leaveSession = new JButton("Leave Session");
 		leaveSession.addActionListener(e -> {
-			if(cModel.getSessionId() == null) {
-				return;
-			}
-			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), null, cModel.getSessionId(), cModel.getHighlightedSessionId());
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(), cModel.getHighlightedSessionId());
 			try {
-				toServer.reset();
-				toServer.writeUnshared(leaveMessage);
+				client.sendTCP(leaveMessage);
 				cModel.setReady(false);
 			} catch (Exception e1) {
 				e1.printStackTrace();

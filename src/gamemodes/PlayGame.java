@@ -31,6 +31,7 @@ public class PlayGame {
 		MapReader mr = new MapReader();	
 		try
 		{
+
 			tiles = mr.readMap("./resources/maps/potato.csv");
 			System.out.println("Map Loaded");
 		}

@@ -69,7 +69,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
-	private UUID id;
+	private String id;
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
@@ -166,9 +166,9 @@ public class Character extends Observable implements Collidable_Circle {
 																									// this)
 				default_restitution, radius, direction, classType, playerNo, name);
 		
-				// XXX set temp UUID for single player
+				// XXX set temp String for single player
 				// overwritten by networking
-				this.id = UUID.randomUUID();
+				this.id = UUID.randomUUID().toString();
 	}
 
 	// master constructor. Any other constructors should eventually call this.
@@ -230,11 +230,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.name = name;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -9,7 +9,7 @@ public class NetworkMove implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 939146193915119548L;
-	public UUID id;
+	public String id;
 	public Date t;
 	public double x,y;
 	public boolean isFalling, isDead, isDashing, isBlocking;

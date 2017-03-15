@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -32,7 +31,7 @@ public class SessionView extends JPanel implements Observer {
 		super();
 		
 		this.cModel = cModel;
-		UUID id = cModel.getSessionId();
+		String id = cModel.getSessionId();
 		if(id != null) {
 			text = new JTextField(cModel.getSessionId().toString());
 		}

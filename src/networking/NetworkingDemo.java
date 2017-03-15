@@ -1,19 +1,18 @@
 package networking;
 
-import java.awt.EventQueue;
+
 import java.awt.Point;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.swing.SwingUtilities;
+import com.esotericsoftware.kryonet.Connection;
 
 import ai.pathfinding.MapCosts;
-import graphics.Graphics;
-import physics.Physics;
+import gamemodes.Deathmatch;
+import gamemodes.GameModeFFA;
+import gamemodes.HotPotato;
+import gamemodes.LastManStanding;
 import resources.Character;
 import resources.Map;
 import resources.MapReader;
@@ -25,7 +24,7 @@ import resources.Resources;
 
 public class NetworkingDemo {
 
-	public static void startServerGame(Session session, ConcurrentMap<UUID, Resources> resourcesMap, ConcurrentMap<UUID, Session> sessions) {
+	public static void startServerGame(Session session, ConcurrentMap<String, Resources> resourcesMap, ConcurrentMap<String, Session> sessions, ConcurrentMap<String, Connection> connections) {
 		
 		// make the map the default just in case the following fails
 		Map.Tile[][] tiles = null;	
@@ -50,6 +49,23 @@ public class NetworkingDemo {
 		resources.setMap(map);
 		new MapCosts(resources);
 		
+		GameModeFFA mode;
+		switch(resources.mode) {
+		case Deathmatch:
+			mode = new Deathmatch(resources);
+			break;
+		case LastManStanding:
+			mode = new LastManStanding(resources, 5);
+			break;
+		case HotPotato:
+			mode = new HotPotato(resources);
+			break;
+		default:
+			mode = new Deathmatch(resources);
+			break;
+		}
+		
+		System.out.println(resources.gamemode);
 		
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
@@ -57,22 +73,17 @@ public class NetworkingDemo {
 			Point tile = resources.getMap().tileCoords(coords.x, coords.y);
 			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
 			
-			UUID id = clients.get(i).getId();
+			String id = clients.get(i).getId();
 			newPlayer = new Character(Character.Class.ARCHER, i+1);
 			newPlayer.setX(coords.x);
 			newPlayer.setY(coords.y);
 			newPlayer.setId(id);
-			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions));
+			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions, connections));
 			resources.addPlayerToList(newPlayer);
 		}
+
+		((Thread) mode).start();
 		
-
-		
-
-		// create physics thread
-		Physics p = new Physics(resources, false);
-		p.start();
-
 		resourcesMap.put(session.getId(), resources);
 
 		//SwingUtilities.invokeLater(new Graphics(resources, null, false));

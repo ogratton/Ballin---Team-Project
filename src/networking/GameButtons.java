@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.esotericsoftware.kryonet.Client;
+
 import resources.Resources;
 
 public class GameButtons extends JPanel implements Observer {
@@ -19,7 +21,7 @@ public class GameButtons extends JPanel implements Observer {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
-	private ObjectOutputStream toServer;
+	private Client client;
 	private JButton ready;
 	private JButton notReady;
 	
@@ -30,17 +32,17 @@ public class GameButtons extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public GameButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	public GameButtons(ConnectionDataModel cModel, Client client) {
 		super();
 		
 		this.cModel = cModel;
 		ready = new JButton("Ready");
 		ready.addActionListener(e -> {
-			if(cModel.getSessionId() != null && cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 				if(!cModel.isGameInProgress()) {
 					Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
-						toServer.writeUnshared(message);
+						client.sendTCP(message);
 						cModel.setReady(true);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -51,11 +53,11 @@ public class GameButtons extends JPanel implements Observer {
 		
 		notReady = new JButton("Not Ready");
 		notReady.addActionListener(e -> {
-			if(cModel.getSessionId() != null && cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
+			if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 1) {
 				if(!cModel.isGameInProgress()) {
 					Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
 					try {
-						toServer.writeUnshared(message);
+						client.sendTCP(message);
 						cModel.setReady(false);
 					} catch (Exception e1) {
 						e1.printStackTrace();
