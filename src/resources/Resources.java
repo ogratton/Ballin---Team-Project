@@ -98,8 +98,8 @@ public class Resources {
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
-		bad_tiles.add(Tile.EDGE_ABYSS); // TODO add walls when they are
-										// implemented
+		bad_tiles.add(Tile.EDGE_ABYSS);
+		bad_tiles.add(Tile.WALL);
 	}
 
 	public UUID getId() {
