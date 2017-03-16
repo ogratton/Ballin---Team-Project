@@ -28,8 +28,8 @@ public class PlayGame {
 		
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.Deathmatch; 
-		Map.World style = Map.World.LAVA;
+		resources.mode = Mode.HotPotato; 
+		Map.World style = Map.World.DESERT;
 		
 		// Create default map in case the following fails
 		Map.Tile[][] tiles = null;	

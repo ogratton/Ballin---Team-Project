@@ -259,9 +259,9 @@ public class Character extends Observable implements Collidable_Circle {
 	{
 		System.out.println(lives);
 		
-		// XXX I am making the assumption that lives are decremented after this is called
+		// XXX I am making the assumption that lives are decremented before this is called
 		// If they have lives left
-		if (lives != 0)
+		if (lives != 1)
 		{
 			int index = rand.nextInt(deathSounds.length);
 			return deathSounds[index];
