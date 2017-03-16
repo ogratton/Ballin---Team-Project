@@ -1,8 +1,10 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -45,7 +47,7 @@ public class LayeredPane extends JLayeredPane {
 		view.setBounds(0, 0, x, y);
 		
 		InGameMenu menu = new InGameMenu();
-		inGameMenu = menu.getInGameMenuPanel(); 
+		inGameMenu = menu.getInGameMenuPanel(400, 400); 
 		inGameMenu.setBounds(((x - 400) / 2) , ((y - 400) / 2), 400, 400);
 
 		add(inGameMenu, new Integer(10));

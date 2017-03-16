@@ -390,10 +390,13 @@ public class MenuItems extends UIRes {
 	JButton createSessionButton(JPanel panel) {	
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
-			
+			JFrame frame = new JFrame();
+			Object[] inputs = createLobbyWizard();
 			numberSessions++;
 			sessionsPanel = getSessionsTable(sessionsPanel);
-			
+			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
+					JOptionPane.OK_CANCEL_OPTION);
+					
 //			JFrame frame = new JFrame();
 //			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //			Object[] inputs = createLobbyWizard();
@@ -467,6 +470,18 @@ public class MenuItems extends UIRes {
 				mapLabel, mapChoice };
 
 		return inputs;
+	}
+	
+	JPanel createPlayerPanel(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		JLabel playerName = getLabel(username);
+		 
+		
+		panel.add(Box.createHorizontalGlue());
+		panel.add(playerName);
+		panel.add(Box.createHorizontalGlue());
+		return panel;
 	}
 
 	// JTable getLobbyTableModel(ConnectionDataModel cModel){

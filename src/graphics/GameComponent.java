@@ -274,7 +274,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				System.exit(0);
 			} else if(key == KeyEvent.VK_Z){
 				cycleWorld();
-			} else if(key == KeyEvent.VK_P){
+			} else if(key == KeyEvent.VK_ESCAPE ){
 				if(LayeredPane.menuShowing)
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
 				else
