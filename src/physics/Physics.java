@@ -1,28 +1,24 @@
 package physics;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
 import javax.swing.Timer;
 
-import ai.BasicAI;
-import audio.AudioFile;
-import graphics.sprites.SheetDeets;
+import ai.AITemplate;
+import ai.FightingAI;
 import resources.Character;
-import resources.Character.Heading;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
 import resources.Map.World;
-import resources.Resources.Mode;
 import resources.NetworkMove;
 import resources.Powerup;
 import resources.Puck;
 import resources.Resources;
-import resources.Wall;
+import resources.Resources.Mode;
 
 public class Physics extends Thread implements ActionListener {
 	//dashing reduces stamina, speed multiplied by stamina.
@@ -30,16 +26,12 @@ public class Physics extends Thread implements ActionListener {
 	private final int DELAY = 10;
 	private Resources resources;
 	
-	private AudioFile boing;
 	
 	private boolean client = false;
 	
 	public Physics(Resources resources, boolean client){
 		this.resources = resources;
 		this.client = client;
-		if(!Resources.silent){
-			boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
-		}
 	}
 	
 	@Override
@@ -142,7 +134,23 @@ public class Physics extends Thread implements ActionListener {
 				c.decrementLives();
 				if(!client && c.getLives() != 0) resources.getMap().spawn(c);
 				if (c.isAI()) {
-					BasicAI ai = new BasicAI(resources, c);
+					
+					// TODO need to respawn the right kind of AI
+					
+//					BasicAI ai = new BasicAI(resources, c);
+					
+					AITemplate ai;
+					if (resources.mode == Mode.Deathmatch || resources.mode == Mode.LastManStanding)
+					{
+						ai = new FightingAI(resources, c);
+					}
+					else
+					{
+						// XXX TEMPORARILY THEY ARE ALL THE SAME
+						// SO WE HAVE NO CHOICE
+						ai = new FightingAI(resources, c);
+					}
+					
 					ai.start();
 				}
 			}

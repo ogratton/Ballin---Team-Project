@@ -19,7 +19,17 @@ public class StaticHeuristics
 	 */
 	public static double euclidean(Point a, Point b)
 	{
-		double dist = Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
+		
+		double dist;
+		try
+		{
+			dist = Math.sqrt(Math.pow(Math.abs(a.getX()) - Math.abs(b.getX()), 2) + Math.pow(Math.abs(a.getY()) - Math.abs(b.getY()), 2));
+		}
+		catch (NullPointerException e)
+		{
+			return Double.MAX_VALUE;
+		}
+		
 		return dist;
 	}
 	

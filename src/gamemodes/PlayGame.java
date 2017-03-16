@@ -2,7 +2,7 @@ package gamemodes;
 
 import java.io.IOException;
 
-import ai.BasicAI;
+import ai.FightingAI;
 import ai.pathfinding.MapCosts;
 import resources.Character;
 import resources.Map;
@@ -27,8 +27,8 @@ public class PlayGame {
 	public static void start(Resources resources) {
 		
 		// TODO these should be parameters for start
-		String mapName = "potato2";
-		resources.mode = Mode.HotPotato; 
+		String mapName = "asteroid";
+		resources.mode = Mode.Deathmatch; 
 		Map.World style = Map.World.LAVA;
 		
 		// Create default map in case the following fails
@@ -59,17 +59,17 @@ public class PlayGame {
 		resources.addPlayerToList(player1);
 		resources.addPlayerToList(player2);
 		// Create AIs
-		BasicAI ai1 = new BasicAI(resources, player1);
+		FightingAI ai1 = new FightingAI(resources, player1);
 		player1.setAI(ai1);
 		ai1.start();
-		BasicAI ai2 = new BasicAI(resources, player2);
+		FightingAI ai2 = new FightingAI(resources, player2);
 		ai2.start();
 		player2.setAI(ai2);
 		
 		for(int i = 3; i < 8; i++){
 			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
 			resources.addPlayerToList(character);
-			BasicAI ai = new BasicAI(resources, character);
+			FightingAI ai = new FightingAI(resources, character);
 			character.setAI(ai);
 			ai.start();
 		}

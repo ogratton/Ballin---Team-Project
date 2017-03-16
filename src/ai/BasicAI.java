@@ -19,7 +19,7 @@ import resources.Resources;
  * @author Oliver Gratton
  *
  */
-@Deprecated
+//@Deprecated
 public class BasicAI extends Thread
 {
 	private Character character;
