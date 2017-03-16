@@ -3,7 +3,7 @@ package ai.pathfinding;
 import java.awt.Point;
 import java.io.IOException;
 
-import ai.BasicAI;
+import ai.FightingAI;
 import gamemodes.DebugMode;
 import resources.Character;
 import resources.Map;
@@ -25,14 +25,14 @@ public class PathFindingTest
 
 	private static boolean followSetPoints = false;
 	
-	private static void testPoirot(Character player, BasicAI ai)
+	private static void testPoirot(Character player, FightingAI ai)
 	{
 		ai.setBehaviour("poirot"); // so we can feed it our own waypoints
 		ai.setDestinations(destinations);
 		player.setAI(ai);
 	}
 	
-	private static void testOther(Character player, BasicAI ai, String behaviour)
+	private static void testOther(Character player, FightingAI ai, String behaviour)
 	{
 		ai.setBehaviour(behaviour);
 		player.setAI(ai);
@@ -50,7 +50,7 @@ public class PathFindingTest
 		try
 		{
 			// if following set points we must be on a map for which the points are a viable route
-			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/potato.csv"); 
+			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/asteroid.csv"); 
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -77,7 +77,7 @@ public class PathFindingTest
 		player.setPlayerNumber(0); // so debug stuff is drawn
 		resources.addPlayerToList(player);
 
-		BasicAI ai = new BasicAI(resources, player);
+		FightingAI ai = new FightingAI(resources, player);
 		if (followSetPoints)
 		{
 			testPoirot(player, ai);
