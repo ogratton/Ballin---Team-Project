@@ -1,6 +1,7 @@
 package audio;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -10,6 +11,8 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import resources.Resources;
 
@@ -42,20 +45,49 @@ public class AudioFile implements LineListener
 	};
 
 	private volatile PlayState playState;
-	
+
 	private Resources resources;
+	private boolean noResources = false; // true if resources will be null
 
 	/**
 	 * Make a new audio file object
 	 * 
-	 * @param filename fully qualified filename/path of the audio file for this
-	 * object
+	 * @param resources common resources object
+	 * @param filepath path to file
+	 * @param title displayable name of clip
 	 */
-	public AudioFile(Resources resources, String filename, String title)
+	public AudioFile(Resources resources, String filepath, String title)
 	{
 		try
-		{	
+		{
 			this.resources = resources;
+			soundFile = new File(filepath);
+			this.title = title;
+			ais = AudioSystem.getAudioInputStream(soundFile);
+			format = ais.getFormat();
+			info = new DataLine.Info(Clip.class, format);
+			clip = (Clip) AudioSystem.getLine(info);
+			clip.addLineListener(this);
+			clip.open(ais);
+			gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Special constructor for when resources is not available
+	 * 
+	 * @param filename path to file
+	 * @param title displayable name of clip
+	 */
+	public AudioFile(String filename, String title)
+	{
+		noResources = true;
+		try
+		{
 			soundFile = new File(filename);
 			this.title = title;
 			ais = AudioSystem.getAudioInputStream(soundFile);
@@ -69,7 +101,6 @@ public class AudioFile implements LineListener
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			System.exit(1);
 		}
 	}
 
@@ -105,8 +136,12 @@ public class AudioFile implements LineListener
 	{
 		if (playState != PlayState.PLAYING)
 		{
-			int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
-			gainControl.setValue(gain + offset); 
+			if (!noResources)
+			{
+				int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+				gain += offset;
+			}
+			gainControl.setValue(gain);
 			clip.start();
 			playState = PlayState.PLAYING;
 		}
@@ -192,7 +227,7 @@ public class AudioFile implements LineListener
 		}
 		clip.setFramePosition(res_pos);
 		int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
-		gainControl.setValue(gain + offset); 
+		gainControl.setValue(gain + offset);
 		clip.start();
 		playState = PlayState.PLAYING;
 	}
@@ -210,9 +245,9 @@ public class AudioFile implements LineListener
 			System.out.println("beginning!");
 		}
 		else if (event.getType() == LineEvent.Type.STOP)
-//		else if (clip.getMicrosecondLength() - clip.getMicrosecondPosition() <= 100) // test value
+		//		else if (clip.getMicrosecondLength() - clip.getMicrosecondPosition() <= 100) // test value
 		{
-			System.out.println(clip.getMicrosecondLength()/1000.0);
+			System.out.println(clip.getMicrosecondLength() / 1000.0);
 			// gets called every time the clip is stopped/ends
 			if (playState != PlayState.PAUSED)
 			{

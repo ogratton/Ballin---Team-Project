@@ -323,7 +323,7 @@ public class BasicAI extends Thread
 		// 	if we don't have a target to hunt
 		if (waypoints.isEmpty())
 		{
-			System.out.println("Searching for nearest player...");
+			if (debug) System.out.println("Searching for nearest player...");
 			Character nearestPlayer;
 			try
 			{
@@ -332,7 +332,7 @@ public class BasicAI extends Thread
 			catch (NullPointerException e)
 			{
 				// no other players, so probably switch behaviour
-				System.out.println("Nobody around, switching to Roving");
+				if (debug) System.out.println("Nobody around, switching to Roving");
 				setBehaviour(Behaviour.ROVING);
 				return;
 			}
@@ -344,7 +344,7 @@ public class BasicAI extends Thread
 			Point charPos = getCurrentTileCoords();
 			Point newDest = getTargetLocation(nearestPlayer);
 			Point newDestTile = getTileCoords(newDest);
-			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
+			if (debug) System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
 			if (newDestTile != null)
 			{
 				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
