@@ -71,7 +71,10 @@ public class FightingAI extends AITemplate
 			{
 				// keep trying to get a new dest until we get a valid path
 				// just in case point given is dodgy
-				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
+				if (charPos != null && newDestTile != null)
+				{
+					waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
+				}
 			}
 
 			if (debug)
