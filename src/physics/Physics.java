@@ -31,7 +31,6 @@ public class Physics extends Thread implements ActionListener {
 	private Resources resources;
 	
 	private AudioFile boing;
-	private AudioFile death;
 	
 	private boolean client = false;
 	
@@ -40,7 +39,6 @@ public class Physics extends Thread implements ActionListener {
 		this.client = client;
 		if(!Resources.silent){
 			boing = new AudioFile(resources, "resources/audio/boing.wav", "Boing");
-			death = new AudioFile(resources, "resources/audio/death.wav", "Death");
 		}
 	}
 	
@@ -221,7 +219,7 @@ public class Physics extends Thread implements ActionListener {
 				c.setDead(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
-				if (!Resources.silent) death.play();
+				if (!Resources.silent) c.getRandDeathSound().play(resources.getSFXGain());
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();

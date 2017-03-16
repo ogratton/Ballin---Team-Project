@@ -3,13 +3,14 @@ package resources;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.UUID;
-
-import ai.BasicAI;
-
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Random;
+import java.util.UUID;
 
+import ai.AITemplate;
+import ai.BasicAI;
+import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Powerup.Power;
@@ -32,7 +33,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 	
 	private boolean isAI = false;
-	private BasicAI ai;
+	private AITemplate ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -113,6 +114,10 @@ public class Character extends Observable implements Collidable_Circle {
 	private int requestId;
 	
 	private String name;
+	
+	private AudioFile playerOutSound;
+	private AudioFile[] deathSounds;
+	private Random rand = new Random();
 	
 	public int getRequestId() {
 		return requestId;
@@ -229,6 +234,43 @@ public class Character extends Observable implements Collidable_Circle {
 		falling = false;
 		dead = false;
 		this.name = name;
+		
+		if (!Resources.silent) 
+		{
+			deathSounds = new AudioFile[3];
+			deathSounds[0] = new AudioFile("resources/audio/death1.wav", "Death1");
+			deathSounds[1] = new AudioFile("resources/audio/death2.wav", "Death2");
+			deathSounds[2] = new AudioFile("resources/audio/death3.wav", "Death3");
+			
+			playerOutSound = new AudioFile("resources/audio/playerOut.wav", "PlayerOut");
+		}
+	}
+	
+	/**
+	 * Note: this object has not been passed resources,
+	 * therefore when played gain must be set in the play
+	 * method (i.e. play(resources.getSFXGain())
+	 * 
+	 * Also note: should never be called when Resources.silent
+	 * 
+	 * @return a random death sound AudioFile object
+	 */
+	public AudioFile getRandDeathSound()
+	{
+		System.out.println(lives);
+		
+		// XXX I am making the assumption that lives are decremented after this is called
+		// If they have lives left
+		if (lives > 1)
+		{
+			int index = rand.nextInt(deathSounds.length);
+			return deathSounds[index];
+		}
+		else
+		{
+			return playerOutSound;
+		}
+		
 	}
 
 	public String getId() {
@@ -1485,11 +1527,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.isAI = isAI;
 	}
 
-	public BasicAI getAI() {
+	public AITemplate getAI() {
 		return ai;
 	}
 
-	public void setAI(BasicAI ai) {
+	public void setAI(AITemplate ai) {
 		setAI(true);
 		this.ai = ai;
 	}
