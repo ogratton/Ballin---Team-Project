@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.esotericsoftware.kryonet.Client;
+
 public class ControlButtons extends JPanel implements Observer {
 
 	/**
@@ -17,7 +19,7 @@ public class ControlButtons extends JPanel implements Observer {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ConnectionDataModel  cModel;
-	private ObjectOutputStream toServer;
+	private Client client;
 	private JButton refresh;
 	
 /**
@@ -27,7 +29,7 @@ public class ControlButtons extends JPanel implements Observer {
  * @param toServer The output stream to the Server Receiver.
  */
 	
-	public ControlButtons(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	public ControlButtons(ConnectionDataModel cModel, Client client) {
 		super();
 		
 		this.cModel = cModel;
@@ -35,7 +37,7 @@ public class ControlButtons extends JPanel implements Observer {
 		refresh.addActionListener(e -> {
 			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(), null);
 			try {
-				toServer.writeUnshared(message);
+				client.sendTCP(message);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

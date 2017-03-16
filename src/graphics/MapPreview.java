@@ -42,8 +42,10 @@ public class MapPreview extends JPanel {
 
 				Tile t = map.tileAt(i, j);
 
-				if (t.equals(Tile.ABYSS) || t.equals(Tile.EDGE_ABYSS)) {
+				if (t == null || t == (Tile.ABYSS) || t == (Tile.EDGE_ABYSS)) {
 					g.setColor(Color.BLACK);
+				} else if (t == Tile.WALL) {
+					g.setColor(Color.RED);
 				} else {
 					g.setColor(Color.GREEN);
 				}
@@ -97,7 +99,7 @@ public class MapPreview extends JPanel {
 	private class TAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
-			
+
 		}
 
 		@Override
@@ -117,19 +119,18 @@ public class MapPreview extends JPanel {
 
 				map = maps.get(index);
 
-				
 			}
-			
+
 			if (key == KeyEvent.VK_LEFT) {
 				index--;
 
 				if (index == -1) {
-					index = maps.size()-1;
+					index = maps.size() - 1;
 				}
 
 				map = maps.get(index);
 			}
-			
+
 			repaint();
 			label.setText(map.getName());
 		}

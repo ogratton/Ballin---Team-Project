@@ -69,12 +69,13 @@ public class Character extends Observable implements Collidable_Circle {
 	private int rollingFrame, directionFrame;
 	private int dyingStep = 0;
 	private boolean moving;
-	private UUID id;
+	private String id;
 	private int playerNo; // 0 means cpu
 	private boolean visible = true;
 	private BufferedImage currentFrame;
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
+	private Heading dashDirection = Heading.STILL;
 	
 
 	// So we can control how long a character dashes/blocks for
@@ -166,9 +167,9 @@ public class Character extends Observable implements Collidable_Circle {
 																									// this)
 				default_restitution, radius, direction, classType, playerNo, name);
 		
-				// XXX set temp UUID for single player
+				// XXX set temp String for single player
 				// overwritten by networking
-				this.id = UUID.randomUUID();
+				this.id = UUID.randomUUID().toString();
 	}
 
 	// master constructor. Any other constructors should eventually call this.
@@ -230,11 +231,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.name = name;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -322,13 +323,46 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return the dash sprite
 	 */
 
-	public BufferedImage getDashSprite(boolean fullscreen) {
+	public BufferedImage getDashSprite(boolean fullscreen, Heading direction) {
 		
+		int frame = 0;
+		
+		switch(direction)
+		{
+		case E:
+			frame = 2;
+			break;
+		case N:
+			frame = 0;
+			break;
+		case NE:
+			frame = 1;
+			break;
+		case NW:
+			frame = 7;
+			break;
+		case S:
+			frame = 4;
+			break;
+		case SE:
+			frame = 3;
+			break;
+		case SW:
+			frame = 5;
+			break;
+		case W:
+			frame = 6;
+			break;
+		case STILL:
+		default:
+			break;
+		
+		}
 		if(fullscreen){
-			return this.bigDashSprites.get(directionFrame);
+			return this.bigDashSprites.get(frame);
 		}
 		
-		return this.dashSprites.get(directionFrame);
+		return this.dashSprites.get(frame);
 
 	}
 
@@ -1010,6 +1044,24 @@ public class Character extends Observable implements Collidable_Circle {
 	public boolean isDashing() {
 		return this.dashing;
 	}
+	
+	/**
+	 * Set the direction the character is dashing
+	 * @param direction the direction the character is dashing
+	 */
+	
+	public void setDashDirection(Heading direction){
+		this.dashDirection = direction;
+	}
+	
+	/**
+	 * Get the direction the character is dashing
+	 * @return the direction the character is dashing
+	 */
+	
+	public Heading getDashDirection(){
+		return this.dashDirection;
+	}
 
 	/**
 	 * Returns the current dash timer for this character.
@@ -1400,11 +1452,11 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	public void setExploding(boolean exploding) {
+		System.out.println(name + ", lives: " + lives);
 		this.exploding = exploding;
 		if (exploding) {
 			dead = true;
 			hasBomb = false;
-			decrementLives();
 		}
 	}
 

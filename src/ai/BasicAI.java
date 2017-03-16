@@ -36,7 +36,7 @@ public class BasicAI extends Thread
 		POTATO // debug: does literally nothing other than common behaviour
 	};
 
-	private Behaviour behaviour = Behaviour.ROVING; // default
+	private Behaviour behaviour = Behaviour.AGGRESSIVE; // default
 
 	//	private int raycast_length = 10;
 	private static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
@@ -47,7 +47,7 @@ public class BasicAI extends Thread
 
 	private ArrayList<Tile> bad_tiles;
 
-	private UUID id;
+	private String id;
 
 	private AStarSearch aStar;
 
@@ -59,6 +59,9 @@ public class BasicAI extends Thread
 	private boolean success = true; // we start off a winner (because we need to be motivated to look for new goals) 
 	
 	private ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
+	
+	private Character currentTarget; // for aggressive mode
+	private Point currentGoal;
 
 	// XXX debug stuff
 	// this is setting things up for the debug Detective
@@ -220,7 +223,7 @@ public class BasicAI extends Thread
 			}
 
 			destI++;
-			try
+			if (destI < destinations.length)
 			{
 				Point charPos = getCurrentTileCoords();
 				//if (debug) System.out.println(charPos);
@@ -237,7 +240,7 @@ public class BasicAI extends Thread
 				}
 
 			}
-			catch (ArrayIndexOutOfBoundsException e)
+			else
 			{
 				destI = 0; // loop
 			}
@@ -272,6 +275,8 @@ public class BasicAI extends Thread
 			Point charPos = getCurrentTileCoords();
 			Point newDest = resources.getMap().randPointOnMap();
 			Point newDestTile = getTileCoords(newDest);
+			
+			currentGoal = newDest;
 			//System.out.println("going to try to pathfind to " + newDest);
 			while (waypoints.isEmpty())
 			{
@@ -331,10 +336,13 @@ public class BasicAI extends Thread
 				setBehaviour(Behaviour.ROVING);
 				return;
 			}
+			
+			currentTarget = nearestPlayer;
+			currentGoal = getTargetLocation(nearestPlayer);
 
 			// pathfind to them
 			Point charPos = getCurrentTileCoords();
-			Point newDest = new Point((int) nearestPlayer.getX(), (int) nearestPlayer.getY());
+			Point newDest = getTargetLocation(nearestPlayer);
 			Point newDestTile = getTileCoords(newDest);
 			System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
 			if (newDestTile != null)
@@ -345,11 +353,25 @@ public class BasicAI extends Thread
 			}
 			else
 			{
-				// player has died in the time since we found them
-				System.out.println("target lost, switching to roving");
-				setBehaviour(Behaviour.ROVING);
+//				// player has died in the time since we found them
+//				System.out.println("target lost, switching to roving");
+//				setBehaviour(Behaviour.ROVING);
 			}
 
+		}
+		else
+		{
+			// dash when we are close to the target
+			if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
+			{
+				character.setDashing(true);
+			}
+			// if the player has moved considerably since we targeted them
+			else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 100) // XXX 100 is experimental threshold
+			{
+				// force recalculation next tick by clearing our waypoints
+				waypoints.clear();
+			}
 		}
 
 	}
@@ -402,7 +424,7 @@ public class BasicAI extends Thread
 		double SLD_to_nearestPlayer = Double.MAX_VALUE;
 		for (Character player : resources.getPlayerList())
 		{
-			UUID playerID = player.getId();
+			String playerID = player.getId();
 			// don't hunt ourselves
 			if (!id.equals(playerID))
 			{
@@ -493,6 +515,15 @@ public class BasicAI extends Thread
 	private Point getOurLocation()
 	{
 		return new Point((int) character.getX(), (int) character.getY());
+	}
+	
+	/**
+	 * @param c character target
+	 * @return the location of the target character
+	 */
+	private Point getTargetLocation(Character c)
+	{
+		return new Point((int) c.getX(), (int) c.getY());
 	}
 
 	/**

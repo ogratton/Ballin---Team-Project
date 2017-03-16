@@ -1,46 +1,39 @@
 package networking;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-public class Message implements Serializable {
+public class Message {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5302365975590223550L;
 	private Command command;
 	private Note note;
 	private String message;
-	private UUID senderId;
-	private UUID receiverId;
-	private UUID currentSessionId;
-	private UUID targetSessionId;
+	private String senderId;
+	private String receiverId;
+	private String currentSessionId;
+	private String targetSessionId;
 	private Object object;
 	
 	public Message() {
 		command = Command.NULL;
 		note = Note.EMPTY;
 		message = "";
-		senderId = null;
-		receiverId = null;
+		senderId = "";
+		receiverId = "";
 		object = new Empty();
-		currentSessionId = null;
-		targetSessionId = null;
+		currentSessionId = "";
+		targetSessionId = "";
 	}
 	
-	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId) {
+	public Message(Command command, Note note, String senderId, String receiverId, String currentSessionId, String targetSessionId) {
 		this.command = command;
 		this.note = note;
 		this.message = "";
-		this.senderId = senderId;
-		this.receiverId = receiverId;
-		this.currentSessionId = currentSessionId;
-		this.targetSessionId = targetSessionId;
+		this.senderId = senderId != null ? senderId.toString() : "";
+		this.receiverId = receiverId != null ? receiverId.toString() : "";
+		this.currentSessionId = currentSessionId != null ? currentSessionId.toString() : "";
+		this.targetSessionId = targetSessionId != null ? targetSessionId.toString() : "";
 		this.object = new Empty();
 	}
 	
-	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId, Object object) {
+	public Message(Command command, Note note, String senderId, String receiverId, String currentSessionId, String targetSessionId, Object object) {
 		this.command = command;
 		this.note = note;
 		this.message = "";
@@ -51,7 +44,7 @@ public class Message implements Serializable {
 		this.targetSessionId = targetSessionId;
 	}
 	
-	public Message(Command command, Note note, UUID senderId, UUID receiverId, UUID currentSessionId, UUID targetSessionId, Object object, String message) {
+	public Message(Command command, Note note, String senderId, String receiverId, String currentSessionId, String targetSessionId, Object object, String message) {
 		this.command = command;
 		this.note = note;
 		this.message = message;
@@ -70,19 +63,19 @@ public class Message implements Serializable {
 		this.message = message;
 	}
 
-	public UUID getCurrentSessionId() {
+	public String getCurrentSessionId() {
 		return currentSessionId;
 	}
 
-	public void setCurrentSessionId(UUID currentSessionId) {
+	public void setCurrentSessionId(String currentSessionId) {
 		this.currentSessionId = currentSessionId;
 	}
 
-	public UUID getTargetSessionId() {
+	public String getTargetSessionId() {
 		return targetSessionId;
 	}
 
-	public void setTargetSessionId(UUID targetSessionId) {
+	public void setTargetSessionId(String targetSessionId) {
 		this.targetSessionId = targetSessionId;
 	}
 
@@ -102,20 +95,20 @@ public class Message implements Serializable {
 		this.note = note;
 	}
 
-	public UUID getSenderId() {
+	public String getSenderId() {
 		return senderId;
 	}
 
-	public void setSenderId(UUID senderId) {
-		this.senderId = senderId;
+	public void setSenderId(String senderId) {
+		this.senderId = senderId != null ? senderId.toString() : "";
 	}
 
-	public UUID getReceiverId() {
+	public String getReceiverId() {
 		return receiverId;
 	}
 
-	public void setReceiverId(UUID receiverId) {
-		this.receiverId = receiverId;
+	public void setReceiverId(String receiverId) {
+		this.receiverId = receiverId != null ? receiverId.toString() : "";
 	}
 
 	public Object getObject() {

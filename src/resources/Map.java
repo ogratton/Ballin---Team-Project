@@ -14,6 +14,7 @@ import resources.Map.Tile;
 public class Map {
 	private int width, height;
 	private Point2D origin;
+	private final static double default_friction = 0.02;
 
 	// friction = 1.0 / deceleration
 	// so physics does
@@ -77,7 +78,7 @@ public class Map {
 
 	public Map(int width, int height, String name) {
 
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), name);
+		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), name);
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class Map {
 	 */
 
 	public Map(int width, int height, Tile[][] tile, World world, String name) {
-		this(new Point2D.Double(0, 0), width, height, 0.02, 0.0, new ArrayList<Wall>(), tile, world, name);
+		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), tile, world, name);
 	}
 
 	/**
@@ -124,6 +125,7 @@ public class Map {
 		this.walls = walls;
 		this.world = World.CAVE;
 		this.name = name;
+		setFriction();
 
 		tiles = new Tile[height][width];
 		tileSet = SheetDeets.getTileSetFromWorld(world);
@@ -167,6 +169,7 @@ public class Map {
 
 		this.tiles = tile;
 		this.world = worldType;
+		setFriction();
 
 		tileSet = SheetDeets.getTileSetFromWorld(world);
 	}
@@ -211,6 +214,31 @@ public class Map {
 		return friction;
 	}
 
+	private void setFriction() {
+		switch(world) {
+		case CAKE:
+			friction = default_friction;
+			break;
+		case CAVE:
+			friction = default_friction;
+			break;
+		case DESERT:
+			friction = default_friction * 4;
+			break;
+		case ICE:
+			friction = default_friction / 2;
+			break;
+		case LAVA:
+			friction = default_friction;
+			break;
+		case SPACE:
+			friction = default_friction;
+			break;
+		default:
+			break;
+		}
+	}
+	
 	/**
 	 * Get the gravity of this map
 	 * 
@@ -369,6 +397,7 @@ public class Map {
 
 	public void setWorldType(World world) {
 		this.world = world;
+		setFriction();
 		tileSet = SheetDeets.getTileSetFromWorld(world);
 	}
 

@@ -1,30 +1,28 @@
 package networking;
 
-import java.io.Serializable;
-import java.util.UUID;
+public class CharacterInfo {
 
-public class CharacterInfo implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5417282971483563559L;
 	private double x;
 	private double y;
-	private UUID id;
+	private String id;
 	private boolean up, right, left, down, jump, punch;
 	private boolean isFalling, isDead, isDashing, isBlocking;
+	public boolean sendDashing, sendBlocking;
 	private int playerNumber;
 	private int requestId;
 	
-	public CharacterInfo(UUID id, double d, double e, int playerNumber) {
+	public CharacterInfo() {
+		
+	}
+	
+	public CharacterInfo(String id, double d, double e, int playerNumber) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
 		this.playerNumber = playerNumber;
 	}
 	
-	public CharacterInfo(UUID id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -36,7 +34,7 @@ public class CharacterInfo implements Serializable {
 		this.requestId = requestId;
 	}
 
-	public CharacterInfo(UUID id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean punch, boolean block, int requestId) {
+	public CharacterInfo(String id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean punch, boolean block, int requestId) {
 		this.id = id;
 		this.up = up;
 		this.right = right;
@@ -96,11 +94,11 @@ public class CharacterInfo implements Serializable {
 		this.punch = punch;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

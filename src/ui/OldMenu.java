@@ -23,8 +23,6 @@ import javax.swing.JTextField;
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
-import networking.Client;
-import networking.Port;
 import resources.Resources;
 
 @Deprecated
@@ -334,8 +332,8 @@ public class OldMenu extends JFrame {
 		startButton.setFont(font);
 		startButton.addActionListener(e -> {
 			// PhysicsWithGraphicsDemo.main(null);
-			Client client = new Client(username, "" + Port.number, "cca-ug04-15090");
-			client.start();
+//			Client client = new Client(username, "" + Port.number, "cca-ug04-15090");
+//			client.start();
 			System.out.println("Finished starting Client");
 		});
 
