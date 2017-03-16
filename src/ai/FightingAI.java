@@ -144,6 +144,7 @@ public class FightingAI extends AITemplate
 		else
 		{
 			// dash when we are close to the target
+			System.out.println(currentTarget);
 			if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
 			{
 				character.setDashing(true);

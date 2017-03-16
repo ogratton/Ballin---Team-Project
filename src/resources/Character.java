@@ -8,7 +8,7 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.UUID;
 
-import ai.AITemplate;
+import ai.BasicAI;
 import ai.BasicAI;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
@@ -33,7 +33,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 	
 	private boolean isAI = false;
-	private AITemplate ai;
+	private BasicAI ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -1527,11 +1527,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.isAI = isAI;
 	}
 
-	public AITemplate getAI() {
+	public BasicAI getAI() {
 		return ai;
 	}
 
-	public void setAI(AITemplate ai) {
+	public void setAI(BasicAI ai) {
 		setAI(true);
 		this.ai = ai;
 	}
