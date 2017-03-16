@@ -256,9 +256,11 @@ public class Character extends Observable implements Collidable_Circle {
 	 */
 	public AudioFile getRandDeathSound()
 	{
+		System.out.println(lives);
+		
 		// XXX I am making the assumption that lives are decremented before this is called
 		// If they have lives left
-		if (lives > 1)
+		if (lives != 0)
 		{
 			int index = rand.nextInt(deathSounds.length);
 			return deathSounds[index];

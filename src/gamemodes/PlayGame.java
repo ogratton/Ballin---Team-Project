@@ -8,6 +8,7 @@ import resources.Character;
 import resources.Map;
 import resources.MapReader;
 import resources.Resources;
+import resources.Resources.Mode;
 
 /**
  * I try and smash graphics with physics. It works ish
@@ -25,6 +26,11 @@ public class PlayGame {
 	
 	public static void start(Resources resources) {
 		
+		// TODO these should be parameters for start
+		String mapName = "potato2";
+		resources.mode = Mode.HotPotato; 
+		Map.World style = Map.World.LAVA;
+		
 		// Create default map in case the following fails
 		Map.Tile[][] tiles = null;	
 		// Create map
@@ -32,7 +38,7 @@ public class PlayGame {
 		try
 		{
 
-			tiles = mr.readMap("./resources/maps/asteroid.csv");
+			tiles = mr.readMap("./resources/maps/"+mapName+".csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -42,7 +48,7 @@ public class PlayGame {
 			
 		}
 		
-		resources.setMap(new Map(1200, 650, tiles, Map.World.CAKE, "Map"));
+		resources.setMap(new Map(1200, 650, tiles, style, "Map"));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");

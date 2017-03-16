@@ -3,7 +3,6 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.UUID;
 
 import ai.pathfinding.AStarSearch;
 import ai.pathfinding.Line;
@@ -267,17 +266,29 @@ public class BasicAI extends Thread
 	 */
 	private void rovingBehaviour() throws InterruptedException
 	{
-		// TODO make checks to switch behaviours
-
 		if (waypoints.isEmpty())
 		{
+			
+			// TODO make behaviour change switches here for efficiency
+			
+			// if there is a player near, seek them out instead
+			// XXX hard-coded experimental value used!
+			double distToNearestPlayer = distToNearestPlayer();
+			if (distToNearestPlayer < 1000)
+			{
+				setBehaviour(Behaviour.AGGRESSIVE);
+			}
+			else
+			{
+				if (debug) System.out.println(distToNearestPlayer + " considered too far");
+			}
+			
 
 			Point charPos = getCurrentTileCoords();
 			Point newDest = resources.getMap().randPointOnMap();
 			Point newDestTile = getTileCoords(newDest);
 			
 			currentGoal = newDest;
-			//System.out.println("going to try to pathfind to " + newDest);
 			while (waypoints.isEmpty())
 			{
 				// keep trying to get a new dest until we get a valid path
@@ -287,8 +298,6 @@ public class BasicAI extends Thread
 
 			if (debug)
 			{
-				//System.out.println("New destination: " + newDest);
-				//System.out.println(waypoints);
 				resources.setDestList(waypoints);
 				resources.setAINextDest(newDest);
 			}
@@ -353,9 +362,9 @@ public class BasicAI extends Thread
 			}
 			else
 			{
-//				// player has died in the time since we found them
-//				System.out.println("target lost, switching to roving");
-//				setBehaviour(Behaviour.ROVING);
+				// player has died in the time since we found them
+				if (debug) System.out.println("target lost, switching to roving");
+				setBehaviour(Behaviour.ROVING);
 			}
 
 		}
@@ -367,7 +376,7 @@ public class BasicAI extends Thread
 				character.setDashing(true);
 			}
 			// if the player has moved considerably since we targeted them
-			else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 100) // XXX 100 is experimental threshold
+			else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70) // XXX 70 is experimental threshold
 			{
 				// force recalculation next tick by clearing our waypoints
 				waypoints.clear();
@@ -428,7 +437,7 @@ public class BasicAI extends Thread
 			// don't hunt ourselves
 			if (!id.equals(playerID))
 			{
-				Point playerLoc = new Point((int) player.getX(), (int) player.getY());
+				Point playerLoc = getTargetLocation(player);
 				Point ourLoc = getOurLocation();
 				double distanceToPlayer = StaticHeuristics.euclidean(ourLoc, playerLoc);
 				if (distanceToPlayer < SLD_to_nearestPlayer)
@@ -446,6 +455,15 @@ public class BasicAI extends Thread
 		}
 
 		return nearestPlayer;
+	}
+	
+	/**
+	 * @return the distance to the nearest other player
+	 */
+	private double distToNearestPlayer()
+	{
+		Character nearestPlayer = scanForNearestPlayer();
+		return StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(nearestPlayer)); 
 	}
 
 	/**

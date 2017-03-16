@@ -50,7 +50,7 @@ public class PathFindingTest
 		try
 		{
 			// if following set points we must be on a map for which the points are a viable route
-			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/walls.csv"); 
+			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/potato.csv"); 
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -62,7 +62,7 @@ public class PathFindingTest
 		resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
 		new MapCosts(resources);
 
-		/* SETTING UP THE AI PLAYER */
+		/* SETTING UP THE PLAYERS */
 
 		Point startCoords = new Point(resources.getMap().tileCoordsToMapCoords(startTile.x, startTile.y));
 		
@@ -74,6 +74,7 @@ public class PathFindingTest
 		Character player = new Character(Character.Class.WIZARD, 0);
 		player.setX(startCoords.getX());
 		player.setY(startCoords.getY());
+		player.setPlayerNumber(0); // so debug stuff is drawn
 		resources.addPlayerToList(player);
 
 		BasicAI ai = new BasicAI(resources, player);
