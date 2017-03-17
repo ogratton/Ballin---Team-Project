@@ -37,6 +37,8 @@ public class UIRes {
 	
 	public static final Color colour = Color.BLACK;
 	
+	public static JPanel inLobbyPanel = InLobbyMenu.getInLobbyMenu();
+	
 	public static int numberSessions = 0;
 	public static JPanel sessionsPanel = new JPanel();
 	public static ArrayList<JPanel> sessionList = new ArrayList<JPanel>();
