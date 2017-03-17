@@ -28,8 +28,8 @@ public class PlayGame {
 		
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.HotPotato; 
-		Map.World style = Map.World.DESERT;
+		resources.mode = Mode.LastManStanding; 
+		Map.World style = Map.World.CAKE;
 		
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);

@@ -47,7 +47,6 @@ public class LayeredPane extends JLayeredPane {
 		InGameMenu menu = new InGameMenu();
 		inGameMenu = menu.getInGameMenuPanel(); 
 		inGameMenu.setBounds(((x - 400) / 2) , ((y - 400) / 2), 400, 400);
-
 		add(inGameMenu, new Integer(10));
 		add(view, new Integer(15));
 		
