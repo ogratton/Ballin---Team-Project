@@ -36,6 +36,8 @@ public class SearchNode
 		this.parent = parent;
 		this.costSoFar = costSoFar;
 		this.distToGo = StaticHeuristics.euclidean(location, goal);
+
+		
 	}
 
 	/**

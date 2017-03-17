@@ -35,7 +35,9 @@ public class UIRes {
 	public static String gameMode;
 	public static String mapName;
 	
-	public static final Color colour = Color.BLACK;
+	public static final Color colour = Color.WHITE;
+	
+	public static JPanel inLobbyPanel = InLobbyMenu.getInLobbyMenu();
 	
 	public static int numberSessions = 0;
 	public static JPanel sessionsPanel = new JPanel();

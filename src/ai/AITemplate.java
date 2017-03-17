@@ -58,9 +58,6 @@ public abstract class AITemplate extends Thread
 
 	protected ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
-	protected Character currentTarget; // for aggressive mode
-	protected Point currentGoal;
-
 	// XXX debug stuff
 	// this is setting things up for the debug Detective
 	protected Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };

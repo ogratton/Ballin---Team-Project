@@ -15,6 +15,9 @@ import resources.Resources;
  */
 public class FightingAI extends AITemplate
 {
+	
+	protected Character currentTarget; // for aggressive mode
+	protected Point currentGoal; // for aggressive mode
 
 	public FightingAI(Resources resources, Character character)
 	{
@@ -58,11 +61,6 @@ public class FightingAI extends AITemplate
 			{
 				setBehaviour(Behaviour.AGGRESSIVE);
 			}
-			else
-			{
-				if (debug)
-					System.out.println(distToNearestPlayer + " considered too far");
-			}
 
 			Point charPos = getCurrentTileCoords();
 			Point newDest = resources.getMap().randPointOnMap();
@@ -73,7 +71,10 @@ public class FightingAI extends AITemplate
 			{
 				// keep trying to get a new dest until we get a valid path
 				// just in case point given is dodgy
-				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
+				if (charPos != null && newDestTile != null)
+				{
+					waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
+				}
 			}
 
 			if (debug)
@@ -101,8 +102,6 @@ public class FightingAI extends AITemplate
 		// 	if we don't have a target to hunt
 		if (waypoints.isEmpty())
 		{
-			if (debug)
-				System.out.println("Searching for nearest player...");
 			Character nearestPlayer;
 			try
 			{
@@ -111,8 +110,6 @@ public class FightingAI extends AITemplate
 			catch (NullPointerException e)
 			{
 				// no other players, so probably switch behaviour
-				if (debug)
-					System.out.println("Nobody around, switching to Roving");
 				setBehaviour(Behaviour.ROVING);
 				return;
 			}
@@ -124,9 +121,7 @@ public class FightingAI extends AITemplate
 			Point charPos = getCurrentTileCoords();
 			Point newDest = getTargetLocation(nearestPlayer);
 			Point newDestTile = getTileCoords(newDest);
-			if (debug)
-				System.out.println("Now hunting player " + nearestPlayer.getPlayerNumber());
-			if (newDestTile != null)
+			if (newDestTile != null && charPos != null)
 			{
 				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
 				resources.setDestList(waypoints);
@@ -135,27 +130,31 @@ public class FightingAI extends AITemplate
 			else
 			{
 				// player has died in the time since we found them
-				if (debug)
-					System.out.println("target lost, switching to roving");
 				setBehaviour(Behaviour.ROVING);
 			}
 
 		}
 		else
 		{
-			// dash when we are close to the target
-			if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
+			try
 			{
-				character.setDashing(true);
+				// dash when we are close to the target
+				if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
+				{
+					character.setDashing(true);
+				}
+				// if the player has moved considerably since we targeted them
+				else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70) // XXX 70 is experimental threshold
+				{
+					// force recalculation next tick by clearing our waypoints
+					waypoints.clear();
+				}
 			}
-			// if the player has moved considerably since we targeted them
-			else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70) // XXX 70 is experimental threshold
+			catch (NullPointerException e)
 			{
-				// force recalculation next tick by clearing our waypoints
-				waypoints.clear();
+				// this may happen the first time
+				// it's fine
 			}
 		}
-
 	}
-
 }

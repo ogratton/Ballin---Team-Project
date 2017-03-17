@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Function;
 
@@ -95,8 +96,8 @@ public class Map {
 	 *            the world type
 	 */
 
-	public Map(int width, int height, Tile[][] tile, World world, String name) {
-		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), tile, world, name);
+	public Map(int width, int height, World world, String mapName) {
+		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), world, mapName);
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class Map {
 	 */
 
 	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
-			Tile[][] tile, World worldType, String name) {
+			World worldType, String name) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
@@ -166,8 +167,25 @@ public class Map {
 		this.gravity = gravity;
 		this.walls = walls;
 		this.name = name;
+		
+		// Create default map in case the following fails
+		Map.Tile[][] tiles = null;	
+		// Create map
+		MapReader mr = new MapReader();	
+		try
+		{
 
-		this.tiles = tile;
+			tiles = mr.readMap("./resources/maps/"+name+".csv");
+			System.out.println("Map Loaded");
+		}
+		catch (IOException e)
+		{
+			System.out.println("File not found");
+			e.printStackTrace();
+			
+		}
+
+		this.tiles = tiles;
 		this.world = worldType;
 		setFriction();
 

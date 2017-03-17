@@ -27,28 +27,11 @@ public class PlayGame {
 	public static void start(Resources resources) {
 		
 		// TODO these should be parameters for start
-		String mapName = "potato2";
-		resources.mode = Mode.HotPotato; 
-		Map.World style = Map.World.LAVA;
+		String mapName = "asteroid";
+		resources.mode = Mode.LastManStanding; 
+		Map.World style = Map.World.CAKE;
 		
-		// Create default map in case the following fails
-		Map.Tile[][] tiles = null;	
-		// Create map
-		MapReader mr = new MapReader();	
-		try
-		{
-
-			tiles = mr.readMap("./resources/maps/"+mapName+".csv");
-			System.out.println("Map Loaded");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
-			
-		}
-		
-		resources.setMap(new Map(1200, 650, tiles, style, "Map"));
+		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");

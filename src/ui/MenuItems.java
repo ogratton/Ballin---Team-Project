@@ -188,11 +188,10 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			try {
-				NetworkingServer.main(null);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			JPanel panel = new JPanel();
+			SessionListMenu sessions = new SessionListMenu();
+			panel = sessions.getLobbyListPanel();
+			switchPanel(panel);
 //			JFrame frame = new JFrame();
 //			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
 //					JOptionPane.PLAIN_MESSAGE);
@@ -370,19 +369,22 @@ public class MenuItems extends UIRes {
 //		return table;
 //	}
 
-	JButton joinSessionButton(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	JButton joinSessionButton(JPanel panel) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
-			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
-						cModel.getSessionId(), cModel.getHighlightedSessionId());
-				try {
-					toServer.reset();
-					toServer.writeUnshared(joinMessage);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
+//			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
+//				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
+//						cModel.getSessionId(), cModel.getHighlightedSessionId());
+//				try {
+//					toServer.reset();
+//					toServer.writeUnshared(joinMessage);
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+			for(int i = 0; i <= 8; i ++)
+				addPlayerToLobby(panel);
+			switchPanel(inLobbyPanel);
 
 		});
 
@@ -415,8 +417,6 @@ public class MenuItems extends UIRes {
 //
 //				}
 //			});
-//			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
-//					JOptionPane.OK_CANCEL_OPTION);
 //			if (optionPane == JOptionPane.OK_OPTION) {
 //				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
 //						cModel.getClientInformation());
@@ -503,19 +503,44 @@ public class MenuItems extends UIRes {
 	// return model;
 	// }
 
-	JPanel addPlayerToLobby(JPanel panel, String playerName) {
+	JPanel addPlayerToLobby(JPanel panel) {
 		JPanel playerPanel = new JPanel();
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
-		JLabel playerLabel = new JLabel(playerName);
+		JLabel playerLabel = new JLabel(username);
 
 		Choice characterClass = new Choice();
 		for (Character.Class character : Character.Class.values()) {
 			characterClass.add(character + "");
 		}
-
+		
+		Choice indicatorColour = new Choice();
+		for (int i = 0; i < 9; i++){
+			Color colour = resources.getPlayerColor(i);
+			indicatorColour.add("" + colour);
+			
+		}
+		
+		JButton readyCheck = new JButton("Ready");
+		customiseButton(readyCheck, false);
+		readyCheck.setForeground(Color.RED);
+		readyCheck.addActionListener(e -> {
+			if(readyCheck.getForeground() == Color.RED)
+				readyCheck.setForeground(Color.GREEN);
+			else
+				readyCheck.setForeground(Color.RED);
+		});
+		
+		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(playerLabel);
+		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(characterClass);
+		playerPanel.add(Box.createHorizontalGlue());
+		playerPanel.add(indicatorColour);
+		playerPanel.add(Box.createHorizontalGlue());
+		playerPanel.add(readyCheck);
+		playerPanel.add(Box.createHorizontalGlue());
 		panel.add(playerPanel);
+		panel.add(Box.createVerticalGlue());
 		return panel;
 	}
 

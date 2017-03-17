@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import ai.AITemplate;
+import ai.FightingAI;
 import ai.pathfinding.Line;
 import audio.MusicPlayer;
 import gamemodes.GameModeFFA;

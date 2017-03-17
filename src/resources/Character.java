@@ -8,8 +8,8 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.UUID;
 
-import ai.AITemplate;
-import ai.BasicAI;
+import ai.FightingAI;
+import ai.FightingAI;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
@@ -33,7 +33,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 	
 	private boolean isAI = false;
-	private AITemplate ai;
+	private FightingAI ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -259,9 +259,9 @@ public class Character extends Observable implements Collidable_Circle {
 	{
 		System.out.println(lives);
 		
-		// XXX I am making the assumption that lives are decremented after this is called
+		// XXX I am making the assumption that lives are decremented before this is called
 		// If they have lives left
-		if (lives > 1)
+		if (lives != 1)
 		{
 			int index = rand.nextInt(deathSounds.length);
 			return deathSounds[index];
@@ -1527,11 +1527,11 @@ public class Character extends Observable implements Collidable_Circle {
 		this.isAI = isAI;
 	}
 
-	public AITemplate getAI() {
+	public FightingAI getAI() {
 		return ai;
 	}
 
-	public void setAI(AITemplate ai) {
+	public void setAI(FightingAI ai) {
 		setAI(true);
 		this.ai = ai;
 	}

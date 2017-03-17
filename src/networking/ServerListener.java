@@ -114,12 +114,12 @@ public class ServerListener extends Listener {
 				  		session = sessions.get(sessionId);
 				  		sessions.get(sessionId).removeClient(senderClient.getId());
 				  		senderClient.setSessionId("");
-				  		response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
-				  		senderClient.getQueue().offer(response);
-				  		response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
+				  		Message response1 = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
+				  		Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response);
+				  			c.sendTCP(response1);
+				  			c.sendTCP(response2);
 				  		}
 				  		
 				  		break;

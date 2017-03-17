@@ -37,7 +37,7 @@ public class MapPreview extends JPanel {
 
 		g.clearRect(0, 0, 300, 300);
 
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 26; i++) {
 			for (int j = 0; j < 48; j++) {
 
 				Tile t = map.tileAt(i, j);
@@ -79,7 +79,7 @@ public class MapPreview extends JPanel {
 
 			}
 
-			maps.add(new Map(1200, 675, tiles, Map.World.CAVE,
+			maps.add(new Map(1200, 650, tiles, Map.World.CAVE,
 					listOfFiles[i].getName().substring(0, listOfFiles[i].getName().length() - 4)));
 
 		}

@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 public class InLobbyMenu extends BaseMenu{
 	
-	public JPanel getInLobbyMenu(){
+	public static JPanel getInLobbyMenu(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
