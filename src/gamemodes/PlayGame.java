@@ -31,24 +31,7 @@ public class PlayGame {
 		resources.mode = Mode.HotPotato; 
 		Map.World style = Map.World.DESERT;
 		
-		// Create default map in case the following fails
-		Map.Tile[][] tiles = null;	
-		// Create map
-		MapReader mr = new MapReader();	
-		try
-		{
-
-			tiles = mr.readMap("./resources/maps/"+mapName+".csv");
-			System.out.println("Map Loaded");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
-			
-		}
-		
-		resources.setMap(new Map(1200, 650, tiles, style, "Map"));
+		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");

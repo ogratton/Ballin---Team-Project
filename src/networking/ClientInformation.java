@@ -2,14 +2,17 @@ package networking;
 
 import java.util.UUID;
 
+import graphics.sprites.Sprite;
+
 public class ClientInformation {
 	
 	private String id;
 	private String name;
-	private MessageQueue queue;
 	private String sessionId;
 	private boolean ready;
-	
+	private resources.Character.Class characterClass;
+	private int playerNumber;
+
 	public ClientInformation() {
 		
 	}
@@ -17,15 +20,20 @@ public class ClientInformation {
 	public ClientInformation(String name) {
 		this.id = UUID.randomUUID().toString();
 		this.name = name;
-		this.queue = new MessageQueue();
 		this.ready = false;
 	}
 	
 	public ClientInformation(String id, String name) {
 		this.id = id;
 		this.name = name;
-		this.queue = new MessageQueue();
 		this.ready = false;
+	}
+	
+	public ClientInformation(String id, String name, resources.Character.Class characterClass) {
+		this.id = id;
+		this.name = name;
+		this.ready = false;
+		this.characterClass = characterClass;
 	}
 
 	public String getId() {
@@ -38,14 +46,6 @@ public class ClientInformation {
 	
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	* Gets the blocking queue of messages which this client has.
-	* @return the blocking queue of messages
-	*/
-	public MessageQueue getQueue() {
-		return queue;
 	}
 	
 	public boolean isReady() {
@@ -62,5 +62,23 @@ public class ClientInformation {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+	
+
+	public resources.Character.Class getCharacterClass() {
+		return characterClass;
+	}
+
+	public void setCharacterClass(resources.Character.Class characterClass) {
+		this.characterClass = characterClass;
+	}
+	
+
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
 	}
 }

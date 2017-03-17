@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import networking.GameData.Tag;
+import resources.Resources.Mode;
 
 public class NetworkingClient {
 
@@ -64,5 +65,7 @@ public class NetworkingClient {
 		  kryo.register(GameData.class);
 		  kryo.register(ArrayList.class);
 		  kryo.register(Tag.class);
+		  kryo.register(resources.Map.World.class);
+		  kryo.register(Mode.class);
 	}
 }
