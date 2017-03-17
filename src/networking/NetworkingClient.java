@@ -2,7 +2,6 @@ package networking;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -15,6 +14,11 @@ import networking.GameData.Tag;
 import resources.Resources.Mode;
 
 public class NetworkingClient extends Thread {
+	
+	public static void main(String[] args) {
+		NetworkingClient c = new NetworkingClient("localhost", "Aaquib");
+		c.start();
+	}
 
 	//private Client client;
 	static int UDPport = 27970;
