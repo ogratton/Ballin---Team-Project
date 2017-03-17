@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
 import java.security.SecureRandom;
 import java.util.Iterator;
 
@@ -36,6 +37,7 @@ import graphics.sprites.Sprite.SheetType;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
+import networking.NetworkingClient;
 import networking.NetworkingServer;
 import networking.Note;
 import resources.Character;
@@ -188,18 +190,20 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			JPanel panel = new JPanel();
-			SessionListMenu sessions = new SessionListMenu();
-			panel = sessions.getLobbyListPanel();
-			switchPanel(panel);
-//			JFrame frame = new JFrame();
-//			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
-//					JOptionPane.PLAIN_MESSAGE);
-//			if (input != null) {
-//				//connectToServer(username, "" + Port.number, host);
-//			} else {
-//				frame.dispose();
-//			}
+//			JPanel panel = new JPanel();
+//			SessionListMenu sessions = new SessionListMenu();
+//			panel = sessions.getLobbyListPanel();
+//			switchPanel(panel);
+//			
+			JFrame frame = new JFrame();
+			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
+				NetworkingClient client = new NetworkingClient(input, username);
+				client.run();
+			} else {
+				frame.dispose();
+			}
 		});
 		return startButton;
 	}
