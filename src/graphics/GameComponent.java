@@ -53,20 +53,20 @@ public class GameComponent extends JFrame implements ActionListener {
 	public GameComponent(Resources resources, int width, int height, Updater updater, boolean debugPaths) {
 
 		super();
-		
+
 		this.resources = resources;
 		this.characters = resources.getPlayerList();
-		
+
 		setLayout(new BorderLayout());
 
 		// create a new key adapter and set listener
 		addKeyListener(new TAdapter(resources));
 		setFocusable(true);
-		
+
 		// create the elements of the game
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths);
-		
+
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
 				model.addObserver(layers.getView());
@@ -85,27 +85,26 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 		add(bar, BorderLayout.NORTH);
-		
+
 		// fullscreen stuff
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-	
+		// GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+
 		add(layers, BorderLayout.CENTER);
-		
+
 		// make the game fullscreen
 		toggleFullscreen();
-		
+
 		// start the timer to send actionevents
 		timer = new Timer(10, this);
 		timer.start();
-		
+
 		// make everything visible and the right size
 		setVisible(true);
 		pack();
-		
-	}
 
+	}
 
 	/**
 	 * What to do on each tick
@@ -113,14 +112,13 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 
-			layers.repaint();
-			bar.paint();
-			bar.updateScores();
-			bar.updateStats();
-			
-		
+		layers.repaint();
+		bar.paint();
+		bar.updateScores();
+		bar.updateStats();
+
 	}
-	
+
 	/**
 	 * Switch between fullscreen and windowed
 	 */
@@ -147,16 +145,16 @@ public class GameComponent extends JFrame implements ActionListener {
 			fullScreen = true;
 
 		}
-		
+
 		setFocusable(true);
 		requestFocus();
-		
+
 	}
 
 	/**
 	 * Cycle between worlds. Debug function, not for final product
 	 */
-	
+
 	public void cycleWorld() {
 
 		World world = resources.getMap().getWorldType();
@@ -191,15 +189,16 @@ public class GameComponent extends JFrame implements ActionListener {
 		toggleFullscreen();
 
 	}
-	
+
 	/**
 	 * Key adapter to receive input from keyboard
+	 * 
 	 * @author George Kaye (ish)
 	 *
 	 */
-	
+
 	private class TAdapter extends KeyAdapter {
-		
+
 		private Resources resources;
 		private int leftKey;
 		private int rightKey;
@@ -207,47 +206,50 @@ public class GameComponent extends JFrame implements ActionListener {
 		private int downKey;
 		private int dashKey;
 		private int blockKey;
-		
+
 		/**
 		 * Create a new keyadapter, setting up custom controls
-		 * @param resources the resources object
+		 * 
+		 * @param resources
+		 *            the resources object
 		 */
-		
+
 		public TAdapter(Resources resources) {
-			
+
 			this.resources = resources;
 			setUpControls();
-			
+
 		}
-		
+
 		/**
-		 * Set the controls for this component, based on how they are set in resources
+		 * Set the controls for this component, based on how they are set in
+		 * resources
 		 */
-		
-		public void setUpControls(){
-			
+
+		public void setUpControls() {
+
 			leftKey = resources.getLeft();
 			rightKey = resources.getRight();
 			upKey = resources.getUp();
 			downKey = resources.getDown();
-			
+
 			blockKey = resources.getBlock();
 			dashKey = resources.getDash();
-			
+
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			
+
 			int key = e.getKeyCode();
-			
-			if(key == leftKey){
+
+			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(false);
-			} else if(key == rightKey){
+			} else if (key == rightKey) {
 				characters.get(firstPlayerIndex).setRight(false);
-			} else if(key == upKey){
+			} else if (key == upKey) {
 				characters.get(firstPlayerIndex).setUp(false);
-			} else if(key == downKey){
+			} else if (key == downKey) {
 				characters.get(firstPlayerIndex).setDown(false);
 			}
 		}
@@ -255,28 +257,30 @@ public class GameComponent extends JFrame implements ActionListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
-			
-			if(key == leftKey){
+
+			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(true);
-			} else if(key == rightKey){
+			} else if (key == rightKey) {
 				characters.get(firstPlayerIndex).setRight(true);
-			} else if(key == upKey){
+			} else if (key == upKey) {
 				characters.get(firstPlayerIndex).setUp(true);
-			} else if(key == downKey){
+			} else if (key == downKey) {
 				characters.get(firstPlayerIndex).setDown(true);
-			} else if(key == dashKey){
+			} else if (key == dashKey) {
 				characters.get(firstPlayerIndex).requestDashing();
-			} else if(key == blockKey){
+			} else if (key == blockKey) {
 				characters.get(firstPlayerIndex).setBlocking(true);
-			} else if(key == KeyEvent.VK_BACK_SPACE){
+			} else if (key == KeyEvent.VK_BACK_SPACE) {
 				System.exit(0);
-			} else if(key == KeyEvent.VK_Z){
+			} else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
-			} else if(key == KeyEvent.VK_P){
-				if(LayeredPane.menuShowing)
-					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
-				else
+			} else if (key == KeyEvent.VK_ESCAPE) {
+
+				if (LayeredPane.menuShowing) {
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(10));
+				} else {
+					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
+				}
 				LayeredPane.menuShowing = !LayeredPane.menuShowing;
 			}
 		}
