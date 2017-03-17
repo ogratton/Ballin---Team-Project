@@ -84,5 +84,6 @@ public class NetworkingClient extends Thread {
 		  kryo.register(Tag.class);
 		  kryo.register(resources.Map.World.class);
 		  kryo.register(Mode.class);
+		  kryo.register(resources.Character.Class.class);
 	}
 }
