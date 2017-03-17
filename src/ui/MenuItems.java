@@ -36,6 +36,7 @@ import graphics.sprites.Sprite.SheetType;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
+import networking.NetworkingServer;
 import networking.Note;
 import resources.Character;
 import resources.Map;
@@ -187,14 +188,19 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			JFrame frame = new JFrame();
-			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
-					JOptionPane.PLAIN_MESSAGE);
-			if (input != null) {
-				//connectToServer(username, "" + Port.number, host);
-			} else {
-				frame.dispose();
+			try {
+				NetworkingServer.main(null);
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
+//			JFrame frame = new JFrame();
+//			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+//					JOptionPane.PLAIN_MESSAGE);
+//			if (input != null) {
+//				//connectToServer(username, "" + Port.number, host);
+//			} else {
+//				frame.dispose();
+//			}
 		});
 		return startButton;
 	}
