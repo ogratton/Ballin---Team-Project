@@ -212,6 +212,21 @@ public class MusicPlayer extends Thread
 			System.out.println("Now Playing: " + nowPlaying());
 		}
 	}
+	
+	/**
+	 * Pause if playing, play if paused
+	 */
+	public void togglePlaying()
+	{
+		if(paused)
+		{
+			resumeMusic();
+		}
+		else
+		{
+			pauseMusic();
+		}
+	}
 
 	/**
 	 * mute the music
