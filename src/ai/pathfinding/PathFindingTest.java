@@ -23,7 +23,7 @@ public class PathFindingTest
 		private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 43) }; // TODO to test moveAwayFrom Edge
 //	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
 
-	private static boolean followSetPoints = true;
+	private static boolean followSetPoints = false;
 	
 	private static void testPoirot(Character player, FightingAI ai)
 	{
@@ -47,19 +47,10 @@ public class PathFindingTest
 		// make the map the default just in case the following fails
 		Map.Tile[][] tiles = null;
 		MapReader mr = new MapReader();
-		try
-		{
-			// if following set points we must be on a map for which the points are a viable route
-			tiles = followSetPoints ? mr.readMap("./resources/maps/map0.csv") : mr.readMap("./resources/maps/asteroid.csv"); 
-			System.out.println("Map Loaded");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
-
-		}
-		resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
+		
+		String mapName = followSetPoints ? "map0" : "asteroid";
+		
+		resources.setMap(new Map(1200, 650, Map.World.CAVE, mapName));
 		new MapCosts(resources);
 
 		/* SETTING UP THE PLAYERS */
