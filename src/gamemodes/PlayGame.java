@@ -1,12 +1,10 @@
 package gamemodes;
 
-import java.io.IOException;
-
 import ai.FightingAI;
 import ai.pathfinding.MapCosts;
+import audio.MusicPlayer;
 import resources.Character;
 import resources.Map;
-import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
 
@@ -20,6 +18,8 @@ public class PlayGame {
 		
 		Resources resources = new Resources();
 		
+		resources.setMusicPlayer(new MusicPlayer(resources, "grandma"));
+		
 		start(resources);
 		
 	}
@@ -30,6 +30,35 @@ public class PlayGame {
 		String mapName = "asteroid";
 		resources.mode = Mode.LastManStanding; 
 		Map.World style = Map.World.CAKE;
+		
+		
+		// Music setting:
+		
+		// 30 second gamemode needs 30 seconds of music
+		if (resources.mode == Mode.Deathmatch)
+		{
+			if (style == Map.World.DESERT)
+			{
+				resources.getMusicPlayer().changePlaylist("paris30");
+			}
+			else
+			{
+				resources.getMusicPlayer().changePlaylist("thirty");
+			}
+		}
+		// looping music
+		else
+		{
+			if (style == Map.World.DESERT)
+			{
+				resources.getMusicPlayer().changePlaylist("parisLoop");
+			}
+			else
+			{
+				resources.getMusicPlayer().changePlaylist("swing");
+			}
+		}
+		
 		
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
@@ -72,5 +101,17 @@ public class PlayGame {
 			break;
 		}
 		((Thread) mode).start();
+		
+		// must resume after changing playlist
+		if (resources.getMusicPlayer().isAlive())
+		{
+			resources.getMusicPlayer().resumeMusic();
+		}
+		else
+		{
+			resources.getMusicPlayer().start();
+		}
+		
+		
 	}
 }

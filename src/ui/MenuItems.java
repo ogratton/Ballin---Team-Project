@@ -181,8 +181,8 @@ public class MenuItems extends UIRes {
 				// button sound effect
 				audioPlayer.play();
 				// change the song
-				resources.getMusicPlayer().changePlaylist("thirty");
-				resources.getMusicPlayer().resumeMusic();
+//				resources.getMusicPlayer().changePlaylist("paris30");
+//				resources.getMusicPlayer().resumeMusic();
 			}
 
 		});

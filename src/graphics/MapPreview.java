@@ -68,19 +68,9 @@ public class MapPreview extends JPanel {
 
 		for (int i = 0; i < listOfFiles.length; i++) {
 
-			Map.Tile[][] tiles = null;
-			MapReader mr = new MapReader();
-			try {
-				tiles = mr.readMap(root + listOfFiles[i].getName());
-				System.out.println("Map Loaded");
-			} catch (IOException e) {
-				System.out.println("File not found");
-				e.printStackTrace();
-
-			}
-
-			maps.add(new Map(1200, 650, tiles, Map.World.CAVE,
-					listOfFiles[i].getName().substring(0, listOfFiles[i].getName().length() - 4)));
+			String filename = listOfFiles[i].getName();
+			
+			maps.add(new Map(1200, 650, Map.World.CAVE, filename.substring(0, filename.length() - 4)));
 
 		}
 
