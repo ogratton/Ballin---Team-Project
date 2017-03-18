@@ -12,11 +12,12 @@ import com.esotericsoftware.kryonet.Server;
 
 import networking.GameData.Tag;
 import resources.Resources.Mode;
+import ui.UIRes;
 
 public class NetworkingClient extends Thread {
 	
 	public static void main(String[] args) {
-		NetworkingClient c = new NetworkingClient("localhost", "Aaquib");
+		NetworkingClient c = new NetworkingClient("localhost", UIRes.username);
 		c.start();
 	}
 

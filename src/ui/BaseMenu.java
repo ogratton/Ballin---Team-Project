@@ -13,8 +13,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import com.esotericsoftware.kryonet.Client;
+
 import audio.MusicPlayer;
 import graphics.sprites.Sprite;
+import networking.ConnectionDataModel;
 import resources.Map;
 import resources.Resources;
 
@@ -35,7 +38,7 @@ public abstract class BaseMenu extends MenuItems
 	{
 		JFrame frame = new JFrame();
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
 		frame.setLayout(new BorderLayout());
@@ -73,6 +76,7 @@ public abstract class BaseMenu extends MenuItems
 	{
 		customisePanel(startPanel, frame);
 		customisePanel(optionsPanel, frame);
+		customisePanel(sessionsPanels , frame);
 
 	}
 
@@ -190,16 +194,9 @@ public abstract class BaseMenu extends MenuItems
 		 return panel;
 	 }
 	 
-//	 JPanel addLobbyListButtons(JPanel panel, JTable table, ConnectionDataModel cdmodel, ObjectOutputStream toServer){
-//		 JPanel buttonsPanel = new JPanel();
-//		 JButton joinLobby = joinSessionButton(cdmodel, toServer);
-//		 JButton createLobby = createSessionButton(table, cdmodel, toServer);
-//		 JButton refreshLobby = refreshSessionList(table, cdmodel, toServer);
-//		 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
-//		 getButtonAndIcon(buttonsPanel, joinLobby);
-//		 getButtonAndIcon(buttonsPanel, createLobby);
-//		 getButtonAndIcon(buttonsPanel, refreshLobby);
-//		 panel.add(buttonsPanel);
-//		 return panel;
-//	 }
+	 JPanel addBackToLobbyPanel(JPanel panel, ConnectionDataModel cModel, Client client){
+		 JButton button = leaveLobbyButton(cModel, client);
+		 panel.add(button);
+		 return panel;
+	 }
 }

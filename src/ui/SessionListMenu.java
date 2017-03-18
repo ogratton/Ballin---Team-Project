@@ -12,19 +12,15 @@ import networking.NetworkingClient;
 
 public class SessionListMenu extends BaseMenu{
 	
-	public JPanel getLobbyListPanel(ConnectionDataModel cdmodel, Client client){
-		updateSessionsPanel(cdmodel);
+	public JPanel getLobbyListPanel(ConnectionDataModel cModel, Client client){
 		JPanel panel = new JPanel();
+		InLobbyMenu lobbyMenu = new InLobbyMenu();
+		JPanel lobbyPanel = lobbyMenu.getInLobbyMenu(cModel, client);
+		updateSessionsPanel(cModel, client);
 		panel.setLayout(new BorderLayout());
-		panel.add(createSessionButton(cdmodel, client), BorderLayout.PAGE_START);
-		panel.add(joinSessionButton(inLobbyPanel), BorderLayout.EAST);
+		panel.add(addSessionButtons(cModel, client, lobbyPanel), BorderLayout.PAGE_START);
 		panel.add(sessionsPanels, BorderLayout.CENTER);
-//		DefaultTableModel tableModel = getSessionTableModel(cdmodel);
-//		JTable lobbyTable = getSessionTable(tableModel);
-//		JScrollPane scroll = new JScrollPane(lobbyTable);
-//		addReturnButton(panel);
-//		addLobbyListButtons(panel, lobbyTable, cdmodel, toServer);
-//		panel.add(scroll);
+
 		return panel;
 	}
 

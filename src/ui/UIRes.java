@@ -40,16 +40,14 @@ public class UIRes {
 	public String gameModeName;
 	public String mapName;
 	
-	public static NetworkingClient netClient = new NetworkingClient("localhost", "Aaquib");
+	//public static NetworkingClient netClient = new NetworkingClient("localhost", username);
 	
 	public static final Color colour = Color.BLACK;
-	
-	public static JPanel inLobbyPanel = InLobbyMenu.getInLobbyMenu();
 	
 	public static JPanel sessionsPanels = new JPanel();
 	
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
-	public static ArrayList<Session> sessionList = new ArrayList<Session>();
+	public ArrayList<JPanel> inLobbyList = new ArrayList<JPanel>();
 	
 	public static int numberIcons = Character.Class.values().length - 1;
 	

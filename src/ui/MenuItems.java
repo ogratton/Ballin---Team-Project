@@ -15,7 +15,9 @@ import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.security.SecureRandom;
 import java.util.Iterator;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -75,8 +78,8 @@ public class MenuItems extends UIRes {
 		allignToCenter(comp);
 		comp.setForeground(colour);
 	}
-	
-	void customiseLabel(JLabel label, int size){
+
+	void customiseLabel(JLabel label, int size) {
 		setCustomFont(label, size);
 		allignToCenter(label);
 		label.setForeground(colour);
@@ -102,8 +105,6 @@ public class MenuItems extends UIRes {
 
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
@@ -120,14 +121,10 @@ public class MenuItems extends UIRes {
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-
 				}
 
 			});
@@ -147,7 +144,7 @@ public class MenuItems extends UIRes {
 		customiseLabel(label);
 		return label;
 	}
-	
+
 	JLabel getLabel(String text, int size) {
 		JLabel label = new JLabel(text);
 		customiseLabel(label, size);
@@ -179,16 +176,15 @@ public class MenuItems extends UIRes {
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
-			
-			if (!Resources.silent)
-			{
+
+			if (!Resources.silent) {
 				// button sound effect
 				audioPlayer.play();
 				// change the song
 				resources.getMusicPlayer().changePlaylist("thirty");
 				resources.getMusicPlayer().resumeMusic();
 			}
-			
+
 		});
 		return startButton;
 	}
@@ -197,18 +193,19 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			
+
 			NetworkingClient.main(null);
-//			
-//			JFrame frame = new JFrame();
-//			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
-//					JOptionPane.PLAIN_MESSAGE);
-//			if (input != null) {
-//				NetworkingClient client = new NetworkingClient(input, username);
-//				client.run();
-//			} else {
-//				frame.dispose();
-//			}
+			//
+			// JFrame frame = new JFrame();
+			// String input = (String) JOptionPane.showInputDialog(frame, "Enter
+			// the server name:", "Input server",
+			// JOptionPane.PLAIN_MESSAGE);
+			// if (input != null) {
+			// NetworkingClient client = new NetworkingClient(input, username);
+			// client.run();
+			// } else {
+			// frame.dispose();
+			// }
 		});
 		return startButton;
 	}
@@ -219,6 +216,12 @@ public class MenuItems extends UIRes {
 		button.addActionListener(e -> {
 			switchPanel(startPanel);
 		});
+		return button;
+	}
+	
+	JButton getBackToStartMenuButton(String name){
+		JButton button = getBackToStartMenuButton();
+		button.setText(name);
 		return button;
 	}
 
@@ -239,10 +242,10 @@ public class MenuItems extends UIRes {
 		customiseButton(exitButton, true);
 		return exitButton;
 	}
-	
-	JButton getResumeToGameButton(JPanel panel){
+
+	JButton getResumeToGameButton(JPanel panel) {
 		JButton button = new JButton("Resume");
-		button.addActionListener(e ->{
+		button.addActionListener(e -> {
 			GameComponent.layers.setLayer(panel, new Integer(10));
 			LayeredPane.menuShowing = !LayeredPane.menuShowing;
 		});
@@ -270,21 +273,20 @@ public class MenuItems extends UIRes {
 	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
 		customiseSlider(musicSlider);
-		if (!Resources.silent)
-		{
+		if (!Resources.silent) {
 			musicSlider.addChangeListener(e -> {
-			int volume = musicSlider.getValue();
-			if (volume == 0)
-				resources.getMusicPlayer().mute();
-			else
-				resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
-		});
+				int volume = musicSlider.getValue();
+				if (volume == 0)
+					resources.getMusicPlayer().mute();
+				else
+					resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
+			});
 		}
-		
+
 		return musicSlider;
 	}
-	
-	JPanel getSessionPanel(Session session){
+
+	JPanel getSessionPanel(Session session) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JLabel sessionName = getLabel(session.getSessionName(), 20);
@@ -305,72 +307,94 @@ public class MenuItems extends UIRes {
 		panel.add(Box.createHorizontalGlue());
 		panel.setFocusable(true);
 		Color background = panel.getBackground();
-		
-		panel.addMouseListener(new MouseListener(){
+
+		panel.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println(panel.isFocusOwner());
-				for(int i = 0; i < sessionPanelsList.size(); i++){
-					if(sessionPanelsList.get(i).isFocusOwner())
+				for (int i = 0; i < sessionPanelsList.size(); i++) {
+					if (sessionPanelsList.get(i).isFocusOwner())
 						sessionPanelsList.get(i).setBackground(background);
 				}
 				panel.requestFocus();
 				panel.setBackground(Color.RED);
 			}
-			
-			@Override public void mouseEntered(MouseEvent arg0) {}
-			@Override public void mouseExited(MouseEvent arg0) {}
-			@Override public void mousePressed(MouseEvent arg0) {}
-			@Override public void mouseReleased(MouseEvent arg0) {}
-			
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+
 		});
 		panel.requestFocus();
 		return panel;
 	}
-	
-	void updateSessionsPanel(ConnectionDataModel cModel){
+
+	void updateSessionsPanel(ConnectionDataModel cModel, Client client) {
 		sessionsPanels.removeAll();
+		sessionPanelsList.removeAll(sessionPanelsList);
+		inLobbyList.removeAll(inLobbyList);
 		sessionsPanels.setLayout(new BoxLayout(sessionsPanels, BoxLayout.Y_AXIS));
-		System.out.println(cModel.getAllSessions().size());
-		for(int i = 0; i < cModel.getAllSessions().size(); i++){
-			System.out.println("Host: " + cModel.getAllSessions().get(i).getHostName());
-			System.out.println("Map: " + cModel.getAllSessions().get(i).getMapName());
-			System.out.println("Game mode: " + cModel.getAllSessions().get(i).getGameMode());
-			System.out.println("Lobby name: " + cModel.getAllSessions().get(i).getSessionName());
+		
+		for (int i = 0; i < cModel.getAllSessions().size(); i++) {
 			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
 			sessionPanelsList.add(session);
 			sessionsPanels.add(session);
+			sessionsPanels.add(Box.createVerticalStrut(10));
+			
+			JPanel inLobbyPanel = new JPanel();
+			InLobbyMenu lobbyMenu = new InLobbyMenu();
+			inLobbyPanel = lobbyMenu.getInLobbyMenu(cModel, client);
+			inLobbyList.add(inLobbyPanel);
 		}
-		
+
 		sessionsPanels.repaint();
 		sessionsPanels.revalidate();
 	}
 
-	JButton joinSessionButton(JPanel panel) {
+	JButton joinSessionButton(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
-//			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-//				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
-//						cModel.getSessionId(), cModel.getHighlightedSessionId());
-//				try {
-//					toServer.reset();
-//					toServer.writeUnshared(joinMessage);
-//				} catch (Exception e1) {
-//					e1.printStackTrace();
-//				}
+			int index = -1;
+			for (int i = 0; i < sessionPanelsList.size(); i++) {
+				if(sessionPanelsList.get(i).isFocusOwner())
+					index = i;
+			}
+			
+			Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
+					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
+			try {
+				client.sendTCP(joinMessage);
+				addPlayerToLobby(sessionPanel, new ClientInformation(username), cModel.getAllSessions().get(index).getAllClients().size() + 1);
+				//updateInLobbyPanel(sessionPanel, cModel.getAllSessions().get(index).getAllClients().size() + 1, cModel, client);
+			//	updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
+				switchPanel(sessionPanel);
+			
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+//			if(index != -1){
+//					
+//					updateSessionsPanel(cModel, client);
 //			}
-			for(int i = 0; i <= 8; i ++)
-				addPlayerToLobby(panel);
-			switchPanel(inLobbyPanel);
-
 		});
 
 		customiseButton(button, true);
 		return button;
 	}
 
-	JButton createSessionButton(ConnectionDataModel cModel, Client client) {
+	JButton createSessionButton(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
 			JFrame frame = new JFrame();
@@ -378,56 +402,71 @@ public class MenuItems extends UIRes {
 			Object[] inputs = createLobbyWizard();
 			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
 					JOptionPane.OK_CANCEL_OPTION);
-					
-			lobbyName = ((JTextField) inputs[1]).getText();
-			
-			gameModeName = ((Choice) inputs[3]).getSelectedItem();
-			
-			mapName = ((Choice) inputs[5]).getSelectedItem();
-			
-			Map.World mapTiles = null;
-			
-			for (Map.World map : Map.World.values()) {
-				if (map.toString().compareTo(mapName) == 0)
-					mapTiles = map;
-			}
-				
-			Mode gameMode = null;
-			for (Resources.Mode mode : Resources.Mode.values()){
-				if(mode.toString().compareTo(gameModeName) == 0)
-					gameMode = mode;
-			}
-			
-			Session newSession = new Session(lobbyName, new ClientInformation(username), mapName ,mapTiles, gameMode, netClient.getName(), 0);
-			sessionList.add(newSession);
-			
-			
+
 			if (optionPane == JOptionPane.OK_OPTION) {
-				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "", newSession);
+				lobbyName = ((JTextField) inputs[1]).getText();
+
+				gameModeName = ((Choice) inputs[3]).getSelectedItem();
+
+				mapName = ((Choice) inputs[5]).getSelectedItem();
+
+				Map.World mapTiles = null;
+
+				for (Map.World map : Map.World.values()) {
+					if (map.toString().compareTo(mapName) == 0)
+						mapTiles = map;
+				}
+
+				Mode gameMode = null;
+				for (Resources.Mode mode : Resources.Mode.values()) {
+					if (mode.toString().compareTo(gameModeName) == 0)
+						gameMode = mode;
+				}
+
+				Session newSession = new Session(lobbyName, new ClientInformation(username), mapName, mapTiles,
+						gameMode, username, 0);
+
+				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "",
+						newSession);
 				try {
 					client.sendTCP(createMessage);
+					updateSessionsPanel(cModel, client);
+					updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
+					switchPanel(sessionPanel);
+					
 					System.out.println("Session creation sent.");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+				
+//				int index = -1;
+//				
+//				for(int i = 0; i < cModel.getAllSessions().size(); i++){
+//					if(cModel.getAllSessions().get(i).getId().compareTo(newSession.getId()) == 0)
+//						index = i;
+//				}
+//				
+//				updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
+//				
 			}
-			
-			updateSessionsPanel(cModel);
 
-			
+			else
+				frame.dispose();
+
+
 		});
 		customiseButton(button, true);
 		return button;
 	}
 
-	JButton refreshSessionList(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	JButton refreshSessionList(ConnectionDataModel cModel, Client client) {
 		JButton button = new JButton("Refresh");
 		button.addActionListener(e -> {
 			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(),
 					null);
 			try {
-				toServer.writeUnshared(message);
-				//updateSessionTable(cModel, table);
+				client.sendTCP(message);
+				updateSessionsPanel(cModel, client);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -436,14 +475,28 @@ public class MenuItems extends UIRes {
 		return button;
 	}
 
+	JPanel addSessionButtons(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		JButton createSession = createSessionButton(cModel, client, sessionPanel);
+		JButton joinSession = joinSessionButton(cModel, client, sessionPanel);
+		JButton refreshSession = refreshSessionList(cModel, client);
+		JButton backToMainMenu = getBackToStartMenuButton();
+		panel.add(createSession);
+		panel.add(joinSession);
+		panel.add(refreshSession);
+		panel.add(backToMainMenu);
+		return panel;
+	}
+
 	Object[] createLobbyWizard() {
 		JLabel lobbyNameLabel = new JLabel("Lobby name: ");
 
 		JLabel gameModeLabel = new JLabel("Game mode: ");
 		Choice gameModeChoice = new Choice();
-			for (Resources.Mode gameMode : Resources.Mode.values()){
-				gameModeChoice.add(gameMode.toString());
-			}
+		for (Resources.Mode gameMode : Resources.Mode.values()) {
+			gameModeChoice.add(gameMode.toString());
+		}
 
 		JLabel mapLabel = new JLabel("Map: ");
 		Choice mapChoice = new Choice();
@@ -459,85 +512,80 @@ public class MenuItems extends UIRes {
 
 		return inputs;
 	}
-	
-	JPanel createPlayerPanel(){
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel playerName = getLabel(username);
-		 
-		
-		panel.add(Box.createHorizontalGlue());
-		panel.add(playerName);
-		panel.add(Box.createHorizontalGlue());
-		return panel;
-	}
 
-	// JTable getLobbyTableModel(ConnectionDataModel cModel){
-	// List<Session> sessions = cModel.getAllSessions();
-	// String[] columnNames = { "Player", "Character", "Ready"};
-	// DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-	// if (cModel.getHighlightedSessionId() != null) {
-	// UUID sessionId = cModel.getHighlightedSessionId();
-	// Session session = cModel.getSession(sessionId);
-	// clients = session.getAllClients();
-	// }
-	// else {
-	// clients = new ArrayList<ClientInformation>();
-	// }
-	// return model;
-	// }
-
-	JPanel addPlayerToLobby(JPanel panel) {
+	JPanel addPlayerToLobby(JPanel panel, ClientInformation client, int index) {
 		JPanel playerPanel = new JPanel();
+		playerPanel.setPreferredSize(new Dimension(panel.getWidth(), playerPanel.getHeight()));
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
-		JLabel playerLabel = new JLabel(username);
+		JLabel playerLabel = new JLabel(client.getName());
 
 		Choice characterClass = new Choice();
 		for (Character.Class character : Character.Class.values()) {
 			characterClass.add(character + "");
 		}
-		
-		Choice indicatorColour = new Choice();
-		for (int i = 0; i < 9; i++){
-			Color colour = resources.getPlayerColor(i);
-			indicatorColour.add("" + colour);
-			
-		}
-		
+
+		Color colour = resources.getPlayerColor(index);
+		playerPanel.setBorder(BorderFactory.createLineBorder(colour, 15));
+
 		JButton readyCheck = new JButton("Ready");
 		customiseButton(readyCheck, false);
+
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
-			if(readyCheck.getForeground() == Color.RED)
+			if (readyCheck.getForeground() == Color.RED){
 				readyCheck.setForeground(Color.GREEN);
-			else
+				client.setReady(true);
+			}
+			else{
 				readyCheck.setForeground(Color.RED);
+				client.setReady(false);
+			}
+			System.out.println(client.isReady());
 		});
-		
+
 		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(playerLabel);
 		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(characterClass);
 		playerPanel.add(Box.createHorizontalGlue());
-		playerPanel.add(indicatorColour);
-		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(readyCheck);
 		playerPanel.add(Box.createHorizontalGlue());
 		panel.add(playerPanel);
-		panel.add(Box.createVerticalGlue());
+		panel.add(Box.createVerticalStrut(20));
+		return panel;
+	}
+	
+	JPanel updateInLobbyPanel(JPanel panel, Session session, ConnectionDataModel cModel, Client client){
+		for(int i = 1; i < panel.getComponentCount(); i++){
+			panel.remove(i);
+		}
+		for(int i = 0; i < session.getAllClients().size(); i++){
+			addPlayerToLobby(panel, session.getAllClients().get(i), i+1);
+		}	
+		panel.repaint();
+		panel.revalidate();
 		return panel;
 	}
 
-	JButton backToLobbyListPanel(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	JButton leaveLobbyButton(ConnectionDataModel cModel, Client client) {
 		JButton button = new JButton("Leave Lobby");
 		customiseButton(button, true);
 		button.addActionListener(e -> {
-			// SessionListMenu lobbyList = new SessionListMenu();
-			// JPanel lobby = lobbyList.getLobbyListPanel(cModel, toServer);
-			// switchPanel(lobby);
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(), cModel.getHighlightedSessionId());
+			try {
+				client.sendTCP(leaveMessage);
+				cModel.setReady(false);
+				SessionListMenu lobbyList = new SessionListMenu();
+				JPanel lobby = lobbyList.getLobbyListPanel(cModel, client);
+				updateSessionsPanel(cModel, client);
+				
+				switchPanel(lobby);
+				
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		});
 		return button;
-
 	}
 
 	JSlider getAudioSlider() {
@@ -700,8 +748,13 @@ public class MenuItems extends UIRes {
 
 					}
 
-					@Override public void keyReleased(KeyEvent e) {}
-					@Override public void keyTyped(KeyEvent e) {}
+					@Override
+					public void keyReleased(KeyEvent e) {
+					}
+
+					@Override
+					public void keyTyped(KeyEvent e) {
+					}
 				});
 
 			}
@@ -716,8 +769,13 @@ public class MenuItems extends UIRes {
 				button.setForeground(colour);
 			}
 
-			@Override public void mousePressed(MouseEvent e) {}
-			@Override public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
 
 		});
 	}
