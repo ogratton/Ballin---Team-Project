@@ -20,10 +20,10 @@ public class PathFindingTest
 {
 	private static Point startTile = new Point(12, 25);
 	//	private static Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
-	//	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 43) }; // TODO to test moveAwayFrom Edge
-	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
+		private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 14), new Point(9, 4), new Point(20, 43) }; // TODO to test moveAwayFrom Edge
+//	private static Point[] destinations = new Point[] { new Point(6, 20), new Point(10, 20), new Point(9, 20), new Point(20, 20) }; // TODO to test smoothing
 
-	private static boolean followSetPoints = false;
+	private static boolean followSetPoints = true;
 	
 	private static void testPoirot(Character player, FightingAI ai)
 	{

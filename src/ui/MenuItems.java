@@ -4,12 +4,15 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
 import java.security.SecureRandom;
 import java.util.Iterator;
 
@@ -27,19 +30,26 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import com.esotericsoftware.kryonet.Client;
+
 import gamemodes.PlayGame;
 import graphics.GameComponent;
 import graphics.LayeredPane;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
+import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
+import networking.NetworkingClient;
+import networking.NetworkingServer;
 import networking.Note;
+import networking.Session;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
+import resources.Resources.Mode;
 
 public class MenuItems extends UIRes {
 
@@ -187,21 +197,20 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			JFrame frame = new JFrame();
-			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
-					JOptionPane.PLAIN_MESSAGE);
-			if (input != null) {
-				//connectToServer(username, "" + Port.number, host);
-			} else {
-				frame.dispose();
-			}
+			
+			NetworkingClient.main(null);
+//			
+//			JFrame frame = new JFrame();
+//			String input = (String) JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+//					JOptionPane.PLAIN_MESSAGE);
+//			if (input != null) {
+//				NetworkingClient client = new NetworkingClient(input, username);
+//				client.run();
+//			} else {
+//				frame.dispose();
+//			}
 		});
 		return startButton;
-	}
-
-	void connectToServer(String username, String port, String host) {
-		//Client client = new Client(username, port, host);
-		//client.start();
 	}
 
 	JButton getBackToStartMenuButton() {
@@ -275,15 +284,14 @@ public class MenuItems extends UIRes {
 		return musicSlider;
 	}
 	
-	JPanel getSessionInfo(){
+	JPanel getSessionPanel(Session session){
 		JPanel panel = new JPanel();
-		panel.setName("Session id");
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel sessionName = getLabel("Session", 20);
-		JLabel hostName = getLabel("Host Name", 20);
-		JLabel mapName = getLabel("Map Name", 20);
-		JLabel gameModeName = getLabel("Game Mode", 20);
-		JLabel numberPlayers = getLabel("0/8", 20);
+		JLabel sessionName = getLabel(session.getSessionName(), 20);
+		JLabel hostName = getLabel(session.getHostName(), 20);
+		JLabel mapName = getLabel(session.getMapName(), 20);
+		JLabel gameModeName = getLabel("" + session.getGameMode(), 20);
+		JLabel numberPlayers = getLabel(session.getAllClients().size() + "/8", 20);
 		panel.add(Box.createHorizontalGlue());
 		panel.add(sessionName);
 		panel.add(Box.createHorizontalGlue());
@@ -303,9 +311,9 @@ public class MenuItems extends UIRes {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				System.out.println(panel.isFocusOwner());
-				for(int i = 0; i < sessionList.size(); i++){
-					if(sessionList.get(i).isFocusOwner())
-						sessionList.get(i).setBackground(background);
+				for(int i = 0; i < sessionPanelsList.size(); i++){
+					if(sessionPanelsList.get(i).isFocusOwner())
+						sessionPanelsList.get(i).setBackground(background);
 				}
 				panel.requestFocus();
 				panel.setBackground(Color.RED);
@@ -321,62 +329,40 @@ public class MenuItems extends UIRes {
 		return panel;
 	}
 	
-	JPanel getSessionsTable(JPanel panel){
-		panel.removeAll();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		for(int i = 0; i < numberSessions; i++){
-			JPanel session = getSessionInfo();
-			sessionList.add(session);
-			panel.add(session);
+	void updateSessionsPanel(ConnectionDataModel cModel){
+		sessionsPanels.removeAll();
+		sessionsPanels.setLayout(new BoxLayout(sessionsPanels, BoxLayout.Y_AXIS));
+		System.out.println(cModel.getAllSessions().size());
+		for(int i = 0; i < cModel.getAllSessions().size(); i++){
+			System.out.println("Host: " + cModel.getAllSessions().get(i).getHostName());
+			System.out.println("Map: " + cModel.getAllSessions().get(i).getMapName());
+			System.out.println("Game mode: " + cModel.getAllSessions().get(i).getGameMode());
+			System.out.println("Lobby name: " + cModel.getAllSessions().get(i).getSessionName());
+			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
+			sessionPanelsList.add(session);
+			sessionsPanels.add(session);
 		}
-		panel.repaint();
-		panel.revalidate();
-		return panel;
+		
+		sessionsPanels.repaint();
+		sessionsPanels.revalidate();
 	}
 
-//	DefaultTableModel getSessionTableModel(ConnectionDataModel cModel) {
-//		List<Session> sessions = cModel.getAllSessions();
-//		System.out.println(sessions.size());
-//		Iterator<Session> iterator = sessions.iterator();
-//		String[] columnNames = { "Lobby Name", "Owner", "Map", "Game Mode", "No. of players" };
-//		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-//		while (iterator.hasNext()) {
-//			Object[] lobbyInfo = { iterator.next().getId(), null, mapName, null};
-//			model.addRow(lobbyInfo);
-//		}
-//		return model;
-//	}
-//
-//	JTable getSessionTable(DefaultTableModel model) {
-//		JTable table = new JTable(model);
-//		table.setDefaultEditor(Object.class, null);
-//		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		table.setOpaque(true);
-//		table.setFillsViewportHeight(true);
-//
-//		return table;
-//	}
-//
-//	JTable updateSessionTable(ConnectionDataModel cModel, JTable table) {
-//		DefaultTableModel tableModel = getSessionTableModel(cModel);
-//		table.removeAll();
-//		table.setModel(tableModel);
-//		return table;
-//	}
-
-	JButton joinSessionButton(ConnectionDataModel cModel, ObjectOutputStream toServer) {
+	JButton joinSessionButton(JPanel panel) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
-			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
-				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
-						cModel.getSessionId(), cModel.getHighlightedSessionId());
-				try {
-					toServer.reset();
-					toServer.writeUnshared(joinMessage);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
+//			if (cModel.getSessionId() != cModel.getHighlightedSessionId()) {
+//				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), null,
+//						cModel.getSessionId(), cModel.getHighlightedSessionId());
+//				try {
+//					toServer.reset();
+//					toServer.writeUnshared(joinMessage);
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+			for(int i = 0; i <= 8; i ++)
+				addPlayerToLobby(panel);
+			switchPanel(inLobbyPanel);
 
 		});
 
@@ -384,42 +370,51 @@ public class MenuItems extends UIRes {
 		return button;
 	}
 
-	//JButton createSessionButton(JTable table, ConnectionDataModel cModel, ObjectOutputStream toServer) {
-	JButton createSessionButton(JPanel panel) {	
+	JButton createSessionButton(ConnectionDataModel cModel, Client client) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
+			JFrame frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Object[] inputs = createLobbyWizard();
+			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
+					JOptionPane.OK_CANCEL_OPTION);
+					
+			lobbyName = ((JTextField) inputs[1]).getText();
 			
-			numberSessions++;
-			sessionsPanel = getSessionsTable(sessionsPanel);
+			gameModeName = ((Choice) inputs[3]).getSelectedItem();
 			
-//			JFrame frame = new JFrame();
-//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//			Object[] inputs = createLobbyWizard();
-//			mapName = ((Choice) inputs[5]).getSelectedItem();
-//			((Choice) inputs[5]).addItemListener(new ItemListener() {
-//
-//				@Override
-//				public void itemStateChanged(ItemEvent e) {
-//					if(e.getStateChange() == e.SELECTED){
-//						mapName = ((Choice) inputs[5]).getSelectedItem();
-//					System.out.println(mapName);}
-//
-//				}
-//			});
-//			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
-//					JOptionPane.OK_CANCEL_OPTION);
-//			if (optionPane == JOptionPane.OK_OPTION) {
-//				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), null, null, null,
-//						cModel.getClientInformation());
-//
-//				try {
-//					toServer.reset();
-//					toServer.writeUnshared(createMessage);
-//					//updateSessionTable(cModel, table);
-//				} catch (Exception e1) {
-//					e1.printStackTrace();
-//				}
-//			}
+			mapName = ((Choice) inputs[5]).getSelectedItem();
+			
+			Map.World mapTiles = null;
+			
+			for (Map.World map : Map.World.values()) {
+				if (map.toString().compareTo(mapName) == 0)
+					mapTiles = map;
+			}
+				
+			Mode gameMode = null;
+			for (Resources.Mode mode : Resources.Mode.values()){
+				if(mode.toString().compareTo(gameModeName) == 0)
+					gameMode = mode;
+			}
+			
+			Session newSession = new Session(lobbyName, new ClientInformation(username), mapName ,mapTiles, gameMode, netClient.getName(), 0);
+			sessionList.add(newSession);
+			
+			
+			if (optionPane == JOptionPane.OK_OPTION) {
+				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "", newSession);
+				try {
+					client.sendTCP(createMessage);
+					System.out.println("Session creation sent.");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			updateSessionsPanel(cModel);
+
+			
 		});
 		customiseButton(button, true);
 		return button;
@@ -447,17 +442,15 @@ public class MenuItems extends UIRes {
 		JLabel gameModeLabel = new JLabel("Game mode: ");
 		Choice gameModeChoice = new Choice();
 			for (Resources.Mode gameMode : Resources.Mode.values()){
-				gameModeChoice.add(gameMode + "");
+				gameModeChoice.add(gameMode.toString());
 			}
-		System.out.println(gameMode);
 
 		JLabel mapLabel = new JLabel("Map: ");
 		Choice mapChoice = new Choice();
 		for (Map.World map : Map.World.values()) {
-			mapChoice.add(map + "");
+			mapChoice.add(map.toString());
 		}
 
-		System.out.println(mapName);
 		customiseLabel(lobbyNameLabel);
 		customiseLabel(gameModeLabel);
 		customiseLabel(mapLabel);
@@ -465,6 +458,18 @@ public class MenuItems extends UIRes {
 				mapLabel, mapChoice };
 
 		return inputs;
+	}
+	
+	JPanel createPlayerPanel(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		JLabel playerName = getLabel(username);
+		 
+		
+		panel.add(Box.createHorizontalGlue());
+		panel.add(playerName);
+		panel.add(Box.createHorizontalGlue());
+		return panel;
 	}
 
 	// JTable getLobbyTableModel(ConnectionDataModel cModel){
@@ -482,19 +487,44 @@ public class MenuItems extends UIRes {
 	// return model;
 	// }
 
-	JPanel addPlayerToLobby(JPanel panel, String playerName) {
+	JPanel addPlayerToLobby(JPanel panel) {
 		JPanel playerPanel = new JPanel();
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
-		JLabel playerLabel = new JLabel(playerName);
+		JLabel playerLabel = new JLabel(username);
 
 		Choice characterClass = new Choice();
 		for (Character.Class character : Character.Class.values()) {
 			characterClass.add(character + "");
 		}
-
+		
+		Choice indicatorColour = new Choice();
+		for (int i = 0; i < 9; i++){
+			Color colour = resources.getPlayerColor(i);
+			indicatorColour.add("" + colour);
+			
+		}
+		
+		JButton readyCheck = new JButton("Ready");
+		customiseButton(readyCheck, false);
+		readyCheck.setForeground(Color.RED);
+		readyCheck.addActionListener(e -> {
+			if(readyCheck.getForeground() == Color.RED)
+				readyCheck.setForeground(Color.GREEN);
+			else
+				readyCheck.setForeground(Color.RED);
+		});
+		
+		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(playerLabel);
+		playerPanel.add(Box.createHorizontalGlue());
 		playerPanel.add(characterClass);
+		playerPanel.add(Box.createHorizontalGlue());
+		playerPanel.add(indicatorColour);
+		playerPanel.add(Box.createHorizontalGlue());
+		playerPanel.add(readyCheck);
+		playerPanel.add(Box.createHorizontalGlue());
 		panel.add(playerPanel);
+		panel.add(Box.createVerticalGlue());
 		return panel;
 	}
 

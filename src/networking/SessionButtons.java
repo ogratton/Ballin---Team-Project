@@ -48,8 +48,6 @@ public class SessionButtons extends JPanel implements Observer {
 		
 		createSession = new JButton("Create Session");
 		createSession.addActionListener(e -> {
-			//System.out.println("ID: " + cModel.getMyId());
-			//System.out.println("ClientInformation" + cModel.getClientInformation().toString());
 			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "", cModel.getClientInformation());	
 			try {
 				client.sendTCP(createMessage);

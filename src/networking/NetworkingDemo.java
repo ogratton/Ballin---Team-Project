@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import ai.FightingAI;
 import ai.pathfinding.MapCosts;
 import gamemodes.Deathmatch;
 import gamemodes.GameModeFFA;
@@ -17,6 +18,7 @@ import resources.Character;
 import resources.Map;
 import resources.MapReader;
 import resources.Resources;
+import resources.Resources.Mode;
 
 /**
  * I try and smash graphics with physics. It works ish
@@ -25,24 +27,11 @@ import resources.Resources;
 public class NetworkingDemo {
 
 	public static void startServerGame(Session session, ConcurrentMap<String, Resources> resourcesMap, ConcurrentMap<String, Session> sessions, ConcurrentMap<String, Connection> connections) {
+		String mapName = session.getSessionName();
+		Map.World style = session.getTileset();
+		Mode modeName = session.getGameMode();
 		
-		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = null;	
-		MapReader mr = new MapReader();	
-		try
-		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
-			System.out.println("I guess it worked then");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
-			
-		}
-		
-		Map map = new Map(1200, 650, tiles, Map.World.CAVE, "");
-		
+		Map map = new Map(1200, 650, style, mapName);
 		
 		Character newPlayer;
 		Resources resources = new Resources();
@@ -50,7 +39,7 @@ public class NetworkingDemo {
 		new MapCosts(resources);
 		
 		GameModeFFA mode;
-		switch(resources.mode) {
+		switch(modeName) {
 		case Deathmatch:
 			mode = new Deathmatch(resources);
 			break;
@@ -65,8 +54,6 @@ public class NetworkingDemo {
 			break;
 		}
 		
-		System.out.println(resources.gamemode);
-		
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
 			Point coords = resources.getMap().randPointOnMap();
@@ -80,6 +67,14 @@ public class NetworkingDemo {
 			newPlayer.setId(id);
 			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions, connections));
 			resources.addPlayerToList(newPlayer);
+		}
+		
+		for(int i = 0; i < session.getNumberOfAI(); i++){
+			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
+			resources.addPlayerToList(character);
+			FightingAI ai = new FightingAI(resources, character);
+			character.setAI(ai);
+			ai.start();
 		}
 
 		((Thread) mode).start();

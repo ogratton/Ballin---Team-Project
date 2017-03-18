@@ -23,6 +23,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import networking.GameData.Tag;
 import resources.Resources;
+import resources.Resources.Mode;
 
 import java.io.*;
 
@@ -72,5 +73,8 @@ public class NetworkingServer {
 		kryo.register(GameData.class);
 		kryo.register(ArrayList.class);
 		kryo.register(Tag.class);
+		kryo.register(resources.Map.World.class);
+		kryo.register(Mode.class);
+		kryo.register(resources.Character.Class.class);
 	}
 }

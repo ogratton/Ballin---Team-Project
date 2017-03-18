@@ -9,45 +9,49 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import gamemodes.GameModeFFA;
 import resources.Resources;
+import resources.Resources.Mode;
 
 public class Session {
 	
 	private String id;
 	private ConcurrentMap<String, ClientInformation> clients;
-	private ConcurrentMap<String, ClientInformation> serializedClients;
 	private boolean gameInProgress;
-	//private Resources resources;
-	
+	private String mapName;
+	private resources.Map.World tileset;
+	private String sessionName;
+	private Mode gameMode;
+	private String hostName;
+	private int numberOfAI;
+
 	public Session() {
 		
 	}
-	
+
 	public Session(ConcurrentMap<String, ClientInformation> clients) {
 		this.id = UUID.randomUUID().toString();
 		this.clients = clients;
 		this.gameInProgress = false;
-		//this.resources = new Resources();
 	}
 	
 	public Session(String id, ConcurrentMap<String, ClientInformation> clients, boolean gameInProgress) {
 		this.id = id;
 		this.clients = clients;
 		this.gameInProgress = gameInProgress;
-		//this.resources = null;
 	}
-
-//	public SerializableSession serialize() {
-//		return new SerializableSession(id, clients, gameInProgress);
-//	}
 	
-//	public Resources getResources() {
-//		return resources;
-//	}
-//
-//	public void setResources(Resources resources) {
-//		this.resources = resources;
-//	}
+	public Session(String sessionName, ClientInformation client, String mapName, resources.Map.World tileset, Mode modeName, String hostName, int numberOfAI) {
+		this.id = UUID.randomUUID().toString();
+		this.sessionName = sessionName;
+		this.clients = new ConcurrentHashMap<String, ClientInformation>();
+		this.clients.put(client.getId(), client);
+		this.mapName = mapName;
+		this.tileset = tileset;
+		this.gameMode = modeName;
+		this.hostName = hostName;
+		this.numberOfAI = numberOfAI;
+	}
 
 	public boolean isGameInProgress() {
 		return gameInProgress;
@@ -93,4 +97,54 @@ public class Session {
 		
 		return ready;
 	}
+	
+	public String getMapName() {
+		return mapName;
+	}
+
+	public void setMapName(String mapName) {
+		this.mapName = mapName;
+	}
+
+	public resources.Map.World getTileset() {
+		return tileset;
+	}
+
+	public void setTileset(resources.Map.World tileset) {
+		this.tileset = tileset;
+	}
+
+	public String getSessionName() {
+		return sessionName;
+	}
+
+	public void setSessionName(String sessionName) {
+		this.sessionName = sessionName;
+	}
+
+	public Mode getGameMode() {
+		return gameMode;
+	}
+
+	public void setGameMode(Mode gameMode) {
+		this.gameMode = gameMode;
+	}
+	
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+	
+	public int getNumberOfAI() {
+		return numberOfAI;
+	}
+
+	public void setNumberOfAI(int numberOfAI) {
+		this.numberOfAI = numberOfAI;
+	}
 }
+
+

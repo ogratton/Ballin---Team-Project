@@ -7,16 +7,25 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.swing.JPanel;
+
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import ai.pathfinding.MapCosts;
+import gamemodes.Deathmatch;
+import gamemodes.GameModeFFA;
+import gamemodes.HotPotato;
+import gamemodes.LastManStanding;
 import graphics.Graphics;
 import resources.Character;
 import resources.Map;
 import resources.MapReader;
 import resources.Resources;
+import resources.Resources.Mode;
+import ui.SessionListMenu;
+import ui.UIRes;
 
 public class ClientListener extends Listener {
 	
@@ -65,9 +74,12 @@ public class ClientListener extends Listener {
    			break;
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
+   			SessionListMenu sessionList = new SessionListMenu();
+			JPanel panel = sessionList.getLobbyListPanel(cModel, client);
+			UIRes.switchPanel(panel);
    			// Create a thread for the GUI:
-   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
-   		    gui.start();
+//   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
+//   		    gui.start();
    		    
    			break;
    		case GAME:
@@ -108,22 +120,29 @@ public class ClientListener extends Listener {
    					}
    				}
    				
-   				//make the map the default just in case the following fails
-			        resources.Map.Tile[][] tiles = null;	
-					MapReader mr = new MapReader();	
-					try
-					{
-						tiles = mr.readMap("./resources/maps/map1.csv");
-						System.out.println("I guess it worked then");
-					}
-					catch (IOException e)
-					{
-						System.out.println("File not found");
-						e.printStackTrace();
-					}
-					
-					resources.setMap(new Map(1200, 675, tiles, Map.World.CAVE, "Test Map"));
-					new MapCosts(resources);
+   				Session session = cModel.getSession(cModel.getSessionId());
+   				String mapName = session.getSessionName();
+   				Map.World tileset = session.getTileset();
+   				Mode modeName = session.getGameMode();
+   				GameModeFFA mode;
+   				switch(modeName) {
+   				case Deathmatch:
+   					mode = new Deathmatch(resources);
+   					break;
+   				case LastManStanding:
+   					mode = new LastManStanding(resources, 5);
+   					break;
+   				case HotPotato:
+   					mode = new HotPotato(resources);
+   					break;
+   				default:
+   					mode = new Deathmatch(resources);
+   					break;
+   				}
+   				resources.gamemode = mode;
+   				
+				resources.setMap(new Map(1200, 675, tileset, mapName));
+				new MapCosts(resources);
    				cModel.setResources(resources);
    				
 //   				Physics p = new Physics(resources);

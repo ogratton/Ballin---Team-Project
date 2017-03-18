@@ -1,7 +1,7 @@
 package networking;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -11,18 +11,28 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import networking.GameData.Tag;
+import resources.Resources.Mode;
 
-public class NetworkingClient {
+public class NetworkingClient extends Thread {
+	
+	public static void main(String[] args) {
+		NetworkingClient c = new NetworkingClient("localhost", "Aaquib");
+		c.start();
+	}
 
 	//private Client client;
 	static int UDPport = 27970;
 	static int TCPport = 27970;
-	static String ip = "localhost";
+	private String ip;
+	private String name;
 	static boolean messageReceived = false;
 	
-	public static void main(String[] args) throws Exception {
-		
-		String name = "Aaquib";
+	public NetworkingClient(String ip, String name) {
+		this.ip = ip;
+		this.name = name;
+	}
+	
+	public void run() {
 		
 		Client client = new Client();
 		
@@ -30,7 +40,11 @@ public class NetworkingClient {
 		
 		new Thread(client).start();
 		
-		client.connect(5000, ip, UDPport, TCPport);
+		try {
+			client.connect(5000, ip, UDPport, TCPport);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
 		ConnectionData conn = new ConnectionData();
 	    ConnectionDataModel cModel = new ConnectionDataModel(conn);
@@ -45,7 +59,11 @@ public class NetworkingClient {
 	    client.sendTCP(m);
 		
 		while(!messageReceived) {
-			Thread.sleep(1000);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -64,5 +82,8 @@ public class NetworkingClient {
 		  kryo.register(GameData.class);
 		  kryo.register(ArrayList.class);
 		  kryo.register(Tag.class);
+		  kryo.register(resources.Map.World.class);
+		  kryo.register(Mode.class);
+		  kryo.register(resources.Character.Class.class);
 	}
 }
