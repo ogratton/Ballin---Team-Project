@@ -9,7 +9,12 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import com.esotericsoftware.kryonet.Client;
+
 import audio.AudioFile;
+import networking.NetworkingClient;
+import networking.Session;
 import resources.Character;
 import resources.Resources;
 
@@ -31,17 +36,20 @@ public class UIRes {
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
-	public static String lobbyName;
-	public static String gameMode;
-	public static String mapName;
+	public String lobbyName;
+	public String gameModeName;
+	public String mapName;
+	
+	public static NetworkingClient netClient = new NetworkingClient("localhost", "Aaquib");
 	
 	public static final Color colour = Color.BLACK;
 	
 	public static JPanel inLobbyPanel = InLobbyMenu.getInLobbyMenu();
 	
-	public static int numberSessions = 0;
 	public static JPanel sessionsPanel = new JPanel();
-	public static ArrayList<JPanel> sessionList = new ArrayList<JPanel>();
+	
+	public static ArrayList<JPanel> sessionPanels = new ArrayList<JPanel>();
+	public static ArrayList<Session> sessionList = new ArrayList<Session>();
 	
 	public static int numberIcons = Character.Class.values().length - 1;
 	
