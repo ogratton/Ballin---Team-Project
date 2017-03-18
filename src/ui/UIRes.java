@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import com.esotericsoftware.kryonet.Client;
 
 import audio.AudioFile;
+import networking.ClientListener;
 import networking.NetworkingClient;
 import networking.Session;
 import resources.Character;

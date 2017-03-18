@@ -4,18 +4,13 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.ObjectOutputStream;
-import java.net.Inet4Address;
 import java.security.SecureRandom;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,13 +20,10 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -46,7 +38,6 @@ import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.NetworkingClient;
-import networking.NetworkingServer;
 import networking.Note;
 import networking.Session;
 import resources.Character;
@@ -344,21 +335,14 @@ public class MenuItems extends UIRes {
 	void updateSessionsPanel(ConnectionDataModel cModel, Client client) {
 		sessionsPanels.removeAll();
 		sessionPanelsList.removeAll(sessionPanelsList);
-		inLobbyList.removeAll(inLobbyList);
 		sessionsPanels.setLayout(new BoxLayout(sessionsPanels, BoxLayout.Y_AXIS));
-		
-		for (int i = 0; i < cModel.getAllSessions().size(); i++) {
+		System.out.println(cModel.getAllSessions().size());
+		for(int i = 0; i < cModel.getAllSessions().size(); i++){
 			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
 			sessionPanelsList.add(session);
 			sessionsPanels.add(session);
-			sessionsPanels.add(Box.createVerticalStrut(10));
-			
-			JPanel inLobbyPanel = new JPanel();
-			InLobbyMenu lobbyMenu = new InLobbyMenu();
-			inLobbyPanel = lobbyMenu.getInLobbyMenu(cModel, client);
-			inLobbyList.add(inLobbyPanel);
 		}
-
+		
 		sessionsPanels.repaint();
 		sessionsPanels.revalidate();
 	}
@@ -376,8 +360,8 @@ public class MenuItems extends UIRes {
 					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 			try {
 				client.sendTCP(joinMessage);
-				addPlayerToLobby(sessionPanel, new ClientInformation(username), cModel.getAllSessions().get(index).getAllClients().size() + 1);
-				//updateInLobbyPanel(sessionPanel, cModel.getAllSessions().get(index).getAllClients().size() + 1, cModel, client);
+				//addPlayerToLobby(sessionPanel, new ClientInformation(username), cModel.getAllSessions().get(index).getAllClients().size() + 1);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
 			//	updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
 				switchPanel(sessionPanel);
 			
@@ -430,24 +414,14 @@ public class MenuItems extends UIRes {
 						newSession);
 				try {
 					client.sendTCP(createMessage);
-					updateSessionsPanel(cModel, client);
-					updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
-					switchPanel(sessionPanel);
-					
 					System.out.println("Session creation sent.");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				
-//				int index = -1;
-//				
-//				for(int i = 0; i < cModel.getAllSessions().size(); i++){
-//					if(cModel.getAllSessions().get(i).getId().compareTo(newSession.getId()) == 0)
-//						index = i;
-//				}
-//				
-//				updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
-//				
+				updateSessionsPanel(cModel, client);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
+				switchPanel(sessionPanel);
 			}
 
 			else
@@ -559,6 +533,7 @@ public class MenuItems extends UIRes {
 		for(int i = 1; i < panel.getComponentCount(); i++){
 			panel.remove(i);
 		}
+		//panel.removeAll();
 		for(int i = 0; i < session.getAllClients().size(); i++){
 			addPlayerToLobby(panel, session.getAllClients().get(i), i+1);
 		}	

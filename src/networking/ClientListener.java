@@ -29,8 +29,8 @@ import ui.UIRes;
 
 public class ClientListener extends Listener {
 	
-	private ConnectionDataModel cModel;
-	private Client client;
+	public ConnectionDataModel cModel;
+	public Client client;
 	
 	public ClientListener(ConnectionDataModel cModel, Client client) {
 		this.cModel = cModel;

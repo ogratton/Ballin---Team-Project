@@ -18,7 +18,6 @@ public class InLobbyMenu extends BaseMenu{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		buttonPanel.add(leaveLobbyButton(cModel,client));
 
-
 		panel.add(buttonPanel);
 		return panel;
 	}
