@@ -29,24 +29,9 @@ public class PhysicsWithGraphicsDemo {
 	}
 	
 	public static void start(Resources resources) {
+				
 		
-		// make the map the default just in case the following fails
-		Map.Tile[][] tiles = null;	
-		MapReader mr = new MapReader();	
-		try
-		{
-			tiles = mr.readMap("./resources/maps/map1.csv");
-			System.out.println("Map Loaded");
-		}
-		catch (IOException e)
-		{
-			System.out.println("File not found");
-			e.printStackTrace();
-			
-		}
-		
-		
-		resources.setMap(new Map(1200, 650, tiles, Map.World.CAVE, "Test Map"));
+		resources.setMap(new Map(1200, 650, Map.World.CAVE, "map1"));
 		new MapCosts(resources);
 		
 		// Player 1 is the actual human
