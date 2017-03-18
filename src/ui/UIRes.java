@@ -46,9 +46,9 @@ public class UIRes {
 	
 	public static JPanel inLobbyPanel = InLobbyMenu.getInLobbyMenu();
 	
-	public static JPanel sessionsPanel = new JPanel();
+	public static JPanel sessionsPanels = new JPanel();
 	
-	public static ArrayList<JPanel> sessionPanels = new ArrayList<JPanel>();
+	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
 	public static ArrayList<Session> sessionList = new ArrayList<Session>();
 	
 	public static int numberIcons = Character.Class.values().length - 1;

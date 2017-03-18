@@ -311,9 +311,9 @@ public class MenuItems extends UIRes {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				System.out.println(panel.isFocusOwner());
-				for(int i = 0; i < sessionList.size(); i++){
-					if(sessionPanels.get(i).isFocusOwner())
-						sessionPanels.get(i).setBackground(background);
+				for(int i = 0; i < sessionPanelsList.size(); i++){
+					if(sessionPanelsList.get(i).isFocusOwner())
+						sessionPanelsList.get(i).setBackground(background);
 				}
 				panel.requestFocus();
 				panel.setBackground(Color.RED);
@@ -330,15 +330,21 @@ public class MenuItems extends UIRes {
 	}
 	
 	void updateSessionsPanel(ConnectionDataModel cModel){
-		sessionsPanel.removeAll();
-		sessionsPanel.setLayout(new BoxLayout(sessionsPanel, BoxLayout.Y_AXIS));
+		sessionsPanels.removeAll();
+		sessionsPanels.setLayout(new BoxLayout(sessionsPanels, BoxLayout.Y_AXIS));
 		System.out.println(cModel.getAllSessions().size());
 		for(int i = 0; i < cModel.getAllSessions().size(); i++){
+			System.out.println("Host: " + cModel.getAllSessions().get(i).getHostName());
+			System.out.println("Map: " + cModel.getAllSessions().get(i).getMapName());
+			System.out.println("Game mode: " + cModel.getAllSessions().get(i).getGameMode());
+			System.out.println("Lobby name: " + cModel.getAllSessions().get(i).getSessionName());
 			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
-			sessionPanels.add(session);
+			sessionPanelsList.add(session);
+			sessionsPanels.add(session);
 		}
-		sessionsPanel.repaint();
-		sessionsPanel.revalidate();
+		
+		sessionsPanels.repaint();
+		sessionsPanels.revalidate();
 	}
 
 	JButton joinSessionButton(JPanel panel) {
@@ -407,7 +413,7 @@ public class MenuItems extends UIRes {
 			}
 			
 			updateSessionsPanel(cModel);
-			sessionList.add(newSession);
+
 			
 		});
 		customiseButton(button, true);

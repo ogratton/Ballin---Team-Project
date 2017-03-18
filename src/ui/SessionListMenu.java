@@ -13,11 +13,12 @@ import networking.NetworkingClient;
 public class SessionListMenu extends BaseMenu{
 	
 	public JPanel getLobbyListPanel(ConnectionDataModel cdmodel, Client client){
+		updateSessionsPanel(cdmodel);
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(createSessionButton(cdmodel, client), BorderLayout.PAGE_START);
 		panel.add(joinSessionButton(inLobbyPanel), BorderLayout.EAST);
-		panel.add(sessionsPanel, BorderLayout.CENTER);
+		panel.add(sessionsPanels, BorderLayout.CENTER);
 //		DefaultTableModel tableModel = getSessionTableModel(cdmodel);
 //		JTable lobbyTable = getSessionTable(tableModel);
 //		JScrollPane scroll = new JScrollPane(lobbyTable);
