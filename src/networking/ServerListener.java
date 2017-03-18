@@ -76,9 +76,7 @@ public class ServerListener extends Listener {
 				  		if(senderClient.getSessionId() != null) {
 				  			sessions.get(senderClient.getSessionId()).removeClient(senderClient.getId());
 				  		}
-				  		ConcurrentMap<String, ClientInformation> sessionClients = new ConcurrentHashMap<String, ClientInformation>();
-				  		sessionClients.put(senderClient.getId(), senderClient);
-				  		session = new Session(sessionClients);
+				  		session = (Session)message.getObject();
 				  		sessions.put(session.getId(), session);
 				  		resourcesMap.put(session.getId(), new Resources());
 				  		senderClient.setSessionId(session.getId());
