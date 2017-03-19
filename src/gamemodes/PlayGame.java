@@ -28,8 +28,8 @@ public class PlayGame {
 		
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.LastManStanding; 
-		Map.World style = Map.World.DESERT;
+		resources.mode = Mode.Deathmatch; 
+		Map.World style = Map.World.SPACE;
 		
 		
 		// Music setting:
@@ -40,6 +40,10 @@ public class PlayGame {
 			if (style == Map.World.DESERT)
 			{
 				resources.getMusicPlayer().changePlaylist("paris30");
+			}
+			else if (style == Map.World.SPACE)
+			{
+				resources.getMusicPlayer().changePlaylist("ultrastorm30");
 			}
 			else
 			{
@@ -53,9 +57,13 @@ public class PlayGame {
 			{
 				resources.getMusicPlayer().changePlaylist("parisLoop");
 			}
+			else if (style == Map.World.SPACE)
+			{
+				resources.getMusicPlayer().changePlaylist("ultrastorm");
+			}
 			else
 			{
-				resources.getMusicPlayer().changePlaylist("swing");
+				resources.getMusicPlayer().changePlaylist("frog");
 			}
 		}
 		

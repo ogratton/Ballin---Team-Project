@@ -17,6 +17,7 @@ import networking.ClientListener;
 import networking.NetworkingClient;
 import networking.Session;
 import resources.Character;
+import resources.FilePaths;
 import resources.Resources;
 
 public class UIRes {
@@ -52,7 +53,7 @@ public class UIRes {
 	
 	public static int numberIcons = Character.Class.values().length - 1;
 	
-	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
 	
 	public static StartMenu start = new StartMenu();
 	public static OptionsMenu options = new OptionsMenu();

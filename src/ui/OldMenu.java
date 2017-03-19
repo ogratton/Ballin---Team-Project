@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import audio.AudioFile;
 import audio.MusicPlayer;
 import graphics.PhysicsWithGraphicsDemo;
+import resources.FilePaths;
 import resources.Resources;
 
 @Deprecated
@@ -263,7 +264,7 @@ public class OldMenu extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					username = textField.getText();
 					textField.setText("");
-					AudioFile audioPlayer = new AudioFile(resources, "resources/audio/ding.wav", "Ding");
+					AudioFile audioPlayer = new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
 					audioPlayer.play();
 					audioPlayer.setGain(resources.getSFXGain());
 					changeState(ViewState.MAINMENU_STATE);
