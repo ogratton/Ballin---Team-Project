@@ -3,6 +3,7 @@ package graphics;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JPanel;
 
@@ -35,13 +36,14 @@ public class PlayerPanel extends JPanel {
 		setLayout(new GridLayout(2, 1));
 
 		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
+		Collections.reverse(characters);
 		boxes = new ArrayList<>();
 
 		int i = 0;
 
 		for (Character c : characters) {
 
-			PlayerInfo box = new PlayerInfo(c);
+			PlayerInfo box = new PlayerInfo(c, resources);
 			boxes.add(box);
 			add(box, i / 4, i % 4);
 
