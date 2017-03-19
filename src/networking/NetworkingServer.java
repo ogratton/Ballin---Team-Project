@@ -67,7 +67,6 @@ public class NetworkingServer {
 		kryo.register(Session.class);
 		kryo.register(Empty.class);
 		kryo.register(ClientInformation.class);
-		kryo.register(MessageQueue.class);
 		kryo.register(LinkedBlockingQueue.class);
 		kryo.register(java.util.concurrent.ConcurrentHashMap.class);
 		kryo.register(GameData.class);
