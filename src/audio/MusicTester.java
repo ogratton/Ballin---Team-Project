@@ -99,7 +99,7 @@ public class MusicTester extends JPanel
 		//		String root = "./resources/audio/";
 		//		File folder = new File(root);
 		//		File[] listOfFiles = folder.listFiles();
-		String[] titles = new String[] { "frog", "grandma", "guile", "pokemon", "swing", "thirty" };
+		String[] titles = new String[] { "frog", "grandma", "guile", "pokemon", "swing", "thirty", "ultrastorm", "parisLoop" };
 
 		resources = res;
 		
