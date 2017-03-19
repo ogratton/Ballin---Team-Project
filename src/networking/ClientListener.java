@@ -13,7 +13,6 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-import ai.pathfinding.MapCosts;
 import gamemodes.Deathmatch;
 import gamemodes.GameModeFFA;
 import gamemodes.HotPotato;
@@ -21,6 +20,7 @@ import gamemodes.LastManStanding;
 import graphics.Graphics;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
 import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
