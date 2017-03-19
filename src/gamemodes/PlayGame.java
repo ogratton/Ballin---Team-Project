@@ -34,37 +34,40 @@ public class PlayGame {
 		
 		// Music setting:
 		
-		// 30 second gamemode needs 30 seconds of music
-		if (resources.mode == Mode.Deathmatch)
+		if (!Resources.silent)
 		{
-			if (style == Map.World.DESERT)
+			// 30 second gamemode needs 30 seconds of music
+			if (resources.mode == Mode.Deathmatch)
 			{
-				resources.getMusicPlayer().changePlaylist("paris30");
+				if (style == Map.World.DESERT)
+				{
+					resources.getMusicPlayer().changePlaylist("paris30");
+				}
+				else if (style == Map.World.SPACE)
+				{
+					resources.getMusicPlayer().changePlaylist("ultrastorm30");
+				}
+				else
+				{
+					resources.getMusicPlayer().changePlaylist("thirty");
+				}
 			}
-			else if (style == Map.World.SPACE)
-			{
-				resources.getMusicPlayer().changePlaylist("ultrastorm30");
-			}
+			// looping music
 			else
 			{
-				resources.getMusicPlayer().changePlaylist("thirty");
-			}
-		}
-		// looping music
-		else
-		{
-			if (style == Map.World.DESERT)
-			{
-				resources.getMusicPlayer().changePlaylist("parisLoop");
-			}
-			else if (style == Map.World.SPACE)
-			{
-				resources.getMusicPlayer().changePlaylist("ultrastorm");
-			}
-			else
-			{
-				resources.getMusicPlayer().changePlaylist("frog");
-			}
+				if (style == Map.World.DESERT)
+				{
+					resources.getMusicPlayer().changePlaylist("parisLoop");
+				}
+				else if (style == Map.World.SPACE)
+				{
+					resources.getMusicPlayer().changePlaylist("ultrastorm");
+				}
+				else
+				{
+					resources.getMusicPlayer().changePlaylist("frog");
+				}
+			} 
 		}
 		
 		
@@ -110,14 +113,17 @@ public class PlayGame {
 		}
 		((Thread) mode).start();
 		
-		// must resume after changing playlist
-		if (resources.getMusicPlayer().isAlive())
+		if (!Resources.silent)
 		{
-			resources.getMusicPlayer().resumeMusic();
-		}
-		else
-		{
-			resources.getMusicPlayer().start();
+			// must resume after changing playlist
+			if (resources.getMusicPlayer().isAlive())
+			{
+				resources.getMusicPlayer().resumeMusic();
+			}
+			else
+			{
+				resources.getMusicPlayer().start();
+			} 
 		}
 		
 		
