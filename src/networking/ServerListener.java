@@ -112,12 +112,24 @@ public class ServerListener extends Listener {
 				  		session = sessions.get(sessionId);
 				  		sessions.get(sessionId).removeClient(senderClient.getId());
 				  		senderClient.setSessionId("");
-				  		Message response1 = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
-				  		Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
+				  		
+				  		// If the host leaves, set a new host for the session.
+				  		if(session.getId().equals(senderClient.getSessionId()) && session.getAllClients().size() <= 0) {
+				  			ClientInformation newHost = session.getAllClients().get(0);
+				  			session.setHostName(newHost.getName());
+				  		}
+				  		
+				  		// If there are no clients in the session, delete the session.
+				  		if(session.getAllClients().size() <= 0) {
+				  			sessions.remove(session.getId());
+				  		}
+				  		
+				  		response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
+				  		//Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
+				  		System.out.println("Number of Clients: " + session.getAllClients().size());
 				  		
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response1);
-				  			c.sendTCP(response2);
+				  			c.sendTCP(response);
 				  		}
 				  		
 				  		break;

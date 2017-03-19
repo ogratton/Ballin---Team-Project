@@ -360,6 +360,7 @@ public class MenuItems extends UIRes {
 					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 			try {
 				client.sendTCP(joinMessage);
+				
 				//addPlayerToLobby(sessionPanel, new ClientInformation(username), cModel.getAllSessions().get(index).getAllClients().size() + 1);
 				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
 			//	updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
@@ -418,6 +419,9 @@ public class MenuItems extends UIRes {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+				
+				cModel.setSessionId(newSession.getId());
+				cModel.getSessionsTable().put(newSession.getId(), newSession);
 				
 				updateSessionsPanel(cModel, client);
 				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
