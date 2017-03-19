@@ -27,7 +27,7 @@ public class PlayGame {
 	public static void start(Resources resources) {
 		
 		// TODO these should be parameters for start
-		String mapName = "asteroid";
+		String mapName = "pit";
 		resources.mode = Mode.LastManStanding; 
 		Map.World style = Map.World.DESERT;
 		
