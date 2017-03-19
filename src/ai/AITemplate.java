@@ -318,6 +318,7 @@ public abstract class AITemplate extends Thread
 			{
 				// player has died in the time since we found them
 				setBehaviour(Behaviour.ROVING);
+				return;
 			}
 
 		}

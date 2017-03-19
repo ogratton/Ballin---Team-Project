@@ -46,6 +46,8 @@ public class FightingAI extends AITemplate
 	@Override
 	protected void rovingBehaviour() throws InterruptedException
 	{
+		// keep trying to get a new dest until we get a valid path
+		// if AStar returns null we'll try again next tick anyway
 		if (waypoints.isEmpty())
 		{
 
@@ -57,29 +59,27 @@ public class FightingAI extends AITemplate
 			if (distToNearestPlayer < 1000)
 			{
 				setBehaviour(Behaviour.AGGRESSIVE);
+				//return;
+				// XXX Even though we should return here, it seems to work better if we don't
+				// So I shall leave it
+				// This is why in pathfinding test it does loads of random points after the player is killed
 			}
 
 			Point charPos = getCurrentTileCoords();
 			Point newDest = resources.getMap().randPointOnMap();
 			Point newDestTile = getTileCoords(newDest);
-
 			currentGoal = newDest;
-			while (waypoints.isEmpty())
+			
+			if (charPos != null && newDestTile != null)
 			{
-				// keep trying to get a new dest until we get a valid path
-				// just in case point given is dodgy
-				if (charPos != null && newDestTile != null)
-				{
-					waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
-				}
+				waypoints = convertWaypoints(aStar.search(charPos, newDestTile));
 			}
 
 			if (debug)
 			{
 				resources.setDestList(waypoints);
-				resources.setAINextDest(newDest);
+				resources.setAINextDest(currentGoal);
 			}
-
 		}
 	}
 
