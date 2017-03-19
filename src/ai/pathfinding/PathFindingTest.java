@@ -8,6 +8,7 @@ import gamemodes.DebugMode;
 import gamemodes.HotPotato;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
 import resources.Resources;
 
 /**

@@ -1,10 +1,10 @@
 package gamemodes;
 
 import ai.FightingAI;
-import ai.pathfinding.MapCosts;
 import audio.MusicPlayer;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
 import resources.Resources;
 import resources.Resources.Mode;
 

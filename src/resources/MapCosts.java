@@ -1,10 +1,9 @@
-package ai.pathfinding;
+package resources;
 
 import java.util.Collection;
 import java.util.TreeSet;
 
 import resources.Map.Tile;
-import resources.Resources;
 
 public class MapCosts
 {

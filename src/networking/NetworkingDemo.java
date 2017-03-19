@@ -8,13 +8,14 @@ import java.util.concurrent.ConcurrentMap;
 import com.esotericsoftware.kryonet.Connection;
 
 import ai.FightingAI;
-import ai.pathfinding.MapCosts;
 import gamemodes.Deathmatch;
 import gamemodes.GameModeFFA;
 import gamemodes.HotPotato;
 import gamemodes.LastManStanding;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
+import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
 

@@ -13,7 +13,6 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-import ai.pathfinding.MapCosts;
 import gamemodes.Deathmatch;
 import gamemodes.GameModeFFA;
 import gamemodes.HotPotato;
@@ -75,9 +74,8 @@ public class ClientListener extends Listener {
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
    			cModel.setConnection(connection);
-   			SessionListMenu sessionList = new SessionListMenu();
-			JPanel panel = sessionList.getLobbyListPanel(client);
-			UIRes.switchPanel(panel);
+   			SessionListMenu sessionList = new SessionListMenu(client);
+			UIRes.switchPanel(sessionList);
    			// Create a thread for the GUI:
 //   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
 //   		    gui.start();
@@ -143,7 +141,7 @@ public class ClientListener extends Listener {
    				resources.gamemode = mode;
    				
 				resources.setMap(new Map(1200, 675, tileset, mapName));
-				new MapCosts(resources);
+				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
    				// create ui thread
