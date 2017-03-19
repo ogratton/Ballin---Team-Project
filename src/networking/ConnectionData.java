@@ -19,7 +19,6 @@ public class ConnectionData {
 	private String sessionId;
 	private ConcurrentMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 	private ClientInformation myClient;
-	private Display display;
 	private String highlightedSessionId = null;
 	private String highlightedClientId = null;
 	private String receivedMessage;
@@ -141,14 +140,6 @@ public class ConnectionData {
 		}
 	    
 	    return sessionList;
-	}
-	
-	public Display getDisplay() {
-		return display;
-	}
-	
-	public void setDisplay(Display display) {
-		this.display = display;
 	}
 	
 	public String getHighlightedSessionId() {

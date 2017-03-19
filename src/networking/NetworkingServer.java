@@ -6,13 +6,7 @@ package networking;
 // There is no provision for ending the server gracefully.  It will
 // end if (and only if) something exceptional happens.
 
-
-import java.net.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,8 +19,12 @@ import networking.GameData.Tag;
 import resources.Resources;
 import resources.Resources.Mode;
 
-import java.io.*;
-
+/**
+ * The NetworkingServer Class is the main Server code which needs to be running to enable
+ * Clients to connect to it.
+ * @author aaquibnaved
+ *
+ */
 public class NetworkingServer {
 
 	static Server server;
@@ -37,18 +35,20 @@ public class NetworkingServer {
 		
 		//Log.DEBUG();
 		
+		// Initialise all the different Hash Maps which store the information about each different session and game.
+		// Key is the Client ID.
 		ConcurrentMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
-		 
-	    ConcurrentMap<String, ClientInformation> clients = new ConcurrentHashMap<String, ClientInformation>();
-	    
 	    ConcurrentMap<String, Resources> resourcesMap = new ConcurrentHashMap<String, Resources>();
 	    
+	    // Key is the Session ID.
+	    ConcurrentMap<String, ClientInformation> clients = new ConcurrentHashMap<String, ClientInformation>();
 	    ConcurrentMap<String, Connection> connections = new ConcurrentHashMap<String, Connection>();
 		
 		server = new Server();
 		
 		registerClasses(server);
 		
+		// Bind the Server to the ports which it will send and receive packets through.
 		server.bind(UDPport, TCPport);
 		
 		server.addListener(new ServerListener(sessions, clients, resourcesMap, connections));
@@ -58,6 +58,12 @@ public class NetworkingServer {
 		System.out.println("Server is operational.");
 	}
 	
+	/**
+	 * This method registers all the classes we will be sending across the network
+	 * with Kryonet's networking system.
+	 * 
+	 * @param server The Kryonet Server object
+	 */
 	private static void registerClasses(Server server) {
 		Kryo kryo = server.getKryo();
 		kryo.register(Message.class);
