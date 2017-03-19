@@ -2,8 +2,6 @@ package gamemodes;
 
 import java.util.ArrayList;
 
-import javax.swing.SwingUtilities;
-
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -22,9 +20,15 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private int timer = 30;
-	
+
 	private String victoryMusic = "grandma";
 
+	/**
+	 * Create a new deathmatch game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public Deathmatch(Resources resources) {
 		this.resources = resources;
 
@@ -35,19 +39,23 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		resources.gamemode = this;
 	}
 
-	public int getTime(){
+	@Override
+	public int getTime() {
 		return this.timer;
 	}
-	
+
+	/*
+	 * Run the logic of this game mode.
+	 */
 	public void run() {
 		// Start game
 		Physics p = new Physics(resources, false);
 		p.start();
-		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
-		
+		// SwingUtilities.invokeLater(new Graphics(resources, null, false));
+
 		Graphics g = new Graphics(resources, null, false);
 		g.start();
-		
+
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
@@ -63,12 +71,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		// TODO pause/change music too
-		if (!Resources.silent)
-		{
+		if (!Resources.silent) {
 			resources.getMusicPlayer().changePlaylist(victoryMusic);
 			resources.getMusicPlayer().resumeMusic();
 		}
-		
+
 		System.out.println("WE HAVE A WINNER");
 		getWinner();
 		System.out.println(
@@ -81,7 +88,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * Spawn a random powerup in a random location
+	 * Spawn a random powerup in a random location.
 	 */
 	private void spawnPowerup() {
 		Powerup p = new Powerup();
@@ -124,7 +131,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		return scores;
 	}
 
-	// Useless for this game mode
 	@Override
 	public void resetLives() {
 		setAllLives(-1);
