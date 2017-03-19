@@ -6,6 +6,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import resources.FilePaths;
+
 /**
  * A properly looping sound file
  * 
@@ -23,7 +25,7 @@ public class Snippet extends Thread
 	{
 		try
 		{
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("./resources/audio/" + file + ".wav"));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(FilePaths.music + file + ".wav"));
 			clip = AudioSystem.getClip();
 			clip.open(inputStream);
 			title = file;

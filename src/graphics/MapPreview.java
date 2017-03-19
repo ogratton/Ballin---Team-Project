@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -15,7 +14,6 @@ import javax.swing.JPanel;
 
 import resources.Map;
 import resources.Map.Tile;
-import resources.MapReader;
 
 @SuppressWarnings("serial")
 public class MapPreview extends JPanel {

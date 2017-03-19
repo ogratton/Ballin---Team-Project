@@ -41,6 +41,10 @@ public class PlayGame {
 			{
 				resources.getMusicPlayer().changePlaylist("paris30");
 			}
+			else if (style == Map.World.SPACE)
+			{
+				resources.getMusicPlayer().changePlaylist("ultrastorm30");
+			}
 			else
 			{
 				resources.getMusicPlayer().changePlaylist("thirty");
@@ -53,9 +57,13 @@ public class PlayGame {
 			{
 				resources.getMusicPlayer().changePlaylist("parisLoop");
 			}
+			else if (style == Map.World.SPACE)
+			{
+				resources.getMusicPlayer().changePlaylist("ultrastorm");
+			}
 			else
 			{
-				resources.getMusicPlayer().changePlaylist("swing");
+				resources.getMusicPlayer().changePlaylist("frog");
 			}
 		}
 		

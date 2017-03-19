@@ -22,22 +22,9 @@ public class Map {
 	// character.speed = character.speed * map.friction
 	// to calculate the new speed.
 	private double friction;
-	private double gravity;
 	
 	private int[][] proxMask;
 	private double[][] costMask;
-
-	// any areas of different physics on the same map, starts at their origin.
-	// Preferably we should avoid a third level of recursion.
-	// Terrain stored in terrain will be ignored
-	// if we have a hole inside a patch of ice,
-	// create the patch of ice and the hole. If the player is on the hole,
-	// that effect will override the ice one.
-
-	// any walls.
-	// keep walls to the top-most map; lower level ones are
-	// not guaranteed to be accounted for in calculations.
-	private ArrayList<Wall> walls;
 
 	private String name;
 	
@@ -79,7 +66,7 @@ public class Map {
 
 	public Map(int width, int height, String name) {
 
-		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), name);
+		this(new Point2D.Double(0, 0), width, height, default_friction, name);
 	}
 
 	/**
@@ -97,7 +84,7 @@ public class Map {
 	 */
 
 	public Map(int width, int height, World world, String mapName) {
-		this(new Point2D.Double(0, 0), width, height, default_friction, 0.0, new ArrayList<Wall>(), world, mapName);
+		this(new Point2D.Double(0, 0), width, height, default_friction, world, mapName);
 	}
 
 	/**
@@ -117,13 +104,11 @@ public class Map {
 	 *            the list of walls
 	 */
 
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls, String name) {
+	public Map(Point2D origin, int width, int height, double friction, String name) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
-		this.gravity = gravity;
-		this.walls = walls;
 		this.world = World.CAVE;
 		this.name = name;
 		setFriction();
@@ -158,14 +143,12 @@ public class Map {
 	 *            the array of tiles
 	 */
 
-	public Map(Point2D origin, int width, int height, double friction, double gravity, ArrayList<Wall> walls,
+	public Map(Point2D origin, int width, int height, double friction,
 			World worldType, String name) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
-		this.gravity = gravity;
-		this.walls = walls;
 		this.name = name;
 		
 		// Create default map in case the following fails
@@ -255,26 +238,6 @@ public class Map {
 		default:
 			break;
 		}
-	}
-	
-	/**
-	 * Get the gravity of this map
-	 * 
-	 * @return the gravity
-	 */
-
-	public double getGravity() {
-		return gravity;
-	}
-
-	/**
-	 * Get the list of walls of this map
-	 * 
-	 * @return the list of walls
-	 */
-
-	public ArrayList<Wall> getWalls() {
-		return walls;
 	}
 
 	/**

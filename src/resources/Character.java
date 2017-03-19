@@ -238,11 +238,11 @@ public class Character extends Observable implements Collidable_Circle {
 		if (!Resources.silent) 
 		{
 			deathSounds = new AudioFile[3];
-			deathSounds[0] = new AudioFile("resources/audio/death1.wav", "Death1");
-			deathSounds[1] = new AudioFile("resources/audio/death2.wav", "Death2");
-			deathSounds[2] = new AudioFile("resources/audio/death3.wav", "Death3");
+			deathSounds[0] = new AudioFile(FilePaths.sfx + "death1.wav", "Death1");
+			deathSounds[1] = new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
+			deathSounds[2] = new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
 			
-			playerOutSound = new AudioFile("resources/audio/playerOut.wav", "PlayerOut");
+			playerOutSound = new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
 		}
 	}
 	

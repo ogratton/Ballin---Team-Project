@@ -47,8 +47,8 @@ public class NetworkingClient extends Thread {
 			e1.printStackTrace();
 		}
 		
-		ConnectionData conn = new ConnectionData();
-	    ConnectionDataModel cModel = new ConnectionDataModel(conn);
+		UIRes uires = new UIRes();
+	    ConnectionDataModel cModel = uires.cModel;
 		
 		client.addListener(new ClientListener(cModel, client));
 		

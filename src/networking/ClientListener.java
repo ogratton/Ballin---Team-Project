@@ -77,7 +77,7 @@ public class ClientListener extends Listener {
    			cModel.setConnection(connection);
    			cModel.setMyId(message.getSenderId());
    			SessionListMenu sessionList = new SessionListMenu();
-			JPanel panel = sessionList.getLobbyListPanel(cModel, client);
+			JPanel panel = sessionList.getLobbyListPanel(client);
 			UIRes.switchPanel(panel);
    			// Create a thread for the GUI:
 //   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);

@@ -173,8 +173,8 @@ public class MenuItems extends UIRes {
 				// button sound effect
 				audioPlayer.play();
 				// change the song
-//				resources.getMusicPlayer().changePlaylist("paris30");
-//				resources.getMusicPlayer().resumeMusic();
+				// resources.getMusicPlayer().changePlaylist("paris30");
+				// resources.getMusicPlayer().resumeMusic();
 			}
 
 		});
@@ -185,19 +185,15 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-
-			NetworkingClient.main(null);
-			//
-			// JFrame frame = new JFrame();
-			// String input = (String) JOptionPane.showInputDialog(frame, "Enter
-			// the server name:", "Input server",
-			// JOptionPane.PLAIN_MESSAGE);
-			// if (input != null) {
-			// NetworkingClient client = new NetworkingClient(input, username);
-			// client.run();
-			// } else {
-			// frame.dispose();
-			// }
+			JFrame frame = new JFrame();
+			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
+				NetworkingClient client = new NetworkingClient(input, username);
+				client.run();
+			} else {
+				frame.dispose();
+			}
 		});
 		return startButton;
 	}
@@ -210,8 +206,8 @@ public class MenuItems extends UIRes {
 		});
 		return button;
 	}
-	
-	JButton getBackToStartMenuButton(String name){
+
+	JButton getBackToStartMenuButton(String name) {
 		JButton button = getBackToStartMenuButton();
 		button.setText(name);
 		return button;
@@ -263,7 +259,7 @@ public class MenuItems extends UIRes {
 	}
 
 	JSlider getMusicSlider() {
-		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
+		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_INIT);
 		customiseSlider(musicSlider);
 		if (!Resources.silent) {
 			musicSlider.addChangeListener(e -> {
@@ -333,54 +329,48 @@ public class MenuItems extends UIRes {
 		return panel;
 	}
 
-	void updateSessionsPanel(ConnectionDataModel cModel, Client client) {
+	void updateSessionsPanel(Client client) {
 		sessionsPanels.removeAll();
 		sessionPanelsList.removeAll(sessionPanelsList);
 		sessionsPanels.setLayout(new BoxLayout(sessionsPanels, BoxLayout.Y_AXIS));
-		System.out.println(cModel.getAllSessions().size());
-		for(int i = 0; i < cModel.getAllSessions().size(); i++){
+		for (int i = 0; i < cModel.getAllSessions().size(); i++) {
 			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
-			sessionPanelsList.add(session);
-			sessionsPanels.add(session);
+			if (!cModel.getAllSessions().get(i).getAllClients().isEmpty()) {
+				sessionPanelsList.add(session);
+				sessionsPanels.add(session);
+			}
 		}
-		
+
 		sessionsPanels.repaint();
 		sessionsPanels.revalidate();
 	}
 
-	JButton joinSessionButton(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
+	JButton joinSessionButton(Client client, JPanel sessionPanel) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
 			int index = -1;
 			for (int i = 0; i < sessionPanelsList.size(); i++) {
-				if(sessionPanelsList.get(i).isFocusOwner())
+				if (sessionPanelsList.get(i).isFocusOwner())
 					index = i;
 			}
-			
+
 			Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
 					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 			try {
 				client.sendTCP(joinMessage);
-				
-				//addPlayerToLobby(sessionPanel, new ClientInformation(username), cModel.getAllSessions().get(index).getAllClients().size() + 1);
 				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
-			//	updateInLobbyPanel(inLobbyList.get(index), index, cModel, client);
 				switchPanel(sessionPanel);
-			
+
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-//			if(index != -1){
-//					
-//					updateSessionsPanel(cModel, client);
-//			}
 		});
 
 		customiseButton(button, true);
 		return button;
 	}
 
-	JButton createSessionButton(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
+	JButton createSessionButton(Client client, JPanel sessionPanel) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
 			JFrame frame = new JFrame();
@@ -420,11 +410,8 @@ public class MenuItems extends UIRes {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				
-				cModel.setSessionId(newSession.getId());
-				cModel.getSessionsTable().put(newSession.getId(), newSession);
-				
-				updateSessionsPanel(cModel, client);
+
+				updateSessionsPanel(client);
 				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
 				switchPanel(sessionPanel);
 			}
@@ -432,20 +419,19 @@ public class MenuItems extends UIRes {
 			else
 				frame.dispose();
 
-
 		});
 		customiseButton(button, true);
 		return button;
 	}
 
-	JButton refreshSessionList(ConnectionDataModel cModel, Client client) {
+	JButton refreshSessionList(Client client) {
 		JButton button = new JButton("Refresh");
 		button.addActionListener(e -> {
 			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(),
 					null);
 			try {
 				client.sendTCP(message);
-				updateSessionsPanel(cModel, client);
+				updateSessionsPanel(client);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -454,12 +440,12 @@ public class MenuItems extends UIRes {
 		return button;
 	}
 
-	JPanel addSessionButtons(ConnectionDataModel cModel, Client client, JPanel sessionPanel) {
+	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JButton createSession = createSessionButton(cModel, client, sessionPanel);
-		JButton joinSession = joinSessionButton(cModel, client, sessionPanel);
-		JButton refreshSession = refreshSessionList(cModel, client);
+		JButton createSession = createSessionButton(client, sessionPanel);
+		JButton joinSession = joinSessionButton(client, sessionPanel);
+		JButton refreshSession = refreshSessionList(client);
 		JButton backToMainMenu = getBackToStartMenuButton();
 		panel.add(createSession);
 		panel.add(joinSession);
@@ -511,11 +497,10 @@ public class MenuItems extends UIRes {
 
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
-			if (readyCheck.getForeground() == Color.RED){
+			if (readyCheck.getForeground() == Color.RED) {
 				readyCheck.setForeground(Color.GREEN);
 				client.setReady(true);
-			}
-			else{
+			} else {
 				readyCheck.setForeground(Color.RED);
 				client.setReady(false);
 			}
@@ -533,34 +518,34 @@ public class MenuItems extends UIRes {
 		panel.add(Box.createVerticalStrut(20));
 		return panel;
 	}
-	
-	JPanel updateInLobbyPanel(JPanel panel, Session session, ConnectionDataModel cModel, Client client){
-		for(int i = 1; i < panel.getComponentCount(); i++){
+
+	JPanel updateInLobbyPanel(JPanel panel, Session session, ConnectionDataModel cModel, Client client) {
+		for (int i = 1; i < panel.getComponentCount(); i++) {
 			panel.remove(i);
 		}
-		//panel.removeAll();
-		for(int i = 0; i < session.getAllClients().size(); i++){
-			addPlayerToLobby(panel, session.getAllClients().get(i), i+1);
-		}	
+		for (int i = 0; i < session.getAllClients().size(); i++) {
+			addPlayerToLobby(panel, session.getAllClients().get(i), i + 1);
+		}
 		panel.repaint();
 		panel.revalidate();
 		return panel;
 	}
 
-	JButton leaveLobbyButton(ConnectionDataModel cModel, Client client) {
+	JButton leaveLobbyButton(Client client, JPanel sessionPanel) {
 		JButton button = new JButton("Leave Lobby");
 		customiseButton(button, true);
 		button.addActionListener(e -> {
-			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(), cModel.getHighlightedSessionId());
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(),
+					cModel.getHighlightedSessionId());
 			try {
 				client.sendTCP(leaveMessage);
 				cModel.setReady(false);
 				SessionListMenu lobbyList = new SessionListMenu();
-				JPanel lobby = lobbyList.getLobbyListPanel(cModel, client);
-				updateSessionsPanel(cModel, client);
-				
+				JPanel lobby = lobbyList.getLobbyListPanel(client);
+				updateSessionsPanel(client);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
 				switchPanel(lobby);
-				
+
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -569,7 +554,7 @@ public class MenuItems extends UIRes {
 	}
 
 	JSlider getAudioSlider() {
-		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_MAX);
+		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, VOL_MIN, VOL_MAX, VOL_INIT);
 		customiseSlider(audioSlider);
 		audioSlider.addChangeListener(e -> {
 			int volume = audioSlider.getValue();

@@ -258,6 +258,10 @@ public class GameComponent extends JFrame implements ActionListener {
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 
+			if(LayeredPane.splashShowing){
+				layers.setLayer(LayeredPane.splash, new Integer(5));
+			}
+			
 			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(true);
 			} else if (key == rightKey) {
@@ -274,14 +278,15 @@ public class GameComponent extends JFrame implements ActionListener {
 				System.exit(0);
 			} else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
-			} else if(key == KeyEvent.VK_ESCAPE ){
-				if(LayeredPane.menuShowing)
+			} else if (key == KeyEvent.VK_ESCAPE) {
+				if (LayeredPane.menuShowing)
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(10));
 				else
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
-				} 
 				LayeredPane.menuShowing = !LayeredPane.menuShowing;
+			}
 			
+
 		}
 	}
 

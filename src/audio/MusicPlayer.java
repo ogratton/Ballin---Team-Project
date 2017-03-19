@@ -2,6 +2,7 @@ package audio;
 
 import java.util.ArrayList;
 
+import resources.FilePaths;
 import resources.Resources;
 
 /**
@@ -46,7 +47,7 @@ public class MusicPlayer extends Thread
 		musicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
 		{
-			musicFiles.add(new AudioFile(resources, "./resources/audio/" + file + ".wav", file));
+			musicFiles.add(new AudioFile(resources, FilePaths.music + file + ".wav", file));
 		}
 
 		currentSongIndex = 0;
@@ -108,7 +109,7 @@ public class MusicPlayer extends Thread
 		ArrayList<AudioFile> tempMusicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
 		{
-			tempMusicFiles.add(new AudioFile(resources, "./resources/audio/" + file + ".wav", file));
+			tempMusicFiles.add(new AudioFile(resources, FilePaths.music + file + ".wav", file));
 		}
 
 		musicFiles = tempMusicFiles;
