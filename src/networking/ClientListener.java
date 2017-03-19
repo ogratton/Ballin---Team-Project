@@ -20,7 +20,6 @@ import gamemodes.LastManStanding;
 import graphics.Graphics;
 import resources.Character;
 import resources.Map;
-import resources.MapCosts;
 import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -75,9 +74,8 @@ public class ClientListener extends Listener {
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
    			cModel.setConnection(connection);
-   			SessionListMenu sessionList = new SessionListMenu();
-			JPanel panel = sessionList.getLobbyListPanel(client);
-			UIRes.switchPanel(panel);
+   			SessionListMenu sessionList = new SessionListMenu(client);
+			UIRes.switchPanel(sessionList);
    			// Create a thread for the GUI:
 //   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
 //   		    gui.start();
@@ -143,7 +141,7 @@ public class ClientListener extends Listener {
    				resources.gamemode = mode;
    				
 				resources.setMap(new Map(1200, 675, tileset, mapName));
-				new MapCosts(resources);
+				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
    				// create ui thread
