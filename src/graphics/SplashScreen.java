@@ -1,19 +1,22 @@
 package graphics;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import gamemodes.GameModeFFA;
 import resources.Resources;
 import ui.UIRes;
+
+/**
+ * A class to hold the splash screen that appears before the game starts
+ * @author George Kaye
+ *
+ */
 
 @SuppressWarnings("serial")
 public class SplashScreen extends JPanel {
