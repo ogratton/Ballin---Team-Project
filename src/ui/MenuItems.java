@@ -189,7 +189,7 @@ public class MenuItems extends UIRes {
 			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
 					JOptionPane.PLAIN_MESSAGE);
 			if (input != null) {
-				NetworkingClient client = new NetworkingClient(input, username, cModel);
+				NetworkingClient client = new NetworkingClient(input, username);
 				client.start();
 			} else {
 				frame.dispose();
@@ -358,7 +358,7 @@ public class MenuItems extends UIRes {
 					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 			try {
 				client.sendTCP(joinMessage);
-				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), client);
 				switchPanel(sessionPanel);
 
 			} catch (Exception e1) {
@@ -412,7 +412,7 @@ public class MenuItems extends UIRes {
 				}
 
 				updateSessionsPanel(client);
-				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), client);
 				switchPanel(sessionPanel);
 			}
 
@@ -519,7 +519,7 @@ public class MenuItems extends UIRes {
 		return panel;
 	}
 
-	JPanel updateInLobbyPanel(JPanel panel, Session session, ConnectionDataModel cModel, Client client) {
+	JPanel updateInLobbyPanel(JPanel panel, Session session, Client client) {
 		for (int i = 1; i < panel.getComponentCount(); i++) {
 			panel.remove(i);
 		}
@@ -543,7 +543,7 @@ public class MenuItems extends UIRes {
 				SessionListMenu lobbyList = new SessionListMenu();
 				JPanel lobby = lobbyList.getLobbyListPanel(client);
 				updateSessionsPanel(client);
-				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), cModel, client);
+				updateInLobbyPanel(sessionPanel, cModel.getSession(cModel.getSessionId()), client);
 				switchPanel(lobby);
 
 			} catch (Exception e1) {

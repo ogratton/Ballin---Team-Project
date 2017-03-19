@@ -29,10 +29,9 @@ public class NetworkingClient extends Thread {
 	static boolean messageReceived = false;
 	private ConnectionDataModel cModel;
 	
-	public NetworkingClient(String ip, String name, ConnectionDataModel cModel) {
+	public NetworkingClient(String ip, String name) {
 		this.ip = ip;
 		this.name = name;
-		this.cModel = cModel;
 	}
 	
 	public void run() {
@@ -48,7 +47,8 @@ public class NetworkingClient extends Thread {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
+
+	    ConnectionDataModel cModel = UIRes.cModel;
 		client.addListener(new ClientListener(cModel, client));
 		
 		System.out.print("Client is now waiting for a packet.");
