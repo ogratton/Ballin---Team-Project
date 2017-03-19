@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import resources.Character;
+import resources.Resources;
 
 /**
  * Class to hold a panel containing player information for the top of the screen
@@ -29,13 +30,13 @@ public class PlayerInfo extends JPanel {
 	 *            the character
 	 */
 
-	public PlayerInfo(Character character) {
+	public PlayerInfo(Character character, Resources resources) {
 
 		super();
 		
 		setLayout(new BorderLayout());
 
-		text = new TextHalf(character);
+		text = new TextHalf(character, resources);
 		sprites = new SpriteHalf(character);
 		
 		add(text,BorderLayout.CENTER);

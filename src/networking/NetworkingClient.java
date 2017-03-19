@@ -6,29 +6,30 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
 
 import networking.GameData.Tag;
 import resources.Resources.Mode;
 import ui.UIRes;
 
+/**
+ * NetworkingClient initialises the Client side for the networking code.
+ * It initialises the listener which receive messages from the Server.
+ * @author aaquibnaved
+ *
+ */
 public class NetworkingClient extends Thread {
-	
-//	public static void main(String[] args) {
-//		NetworkingClient c = new NetworkingClient("localhost", UIRes.username, new ConnectionDataModel(new ConnectionData()));
-//		c.start();
-//	}
 
-	//private Client client;
 	static int UDPport = 27970;
 	static int TCPport = 27970;
 	private String ip;
 	private String name;
 	static boolean messageReceived = false;
-	private ConnectionDataModel cModel;
 	
+	/**
+	 * Initialises the NetworkingClient thread.
+	 * @param ip The IP address of the Server the Client wants to connect to.
+	 * @param name The Name of the Client
+	 */
 	public NetworkingClient(String ip, String name) {
 		this.ip = ip;
 		this.name = name;
@@ -48,16 +49,19 @@ public class NetworkingClient extends Thread {
 			e1.printStackTrace();
 		}
 
+		// Gets the Connection Data Model from the UI Res object so that the UI has access to it.
 	    ConnectionDataModel cModel = UIRes.cModel;
 		client.addListener(new ClientListener(cModel, client));
 		
-		System.out.print("Client is now waiting for a packet.");
-		
+		// Creates and sends a message to the server
+		// indicating to the server that the Client has started and so the server can store the
+		// name of the Client.
 		Message m = new Message();
 	    m.setCommand(Command.MESSAGE);
 	    m.setMessage(name);
 	    client.sendTCP(m);
 		
+	    // Keeps the thread going.
 		while(!messageReceived) {
 			try {
 				Thread.sleep(1000);
@@ -67,6 +71,12 @@ public class NetworkingClient extends Thread {
 		}
 	}
 	
+	/**
+	 * This method registers all the classes we will be sending across the network
+	 * with Kryonet's networking system.
+	 * 
+	 * @param client The Kryonet Client object
+	 */
 	private static void registerClasses(Client client) {
 		  Kryo kryo = client.getKryo();
 		  kryo.register(Message.class);

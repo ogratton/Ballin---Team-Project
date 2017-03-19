@@ -31,21 +31,21 @@ import resources.Resources.Mode;
 @SuppressWarnings("serial")
 public class SessionListMenu extends JPanel implements Observer{
 	
-	String lobbyName;
-	String gameModeName;
-	String mapName;
+	private String lobbyName;
+	private String gameModeName;
+	private String mapName;
+	private Session session;
+	private InLobbyMenu lobbyPanel;
 	
 	public SessionListMenu(Client client){
-		InLobbyMenu lobbyMenu = new InLobbyMenu();
 		updateSessionsPanel(client);
-		JPanel inLobbyPanel = lobbyMenu.getInLobbyMenu( client);
 		setLayout(new BorderLayout());
-		add(addSessionButtons(client, inLobbyPanel), BorderLayout.PAGE_START);
+		add(addSessionButtons(client, this), BorderLayout.PAGE_START);
 		add(UIRes.sessionsPanels, BorderLayout.CENTER);
 
 	}
 	
-	JButton createSessionButton(Client client, JPanel sessionPanel) {
+	JButton createSessionButton(Client client) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
 			JFrame frame = new JFrame();
@@ -76,6 +76,8 @@ public class SessionListMenu extends JPanel implements Observer{
 
 				Session newSession = new Session(lobbyName, new ClientInformation(UIRes.username), mapName, mapTiles,
 						gameMode, UIRes.username, 0);
+				
+				this.session = newSession;
 
 				Message createMessage = new Message(Command.SESSION, Note.CREATE, UIRes.cModel.getMyId(), "", "", "",
 						newSession);
@@ -85,9 +87,11 @@ public class SessionListMenu extends JPanel implements Observer{
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+				
+				InLobbyMenu lobby = new InLobbyMenu(newSession, client);
 
 				updateSessionsPanel(client);
-				UIRes.switchPanel(sessionPanel);
+				UIRes.switchPanel(lobby);
 			}
 
 			else
@@ -98,7 +102,7 @@ public class SessionListMenu extends JPanel implements Observer{
 		return button;
 	}
 	
-	JButton joinSessionButton(Client client, JPanel sessionPanel) {
+	JButton joinSessionButton(Client client) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
 			int index = -1;
@@ -109,9 +113,14 @@ public class SessionListMenu extends JPanel implements Observer{
 
 			Message joinMessage = new Message(Command.SESSION, Note.JOIN, UIRes.cModel.getMyId(), "",
 					UIRes.cModel.getAllSessions().get(index).getId(), UIRes.cModel.getAllSessions().get(index).getId());
+			
+			
+					
 			try {
 				client.sendTCP(joinMessage);
-				UIRes.switchPanel(sessionPanel);
+				session = UIRes.cModel.getAllSessions().get(index);
+				InLobbyMenu lobby = new InLobbyMenu(session, client);
+				UIRes.switchPanel(lobby);
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -212,8 +221,8 @@ public class SessionListMenu extends JPanel implements Observer{
 	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JButton createSession = createSessionButton(client, sessionPanel);
-		JButton joinSession = joinSessionButton(client, sessionPanel);
+		JButton createSession = createSessionButton(client);
+		JButton joinSession = joinSessionButton(client);
 		JButton refreshSession = refreshSessionList(client);
 		JButton backToMainMenu = getBackToStartMenuButton();
 		panel.add(createSession);

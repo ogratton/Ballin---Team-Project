@@ -201,27 +201,25 @@ public abstract class AITemplate extends Thread
 			}
 
 			destI++;
-			if (destI < destinations.length)
-			{
-				Point charPos = getCurrentTileCoords();
-				//if (debug) System.out.println(charPos);
-				waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
-
-				// XXX debug
-				if (debug)
-				{
-					resources.setDestList(waypoints);
-					resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y));
-
-					System.out.println("pathfinding to point " + destinations[destI]);
-					//System.out.println("waypoints: " + waypoints);
-				}
-
-			}
-			else
+			if (destI >= destinations.length)
 			{
 				destI = 0; // loop
 			}
+			
+			Point charPos = getCurrentTileCoords();
+			//if (debug) System.out.println(charPos);
+			waypoints = convertWaypoints(aStar.search(charPos, destinations[destI]));
+
+			// XXX debug
+			if (debug)
+			{
+				resources.setDestList(waypoints);
+				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y));
+
+				System.out.println("pathfinding to point " + destinations[destI]);
+				//System.out.println("waypoints: " + waypoints);
+			}
+
 		}
 	}
 

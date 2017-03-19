@@ -22,12 +22,10 @@ import resources.Map.Tile;
  */
 public class Resources {
 
-	public static final boolean silent = true; // so alex can run the game :)
-
-	public enum Mode {
-		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
-	};
-
+	
+	public static final boolean silent = false; // so alex can run the game :)
+	
+	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	// Default game mode
 	public Mode mode = Mode.HotPotato;
 	public GameModeFFA gamemode;

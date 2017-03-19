@@ -36,30 +36,32 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "asteroid";
+		String mapName = "pit";
 		resources.mode = Mode.LastManStanding;
 		Map.World style = Map.World.DESERT;
 
 		// Music setting:
 
-		// 30 second gamemode needs 30 seconds of music
-		if (resources.mode == Mode.Deathmatch) {
-			if (style == Map.World.DESERT) {
-				resources.getMusicPlayer().changePlaylist("paris30");
-			} else if (style == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm30");
-			} else {
-				resources.getMusicPlayer().changePlaylist("thirty");
+		if (!Resources.silent) {
+			// 30 second gamemode needs 30 seconds of music
+			if (resources.mode == Mode.Deathmatch) {
+				if (style == Map.World.DESERT) {
+					resources.getMusicPlayer().changePlaylist("paris30");
+				} else if (style == Map.World.SPACE) {
+					resources.getMusicPlayer().changePlaylist("ultrastorm30");
+				} else {
+					resources.getMusicPlayer().changePlaylist("thirty");
+				}
 			}
-		}
-		// looping music
-		else {
-			if (style == Map.World.DESERT) {
-				resources.getMusicPlayer().changePlaylist("parisLoop");
-			} else if (style == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm");
-			} else {
-				resources.getMusicPlayer().changePlaylist("frog");
+			// looping music
+			else {
+				if (style == Map.World.DESERT) {
+					resources.getMusicPlayer().changePlaylist("parisLoop");
+				} else if (style == Map.World.SPACE) {
+					resources.getMusicPlayer().changePlaylist("ultrastorm");
+				} else {
+					resources.getMusicPlayer().changePlaylist("frog");
+				}
 			}
 		}
 
@@ -105,12 +107,13 @@ public class PlayGame {
 		}
 		((Thread) mode).start();
 
-		// must resume after changing playlist
-		if (resources.getMusicPlayer().isAlive()) {
-			resources.getMusicPlayer().resumeMusic();
-		} else {
-			resources.getMusicPlayer().start();
+		if (!Resources.silent) {
+			// must resume after changing playlist
+			if (resources.getMusicPlayer().isAlive()) {
+				resources.getMusicPlayer().resumeMusic();
+			} else {
+				resources.getMusicPlayer().start();
+			}
 		}
-
 	}
 }
