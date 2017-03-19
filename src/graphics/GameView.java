@@ -62,6 +62,7 @@ public class GameView extends JPanel implements Observer {
 	private BufferedImage mapSprite;
 	private BufferedImage bigMapSprite;
 	private BufferedImage currentMapSprite;
+	private BufferedImage previewMapSprite;
 
 	// for debugging pathfinding
 	private boolean debugPaths = false;
@@ -123,8 +124,14 @@ public class GameView extends JPanel implements Observer {
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(mapSprite, 0, 0, (int) fullScreenMapWidth, (int) fullScreenMapHeight, 0, 0, w, h, null);
 		g.dispose();
+		previewMapSprite = new BufferedImage(960, 520, mapSprite.getType());
+		g = previewMapSprite.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(mapSprite, 0, 0, 960, 520, 0, 0, w, h, null);
+		g.dispose();
 		currentMapSprite = mapSprite;
 	}
+	
 
 	/**
 	 * Set up the sizes of fullscreen and normal sized screen
@@ -222,8 +229,10 @@ public class GameView extends JPanel implements Observer {
 
 					frame = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.EXPLOSION);
 
-				} else {
+				} else if (!resources.gamemode.isGameOver()) {
 					frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
+				} else {
+					frame = character.getCurrentFrame();
 				}
 
 				points.put(character, new Point(newX, newY));
@@ -239,16 +248,18 @@ public class GameView extends JPanel implements Observer {
 				if (character.isDead()) {
 					int step = character.getDyingStep();
 
-					if (step < 50) {
+					if (!resources.gamemode.isGameOver()) {
+						if (step < 50) {
 
-						deathModifier = (int) (step);
-						adjustedPlayerSize -= deathModifier;
-					} else {
-						adjustedPlayerSize = 0;
-						adjustedPlayerSize = 0;
-						character.setVisible(false);
+							deathModifier = (int) (step);
+							adjustedPlayerSize -= deathModifier;
+						} else {
+							adjustedPlayerSize = 0;
+							adjustedPlayerSize = 0;
+							character.setVisible(false);
+						}
+
 					}
-
 				}
 
 				// determine the actual centre of the character rather than
@@ -325,32 +336,33 @@ public class GameView extends JPanel implements Observer {
 				g.drawImage(character.getArrow(fullscreen), actualX,
 						(int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)),
 						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
-				
-				if(resources.mode == Mode.HotPotato){
-					if(character.hasBomb()){
-						g.drawImage(SheetDeets.getBombSprite(), actualX + (int)(30 * currentMultiplier),
+
+				if (resources.mode == Mode.HotPotato) {
+					if (character.hasBomb()) {
+						g.drawImage(SheetDeets.getBombSprite(), actualX + (int) (30 * currentMultiplier),
 								(int) (actualY + currentOffset + deathModifier + (20 * currentMultiplier)), this);
-						
+
 						UIRes.setCustomFont(this, 14);
 						g.setColor(Color.WHITE);
-						
+
 						int time = resources.gamemode.getTime();
 						int actualTime = 50 - (time % 50);
-						
+
 						String zero = "";
-						
-						if(actualTime < 10){
+
+						if (actualTime < 10) {
 							zero = "0";
 						}
-						
-						g.drawString(zero + actualTime, actualX + (int)(38.5 * currentMultiplier), (int) (actualY + currentOffset + deathModifier + (39.5 * currentMultiplier)));
-						
+
+						g.drawString(zero + actualTime, actualX + (int) (38.5 * currentMultiplier),
+								(int) (actualY + currentOffset + deathModifier + (39.5 * currentMultiplier)));
+
 					}
 				}
 
 				// if the player is dashing, draw the fire sprite
 
-				if (character.isDashing()) {
+				if (character.isDashing() && !character.isDead()) {
 
 					int dashX = 0;
 					int dashY = 0;
@@ -399,8 +411,9 @@ public class GameView extends JPanel implements Observer {
 
 					}
 
-					g.drawImage(character.getDashSprite(fullscreen, character.getDashDirection()), (int) (dashX * currentMultiplier),
-							(int) ((dashY * currentMultiplier) + currentOffset), this);
+					g.drawImage(character.getDashSprite(fullscreen, character.getDashDirection()),
+							(int) (dashX * currentMultiplier), (int) ((dashY * currentMultiplier) + currentOffset),
+							this);
 				} else {
 					character.setDashDirection(Heading.STILL);
 				}
@@ -481,6 +494,10 @@ public class GameView extends JPanel implements Observer {
 
 		setPreferredSize(new Dimension((int) (currentMapWidth + currentOffset * 2),
 				(int) (currentMapHeight + currentOffset * 2)));
+	}
+	
+	public BufferedImage getMapSprite(){
+		return this.previewMapSprite;
 	}
 
 }
