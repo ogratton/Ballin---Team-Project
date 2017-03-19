@@ -74,6 +74,8 @@ public class ClientListener extends Listener {
    			break;
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
+   			cModel.setConnection(connection);
+   			cModel.setMyId(message.getSenderId());
    			SessionListMenu sessionList = new SessionListMenu();
 			JPanel panel = sessionList.getLobbyListPanel(client);
 			UIRes.switchPanel(panel);
