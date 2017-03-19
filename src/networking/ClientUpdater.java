@@ -81,3 +81,7 @@ public class ClientUpdater extends JPanel implements Observer {
 		this.sessionId = sessionId;
 	}
 }
+
+
+
+

@@ -5,7 +5,6 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,9 +21,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import networking.ClientInformation;
 import networking.Command;
-import networking.ConnectionDataModel;
 import networking.Message;
-import networking.NetworkingClient;
 import networking.Note;
 import networking.Session;
 import resources.Map;
@@ -39,13 +36,12 @@ public class SessionListMenu extends JPanel implements Observer{
 	String mapName;
 	
 	public SessionListMenu(Client client){
-		JPanel panel = new JPanel();
 		InLobbyMenu lobbyMenu = new InLobbyMenu();
 		updateSessionsPanel(client);
 		JPanel inLobbyPanel = lobbyMenu.getInLobbyMenu( client);
-		panel.setLayout(new BorderLayout());
-		panel.add(addSessionButtons(client, inLobbyPanel), BorderLayout.PAGE_START);
-		panel.add(UIRes.sessionsPanels, BorderLayout.CENTER);
+		setLayout(new BorderLayout());
+		add(addSessionButtons(client, inLobbyPanel), BorderLayout.PAGE_START);
+		add(UIRes.sessionsPanels, BorderLayout.CENTER);
 
 	}
 	

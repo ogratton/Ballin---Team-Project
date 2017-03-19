@@ -194,8 +194,8 @@ public abstract class BaseMenu extends MenuItems
 		 return panel;
 	 }
 	 
-	 JPanel addBackToLobbyPanel(JPanel panel, ConnectionDataModel cModel, Client client){
-		 JButton button = leaveLobbyButton(cModel, client, panel);
+	 JPanel addBackToLobbyPanel(JPanel panel, Client client){
+		 JButton button = leaveLobbyButton(client, panel);
 		 panel.add(button);
 		 return panel;
 	 }

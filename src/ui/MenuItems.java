@@ -48,8 +48,6 @@ import resources.Resources.Mode;
 
 public class MenuItems extends UIRes {
 
-	
-
 	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseButton(startButton, true);

@@ -35,6 +35,7 @@ import resources.FilePaths;
 import resources.Resources;
 
 public class UIRes {
+	
 	public static Resources resources = new Resources();
 	public static final int width = 800;
 	public static final int height = 1000;
@@ -56,10 +57,9 @@ public class UIRes {
 	public String lobbyName;
 	public String gameModeName;
 	public String mapName;
-	
+
 	public static ConnectionData data = new ConnectionData();
 	public static ConnectionDataModel cModel = new ConnectionDataModel(data);
-	
 	public static final Color colour = Color.BLACK;
 	
 	public static JPanel sessionsPanels = new JPanel();
@@ -106,7 +106,7 @@ public class UIRes {
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
 
-	Color getRandomColour() {
+	static Color getRandomColour() {
 		int r = 0, g = 0, b = 0;
 		SecureRandom rand = new SecureRandom();
 		while ((r < 150 && g < 150) || (b < 150 & g < 150) || (r < 150 & b < 150)) {

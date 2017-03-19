@@ -18,6 +18,9 @@ import resources.Resources;
 public class HotPotatoAI extends AITemplate
 {
 
+	private Character bombHolder;
+	private double distToBomb;
+	
 	public HotPotatoAI(Resources resources, Character character)
 	{
 		super(resources, character);
@@ -65,13 +68,22 @@ public class HotPotatoAI extends AITemplate
 		{
 			if (waypoints.isEmpty())
 			{
-				// try and find the player who has the bomb
-				Character bombHolder = scanForBombPlayer();
+				try
+				{
+					// try and find the player who has the bomb
+					bombHolder = scanForBombPlayer();
+				}
+				catch (NullPointerException e)
+				{
+					// if no-one else has it, assume we do
+					// should never happen
+					setBehaviour(Behaviour.AGGRESSIVE);
+				}
 
 				// work out our distance to them
 				Point charPos = getOurLocation();
 				Point charTile = getCurrentTileCoords();
-				double distToBomb = StaticHeuristics.euclidean(charPos, getTargetLocation(bombHolder));
+				distToBomb = StaticHeuristics.euclidean(charPos, getTargetLocation(bombHolder));
 				
 				// get randPointOnMap
 				Point bestPoint = resources.getMap().randPointOnMap();
@@ -97,14 +109,17 @@ public class HotPotatoAI extends AITemplate
 //					System.out.println("found a better spot");
 					// aStar.search to it
 					Point newDestTile = getTileCoords(bestPoint);
+					if (debug) resources.setAINextDest(bestPoint);
 					// check each of the waypoints is farther
 					if (charTile != null && newDestTile != null)
 					{
 						waypoints = convertWaypoints(aStar.search(charTile, newDestTile));
+						if (debug) resources.setDestList(waypoints);
 					}
-				}
-				{
-					System.out.println("no place like home");
+					
+					// now that we have a path to a far away point, we should check that this point doesn't
+					// take us closer to the bomb en route
+					
 				}
 				// else we're safer not moving
 
@@ -113,6 +128,7 @@ public class HotPotatoAI extends AITemplate
 			{
 				// what to check when we have a list of waypoints to follow
 				// in order to escape the bombHolder
+				// TODO
 			}
 
 		}
