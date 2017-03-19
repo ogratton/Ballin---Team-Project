@@ -16,10 +16,10 @@ import ui.UIRes;
 
 public class NetworkingClient extends Thread {
 	
-	public static void main(String[] args) {
-		NetworkingClient c = new NetworkingClient("localhost", UIRes.username);
-		c.start();
-	}
+//	public static void main(String[] args) {
+//		NetworkingClient c = new NetworkingClient("localhost", UIRes.username, new ConnectionDataModel(new ConnectionData()));
+//		c.start();
+//	}
 
 	//private Client client;
 	static int UDPport = 27970;
@@ -27,10 +27,12 @@ public class NetworkingClient extends Thread {
 	private String ip;
 	private String name;
 	static boolean messageReceived = false;
+	private ConnectionDataModel cModel;
 	
-	public NetworkingClient(String ip, String name) {
+	public NetworkingClient(String ip, String name, ConnectionDataModel cModel) {
 		this.ip = ip;
 		this.name = name;
+		this.cModel = cModel;
 	}
 	
 	public void run() {
@@ -46,9 +48,6 @@ public class NetworkingClient extends Thread {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		UIRes uires = new UIRes();
-	    ConnectionDataModel cModel = uires.cModel;
 		
 		client.addListener(new ClientListener(cModel, client));
 		
@@ -77,7 +76,6 @@ public class NetworkingClient extends Thread {
 		  kryo.register(Session.class);
 		  kryo.register(Empty.class);
 		  kryo.register(ClientInformation.class);
-		  kryo.register(MessageQueue.class);
 		  kryo.register(LinkedBlockingQueue.class);
 		  kryo.register(java.util.concurrent.ConcurrentHashMap.class);
 		  kryo.register(GameData.class);

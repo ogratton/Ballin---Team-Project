@@ -1050,6 +1050,15 @@ public class Character extends Observable implements Collidable_Circle {
 	public Class getClassType() {
 		return this.classType;
 	}
+	
+	/**
+	 * Set the class type of this character.
+	 * 
+	 * @return
+	 */
+	public void setClassType(Class c) {
+		this.classType = c;
+	}
 
 	/**
 	 * Change whether or not the character is falling.

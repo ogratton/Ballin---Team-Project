@@ -75,7 +75,6 @@ public class ClientListener extends Listener {
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
    			cModel.setConnection(connection);
-   			cModel.setMyId(message.getSenderId());
    			SessionListMenu sessionList = new SessionListMenu();
 			JPanel panel = sessionList.getLobbyListPanel(client);
 			UIRes.switchPanel(panel);
@@ -146,9 +145,6 @@ public class ClientListener extends Listener {
 				resources.setMap(new Map(1200, 675, tileset, mapName));
 				new MapCosts(resources);
    				cModel.setResources(resources);
-   				
-//   				Physics p = new Physics(resources);
-//   				p.start();
    				
    				// create ui thread
    				Graphics g = new Graphics(resources, updater, false);

@@ -52,7 +52,7 @@ public class MenuItems extends UIRes {
 		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
-
+	
 	Color getRandomColour() {
 		int r = 0, g = 0, b = 0;
 		SecureRandom rand = new SecureRandom();
@@ -189,8 +189,8 @@ public class MenuItems extends UIRes {
 			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
 					JOptionPane.PLAIN_MESSAGE);
 			if (input != null) {
-				NetworkingClient client = new NetworkingClient(input, username);
-				client.run();
+				NetworkingClient client = new NetworkingClient(input, username, cModel);
+				client.start();
 			} else {
 				frame.dispose();
 			}
