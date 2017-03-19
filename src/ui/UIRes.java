@@ -14,6 +14,8 @@ import com.esotericsoftware.kryonet.Client;
 
 import audio.AudioFile;
 import networking.ClientListener;
+import networking.ConnectionData;
+import networking.ConnectionDataModel;
 import networking.NetworkingClient;
 import networking.Session;
 import resources.Character;
@@ -30,6 +32,7 @@ public class UIRes {
 	public static MenuItems menuItems = new MenuItems();
 	public static String host;
 	public static final int VOL_MAX = 100;
+	public static final int VOL_INIT = 75;
 	public static final int VOL_MIN = 0;
 	public static boolean isPressed;
 	public static ArrayList<String> controlsList = new ArrayList<String>();
@@ -42,7 +45,8 @@ public class UIRes {
 	public String gameModeName;
 	public String mapName;
 	
-	//public static NetworkingClient netClient = new NetworkingClient("localhost", username);
+	public ConnectionData data = new ConnectionData();
+	public ConnectionDataModel cModel = new ConnectionDataModel(data);
 	
 	public static final Color colour = Color.BLACK;
 	
