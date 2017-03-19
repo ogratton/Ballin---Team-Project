@@ -24,6 +24,8 @@ import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
 import resources.Resources;
+import resources.Resources.Mode;
+import ui.UIRes;
 import resources.Character.Heading;
 
 /**
@@ -323,6 +325,28 @@ public class GameView extends JPanel implements Observer {
 				g.drawImage(character.getArrow(fullscreen), actualX,
 						(int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)),
 						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
+				
+				if(resources.mode == Mode.HotPotato){
+					if(character.hasBomb()){
+						g.drawImage(SheetDeets.getBombSprite(), actualX + (int)(30 * currentMultiplier),
+								(int) (actualY + currentOffset + deathModifier + (20 * currentMultiplier)), this);
+						
+						UIRes.setCustomFont(this, 14);
+						g.setColor(Color.WHITE);
+						
+						int time = resources.gamemode.getTime();
+						int actualTime = 50 - (time % 50);
+						
+						String zero = "";
+						
+						if(actualTime < 10){
+							zero = "0";
+						}
+						
+						g.drawString(zero + actualTime, actualX + (int)(38.5 * currentMultiplier), (int) (actualY + currentOffset + deathModifier + (39.5 * currentMultiplier)));
+						
+					}
+				}
 
 				// if the player is dashing, draw the fire sprite
 

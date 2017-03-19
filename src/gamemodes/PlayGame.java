@@ -27,8 +27,8 @@ public class PlayGame {
 	public static void start(Resources resources) {
 		
 		// TODO these should be parameters for start
-		String mapName = "asteroid";
-		resources.mode = Mode.Deathmatch; 
+		String mapName = "potato2";
+		resources.mode = Mode.HotPotato; 
 		Map.World style = Map.World.SPACE;
 		
 		

@@ -25,6 +25,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private Random rand;
+	private int timer;
 
 	public HotPotato(Resources resources) {
 		this.resources = resources;
@@ -44,7 +45,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		p.start();
 		SwingUtilities.invokeLater(new Graphics(resources, null, false));
 
-		int timer = 0; // 10*speed of normal timer
+		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {
 			try {
@@ -187,7 +188,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 
 	@Override
 	public int getTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.timer;
 	}
+	
 }
