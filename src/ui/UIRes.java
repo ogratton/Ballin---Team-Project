@@ -23,6 +23,7 @@ import resources.FilePaths;
 import resources.Resources;
 
 public class UIRes {
+	
 	public static Resources resources = new Resources();
 	public static final int width = 800;
 	public static final int height = 1000;
@@ -44,10 +45,9 @@ public class UIRes {
 	public String lobbyName;
 	public String gameModeName;
 	public String mapName;
-	
-	public ConnectionData data = new ConnectionData();
-	public ConnectionDataModel cModel = new ConnectionDataModel(data);
-	
+
+	public static ConnectionData data = new ConnectionData();
+	public static ConnectionDataModel cModel = new ConnectionDataModel(data);
 	public static final Color colour = Color.BLACK;
 	
 	public static JPanel sessionsPanels = new JPanel();
