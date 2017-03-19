@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import com.esotericsoftware.kryonet.Connection;
+
 import resources.Character;
 import resources.Resources;
 
@@ -26,7 +29,16 @@ public class ConnectionData {
 	private List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
 	private Resources resources;
 	private boolean ready;
+	private Connection connection;
 	
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
 	public Resources getResources() {
 		return resources;
 	}

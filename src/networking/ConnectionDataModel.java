@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentMap;
 
+import com.esotericsoftware.kryonet.Connection;
+
 public class ConnectionDataModel extends Observable {
 
 	private ConnectionData data;
@@ -182,5 +184,13 @@ public class ConnectionDataModel extends Observable {
 		data.setReady(b);
 		setChanged();
 		notifyObservers();
+	}
+	
+	public Connection getConnection() {
+		return data.getConnection();
+	}
+	
+	public synchronized void setConnection(Connection connection) {
+		data.setConnection(connection);
 	}
 }
