@@ -64,9 +64,9 @@ public class PlayerStats extends JPanel {
 		mode = new JLabel(modeText);
 
 		// this doesn't work. why
-		stamina.setHorizontalAlignment(JLabel.CENTER);
-		kda.setHorizontalAlignment(JLabel.CENTER);
-		mode.setHorizontalAlignment(JLabel.CENTER);
+		stamina.setAlignmentX(CENTER_ALIGNMENT);
+		kda.setAlignmentX(CENTER_ALIGNMENT);
+		mode.setAlignmentX(CENTER_ALIGNMENT);
 
 		// set the font for the labels
 		UIRes.setCustomFont(stamina, 20);
@@ -78,7 +78,7 @@ public class PlayerStats extends JPanel {
 		add(kda);
 		add(mode);
 
-		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(15, 35, 25, 25)));
+		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(15, 35, 25, 35)));
 
 	}
 

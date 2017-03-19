@@ -1,10 +1,8 @@
 package graphics;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 import resources.Resources;
 

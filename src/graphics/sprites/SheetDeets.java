@@ -33,6 +33,12 @@ public class SheetDeets {
 
 	}
 
+	/**
+	 * Get the set of sprites for a given class
+	 * @param c the class
+	 * @return the set of sprites
+	 */
+	
 	public static BufferedImage getSpriteSetFromClass(Character.Class c) {
 
 		int x = 0;
@@ -143,6 +149,12 @@ public class SheetDeets {
 	public static final int MISC_SIZEX = 50;
 	public static final int MISC_SIZEY = 50;
 	
+	/**
+	 * Get the relevant sprite from the type
+	 * @param m the type of sprite
+	 * @return the sprite set
+	 */
+	
 	public static BufferedImage getMiscSpritesFromType(Misc m){
 		
 		int y = 0;
@@ -177,6 +189,12 @@ public class SheetDeets {
 		return Sprite.getSprite(MISC, x, y, 50 * numX, 50 * numY);
 		
 	}
+	
+	/**
+	 * Get the correct powerup sprite from the powerup type
+	 * @param p the powerup type
+	 * @return the powerup sprite
+	 */
 	
 	public static BufferedImage getPowerUpSpriteFromType(Powerup.Power p){
 		
@@ -214,6 +232,12 @@ public class SheetDeets {
 		public static final int ARROWS_ROWS = 1;
 		public static final int ARROWS_SIZEX = 50;
 		public static final int ARROWS_SIZEY = 50;
+		
+		/**
+		 * Get the correct coloured arrow for a player
+		 * @param no the player number
+		 * @return the arrow
+		 */
 		
 		public static BufferedImage getArrowFromPlayer(int no){
 			
