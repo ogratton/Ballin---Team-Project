@@ -21,10 +21,10 @@ public class VictoryScreen extends JPanel {
 
 		Resources.Mode mode = resources.mode;
 		Character character = null;
-		
-		try{
+
+		try {
 			character = UIRes.cModel.getMyCharacter();
-		}catch(NullPointerException e){
+		} catch (NullPointerException e) {
 			character = resources.getPlayerList().get(0);
 		}
 
@@ -82,7 +82,7 @@ public class VictoryScreen extends JPanel {
 		UIRes.setCustomFont(label4, 32);
 		label4.setAlignmentX(CENTER_ALIGNMENT);
 		add(label4);
-		
+
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
 
 	}

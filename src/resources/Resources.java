@@ -671,5 +671,9 @@ public class Resources {
 	public void setMusicPlayer(MusicPlayer mp) {
 		this.musicPlayer = mp;
 	}
+	
+	public void clearPlayerList(){
+		this.playerList = new ArrayList<>();
+	}
 
 }

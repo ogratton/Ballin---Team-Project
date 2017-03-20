@@ -64,7 +64,9 @@ public class PlayGame {
 				}
 			}
 		}
-
+		
+		resources.clearPlayerList();
+		
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
