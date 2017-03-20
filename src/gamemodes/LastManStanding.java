@@ -22,6 +22,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	private boolean gameOver = false;
 	private Character winner;
 	private Resources resources;
+	private boolean isServer = false;
 
 	/**
 	 * Create a new last man standing game mode.
@@ -39,6 +40,24 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		resources.mode = Mode.LastManStanding;
 		resources.gamemode = this;
 	}
+	
+	/**
+	 * Create a new last man standing game mode.
+	 * @param resources The resources object being used for the game.
+	 * @param maxLives The maximum number of lives for the game.
+	 */
+	public LastManStanding(Resources resources, int maxLives, boolean isServer) {
+		this.maxLives = maxLives;
+		this.resources = resources;
+
+		// Set up game
+		setAllLives(maxLives);
+		randomRespawn();
+		
+		resources.mode = Mode.LastManStanding;
+		resources.gamemode = this;
+		this.isServer = isServer;
+	}
 
 	/* 
 	 * Run the logic of this game mode.
@@ -47,7 +66,10 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources, false);
 		p.start();
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		
+		if(!isServer) {
+			SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		}
 
 		while (!isGameOver()) {
 			try {
