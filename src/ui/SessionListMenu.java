@@ -5,6 +5,7 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -35,9 +36,13 @@ public class SessionListMenu extends JPanel implements Observer{
 	private String gameModeName;
 	private String mapName;
 	private Session session;
-	private InLobbyMenu lobbyPanel;
+	private Client client;
 	
 	public SessionListMenu(Client client){
+		this.client = client;
+
+		UIRes.cModel.addObserver(this);
+		
 		updateSessionsPanel(client);
 		setLayout(new BorderLayout());
 		add(addSessionButtons(client, this), BorderLayout.PAGE_START);
@@ -81,6 +86,7 @@ public class SessionListMenu extends JPanel implements Observer{
 
 				Message createMessage = new Message(Command.SESSION, Note.CREATE, UIRes.cModel.getMyId(), "", "", "",
 						newSession);
+				
 				try {
 					client.sendTCP(createMessage);
 					System.out.println("Session creation sent.");
@@ -89,8 +95,10 @@ public class SessionListMenu extends JPanel implements Observer{
 				}
 				
 				InLobbyMenu lobby = new InLobbyMenu(newSession, client);
-
-				updateSessionsPanel(client);
+				lobby.setName(newSession.getId());
+				System.out.println(UIRes.resources.lobbyList.add(lobby));
+				
+				
 				UIRes.switchPanel(lobby);
 			}
 
@@ -113,14 +121,16 @@ public class SessionListMenu extends JPanel implements Observer{
 
 			Message joinMessage = new Message(Command.SESSION, Note.JOIN, UIRes.cModel.getMyId(), "",
 					UIRes.cModel.getAllSessions().get(index).getId(), UIRes.cModel.getAllSessions().get(index).getId());
-			
-			
 					
 			try {
 				client.sendTCP(joinMessage);
 				session = UIRes.cModel.getAllSessions().get(index);
-				InLobbyMenu lobby = new InLobbyMenu(session, client);
-				UIRes.switchPanel(lobby);
+				
+				System.out.println("no. lobbies: " + UIRes.resources.lobbyList.size());
+				
+				for(int i = 0; i < UIRes.resources.lobbyList.size(); i++)
+					if(UIRes.resources.lobbyList.get(i).getName().compareTo(session.getId()) == 0)
+						UIRes.switchPanel(UIRes.resources.lobbyList.get(i));
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -138,7 +148,6 @@ public class SessionListMenu extends JPanel implements Observer{
 					null);
 			try {
 				client.sendTCP(message);
-				updateSessionsPanel(client);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -260,6 +269,7 @@ public class SessionListMenu extends JPanel implements Observer{
 		JButton button = new JButton("Back");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
+			UIRes.cModel.deleteObserver(this);
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;
@@ -267,8 +277,8 @@ public class SessionListMenu extends JPanel implements Observer{
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		updateSessionsPanel(client);
 		repaint();
-		
 	}
 
 }

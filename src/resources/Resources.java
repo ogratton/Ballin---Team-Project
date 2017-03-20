@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.swing.JPanel;
+
 import ai.AITemplate;
 import ai.FightingAI;
 import ai.pathfinding.Line;
@@ -25,7 +27,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 	
-	public static final boolean silent = false; // so alex can run the game :)
+	public static final boolean silent = true; // so alex can run the game :)
 	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
 	// Deathmatch by default
@@ -45,6 +47,8 @@ public class Resources {
 	private int right = default_right;
 	private int dash = default_dash;
 	private int block = default_block;
+	
+	public ArrayList<JPanel> lobbyList = new ArrayList<JPanel>();
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think

@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 import com.esotericsoftware.kryonet.Client;
 
+import ui.SessionListMenu;
+
 public class ConnectionDataComponent extends JPanel {
 	private ConnectionDataModel model;
 	
