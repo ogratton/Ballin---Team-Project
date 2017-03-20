@@ -71,8 +71,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 			SwingUtilities.invokeLater(g);
 		}
 		
-		g.setCountdown(3);
-		
 		try{
 		Thread.sleep(1500);
 		g.setCountdown(2);
