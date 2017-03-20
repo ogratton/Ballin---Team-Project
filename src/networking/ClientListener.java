@@ -50,6 +50,7 @@ public class ClientListener extends Listener {
    				System.out.println("Received sessions from Server");
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
+   				System.out.println("Number of Sessions: " + sessions.values().size());
    				break;
    			case CREATED:
    				System.out.println("Session created");
@@ -76,6 +77,7 @@ public class ClientListener extends Listener {
    			cModel.setConnection(connection);
    			SessionListMenu sessionList = new SessionListMenu(client);
 			UIRes.switchPanel(sessionList);
+			System.out.println("Client ID: " + cModel.getMyId());
    			// Create a thread for the GUI:
 //   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
 //   		    gui.start();
