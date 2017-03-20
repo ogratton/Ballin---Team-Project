@@ -58,8 +58,9 @@ public class UIRes {
 	public String gameModeName;
 	public String mapName;
 
-	public static ConnectionData data = new ConnectionData();
-	public static ConnectionDataModel cModel = new ConnectionDataModel(data);
+	public ConnectionData data = new ConnectionData();
+	public ConnectionDataModel cModel = new ConnectionDataModel(data);
+	
 	public static final Color colour = Color.BLACK;
 	
 	public static JPanel sessionsPanels = new JPanel();

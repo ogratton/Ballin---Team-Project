@@ -19,6 +19,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import networking.ClientInformation;
 import networking.Command;
+import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
@@ -29,12 +30,14 @@ public class InLobbyMenu extends JPanel implements Observer{
 	
 	private Session session;
 	private Client client;
+	private ConnectionDataModel cModel;
 	
-	public InLobbyMenu(Session session, Client client){
+	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel){
 		this.session = session;
 		this.client = client;
+		this.cModel = cModel;
 		
-		UIRes.cModel.addObserver(this);
+		cModel.addObserver(this);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -49,14 +52,14 @@ public class InLobbyMenu extends JPanel implements Observer{
 		JButton button = new JButton("Leave Lobby");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			System.out.println("Session ID sent: " + UIRes.cModel.getSessionId());
-			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, UIRes.cModel.getMyId(), "", UIRes.cModel.getSessionId(),
-					UIRes.cModel.getHighlightedSessionId());
+			
+			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(),
+					cModel.getHighlightedSessionId());
 			try {
-				UIRes.cModel.getConnection().sendTCP(leaveMessage);
-				UIRes.cModel.setReady(false);
-				SessionListMenu lobbyList = new SessionListMenu(client);
-				System.out.println("model changed: " + UIRes.cModel.hasChanged());
+				cModel.getConnection().sendTCP(leaveMessage);
+				cModel.setReady(false);
+				SessionListMenu lobbyList = new SessionListMenu(client, cModel);
+				System.out.println("model changed: " + cModel.hasChanged());
 				updateInLobbyPanel();
 				repaint();
 				revalidate();
@@ -72,19 +75,16 @@ public class InLobbyMenu extends JPanel implements Observer{
 	void updateInLobbyPanel() {
 		Session session;
 		UIRes.playersPanel.removeAll();
-		if(UIRes.cModel.getSessionId() != null && (!UIRes.cModel.getSessionId().equals(""))) {
-			session = UIRes.cModel.getSession(UIRes.cModel.getSessionId());
+		if(cModel.getSessionId() != null && (!cModel.getSessionId().equals(""))) {
+			session = cModel.getSession(cModel.getSessionId());
 			System.out.println("Clients in this session at " + new Timestamp(System.currentTimeMillis()) + " :" + session.getAllClients().size());
 			for (int i = 0; i < session.getAllClients().size(); i++) {
 				addPlayerToLobby(session.getAllClients().get(i), i + 1);
 			}
 		}
 		else {
-			session = this.session;
+			session = getSession();
 		}
-		
-		UIRes.playersPanel.repaint();
-		UIRes.playersPanel.revalidate();
 
 	}
 	
@@ -135,6 +135,14 @@ public class InLobbyMenu extends JPanel implements Observer{
 	
 	Session getSession(){
 		return this.session;
+	}
+	
+	void setModel(ConnectionDataModel cModel){
+		this.cModel = cModel;
+	}
+	
+	ConnectionDataModel getModel(){
+		return this.cModel;
 	}
 
 	@Override
