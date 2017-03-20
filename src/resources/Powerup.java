@@ -15,7 +15,7 @@ public class Powerup extends Observable implements Collidable_Circle {
 
 	// Size? Affect other characters? Fireballs?
 	public enum Power {
-		Speed, Mass
+		Speed, Mass, Spike
 	};
 	
 	private Power power = null;

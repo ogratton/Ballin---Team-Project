@@ -37,7 +37,7 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.LastManStanding;
+		resources.mode = Mode.Deathmatch;
 		Map.World style = Map.World.CAVE;
 
 		// Music setting:

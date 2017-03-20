@@ -463,7 +463,7 @@ public class Physics extends Thread implements ActionListener {
 			return;
 
 		// Calculate restitution (bounciness)
-		double e = Math.min(c.getRestitution(), d.getRestitution());
+		double e = Math.max(c.getRestitution(), d.getRestitution());
 
 		// Calculate impulse scalar
 		double j = -(1 + e) * normalVelocity;
