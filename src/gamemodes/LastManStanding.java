@@ -23,7 +23,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private boolean isServer = false;
-	private int countdown = 3;
 
 	/**
 	 * Create a new last man standing game mode.
