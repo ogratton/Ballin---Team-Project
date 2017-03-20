@@ -15,6 +15,10 @@ import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Powerup.Power;
 
+/**
+ * @author Luke
+ *
+ */
 public class Character extends Observable implements Collidable_Circle {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 25;
@@ -31,7 +35,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public enum Class {
 		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 	}; // add to this as we develop more classes.
-	
+
 	private boolean isAI = false;
 	private FightingAI ai;
 
@@ -48,8 +52,8 @@ public class Character extends Observable implements Collidable_Circle {
 	private int lives = 4;
 
 	// these are for the physics engine. Restitution is 'bounciness'.
-	private double mass = 0.0, inv_mass = 0.0, dx = 0.0, dy = 0.0, 
-			maxdx = 0.0, maxdy = 0.0, acc = 0.0, restitution = 0.0;
+	private double mass = 0.0, inv_mass = 0.0, dx = 0.0, dy = 0.0, maxdx = 0.0, maxdy = 0.0, acc = 0.0,
+			restitution = 0.0;
 
 	// these are for the physics engine and the graphics engine.
 	// Characters are circles.
@@ -77,7 +81,6 @@ public class Character extends Observable implements Collidable_Circle {
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
 	private Heading dashDirection = Heading.STILL;
-	
 
 	// So we can control how long a character dashes/blocks for
 	private int dashTimer, blockTimer = 0;
@@ -88,8 +91,6 @@ public class Character extends Observable implements Collidable_Circle {
 	// Stamina used when dashing/blocking
 	private int dashStamina = 150;
 	private int blockStamina = 75;
-	private int health = 100;
-	private boolean burning = false;
 
 	// Store this character's score
 	private int score = 0;
@@ -108,21 +109,28 @@ public class Character extends Observable implements Collidable_Circle {
 	private int kills = 0;
 	private int deaths = 0;
 	private int suicides = 0;
-	
+
 	private int teamNumber;
-	
+
 	private int requestId;
-	
+
 	private String name;
-	
+
 	private AudioFile playerOutSound;
 	private AudioFile[] deathSounds;
 	private Random rand = new Random();
-	
+
+	/**
+	 * @return The current request id.
+	 */
 	public int getRequestId() {
 		return requestId;
 	}
-	
+
+	/**
+	 * @param requestId
+	 *            The new request id.
+	 */
 	public void setRequestId(int requestId) {
 		this.requestId = requestId;
 	}
@@ -155,12 +163,13 @@ public class Character extends Observable implements Collidable_Circle {
 	public Character(Class c, int playerNo) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, "Player");
 	}
-	
+
 	public Character(Class c, int playerNo, String name) {
 		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo, String name) {
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo,
+			String name) {
 		this(false, false, false, false, false, false, false, // control flags
 				mass, x, // x
 				y, // y
@@ -171,16 +180,17 @@ public class Character extends Observable implements Collidable_Circle {
 																									// calculate
 																									// this)
 				default_restitution, radius, direction, classType, playerNo, name);
-		
-				// XXX set temp String for single player
-				// overwritten by networking
-				this.id = UUID.randomUUID().toString();
+
+		// XXX set temp String for single player
+		// overwritten by networking
+		this.id = UUID.randomUUID().toString();
 	}
 
 	// master constructor. Any other constructors should eventually call this.
 	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
 			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
-			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo, String name) {
+			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo,
+			String name) {
 		// new Character();
 		this.up = up;
 		this.right = right;
@@ -234,59 +244,60 @@ public class Character extends Observable implements Collidable_Circle {
 		falling = false;
 		dead = false;
 		this.name = name;
-		
-		if (!Resources.silent) 
-		{
+
+		if (!Resources.silent) {
 			deathSounds = new AudioFile[3];
 			deathSounds[0] = new AudioFile(FilePaths.sfx + "death1.wav", "Death1");
 			deathSounds[1] = new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
 			deathSounds[2] = new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
-			
+
 			playerOutSound = new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
 		}
 	}
-	
+
 	/**
-	 * Note: this object has not been passed resources,
-	 * therefore when played gain must be set in the play
-	 * method (i.e. play(resources.getSFXGain())
+	 * Note: this object has not been passed resources, therefore when played
+	 * gain must be set in the play method (i.e. play(resources.getSFXGain())
 	 * 
 	 * Also note: should never be called when Resources.silent
 	 * 
 	 * @return a random death sound AudioFile object
 	 */
-	public AudioFile getRandDeathSound()
-	{
+	public AudioFile getRandDeathSound() {
 		System.out.println(lives);
-		
-		// XXX I am making the assumption that lives are decremented before this is called
+
+		// XXX I am making the assumption that lives are decremented before this
+		// is called
 		// If they have lives left
-		if (lives != 1)
-		{
+		if (lives != 1) {
 			int index = rand.nextInt(deathSounds.length);
 			return deathSounds[index];
-		}
-		else
-		{
+		} else {
 			return playerOutSound;
 		}
-		
+
 	}
 
+	/**
+	 * @return The current id.
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            The new id.
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Get the current rolling frame
+	 * Get the current rolling frame.
 	 * 
-	 * @return the frame
+	 * @return The current rolling frame.
 	 */
-
 	public BufferedImage getNextFrame(int oldX, int oldY, int newX, int newY, boolean fullscreen) {
 
 		int delX = newX - oldX;
@@ -360,17 +371,15 @@ public class Character extends Observable implements Collidable_Circle {
 
 	/**
 	 * Get the dash sprite for a character Assumes direction has already been
-	 * set
+	 * set.
 	 * 
-	 * @return the dash sprite
+	 * @return The dash sprite.
 	 */
-
 	public BufferedImage getDashSprite(boolean fullscreen, Heading direction) {
-		
+
 		int frame = 0;
-		
-		switch(direction)
-		{
+
+		switch (direction) {
 		case E:
 			frame = 2;
 			break;
@@ -398,12 +407,12 @@ public class Character extends Observable implements Collidable_Circle {
 		case STILL:
 		default:
 			break;
-		
+
 		}
-		if(fullscreen){
+		if (fullscreen) {
 			return this.bigDashSprites.get(frame);
 		}
-		
+
 		return this.dashSprites.get(frame);
 
 	}
@@ -416,9 +425,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the change in X
 	 * @param delY
 	 *            the change in Y
-	 * @return the direction the character is moving in
+	 * @return The direction the character is moving in.
 	 */
-
 	public Heading getVisibleDirection(int delX, int delY) {
 
 		if (delX > 0) {
@@ -459,9 +467,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Is an up command being received?
 	 * 
-	 * @return up?
+	 * @return True if the player is pressing up.
 	 */
-
 	public boolean isUp() {
 		return this.up;
 	}
@@ -469,9 +476,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Is a down command being received?
 	 * 
-	 * @return down?
+	 * @return True if the player is pressing down.
 	 */
-
 	public boolean isDown() {
 		return this.down;
 	}
@@ -479,7 +485,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Is a left command being received?
 	 * 
-	 * @return left?
+	 * @return True if the player is pressing left.
 	 */
 
 	public boolean isLeft() {
@@ -489,7 +495,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Is a right command being received?
 	 * 
-	 * @return right?
+	 * @return True if the player is pressing right.
 	 */
 
 	public boolean isRight() {
@@ -500,7 +506,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set if an up command is being received
 	 * 
 	 * @param up
-	 *            up?
+	 *            Is the player pressing up?
 	 */
 
 	public void setUp(boolean up) {
@@ -512,7 +518,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set if a down command is being received
 	 * 
 	 * @param down
-	 *            down?
+	 *            Is the player pressing down?
 	 */
 
 	public void setDown(boolean down) {
@@ -524,7 +530,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set if a left command is being received
 	 * 
 	 * @param left
-	 *            left?
+	 *            Is the player pressing left?
 	 */
 
 	public void setLeft(boolean left) {
@@ -536,7 +542,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set if a right command is being received
 	 * 
 	 * @param right
-	 *            right?
+	 *            Is the player pressing right?
 	 */
 
 	public void setRight(boolean right) {
@@ -594,6 +600,12 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Get the direction that the character is accelerating towards. (e.g.
 	 * holding up and right = NE)
 	 */
+	/**
+	 * Get the direction that the character is accelerating towards (e.g.
+	 * holding up and right = NE).
+	 * 
+	 * @return The direction the character is accelerating towards.
+	 */
 	public Heading getMovingDirection() {
 
 		if (isUp()) {
@@ -634,12 +646,11 @@ public class Character extends Observable implements Collidable_Circle {
 	 */
 
 	/**
-	 * Set if the character is moving
+	 * Set if the character is moving.
 	 * 
 	 * @param moving
-	 *            moving?
+	 *            Is the character moving?
 	 */
-
 	public void setMoving(boolean moving) {
 
 		this.moving = moving;
@@ -648,9 +659,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get if the character is moving
 	 * 
-	 * @return moving?
+	 * @return Is the character moving?
 	 */
-
 	public boolean isMoving() {
 		return this.moving;
 	}
@@ -665,7 +675,6 @@ public class Character extends Observable implements Collidable_Circle {
 	 * 
 	 * @return the x coordinate
 	 */
-
 	public double getX() {
 		return this.x;
 	}
@@ -675,7 +684,6 @@ public class Character extends Observable implements Collidable_Circle {
 	 * 
 	 * @return the y coordinate
 	 */
-
 	public double getY() {
 		return this.y;
 	}
@@ -683,7 +691,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the facing of this character
 	 * 
-	 * @return the facing
+	 * @return The direction the character is moving.
 	 */
 	public Character.Heading getDirection() {
 		return this.direction;
@@ -700,6 +708,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Sets number of lives.
 	 * 
 	 * @param lives
+	 *            The new number of lives.
 	 */
 	public void setLives(int lives) {
 		this.lives = lives;
@@ -708,7 +717,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * get the number of lives for this character.
 	 * 
-	 * @return
+	 * @return The current number of lives.
 	 */
 	public int getLives() {
 		return lives;
@@ -718,7 +727,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the x coordinate of the character
 	 * 
 	 * @param x
-	 *            the x coordinate
+	 *            The new x coordinate.
 	 */
 
 	public void setX(double x) {
@@ -731,11 +740,10 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the y coordinate of the character
 	 * 
 	 * @param y
-	 *            the y coordinate
+	 *            The new y coordinate.
 	 */
 
 	public void setY(double y) {
-
 		this.y = y;
 		setChanged();
 		notifyObservers();
@@ -745,7 +753,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the x coordinate of the character
 	 * 
 	 * @param x
-	 *            the x coordinate
+	 *            The new x coordinate.
 	 */
 
 	public void setXWithoutNotifying(double x) {
@@ -756,7 +764,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the y coordinate of the character
 	 * 
 	 * @param y
-	 *            the y coordinate
+	 *            The new y coordinate.
 	 */
 
 	public void setYWithoutNotifying(double y) {
@@ -767,12 +775,20 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the facing of the character
 	 * 
 	 * @param direction
+	 *            The new direction.
 	 */
-
 	public void setDirection(Character.Heading direction) {
 		this.direction = direction;
 	}
 
+	/**
+	 * Calculate the direction the character is moving.
+	 * 
+	 * @param oldX
+	 * @param oldY
+	 * @param newX
+	 * @param newY
+	 */
 	public void setDirection(int oldX, int oldY, int newX, int newY) {
 
 		int delx = oldX - newX;
@@ -811,9 +827,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the mass of the character
 	 * 
-	 * @return the mass
+	 * @return The character's mass.
 	 */
-
 	public double getMass() {
 		return this.mass;
 	}
@@ -821,9 +836,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the 'inv mass' of the character
 	 * 
-	 * @return the inv mass
+	 * @return The inverse mass of the character.
 	 */
-
 	public double getInvMass() {
 		return this.inv_mass;
 	}
@@ -831,9 +845,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the dx of the character
 	 * 
-	 * @return the dx
+	 * @return The current x velocity.
 	 */
-
 	public double getDx() {
 		return this.dx;
 	}
@@ -841,9 +854,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the dy of the character
 	 * 
-	 * @return
+	 * @return The current y velocity.
 	 */
-
 	public double getDy() {
 		return this.dy;
 	}
@@ -851,9 +863,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the max dx of the character
 	 * 
-	 * @return the max dx
+	 * @return The maximum x velocity.
 	 */
-
 	public double getMaxDx() {
 		return this.maxdx;
 	}
@@ -861,9 +872,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the max dy of the character
 	 * 
-	 * @return the max dy
+	 * @return The maximum y velocity.
 	 */
-
 	public double getMaxDy() {
 		return this.maxdy;
 	}
@@ -871,9 +881,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the acceleration of the character
 	 * 
-	 * @return the acceleration
+	 * @return The current acceleration.
 	 */
-
 	public double getAcc() {
 		return this.acc;
 	}
@@ -881,9 +890,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the restitution of the character
 	 * 
-	 * @return the restitution
+	 * @return The character's restitution.
 	 */
-
 	public double getRestitution() {
 		return this.restitution;
 	}
@@ -891,9 +899,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the radius of the character
 	 * 
-	 * @return the radius
+	 * @return The character's radius.
 	 */
-
 	public int getRadius() {
 		return this.radius;
 	}
@@ -901,7 +908,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Find out if character is set to fall.
 	 * 
-	 * @return falling
+	 * @return True if the character is falling.
 	 */
 	public boolean isFalling() {
 		return falling;
@@ -910,7 +917,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * find out if character is dead. Dead characters don't update. (for now)
 	 * 
-	 * @return
+	 * @return True if the character is dead.
 	 */
 	public boolean isDead() {
 		return dead;
@@ -920,9 +927,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the mass of a character
 	 * 
 	 * @param mass
-	 *            the mass
+	 *            The new mass.
 	 */
-
 	public void setMass(double mass) {
 		this.mass = mass;
 		this.inv_mass = 1 / mass;
@@ -932,9 +938,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the dx of a character
 	 * 
 	 * @param dx
-	 *            the dx
+	 *            The new x velocity.
 	 */
-
 	public void setDx(double dx) {
 		this.dx = dx;
 		setChanged();
@@ -945,9 +950,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the dy of a character
 	 * 
 	 * @param dy
-	 *            the dy
+	 *            The new y velocity.
 	 */
-
 	public void setDy(double dy) {
 		this.dy = dy;
 		setChanged();
@@ -958,9 +962,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the max dx of a character
 	 * 
 	 * @param maxDx
-	 *            the max dx
+	 *            The new maximum x velocity.
 	 */
-
 	public void setMaxDx(double maxDx) {
 		this.maxdx = maxDx;
 		setChanged();
@@ -971,9 +974,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the max dy of a character
 	 * 
 	 * @param maxDy
-	 *            the max dy
+	 *            The new maximum y velocity.
 	 */
-
 	public void setMaxDy(double maxDy) {
 		this.maxdy = maxDy;
 		setChanged();
@@ -984,9 +986,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the acceleration of a character
 	 * 
 	 * @param acceleration
-	 *            the acceleration
+	 *            The new acceleration.
 	 */
-
 	public void setAcc(double acceleration) {
 		this.acc = acceleration;
 		setChanged();
@@ -997,9 +998,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the restitution of a character
 	 * 
 	 * @param restitution
-	 *            the restitution
+	 *            The new restitution.
 	 */
-
 	public void setRestitution(double restitution) {
 		this.restitution = restitution;
 		setChanged();
@@ -1010,9 +1010,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the radius of a character
 	 * 
 	 * @param radius
-	 *            the radius
+	 *            The new radius.
 	 */
-
 	public void setRadius(int radius) {
 		this.radius = radius;
 		setChanged();
@@ -1021,7 +1020,7 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// setters/getters for control flags
 	/**
-	 * Set all of the control flags at once.
+	 * Deprecated? Set all of the control flags at once.
 	 * 
 	 * @param up
 	 * @param down
@@ -1045,16 +1044,17 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the class type of this character.
 	 * 
-	 * @return
+	 * @return The class type of this character.
 	 */
 	public Class getClassType() {
 		return this.classType;
 	}
-	
+
 	/**
 	 * Set the class type of this character.
 	 * 
-	 * @return
+	 * @param c
+	 *            The new class type for this character.
 	 */
 	public void setClassType(Class c) {
 		this.classType = c;
@@ -1064,6 +1064,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Change whether or not the character is falling.
 	 * 
 	 * @param falling
+	 *            Is the character falling?
 	 */
 	public void setFalling(boolean falling) {
 		this.falling = falling;
@@ -1073,6 +1074,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Change whether or not the character is dead.
 	 * 
 	 * @param dead
+	 *            Is the character dead?
 	 */
 	public void setDead(boolean dead) {
 		this.dead = dead;
@@ -1082,6 +1084,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Change whether or not the character is dashing.
 	 * 
 	 * @param dashing
+	 *            Is the character dashing?
 	 */
 	public void setDashing(boolean dashing) {
 		this.dashing = dashing;
@@ -1090,34 +1093,36 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Returns true if the character is dashing.
 	 * 
-	 * @return dashing
+	 * @return Is the character dashing?
 	 */
 	public boolean isDashing() {
 		return this.dashing;
 	}
-	
+
 	/**
-	 * Set the direction the character is dashing
-	 * @param direction the direction the character is dashing
+	 * Set the direction the character is dashing.
+	 * 
+	 * @param direction
+	 *            The direction the character is dashing.
 	 */
-	
-	public void setDashDirection(Heading direction){
+	public void setDashDirection(Heading direction) {
 		this.dashDirection = direction;
 	}
-	
+
 	/**
-	 * Get the direction the character is dashing
-	 * @return the direction the character is dashing
+	 * Get the direction the character is dashing.
+	 * 
+	 * @return The direction the character is dashing.
 	 */
-	
-	public Heading getDashDirection(){
+	public Heading getDashDirection() {
 		return this.dashDirection;
 	}
 
 	/**
-	 * Returns the current dash timer for this character.
+	 * Returns the current dash timer for this character. The dash timer stores
+	 * how long (number of ticks) the character has been dashing for.
 	 * 
-	 * @return dashTimer
+	 * @return The current dash timer.
 	 */
 	public int getDashTimer() {
 		return dashTimer;
@@ -1131,7 +1136,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * Resets the dash timer to 0;
+	 * Resets the dash timer to 0.
 	 */
 	public void resetDashTimer() {
 		this.dashTimer = 0;
@@ -1141,6 +1146,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Change whether or not the character is blocking.
 	 * 
 	 * @param blocking
+	 *            Is the character blocking?
 	 */
 	public void setBlocking(boolean blocking) {
 		this.blocking = blocking;
@@ -1149,16 +1155,17 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Returns true if the character is blocking.
 	 * 
-	 * @return blocking
+	 * @return Is the character blocking?
 	 */
 	public boolean isBlocking() {
 		return this.blocking;
 	}
 
 	/**
-	 * Returns the current blocking timer for this character.
+	 * Returns the current blocking timer for this character. The block timer
+	 * stores how long (number of ticks) the character has been blocking for.
 	 * 
-	 * @return blockTimer
+	 * @return The current block timer.
 	 */
 	public int getBlockTimer() {
 		return blockTimer;
@@ -1181,7 +1188,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Returns the current stamina for this character.
 	 * 
-	 * @return stamina
+	 * @return The current stamina.
 	 */
 	public int getStamina() {
 		return stamina;
@@ -1189,6 +1196,9 @@ public class Character extends Observable implements Collidable_Circle {
 
 	/**
 	 * Set the current stamina value.
+	 * 
+	 * @param stamina
+	 *            The new stamina value.
 	 */
 	public void setStamina(int stamina) {
 		this.stamina = stamina;
@@ -1212,8 +1222,10 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * Sets the maximum stamina value. Can use for giving different classes
-	 * different max stams.
+	 * Sets the maximum stamina value.
+	 * 
+	 * @param maxStamina
+	 *            The new maximum stamina value.
 	 */
 	public void setMaxStamina(int maxStamina) {
 		this.maxStamina = maxStamina;
@@ -1222,7 +1234,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Returns the maximum stamina value.
 	 * 
-	 * @return maxStamina
+	 * @return The current maximum stamina value.
 	 */
 	public int getMaxStamina() {
 		return maxStamina;
@@ -1231,7 +1243,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Gets the amount of stamina that is used when dashing.
 	 * 
-	 * @return dashStamina
+	 * @return The current dash stamina.
 	 */
 	public int getDashStamina() {
 		return dashStamina;
@@ -1239,6 +1251,9 @@ public class Character extends Observable implements Collidable_Circle {
 
 	/**
 	 * Sets a new value for the amount of stamina drained when dashing.
+	 * 
+	 * @param dashStamina
+	 *            The new dash stamina.
 	 */
 	public void setDashStamina(int dashStamina) {
 		this.dashStamina = dashStamina;
@@ -1247,7 +1262,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Gets the amount of stamina that is used when blocking.
 	 * 
-	 * @return blockStamina
+	 * @return The current block stamina.
 	 */
 	public int getBlockStamina() {
 		return blockStamina;
@@ -1255,6 +1270,9 @@ public class Character extends Observable implements Collidable_Circle {
 
 	/**
 	 * Sets a new value for the amount of stamina drained when blocking.
+	 * 
+	 * @param blockStamina
+	 *            The new block stamina.
 	 */
 	public void setBlockStamina(int blockStamina) {
 		this.blockStamina = blockStamina;
@@ -1264,9 +1282,8 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the dying step
 	 * 
 	 * @param step
-	 *            the dying step
+	 *            The new dying step.
 	 */
-
 	public void setDyingStep(int step) {
 		this.dyingStep = step;
 	}
@@ -1274,7 +1291,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Get the dying step
 	 * 
-	 * @return the dying step
+	 * @return The current dying step.
 	 */
 
 	public int getDyingStep() {
@@ -1282,9 +1299,8 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * Increment the dying step
+	 * Increment the dying step by 1.
 	 */
-
 	public void incDyingStep() {
 		this.dyingStep++;
 	}
@@ -1292,9 +1308,8 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * Is the player visible?
 	 * 
-	 * @return is the player visible?
+	 * @return Is the player visible?
 	 */
-
 	public boolean isVisible() {
 		return this.visible;
 	}
@@ -1303,7 +1318,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Set the player's visibility
 	 * 
 	 * @param visible
-	 *            the state of visibility
+	 *            The new state of visibility.
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
@@ -1317,17 +1332,21 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * Increments this character's score by n
+	 * @param n
+	 *            The amount to increment this character's score.
 	 */
 	public void incrementScore(int n) {
 		score += n;
 	}
 
 	/**
+	 * Stores the last character that this character collided with and when they
+	 * collided.
+	 * 
 	 * @param c
-	 *            The character that was collided with
+	 *            The character that was collided with.
 	 * @param time
-	 *            The time at which they collided
+	 *            The time at which they collided (resources.globalTimer).
 	 */
 	public void setLastCollidedWith(Character c, int time) {
 		this.lastCollidedWith = c;
@@ -1335,23 +1354,30 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * @return Who this character last collided with
+	 * @return Who this character last collided with.
 	 */
 	public Character getLastCollidedWith() {
 		return lastCollidedWith;
 	}
 
 	/**
-	 * @return When this character last collided
+	 * @return When this character last collided.
 	 */
 	public int getLastCollidedTime() {
 		return lastCollidedTime;
 	}
 
+	/**
+	 * @return The current player number.
+	 */
 	public int getPlayerNumber() {
 		return this.playerNo;
 	}
-	
+
+	/**
+	 * @param playerNumber
+	 *            The new player number.
+	 */
 	public void setPlayerNumber(int playerNumber) {
 		this.playerNo = playerNumber;
 	}
@@ -1361,8 +1387,15 @@ public class Character extends Observable implements Collidable_Circle {
 		return type;
 	}
 
-	// private double mass, inv_mass, dx, dy, maxdx, maxdy, acc, restitution =
-	// 0.0;
+	/**
+	 * Apply a powerup object to this character. The time is used to remove the
+	 * powerup after a certain length of time.
+	 * 
+	 * @param p
+	 *            The powerup to apply.
+	 * @param time
+	 *            The current time.
+	 */
 	public void applyPowerup(Powerup p, int time) {
 		if (hasPowerup) {
 			revertPowerup();
@@ -1386,6 +1419,9 @@ public class Character extends Observable implements Collidable_Circle {
 		hasPowerup = true;
 	}
 
+	/**
+	 * Revert the effects of the last powerup applied to this character.
+	 */
 	public void revertPowerup() {
 		switch (lastPowerup) {
 		case Speed:
@@ -1403,30 +1439,61 @@ public class Character extends Observable implements Collidable_Circle {
 		hasPowerup = false;
 	}
 
+	/**
+	 * @return The object of the last powerup applied to this character.
+	 */
 	public Power getLastPowerup() {
 		return lastPowerup;
 	}
 
+	/**
+	 * @return The time that this character last received a powerup.
+	 */
 	public int getLastPowerupTime() {
 		return lastPowerupTime;
 	}
 
+	/**
+	 * @param b
+	 *            Does this character have a powerup?
+	 */
 	public void hasPowerup(boolean b) {
 		hasPowerup = b;
 	}
 
+	/**
+	 * @return Does this character have a powerup?
+	 */
 	public boolean hasPowerup() {
 		return hasPowerup;
 	}
 
+	/**
+	 * Deprecated?
+	 * 
+	 * @return The team number that this character is on (1 or 2).
+	 */
 	public int getTeamNumber() {
 		return teamNumber;
 	}
 
+	/**
+	 * Deprecated?
+	 * 
+	 * @param teamNumber
+	 *            The new team number.
+	 */
 	public void setTeamNumber(int teamNumber) {
 		this.teamNumber = teamNumber;
 	}
 
+	/**
+	 * ???
+	 * 
+	 * @param image
+	 * @param multiplier
+	 * @return
+	 */
 	private BufferedImage resize(BufferedImage image, double multiplier) {
 		int w = image.getWidth();
 		int h = image.getHeight();
@@ -1439,6 +1506,11 @@ public class Character extends Observable implements Collidable_Circle {
 		return big;
 	}
 
+	/**
+	 * ???
+	 * 
+	 * @param multiplier
+	 */
 	public void makeSizeSprites(double multiplier) {
 
 		bigRollingSprites = new ArrayList<BufferedImage>();
@@ -1455,55 +1527,47 @@ public class Character extends Observable implements Collidable_Circle {
 			bigDashSprites.add(resize(image, multiplier));
 
 		}
-		
+
 		bigArrow = resize(arrow, multiplier);
-		
+
 		currentFrame = bigRollingSprites.get(0);
 
 	}
-	
-	public BufferedImage getArrow(boolean fullscreen){
-		if(fullscreen){
+
+	/**
+	 * ???
+	 * 
+	 * @param fullscreen
+	 * @return
+	 */
+	public BufferedImage getArrow(boolean fullscreen) {
+		if (fullscreen) {
 			return bigArrow;
 		}
-		
+
 		return arrow;
 	}
 
-	public int getHealth() {
-		return health;
-	}
-	
-	public void setHealth(int i) {
-		health = i;
-	}
-	
-	public void decrementHealth() {
-		health--;
-	}
-
-	public void decrementHealth(int n) {
-		health -= n;
-	}
-
-	public void setBurning(boolean burning) {
-		this.burning = burning;
-	}
-	
-	public boolean getBurning() {
-		return burning;
-	}
-
+	/**
+	 * @return Does the character have a bomb?
+	 */
 	public boolean hasBomb() {
 		return hasBomb;
 	}
 
+	/**
+	 * @param hasBomb
+	 *            Does the character have a bomb?
+	 */
 	public void hasBomb(boolean hasBomb) {
 		this.hasBomb = hasBomb;
 	}
 
+	/**
+	 * @param exploding
+	 *            Is the character exploding?
+	 */
 	public void setExploding(boolean exploding) {
-		System.out.println(name + ", lives: " + lives);
 		this.exploding = exploding;
 		if (exploding) {
 			dead = true;
@@ -1511,73 +1575,131 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 	}
 
+	/**
+	 * @return Is the character exploding?
+	 */
 	public boolean isExploding() {
 		return this.exploding;
 	}
 
+	/**
+	 * @return When did this character last die?
+	 */
 	public int getTimeOfDeath() {
 		return timeOfDeath;
 	}
 
+	/**
+	 * @param timeOfDeath
+	 *            The new time of death.
+	 */
 	public void setTimeOfDeath(int timeOfDeath) {
 		this.timeOfDeath = timeOfDeath;
 	}
 
+	/**
+	 * Performs a check on whether a character can dash before changing the
+	 * dashing status.
+	 */
 	public void requestDashing() {
-		System.out.println(stamina + ", " + (stamina >= dashStamina) + ", " + dashTimer);
 		setDashing((stamina >= dashStamina));
 	}
 
+	/**
+	 * @return Is this character an AI?
+	 */
 	public boolean isAI() {
 		return isAI;
 	}
 
+	/**
+	 * @param isAI
+	 *            Is this character an AI?
+	 */
 	public void setAI(boolean isAI) {
 		this.isAI = isAI;
 	}
 
+	/**
+	 * @return The AI this character is being controlled by.
+	 */
 	public FightingAI getAI() {
 		return ai;
 	}
 
+	/**
+	 * @param ai
+	 *            The new AI to control this character.
+	 */
 	public void setAI(FightingAI ai) {
 		setAI(true);
 		this.ai = ai;
 	}
-	
-	public BufferedImage getCurrentFrame(){
+
+	/**
+	 * ???
+	 * 
+	 * @return
+	 */
+	public BufferedImage getCurrentFrame() {
 		return this.currentFrame;
 	}
-	
-	public BufferedImage getFirstFrame(){
+
+	/**
+	 * ???
+	 * 
+	 * @return
+	 */
+	public BufferedImage getFirstFrame() {
 		return this.rollingSprites.get(0);
 	}
-	
-	public String getName(){
+
+	/**
+	 * @return The name of the player controlling this character.
+	 */
+	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @return The number of kills achieved by this character.
+	 */
 	public int getKills() {
 		return this.kills;
 	}
-	
-	public int getDeaths(){
+
+	/**
+	 * @return The number of times this character has died.
+	 */
+	public int getDeaths() {
 		return this.deaths;
 	}
-	
-	public int getSuicides(){
+
+	/**
+	 * @return The number of times this character has died on their own.
+	 */
+	public int getSuicides() {
 		return this.suicides;
 	}
-	
-	public void incrementKills(){
+
+	/**
+	 * Increment number of kills by 1.
+	 */
+	public void incrementKills() {
 		this.kills++;
 	}
-	
-	public void incrementSuicides(){
+
+	/**
+	 * Increment number of suicides by 1.
+	 */
+	public void incrementSuicides() {
 		this.suicides++;
 	}
-	
-	public void incrementDeaths(){
+
+	/**
+	 * Increment number of deaths by 1.
+	 */
+	public void incrementDeaths() {
 		this.deaths++;
 	}
 }

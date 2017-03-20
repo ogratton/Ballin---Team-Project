@@ -29,12 +29,14 @@ public class Powerup extends Observable implements Collidable_Circle {
 	private int dyingStep;
 	private boolean active = true;
 
+	/**
+	 * Create a new powerup containing a random power.
+	 */
 	public Powerup() {
 		Random rand = new Random();
 		int p = rand.nextInt(Power.values().length);
 		power = Power.values()[p];
 		sprite = SheetDeets.getPowerUpSpriteFromType(power);
-		System.out.println("POWER: " + power);
 	}
 
 	@Override
@@ -121,6 +123,9 @@ public class Powerup extends Observable implements Collidable_Circle {
 		return type;
 	}
 	
+	/**
+	 * @return Which power does this powerup hold?
+	 */
 	public Power getPower() {
 		return power;
 	}
@@ -141,10 +146,16 @@ public class Powerup extends Observable implements Collidable_Circle {
 		return lastCollidedTime;
 	}
 
+	/**
+	 * @param sprite The new sprite of this powerup.
+	 */
 	public void setSprite(BufferedImage sprite) {
 		this.sprite = sprite;
 	}
 
+	/**
+	 * @return The sprite of this powerup.
+	 */
 	public BufferedImage getSprite() {
 		return sprite;
 	}
@@ -169,10 +180,16 @@ public class Powerup extends Observable implements Collidable_Circle {
 		return dyingStep;
 	}
 	
+	/**
+	 * @return Is this powerup active?
+	 */
 	public boolean isActive(){
 		return active;
 	}
 	
+	/**
+	 * @param active Is this powerup active?
+	 */
 	public void setActive(boolean active){
 		this.active = active;
 	}

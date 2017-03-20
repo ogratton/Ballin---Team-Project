@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.swing.JPanel;
 
@@ -26,15 +25,16 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
+
 	
 	public static final boolean silent = true; // so alex can run the game :)
 	
 	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
-	// Deathmatch by default
+	// Default game mode
 	public Mode mode = Mode.HotPotato;
 	public GameModeFFA gamemode;
 
-	// keybindings
+	// Keybindings
 	private int default_up = KeyEvent.VK_W;
 	private int default_down = KeyEvent.VK_S;
 	private int default_left = KeyEvent.VK_A;
@@ -60,7 +60,7 @@ public class Resources {
 
 	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
 	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
-	
+
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	// powerups in play
@@ -78,8 +78,8 @@ public class Resources {
 
 	// client ID
 	private String id;
-	
-	private ArrayList<Tile> bad_tiles; // tiles to path-find around 
+
+	private ArrayList<Tile> bad_tiles; // tiles to path-find around
 
 	// Counter of how many ticks have happened
 	private int globalTimer = 0;
@@ -96,7 +96,7 @@ public class Resources {
 	private Color p6Colour = new Color(226, 10, 229);
 	private Color p7Colour = new Color(245, 122, 37);
 	private Color p8Colour = new Color(98, 31, 187);
-	
+
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
@@ -107,35 +107,57 @@ public class Resources {
 		bad_tiles.add(Tile.WALL);
 	}
 
+	/**
+	 * @return The current id.
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            The new id.
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
+	/**
+	 * @return The current request id.
+	 */
 	public int getRequestId() {
 		return this.requestId;
 	}
-	
+
+	/**
+	 * @param id
+	 *            The new request id.
+	 */
 	public void setRequestId(int id) {
 		this.requestId = id;
 	}
-	
+
+	/**
+	 * Increment the request id by 1.
+	 */
 	public void incRequestId() {
 		this.requestId++;
 	}
-	
+
+	/**
+	 * Increments and returns the returns id.
+	 * 
+	 * @return The next request id.
+	 */
 	public int getNextRequestId() {
 		this.incRequestId();
 		return this.requestId;
 	}
-	
+
 	public List<networking.CharacterInfo> getRequests() {
 		return requests;
 	}
-	
+
 	public void setRequests(List<networking.CharacterInfo> list) {
 		requests = list;
 	}
@@ -145,7 +167,6 @@ public class Resources {
 	 * 
 	 * @return the default up keybinding
 	 */
-
 	public int getDefaultUp() {
 		return default_up;
 	}
@@ -156,7 +177,6 @@ public class Resources {
 	 * @param default_up
 	 *            the default up keybinding
 	 */
-
 	public void setDefaultUp(int default_up) {
 		this.default_up = default_up;
 	}
@@ -166,7 +186,6 @@ public class Resources {
 	 * 
 	 * @return the default down keybinding
 	 */
-
 	public int getDefaultDown() {
 		return default_down;
 	}
@@ -177,7 +196,6 @@ public class Resources {
 	 * @param default_down
 	 *            the default down keybinding
 	 */
-
 	public void setDefaultDown(int default_down) {
 		this.default_down = default_down;
 	}
@@ -187,7 +205,6 @@ public class Resources {
 	 * 
 	 * @return the default left keybinding
 	 */
-
 	public int getDefaultLeft() {
 		return default_left;
 	}
@@ -198,7 +215,6 @@ public class Resources {
 	 * @param default_left
 	 *            the default left keybinding
 	 */
-
 	public void setDefaultLeft(int default_left) {
 		this.default_left = default_left;
 	}
@@ -208,7 +224,6 @@ public class Resources {
 	 * 
 	 * @return the default right keybinding
 	 */
-
 	public int getDefaultRight() {
 		return default_right;
 	}
@@ -219,7 +234,6 @@ public class Resources {
 	 * @param default_right
 	 *            the default right keybinding
 	 */
-
 	public void setDefaultRight(int default_right) {
 		this.default_right = default_right;
 	}
@@ -229,7 +243,6 @@ public class Resources {
 	 * 
 	 * @return the default dash keybinding
 	 */
-
 	public int getDefaultDash() {
 		return default_dash;
 	}
@@ -240,17 +253,15 @@ public class Resources {
 	 * @param default_right
 	 *            the default dash keybinding
 	 */
-
 	public void setDefaultDash(int default_dash) {
 		this.default_dash = default_dash;
 	}
-	
+
 	/**
 	 * Get the default block keybinding
 	 * 
 	 * @return the default block keybinding
 	 */
-
 	public int getDefaultBlock() {
 		return default_block;
 	}
@@ -261,7 +272,6 @@ public class Resources {
 	 * @param default_block
 	 *            the default block keybinding
 	 */
-
 	public void setDefaultBlock(int default_block) {
 		this.default_block = default_block;
 	}
@@ -271,7 +281,6 @@ public class Resources {
 	 * 
 	 * @return the up keybinding
 	 */
-
 	public int getUp() {
 		return up;
 	}
@@ -282,7 +291,6 @@ public class Resources {
 	 * @param up
 	 *            the up keybinding
 	 */
-
 	public void setUp(int up) {
 		this.up = up;
 	}
@@ -292,7 +300,6 @@ public class Resources {
 	 * 
 	 * @return the down keybinding
 	 */
-
 	public int getDown() {
 		return down;
 	}
@@ -303,7 +310,6 @@ public class Resources {
 	 * @param down
 	 *            the down keybinding
 	 */
-
 	public void setDown(int down) {
 		this.down = down;
 	}
@@ -313,7 +319,6 @@ public class Resources {
 	 * 
 	 * @return the left keybinding
 	 */
-
 	public int getLeft() {
 		return left;
 	}
@@ -324,7 +329,6 @@ public class Resources {
 	 * @param left
 	 *            the left keybinding
 	 */
-
 	public void setLeft(int left) {
 		this.left = left;
 	}
@@ -334,7 +338,6 @@ public class Resources {
 	 * 
 	 * @return the right keybinding
 	 */
-
 	public int getRight() {
 		return right;
 	}
@@ -345,7 +348,6 @@ public class Resources {
 	 * @param right
 	 *            the right keybinding
 	 */
-
 	public void setRight(int right) {
 		this.right = right;
 	}
@@ -355,18 +357,16 @@ public class Resources {
 	 * 
 	 * @return the dash keybinding
 	 */
-
 	public int getDash() {
 		return dash;
 	}
-	
+
 	/**
 	 * Set the dash keybinding
 	 * 
 	 * @param dash
 	 *            the dash keybinding
 	 */
-
 	public void setDash(int dash) {
 		this.dash = dash;
 	}
@@ -377,17 +377,15 @@ public class Resources {
 	 * @param block
 	 *            the block keybinding
 	 */
-
 	public void setBlock(int block) {
 		this.block = block;
 	}
-	
+
 	/**
 	 * Get the block keybinding
 	 * 
 	 * @return the block keybinding
 	 */
-
 	public int getBlock() {
 		return block;
 	}
@@ -397,7 +395,6 @@ public class Resources {
 	 * 
 	 * @return the SFX gain
 	 */
-
 	public int getSFXGain() {
 		return sfx_gain;
 	}
@@ -408,7 +405,6 @@ public class Resources {
 	 * @param sfx_gain
 	 *            the SFX gain
 	 */
-
 	public void setSFXGain(int sfx_gain) {
 		this.sfx_gain = sfx_gain;
 	}
@@ -418,7 +414,6 @@ public class Resources {
 	 * 
 	 * @return the player list
 	 */
-
 	public ArrayList<Character> getPlayerList() {
 		return playerList;
 	}
@@ -427,9 +422,8 @@ public class Resources {
 	 * Add a character to the player list
 	 * 
 	 * @param character
-	 *            the character
+	 *            The character to add to the player list.
 	 */
-
 	public void addPlayerToList(Character character) {
 		playerList.add(character);
 	}
@@ -440,7 +434,6 @@ public class Resources {
 	 * @param playerList
 	 *            the player list
 	 */
-
 	public void setPlayerList(ArrayList<Character> playerList) {
 		this.playerList = playerList;
 	}
@@ -448,9 +441,8 @@ public class Resources {
 	/**
 	 * Get the map
 	 * 
-	 * @return the map
+	 * @return The current map.
 	 */
-
 	public Map getMap() {
 		return map;
 	}
@@ -459,19 +451,22 @@ public class Resources {
 	 * Set the map
 	 * 
 	 * @param map
-	 *            the map
+	 *            The new map.
 	 */
 
 	public void setMap(Map map) {
 		this.map = map;
 	}
 
+	/**
+	 * @return An ArrayList of bad tiles.
+	 */
 	public ArrayList<Tile> getBadTiles() {
 		return bad_tiles;
 	}
 
 	/**
-	 * set the maximum number of lives for each character.
+	 * Deprecated? set the maximum number of lives for each character.
 	 * 
 	 * @param maxDeaths
 	 */
@@ -480,7 +475,7 @@ public class Resources {
 	}
 
 	/**
-	 * get the maximum number of lives for each character.
+	 * Deprecated? get the maximum number of lives for each character.
 	 * 
 	 * @return
 	 */
@@ -489,17 +484,23 @@ public class Resources {
 	}
 
 	/**
-	 * Creates a puck for the hockey game mode.
+	 * Deprecated? Creates a puck for the hockey game mode.
 	 */
 	public void createPuck() {
 		// need new character class to represent puck?
 		this.setPuck(new Puck());
 	}
 
+	/**
+	 * @return The current time (total number of ticks).
+	 */
 	public int getGlobalTimer() {
 		return globalTimer;
 	}
 
+	/**
+	 * Increment the global timer (called each tick).
+	 */
 	public void incrementGlobalTimer() {
 		globalTimer++;
 	}
@@ -512,26 +513,40 @@ public class Resources {
 		return this.destList;
 	}
 
+	/**
+	 * @return An ArrayList of all powerups.
+	 */
 	public ArrayList<Powerup> getPowerupList() {
 		return powerupList;
 	}
 
+	/**
+	 * @param p
+	 *            A powerup to be added to the powerup list.
+	 */
 	public void addPowerup(Powerup p) {
 		powerupList.add(p);
 	}
 
+	/**
+	 * @param p
+	 *            Make the specified powerup inactive.
+	 */
 	public void removePowerup(Powerup p) {
 		p.setActive(false);
 	}
 
+	// Deprecated?
 	public Puck getPuck() {
 		return puck;
 	}
 
+	// Deprecated?
 	public void setPuck(Puck puck) {
 		this.puck = puck;
 	}
 
+	// Deprecated?
 	public Team[] getTeams() {
 		return teams;
 	}
@@ -542,10 +557,11 @@ public class Resources {
 
 	/**
 	 * Get the player colour for a given player (0 for cpu)
-	 * @param no the player number
+	 * 
+	 * @param no
+	 *            the player number
 	 * @return the player colour
 	 */
-	
 	public Color getPlayerColor(int no) {
 		switch (no) {
 		case 0:
@@ -570,49 +586,45 @@ public class Resources {
 			return cpuColour;
 		}
 	}
-	
+
 	// XXX Debug
 	private Point projectedPos;
-	
+
 	/**
 	 * XXX Debug for drawing predicted position of AI
+	 * 
 	 * @return
 	 */
-	public Point getProjectedPos()
-	{
+	public Point getProjectedPos() {
 		return projectedPos;
 	}
-	
+
 	/**
 	 * XXX Debug for drawing predicted position of AI
+	 * 
 	 * @param pos
 	 */
-	public void setProjectedPos(Point pos)
-	{
+	public void setProjectedPos(Point pos) {
 		projectedPos = pos;
 	}
-	
+
 	private Point AINextDest;
-	
-	public Point getAINextdest()
-	{
+
+	public Point getAINextdest() {
 		return AINextDest;
 	}
-	
-	public void setAINextDest(Point nd)
-	{
+
+	public void setAINextDest(Point nd) {
 		AINextDest = nd;
 	}
-	
+
 	private Line normal;
-	
-	public Line getNormal()
-	{
+
+	public Line getNormal() {
 		return normal;
 	}
-	
-	public void setNormal(Line n)
-	{
+
+	public void setNormal(Line n) {
 		this.normal = n;
 	}
 
@@ -623,7 +635,7 @@ public class Resources {
 	public void setClientMoves(LinkedList<NetworkMove> clientMoves) {
 		this.clientMoves = clientMoves;
 	}
-	
+
 	public LinkedList<NetworkMove> getSentClientMoves() {
 		return sentClientMoves;
 	}
@@ -631,31 +643,32 @@ public class Resources {
 	public void setSentClientMoves(LinkedList<NetworkMove> sentClientMoves) {
 		this.sentClientMoves = sentClientMoves;
 	}
-	
+
 	public void transferMoves() {
 		NetworkMove move;
-		while(!clientMoves.isEmpty()) {
+		while (!clientMoves.isEmpty()) {
 			move = clientMoves.remove();
 			sentClientMoves.offer(move);
 		}
 	}
-	
+
+	/**
+	 * @return The character being controlled by this computer.
+	 */
 	public Character getMyCharacter() {
-		for(int i=0; i<this.getPlayerList().size(); i++) {
-			if(this.getPlayerList().get(i).getId().equals(this.getId())) {
+		for (int i = 0; i < this.getPlayerList().size(); i++) {
+			if (this.getPlayerList().get(i).getId().equals(this.getId())) {
 				return this.getPlayerList().get(i);
 			}
 		}
 		return null;
 	}
 
-	public MusicPlayer getMusicPlayer()
-	{
+	public MusicPlayer getMusicPlayer() {
 		return musicPlayer;
 	}
-	
-	public void setMusicPlayer(MusicPlayer mp)
-	{
+
+	public void setMusicPlayer(MusicPlayer mp) {
 		this.musicPlayer = mp;
 	}
 

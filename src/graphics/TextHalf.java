@@ -41,7 +41,7 @@ public class TextHalf extends JPanel {
 		this.character = character;
 
 		name = new JLabel(character.getName());
-		score = new JLabel();
+		score = new JLabel("");
 
 		if (resources.mode == Mode.Deathmatch) {
 			score.setText(character.getScore() + "");
@@ -76,8 +76,6 @@ public class TextHalf extends JPanel {
 
 	public void updateScore() {
 
-		score.setText(character.getScore() + "");
-		
 		if (resources.mode == Mode.Deathmatch) {
 			score.setText(character.getScore() + "");
 		} else if (resources.mode == Mode.LastManStanding) {

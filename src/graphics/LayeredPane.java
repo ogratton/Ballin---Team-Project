@@ -25,6 +25,9 @@ public class LayeredPane extends JLayeredPane {
 	public static boolean splashShowing = true;
 	public static JPanel inGameMenu;
 	public static SplashScreen splash;
+	private Resources resources;
+	private int x;
+	private int y;
 
 	/**
 	 * Create a new layered pane wrapper
@@ -39,14 +42,16 @@ public class LayeredPane extends JLayeredPane {
 
 		super();
 
+		this.resources = resources;
+		
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int x = gd.getDisplayMode().getWidth();
-		int y = gd.getDisplayMode().getHeight();
+		x = gd.getDisplayMode().getWidth();
+		y = gd.getDisplayMode().getHeight();
 
 		view = new GameView(resources, debugPaths);
 		view.setBounds(0, 0, x, y);
 		
-		splash = new SplashScreen(resources, view);
+		splash = new SplashScreen(resources);
 		splash.setBounds(((x - 1100) / 2) , ((y - 300) / 2), 1100, 200);
 		
 		InGameMenu menu = new InGameMenu();
@@ -76,6 +81,13 @@ public class LayeredPane extends JLayeredPane {
 
 	public void repaint() {
 		view.repaint();
+	}
+	
+	public void victory(){
+		VictoryScreen victory = new VictoryScreen(resources);
+		victory.setBounds(((x - 1100) / 2) , ((y - 300) / 2), 1100, 200);
+		add(victory, new Integer(30));
+		
 	}
 
 }

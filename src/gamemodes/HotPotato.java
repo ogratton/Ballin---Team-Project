@@ -27,6 +27,12 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Random rand;
 	private int timer;
 
+	/**
+	 * Create a new hot potato game mode.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public HotPotato(Resources resources) {
 		this.resources = resources;
 
@@ -39,6 +45,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		this.rand = new Random();
 	}
 
+	/*
+	 * Run the logic of this game mode.
+	 */
 	public void run() {
 		// Start game
 		Physics p = new Physics(resources, false);
@@ -71,6 +80,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 	}
 
+	/**
+	 * Place a bomb on a random character.
+	 */
 	private void placeBomb() {
 		boolean success = false;
 		int p;
@@ -87,6 +99,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 	}
 
+	/**
+	 * Find the character with a bomb placed on them and kill them.
+	 */
 	private void explodeBomb() {
 		for (Character c : resources.getPlayerList()) {
 			if (c.hasBomb()) {
@@ -126,6 +141,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		return winner;
 	}
 
+	/**
+	 * Check if the game is over and if so find the last player alive.
+	 */
 	private void checkWinner() {
 		if (playersRemaining() == 1) {
 			gameOver = true;
@@ -166,6 +184,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 		return scores;
 	}
 
+	/**
+	 * @return An ArrayList of each character's time of death, in ascending
+	 *         order.
+	 */
 	public ArrayList<Character> getOrderedTimesOfDeath() {
 		ArrayList<Character> times = new ArrayList<Character>();
 		times.addAll(resources.getPlayerList());
@@ -190,5 +212,4 @@ public class HotPotato extends Thread implements GameModeFFA {
 	public int getTime() {
 		return this.timer;
 	}
-	
 }
