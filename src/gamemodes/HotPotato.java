@@ -116,7 +116,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			c = players.get(p);
 			if (!c.isExploding() && !c.isDead() && !c.hasBomb()) {
 				c.hasBomb(true);
-				System.out.println("Player " + c.getPlayerNumber() + " has been given the bomb!");
+				System.out.println(c.getName() + " has been given the bomb!");
 				success = true;
 			}
 		}
@@ -130,7 +130,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			if (c.hasBomb()) {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
-				System.out.println("Player " + c.getPlayerNumber() + " exploded!");
+				System.out.println(c.getName() + " exploded!");
 				break;
 			}
 		}
