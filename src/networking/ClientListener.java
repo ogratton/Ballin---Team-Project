@@ -77,7 +77,8 @@ public class ClientListener extends Listener {
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
    			cModel.setConnection(connection);
-   			SessionListMenu sessionList = new SessionListMenu(client);
+   			
+   			SessionListMenu sessionList = new SessionListMenu(client, this.cModel);
 			UIRes.switchPanel(sessionList);
 			System.out.println("Client ID: " + cModel.getMyId());
    			// Create a thread for the GUI:
