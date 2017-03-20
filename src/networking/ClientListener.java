@@ -156,6 +156,9 @@ public class ClientListener extends Listener {
 				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
+   				Graphics g = new Graphics(resources, null, false);
+   				g.start();
+   				
    				break;
    			case UPDATE:
    				if(cModel.getResources() != null) {
