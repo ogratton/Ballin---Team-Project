@@ -156,11 +156,6 @@ public class ClientListener extends Listener {
 				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
-   				// create ui thread
-   				
-   				Graphics g = new Graphics(resources, updater, false);
-   				g.start();
-   				
    				break;
    			case UPDATE:
    				if(cModel.getResources() != null) {
@@ -181,6 +176,7 @@ public class ClientListener extends Listener {
            							players.get(i).setFalling(charactersList.get(j).isFalling());
            							players.get(i).setDead(charactersList.get(j).isDead());
            							players.get(i).setDashing(charactersList.get(j).isDashing());
+           							players.get(i).setStamina(charactersList.get(j).getStamina());
            							
            							//System.out.println(charactersList.get(j).isDashing());
            						}
