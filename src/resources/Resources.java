@@ -50,8 +50,6 @@ public class Resources {
 	private int dash = default_dash;
 	private int block = default_block;
 
-	public ArrayList<JPanel> lobbyList = new ArrayList<JPanel>();
-
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think
 	// let's just agree to have 0 as the max
@@ -696,6 +694,10 @@ public class Resources {
 	 */
 	public void setMusicPlayer(MusicPlayer mp) {
 		this.musicPlayer = mp;
+	}
+	
+	public void clearPlayerList(){
+		this.playerList = new ArrayList<>();
 	}
 
 }

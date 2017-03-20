@@ -35,12 +35,13 @@ public class SessionListMenu extends JPanel implements Observer {
 	private String lobbyName;
 	private String gameModeName;
 	private String mapName;
+	
 	private Session session;
 	private Client client;
 	
+	private InLobbyMenu lobby = new InLobbyMenu(session, client);
+	
 	public SessionListMenu(Client client){
-		this.client = client;
-
 		UIRes.cModel.addObserver(this);
 		
 		updateSessionsPanel(client);
@@ -82,23 +83,19 @@ public class SessionListMenu extends JPanel implements Observer {
 				Session newSession = new Session(lobbyName, new ClientInformation(UIRes.cModel.getMyId(), UIRes.username), mapName, mapTiles,
 						gameMode, UIRes.username, 0);
 				
-				this.session = newSession;
 
 				Message createMessage = new Message(Command.SESSION, Note.CREATE, UIRes.cModel.getMyId(), "", "", "",
 						newSession);
 				
+				
 				try {
-					client.sendTCP(createMessage);
+					UIRes.cModel.getConnection().sendTCP(createMessage);
 					System.out.println("Session creation sent.");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				
-				InLobbyMenu lobby = new InLobbyMenu(newSession, client);
-				lobby.setName(newSession.getId());
-				System.out.println(UIRes.resources.lobbyList.add(lobby));
-				
-				
+				lobby.setSession(newSession);
 				UIRes.switchPanel(lobby);
 			}
 
@@ -123,18 +120,15 @@ public class SessionListMenu extends JPanel implements Observer {
 					UIRes.cModel.getAllSessions().get(index).getId(), UIRes.cModel.getAllSessions().get(index).getId());
 					
 			try {
-				client.sendTCP(joinMessage);
-				session = UIRes.cModel.getAllSessions().get(index);
+				UIRes.cModel.getConnection().sendTCP(joinMessage);
 				
-				System.out.println("no. lobbies: " + UIRes.resources.lobbyList.size());
-				
-				for(int i = 0; i < UIRes.resources.lobbyList.size(); i++)
-					if(UIRes.resources.lobbyList.get(i).getName().compareTo(session.getId()) == 0)
-						UIRes.switchPanel(UIRes.resources.lobbyList.get(i));
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			
+			lobby.setSession(UIRes.cModel.getAllSessions().get(index));
+			UIRes.switchPanel(lobby);
 		});
 
 		UIRes.customiseButton(button, true);
@@ -147,7 +141,7 @@ public class SessionListMenu extends JPanel implements Observer {
 			Message message = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), null, UIRes.cModel.getSessionId(),
 					null);
 			try {
-				client.sendTCP(message);
+				UIRes.cModel.getConnection().sendTCP(message);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

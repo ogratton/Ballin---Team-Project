@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.sql.Timestamp;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -24,12 +25,14 @@ import networking.Session;
 import resources.Character;
 
 @SuppressWarnings("serial")
-public class InLobbyMenu extends JPanel implements Observer {
+public class InLobbyMenu extends JPanel implements Observer{
 	
 	private Session session;
+	private Client client;
 	
 	public InLobbyMenu(Session session, Client client){
 		this.session = session;
+		this.client = client;
 		
 		UIRes.cModel.addObserver(this);
 		
@@ -39,19 +42,24 @@ public class InLobbyMenu extends JPanel implements Observer {
 		buttonPanel.add(leaveLobbyButton(client));
 		add(buttonPanel, BorderLayout.PAGE_START);
 		updateInLobbyPanel();
+		add(UIRes.playersPanel, BorderLayout.CENTER);
 	}
 	
 	JButton leaveLobbyButton(Client client) {
 		JButton button = new JButton("Leave Lobby");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
+			
 			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, UIRes.cModel.getMyId(), "", UIRes.cModel.getSessionId(),
 					UIRes.cModel.getHighlightedSessionId());
 			try {
-				client.sendTCP(leaveMessage);
+				UIRes.cModel.getConnection().sendTCP(leaveMessage);
 				UIRes.cModel.setReady(false);
-				UIRes.cModel.deleteObserver(this);
 				SessionListMenu lobbyList = new SessionListMenu(client);
+				System.out.println("model changed: " + UIRes.cModel.hasChanged());
+				updateInLobbyPanel();
+				repaint();
+				revalidate();
 				UIRes.switchPanel(lobbyList);
 
 			} catch (Exception e1) {
@@ -62,17 +70,21 @@ public class InLobbyMenu extends JPanel implements Observer {
 	}
 	
 	void updateInLobbyPanel() {
+		Session session;
 		UIRes.playersPanel.removeAll();
-		for (int i = 1; i < this.getComponentCount(); i++) {
-			this.remove(i);
+		if(UIRes.cModel.getSessionId() != null && (!UIRes.cModel.getSessionId().equals(""))) {
+			session = UIRes.cModel.getSession(UIRes.cModel.getSessionId());
+			System.out.println("Clients in this session at " + new Timestamp(System.currentTimeMillis()) + " :" + session.getAllClients().size());
+			for (int i = 0; i < session.getAllClients().size(); i++) {
+				addPlayerToLobby(session.getAllClients().get(i), i + 1);
+			}
 		}
-		for (int i = 0; i < session.getAllClients().size(); i++) {
-			addPlayerToLobby(session.getAllClients().get(i), i + 1);
+		else {
+			session = this.session;
 		}
 		
-		add(UIRes.playersPanel, BorderLayout.CENTER);
-		repaint();
-		revalidate();
+		UIRes.playersPanel.repaint();
+		UIRes.playersPanel.revalidate();
 
 	}
 	
@@ -114,13 +126,24 @@ public class InLobbyMenu extends JPanel implements Observer {
 		panel.add(Box.createHorizontalGlue());
 		UIRes.playersPanel.add(panel);
 		UIRes.playersPanel.add(Box.createVerticalStrut(20));
-		UIRes.playersPanel.repaint();
 
+	}
+	
+	void setSession(Session session){
+		this.session = session;
+	}
+	
+	Session getSession(){
+		return this.session;
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println(UIRes.username + " lobby update reached");
 		updateInLobbyPanel();
+	//	repaint();
+	//	validate();
+		updateUI();
 	}
 
 }
