@@ -23,6 +23,7 @@ import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
+import resources.Powerup.Power;
 import resources.Resources;
 import resources.Resources.Mode;
 import ui.UIRes;
@@ -366,6 +367,10 @@ public class GameView extends JPanel implements Observer {
 								(int) (actualY + currentOffset + deathModifier + (39.5 * currentMultiplier)));
 
 					}
+				}
+				
+				if(character.hasPowerup() && character.getLastPowerup() == Power.Spike){
+					g.drawImage(character.getSpikes(true), actualX - (int)(8 * currentMultiplier), (int)(actualY + currentOffset - (8 * currentMultiplier)), this);
 				}
 
 				// if the player is dashing, draw the fire sprite
