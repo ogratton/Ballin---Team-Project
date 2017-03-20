@@ -95,7 +95,7 @@ public class ServerListener extends Listener {
 				  	case CREATE:
 				  		System.out.println("Creating Session.");
 				  		senderClient = clients.get(message.getSenderId());
-				  		if(senderClient.getSessionId() != null) {
+				  		if(senderClient.getSessionId() != null && (!senderClient.getSessionId().equals(""))) {
 				  			sessions.get(senderClient.getSessionId()).removeClient(senderClient.getId());
 				  		}
 				  		session = (Session)message.getObject();
@@ -103,6 +103,8 @@ public class ServerListener extends Listener {
 				  		resourcesMap.put(session.getId(), new Resources());
 				  		senderClient.setSessionId(session.getId());
 				  		response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), null, session.getId(), null, sessions);
+				  		
+				  		System.out.println("Client ID: " + senderClient.getId());
 				  		
 				  		// Sends the response to everyone connected to the server.
 				  		for(Connection c : connections.values()) {
@@ -116,7 +118,7 @@ public class ServerListener extends Listener {
 				  		senderClient = clients.get(message.getSenderId());
 				  		sessionId = message.getTargetSessionId();
 					  
-				  		if(senderClient.getSessionId() != null) {
+				  		if(senderClient.getSessionId() != null && (!senderClient.getSessionId().equals(""))) {
 				  			sessions.get(senderClient.getSessionId()).removeClient(senderClient.getId());
 				  		}
 				  		session = sessions.get(sessionId);
@@ -134,9 +136,16 @@ public class ServerListener extends Listener {
 				  	case LEAVE:
 				  		senderClient = clients.get(message.getSenderId());
 				  		senderClient.setReady(false);
-				  		sessionId = message.getTargetSessionId();
+				  		sessionId = message.getCurrentSessionId();
 				  		session = sessions.get(sessionId);
-				  		sessions.get(sessionId).removeClient(senderClient.getId());
+				  		System.out.println("Number of clients in the sessions: " + session.getAllClients().size());
+				  		System.out.println("Sender Client ID: " + senderClient.getId());
+				  		session.removeClient(senderClient.getId());
+				  		
+				  		for(int i=0; i<session.getAllClients().size(); i++) {
+				  			System.out.println("Client ID: " + session.getAllClients().get(i).getId());
+				  		}
+				  		
 				  		senderClient.setSessionId("");
 				  		
 				  		// If the host leaves, set a new host for the session.
@@ -145,6 +154,7 @@ public class ServerListener extends Listener {
 				  			session.setHostName(newHost.getName());
 				  		}
 				  		
+				  		System.out.println("Number of clients in the sessions: " + session.getAllClients().size());
 				  		// If there are no clients in the session, delete the session.
 				  		if(session.getAllClients().size() <= 0) {
 				  			sessions.remove(session.getId());

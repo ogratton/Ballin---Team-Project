@@ -30,7 +30,7 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
-public class SessionListMenu extends JPanel implements Observer{
+public class SessionListMenu extends JPanel implements Observer {
 	
 	private String lobbyName;
 	private String gameModeName;
@@ -79,7 +79,7 @@ public class SessionListMenu extends JPanel implements Observer{
 						gameMode = mode;
 				}
 
-				Session newSession = new Session(lobbyName, new ClientInformation(UIRes.username), mapName, mapTiles,
+				Session newSession = new Session(lobbyName, new ClientInformation(UIRes.cModel.getMyId(), UIRes.username), mapName, mapTiles,
 						gameMode, UIRes.username, 0);
 				
 				this.session = newSession;

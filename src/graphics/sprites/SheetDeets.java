@@ -62,9 +62,6 @@ public class SheetDeets {
 		case HORSE:
 			x = 5;
 			break;
-		case DEFAULT:
-			x = 0;
-			break;
 		}
 
 		return Sprite.getSprite(CHARACTERS, 0, x, CHARACTERS_SIZEX * 8, CHARACTERS_SIZEY);

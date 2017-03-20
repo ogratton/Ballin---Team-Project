@@ -24,9 +24,7 @@ public class InGameMenu extends BaseMenu {
 		JPanel panel2 = new JPanel();
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		map.setLayout(new BorderLayout());
-		panel2.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-		// tried out some margins because I like margins, but it depends what the team thinks (have a look!)
-		// panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
+		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
 		addResumeToGameButton(panel2, panel);
