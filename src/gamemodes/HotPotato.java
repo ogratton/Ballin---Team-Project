@@ -26,6 +26,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Resources resources;
 	private Random rand;
 	private int timer;
+	private boolean isServer;
 
 	/**
 	 * Create a new hot potato game mode.
@@ -44,6 +45,25 @@ public class HotPotato extends Thread implements GameModeFFA {
 		resources.gamemode = this;
 		this.rand = new Random();
 	}
+	
+	/**
+	 * Create a new hot potato game mode.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
+	public HotPotato(Resources resources, boolean isServer) {
+		this.resources = resources;
+
+		// Set up game
+		setAllLives(1);
+		randomRespawn();
+
+		resources.mode = Mode.HotPotato;
+		resources.gamemode = this;
+		this.rand = new Random();
+		this.isServer = isServer;
+	}
 
 	/*
 	 * Run the logic of this game mode.
@@ -52,7 +72,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources, false);
 		p.start();
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		
+		if(!isServer) {
+			SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		}
 
 		timer = 0; // 10*speed of normal timer
 		placeBomb();

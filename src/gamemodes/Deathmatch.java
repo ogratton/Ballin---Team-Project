@@ -2,6 +2,8 @@ package gamemodes;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
@@ -20,6 +22,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private int timer = 30;
+	private boolean isServer = false;
 
 	private String victoryMusic = "grandma";
 
@@ -38,6 +41,23 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 	}
+	
+	/**
+	 * Create a new deathmatch game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
+	public Deathmatch(Resources resources, boolean isServer) {
+		this.resources = resources;
+
+		// Set up game
+		setAllLives(-1);
+		randomRespawn();
+		resources.mode = Mode.Deathmatch;
+		resources.gamemode = this;
+		this.isServer = isServer;
+	}
 
 	@Override
 	public int getTime() {
@@ -51,10 +71,12 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources, false);
 		p.start();
-		// SwingUtilities.invokeLater(new Graphics(resources, null, false));
-
-		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		if(!isServer) {
+			SwingUtilities.invokeLater(new Graphics(resources, null, false));
+		}
+		
+		//Graphics g = new Graphics(resources, null, false);
+		//g.start();
 
 		while (!isGameOver()) {
 			try {

@@ -280,6 +280,29 @@ public class ServerListener extends Listener {
 	
 	public void disconnected(Connection connection) {
 		System.out.println("Disconnection");
+		
+		// Removing client from the server.
+		for (Map.Entry<String, Connection> entry : connections.entrySet()) {
+		    String key = entry.getKey();
+		    Connection value = entry.getValue();
+		    if(value.equals(connection)) {
+		    	ClientInformation client = clients.get(key);
+		    	String sessionId = client.getSessionId();
+		    	sessions.get(sessionId).removeClient(key);
+		    	clients.remove(key);
+		    	connections.remove(key);
+		    	
+		    	Resources resources = resourcesMap.get(sessionId);
+		    	ArrayList<resources.Character> characters = resources.getPlayerList();
+		    	for(int i=0; i<characters.size(); i++) {
+		    		if(characters.get(i).getId().equals(key)) {
+		    			characters.get(i).setLives(0);
+		    			characters.get(i).setDead(true);
+		    		}
+		    	}
+		    }
+		    break;
+		}
 	}
 }
 

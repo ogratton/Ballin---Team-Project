@@ -59,16 +59,16 @@ public class NetworkingDemo {
 		GameModeFFA mode;
 		switch(modeName) {
 		case Deathmatch:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, true);
 			break;
 		case LastManStanding:
-			mode = new LastManStanding(resources, 5);
+			mode = new LastManStanding(resources, 5, true);
 			break;
 		case HotPotato:
-			mode = new HotPotato(resources);
+			mode = new HotPotato(resources, true);
 			break;
 		default:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, true);
 			break;
 		}
 		
