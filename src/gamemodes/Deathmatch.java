@@ -77,11 +77,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 		
 		try{
-		Thread.sleep(1000);
+		Thread.sleep(1500);
 		g.setCountdown(2);
-		Thread.sleep(1000);
+		Thread.sleep(1500);
 		g.setCountdown(1);
-		Thread.sleep(1000);
+		Thread.sleep(1500);
 		}catch(InterruptedException e){
 			e.printStackTrace();
 		}
