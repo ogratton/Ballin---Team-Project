@@ -20,6 +20,7 @@ import gamemodes.LastManStanding;
 import graphics.Graphics;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
 import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -126,8 +127,14 @@ public class ClientListener extends Listener {
    				
    				Session session = cModel.getSession(cModel.getSessionId());
    				String mapName = session.getSessionName();
+   				Map.World style = session.getTileset();
    				Map.World tileset = session.getTileset();
    				Mode modeName = session.getGameMode();
+   				mapName = "map0";
+   				Map map = new Map(1200, 650, style, mapName);
+   				resources.setMap(map);
+   				new MapCosts(resources);
+   				
    				GameModeFFA mode;
    				switch(modeName) {
    				case Deathmatch:
@@ -145,11 +152,12 @@ public class ClientListener extends Listener {
    				}
    				resources.gamemode = mode;
    				
-				resources.setMap(new Map(1200, 675, tileset, mapName));
+				resources.setMap(map);
 				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
    				// create ui thread
+   				
    				Graphics g = new Graphics(resources, updater, false);
    				g.start();
    				

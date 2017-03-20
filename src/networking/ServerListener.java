@@ -197,22 +197,24 @@ public class ServerListener extends Listener {
 			  			client.setReady(true);
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(true);
-			  			List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  			
-			  			// Update player colour and class type of the client on the server.
-			  			for(int i=0; i<characters.size(); i++) {
-			  				if(characters.get(i).equals(client.getId())) {
-			  					characters.get(i).setPlayerNumber(client.getPlayerNumber());
-			  					characters.get(i).setClassType(client.getCharacterClass());
-			  				}
-			  			}
 			  			//System.out.println("Current Session ID: " + message.getCurrentSessionId());
 			  			//System.out.println("Current Session: " + session);
 			  			// If all the clients are ready, then start the game.
 			  			if(session.allClientsReady()) {
 
-							
 			  				NetworkingDemo.startServerGame(session, resourcesMap, sessions, connections);
+			  				
+			  				List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
+			  				
+			  				// Update player colour and class type of the client on the server.
+				  			for(int i=0; i<characters.size(); i++) {
+				  				if(characters.get(i).equals(client.getId())) {
+				  					characters.get(i).setPlayerNumber(client.getPlayerNumber());
+				  					characters.get(i).setClassType(client.getCharacterClass());
+				  				}
+				  			}
+				  			
 			  				session.setGameInProgress(true);
 			  				//List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  				List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();

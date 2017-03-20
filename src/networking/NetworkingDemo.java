@@ -39,7 +39,8 @@ public class NetworkingDemo {
 	public static void startServerGame(Session session, ConcurrentMap<String, Resources> resourcesMap, ConcurrentMap<String, Session> sessions, ConcurrentMap<String, Connection> connections) {
 		
 		// Fetches the variables needed to generate the map from the session object.
-		String mapName = session.getSessionName();
+		String mapName = session.getMapName();
+		mapName = "map0";
 		Map.World style = session.getTileset();
 		
 		// Fetches the game mode from the session object.
