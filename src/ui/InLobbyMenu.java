@@ -105,14 +105,38 @@ public class InLobbyMenu extends JPanel implements Observer{
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
 
+		
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
 			if (readyCheck.getForeground() == Color.RED) {
+				System.out.println("Got here");
 				readyCheck.setForeground(Color.GREEN);
 				client.setReady(true);
+				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+					if(!cModel.isGameInProgress()) {
+						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
+						try {
+							cModel.getConnection().sendTCP(message);
+							cModel.setReady(true);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
 			} else {
 				readyCheck.setForeground(Color.RED);
 				client.setReady(false);
+				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+					if(!cModel.isGameInProgress()) {
+						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+						try {
+							cModel.getConnection().sendTCP(message);
+							cModel.setReady(false);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
 			}
 			System.out.println(client.isReady());
 		});

@@ -186,10 +186,15 @@ public class ServerListener extends Listener {
 			  		case STOP:
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(false);
+			  			session = sessions.get(message.getCurrentSessionId());
+			  			client = session.getClient(message.getSenderId());
+			  			client.setReady(false);
 			  			break;
 			  		// Fires when the client presses "Ready"
 			  		case START:
 			  			session = sessions.get(message.getCurrentSessionId());
+			  			client = session.getClient(message.getSenderId());
+			  			client.setReady(true);
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(true);
 			  			List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
@@ -201,9 +206,12 @@ public class ServerListener extends Listener {
 			  					characters.get(i).setClassType(client.getCharacterClass());
 			  				}
 			  			}
-					  
+			  			//System.out.println("Current Session ID: " + message.getCurrentSessionId());
+			  			//System.out.println("Current Session: " + session);
 			  			// If all the clients are ready, then start the game.
 			  			if(session.allClientsReady()) {
+
+							
 			  				NetworkingDemo.startServerGame(session, resourcesMap, sessions, connections);
 			  				session.setGameInProgress(true);
 			  				//List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
