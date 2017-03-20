@@ -69,6 +69,8 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 				gameModeName = ((Choice) inputs[3]).getSelectedItem();
 
 				mapName = ((Choice) inputs[5]).getSelectedItem();
+				
+				System.out.println("Map name: " + this.mapName);
 
 				Map.World mapTiles = null;
 
@@ -79,12 +81,16 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 
 				Mode gameMode = null;
 				for (Resources.Mode mode : Resources.Mode.values()) {
-					if (mode.toString().compareTo(gameModeName) == 0)
+					if (mode.toString().compareTo(this.gameModeName) == 0)
 						gameMode = mode;
 				}
-
-				Session newSession = new Session(lobbyName, new ClientInformation(cModel.getMyId(), UIRes.username), mapName, mapTiles,
+				
+				
+				
+				Session newSession = new Session(this.lobbyName, new ClientInformation(cModel.getMyId(), UIRes.username), this.mapName, mapTiles,
 						gameMode, UIRes.username, 0);
+				
+				System.out.println("Session map name: " + newSession.getMapName());
 				
 
 				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "",

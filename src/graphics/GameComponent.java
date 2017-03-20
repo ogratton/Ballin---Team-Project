@@ -65,7 +65,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		// create the elements of the game
 		bar = new TopBar(resources);
-		layers = new LayeredPane(resources, debugPaths);
+		layers = new LayeredPane(resources, debugPaths, this);
 		
 		LayeredPane.victoryShowing = false;
 
