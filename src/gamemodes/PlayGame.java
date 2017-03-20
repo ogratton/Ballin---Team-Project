@@ -37,7 +37,7 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "pit";
-		resources.mode = Mode.Deathmatch;
+		resources.mode = Mode.HotPotato;
 		Map.World style = Map.World.LAVA;
 
 		// Music setting:
