@@ -333,7 +333,15 @@ public class GameView extends JPanel implements Observer {
 
 				// draw the arrowhead for the player
 
-				g.drawImage(character.getArrow(fullscreen), actualX,
+				boolean me = false;
+				
+				try{
+					me = UIRes.cModel.getMyCharacter().equals(character);
+				}catch(NullPointerException e){
+					me = character.equals(resources.getPlayerList().get(0));
+				}
+				
+				g.drawImage(character.getArrow(fullscreen, me), actualX,
 						(int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)),
 						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
 

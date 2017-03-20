@@ -32,11 +32,13 @@ public class GameComponent extends JFrame implements ActionListener {
 	private ArrayList<Character> characters;
 	private Timer timer;
 	public static LayeredPane layers;
+	private boolean seenVictory = false;
 	private TopBar bar;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 
 	private boolean fullScreen = false;
+	private boolean keyPressed = false;
 
 	int oldValueX, newValueX, oldValueY, newValueY;
 
@@ -66,7 +68,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		// create the elements of the game
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths, this);
-		
+
 		LayeredPane.victoryShowing = false;
 
 		if (updater != null) {
@@ -118,9 +120,13 @@ public class GameComponent extends JFrame implements ActionListener {
 		bar.paint();
 		bar.updateScores();
 		bar.updateStats();
-		
-		if(resources.gamemode.isGameOver()){
+
+		if (resources.gamemode.isGameOver()) {
 			layers.victory();
+			
+			if(!keyPressed){
+				seenVictory = true;
+			}
 		}
 
 	}
@@ -196,11 +202,11 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
-	public void end(){
+	public void end() {
 		LayeredPane.victoryShowing = false;
 		this.dispose();
 	}
-	
+
 	/**
 	 * Key adapter to receive input from keyboard
 	 * 
@@ -248,18 +254,18 @@ public class GameComponent extends JFrame implements ActionListener {
 			dashKey = resources.getDash();
 
 		}
-		
-		public void keyTyped(KeyEvent e){
-			if(LayeredPane.victoryShowing){
-				end();
-			}
-		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
 
-			int key = e.getKeyCode();
+			keyPressed = false;
+			
+			if (LayeredPane.victoryShowing && !seenVictory) {
+				seenVictory = true;
+			}
 
+			int key = e.getKeyCode();
+			
 			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(false);
 			} else if (key == rightKey) {
@@ -273,12 +279,23 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
+			
+			keyPressed = true;
+			
 			int key = e.getKeyCode();
 
-			if(LayeredPane.splashShowing){
-				layers.setLayer(LayeredPane.splash, new Integer(5));
+			if (LayeredPane.victoryShowing && !seenVictory) {
+				e.consume();
 			}
 			
+			if (LayeredPane.victoryShowing && seenVictory) {
+				end();
+			}
+			
+			if (LayeredPane.splashShowing) {
+				layers.setLayer(LayeredPane.splash, new Integer(5));
+			}
+
 			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(true);
 			} else if (key == rightKey) {
@@ -302,7 +319,6 @@ public class GameComponent extends JFrame implements ActionListener {
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
 				LayeredPane.menuShowing = !LayeredPane.menuShowing;
 			}
-			
 
 		}
 	}

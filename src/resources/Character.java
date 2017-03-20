@@ -114,6 +114,8 @@ public class Character extends Observable implements Collidable_Circle {
 	private BufferedImage currentFrame;
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
+	private BufferedImage arrowMe;
+	private BufferedImage bigArrowMe;
 	private Heading dashDirection = Heading.STILL;
 
 	// So we can control how long a character dashes/blocks for
@@ -147,7 +149,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private int teamNumber;
 
 	private int requestId;
-	
+
 	private boolean reqDashing = false;
 	private int dashCooldown = 0;
 
@@ -261,7 +263,8 @@ public class Character extends Observable implements Collidable_Circle {
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
-		arrow = SheetDeets.getArrowFromPlayer(playerNo);
+		arrow = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 0, 50, 50);
+		arrowMe = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 1, 50, 50);
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
@@ -1444,7 +1447,7 @@ public class Character extends Observable implements Collidable_Circle {
 		case Speed:
 			setMaxDx(maxdx * red_speed_mult);
 			setMaxDy(maxdy * red_speed_mult);
-//			setAcc(acc * 2);
+			// setAcc(acc * 2);
 			break;
 		case Mass:
 			setMass(mass * blue_mass_mult);
@@ -1470,7 +1473,7 @@ public class Character extends Observable implements Collidable_Circle {
 		case Speed:
 			setMaxDx(maxdx / red_speed_mult);
 			setMaxDy(maxdy / red_speed_mult);
-//			setAcc(acc / 2);
+			// setAcc(acc / 2);
 			break;
 		case Mass:
 			setMass(mass / blue_mass_mult);
@@ -1578,6 +1581,7 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 
 		bigArrow = resize(arrow, multiplier);
+		bigArrowMe = resize(arrowMe, multiplier);
 
 		currentFrame = bigRollingSprites.get(0);
 
@@ -1589,11 +1593,17 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @param fullscreen
 	 * @return
 	 */
-	public BufferedImage getArrow(boolean fullscreen) {
+	public BufferedImage getArrow(boolean fullscreen, boolean isPlayer) {
 		if (fullscreen) {
+			if (isPlayer) {
+				return bigArrowMe;
+			}
 			return bigArrow;
 		}
 
+		if (isPlayer) {
+			return arrowMe;
+		}
 		return arrow;
 	}
 
@@ -1751,7 +1761,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public void incrementDeaths() {
 		this.deaths++;
 	}
-	
+
 	public int getDashCooldown() {
 		return dashCooldown;
 	}
@@ -1759,7 +1769,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public void incrementDashCooldown() {
 		this.dashCooldown++;
 	}
-	
+
 	public void setDashCooldown(int n) {
 		dashCooldown = n;
 	}
