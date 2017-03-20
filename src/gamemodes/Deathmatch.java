@@ -23,6 +23,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Resources resources;
 	private int timer = 30;
 	private boolean isServer = false;
+	private int countdown = 3;
 
 	private String victoryMusic = "grandma";
 
@@ -70,10 +71,24 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	public void run() {
 		// Start game
 		Physics p = new Physics(resources, false);
-		p.start();
+		Graphics g = new Graphics(resources, null, false);
 		if(!isServer) {
-			SwingUtilities.invokeLater(new Graphics(resources, null, false));
+			SwingUtilities.invokeLater(g);
 		}
+		
+		try{
+		Thread.sleep(1000);
+		g.setCountdown(2);
+		Thread.sleep(1000);
+		g.setCountdown(1);
+		Thread.sleep(1000);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		g.begin();
+		p.start();
+		
 		
 		//Graphics g = new Graphics(resources, null, false);
 		//g.start();
@@ -164,4 +179,5 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
+
 }

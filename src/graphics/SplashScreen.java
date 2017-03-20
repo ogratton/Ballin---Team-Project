@@ -22,6 +22,8 @@ import ui.UIRes;
 @SuppressWarnings("serial")
 public class SplashScreen extends JPanel {
 
+	private JLabel label3;
+	
 	public SplashScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -65,13 +67,22 @@ public class SplashScreen extends JPanel {
 		label4.setAlignmentX(CENTER_ALIGNMENT);
 		add(label4);
 		
-		JLabel label3 = new JLabel("Press any key to start");
-		UIRes.setCustomFont(label3, 32);
+		label3 = new JLabel(3 + "");
+		UIRes.setCustomFont(label3,64);
 		label3.setAlignmentX(CENTER_ALIGNMENT);
 		add(label3);
 		
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
 
+	}
+	
+	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
+	
+	public void setCountdown(int i){
+		label3.setText(i + "");
 	}
 
 }

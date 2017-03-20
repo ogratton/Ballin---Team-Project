@@ -78,6 +78,15 @@ public class LayeredPane extends JLayeredPane {
 	}
 
 	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
+	
+	public void setCountdown(int i){
+		splash.setCountdown(i);
+	}
+	
+	/**
 	 * Repaint the views contained within this layered pane
 	 */
 

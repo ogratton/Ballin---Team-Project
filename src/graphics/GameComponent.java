@@ -111,6 +111,23 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
+	
+	public void setCountdown(int i){
+		layers.setCountdown(i);
+	}
+	
+	/**
+	 * Send the signal that the game has begun
+	 */
+	
+	public void begin(){
+		layers.setLayer(LayeredPane.splash, new Integer(5));
+	}
+	
+	/**
 	 * What to do on each tick
 	 */
 
@@ -293,7 +310,7 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 			
 			if (LayeredPane.splashShowing) {
-				layers.setLayer(LayeredPane.splash, new Integer(5));
+				
 			}
 
 			if (key == leftKey) {
