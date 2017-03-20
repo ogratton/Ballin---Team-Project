@@ -22,12 +22,12 @@ public class PathFindingJUnit
 		resources = new Resources();
 	}
 	
-	@Test
-	public void aStartTest()
-	{
-		AStarSearch aStar = new AStarSearch(resources);
-		// TODO
-	}
+//	@Test
+//	public void aStarTest()
+//	{
+//		AStarSearch aStar = new AStarSearch(resources);
+//		// TODO
+//	}
 		
 	/**
 	 * 

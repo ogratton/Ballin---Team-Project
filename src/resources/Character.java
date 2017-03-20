@@ -22,10 +22,13 @@ import resources.Powerup.Power;
 public class Character extends Observable implements Collidable_Circle {
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 25;
-	private static final double default_max_speed_x = 3;
-	private static final double default_max_speed_y = 3;
+	private static final double default_max_speed_x = 2.75;
+	private static final double default_max_speed_y = 2.75;
 	private static final double default_acc = 0.1;
 	private static final double default_restitution = 0.7; // 'bounciness'
+	private static final double blue_mass_mult = 50;
+	private static final double red_speed_mult = 2;
+	private static final Random r = new Random();
 
 	public enum Heading {
 		N, E, S, W, NE, NW, SE, SW, STILL
@@ -33,7 +36,37 @@ public class Character extends Observable implements Collidable_Circle {
 
 	// this will have all the Character classes in use.
 	public enum Class {
-		DEFAULT, WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
+		WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
+
+		/**
+		 * Get a random class
+		 * 
+		 * @return the random class
+		 */
+
+		public static Class getRandomClass() {
+
+			int x = r.nextInt(6);
+
+			switch (x) {
+			case 0:
+				return Class.WIZARD;
+			case 1:
+				return Class.ARCHER;
+			case 2:
+				return Class.WARRIOR;
+			case 3:
+				return Class.MONK;
+			case 4:
+				return Class.WITCH;
+			case 5:
+				return Class.HORSE;
+			default:
+				return Class.WIZARD;
+			}
+
+		}
+
 	}; // add to this as we develop more classes.
 
 	private boolean isAI = false;
@@ -65,7 +98,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private double x = 0.0, y = 0.0;
 	private int radius = 0;
 	private Heading direction = Heading.STILL;
-	private Class classType = Class.DEFAULT;
+	private Class classType = Class.WIZARD;
 
 	// variables imported from CharacterModel
 	private BufferedImage characterSheet;
@@ -89,7 +122,7 @@ public class Character extends Observable implements Collidable_Circle {
 	// 0 is empty
 	private int stamina = maxStamina;
 	// Stamina used when dashing/blocking
-	private int dashStamina = 150;
+	private int dashStamina = 90;
 	private int blockStamina = 75;
 
 	// Store this character's score
@@ -139,7 +172,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * Default character with default sprite
 	 */
 	public Character() {
-		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.DEFAULT, 0, "Player");
+		this(default_mass, 0, 0, default_radius, Heading.STILL, Class.WIZARD, 0, "Player");
 	}
 
 	/**
@@ -1405,12 +1438,12 @@ public class Character extends Observable implements Collidable_Circle {
 		lastPowerupTime = time;
 		switch (pow) {
 		case Speed:
-			setMaxDx(maxdx * 2);
-			setMaxDy(maxdy * 2);
-			setAcc(acc * 2);
+			setMaxDx(maxdx * red_speed_mult);
+			setMaxDy(maxdy * red_speed_mult);
+//			setAcc(acc * 2);
 			break;
 		case Mass:
-			setMass(mass * 10);
+			setMass(mass * blue_mass_mult);
 			setMaxDx(maxdx / 2);
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
@@ -1425,12 +1458,12 @@ public class Character extends Observable implements Collidable_Circle {
 	public void revertPowerup() {
 		switch (lastPowerup) {
 		case Speed:
-			setMaxDx(maxdx / 2);
-			setMaxDy(maxdy / 2);
-			setAcc(acc / 2);
+			setMaxDx(maxdx / red_speed_mult);
+			setMaxDy(maxdy / red_speed_mult);
+//			setAcc(acc / 2);
 			break;
 		case Mass:
-			setMass(mass / 10);
+			setMass(mass / blue_mass_mult);
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
