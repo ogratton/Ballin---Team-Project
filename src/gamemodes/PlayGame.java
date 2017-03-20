@@ -36,8 +36,8 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "infinity";
-		resources.mode = Mode.Deathmatch;
+		String mapName = "asteroid";
+		resources.mode = Mode.LastManStanding;
 		Map.World style = Map.World.CAVE;
 
 		// Music setting:

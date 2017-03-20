@@ -240,7 +240,7 @@ public class Physics extends Thread implements ActionListener {
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
 				// If c has collided with someone else in the last 5 seconds
-				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 500) {
+				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 150) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
