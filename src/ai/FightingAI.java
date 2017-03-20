@@ -2,7 +2,6 @@ package ai;
 
 import java.awt.Point;
 
-import ai.pathfinding.StaticHeuristics;
 import resources.Character;
 import resources.Resources;
 

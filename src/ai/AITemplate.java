@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import ai.AITemplate.Behaviour;
 import ai.pathfinding.AStarSearch;
 import ai.pathfinding.Line;
 import ai.pathfinding.StaticHeuristics;
