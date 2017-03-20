@@ -26,10 +26,12 @@ import resources.Map.Tile;
  */
 public class Resources {
 
-	
 	public static final boolean silent = true; // so alex can run the game :)
-	
-	public enum Mode { Deathmatch, LastManStanding, HotPotato, Hockey, Debug };
+
+	public enum Mode {
+		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
+	};
+
 	// Default game mode
 	public Mode mode = Mode.HotPotato;
 	public GameModeFFA gamemode;
@@ -98,6 +100,9 @@ public class Resources {
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
+	/**
+	 * Creates a new resources object and defines which tiles are not walkable ('bad')
+	 */
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
 		bad_tiles.add(Tile.ABYSS);
@@ -464,24 +469,6 @@ public class Resources {
 	}
 
 	/**
-	 * Deprecated? set the maximum number of lives for each character.
-	 * 
-	 * @param maxDeaths
-	 */
-	public void setMaxDeaths(int maxDeaths) {
-		this.maxDeaths = maxDeaths;
-	}
-
-	/**
-	 * Deprecated? get the maximum number of lives for each character.
-	 * 
-	 * @return
-	 */
-	public int maxDeaths() {
-		return maxDeaths;
-	}
-
-	/**
 	 * Deprecated? Creates a puck for the hockey game mode.
 	 */
 	public void createPuck() {
@@ -503,10 +490,21 @@ public class Resources {
 		globalTimer++;
 	}
 
+	/**
+	 * DEBUG: set the list of waypoints for drawing by GameView
+	 * 
+	 * @param destList
+	 *            waypoints determined by AI
+	 */
 	public void setDestList(LinkedList<Point> destList) {
 		this.destList = destList;
 	}
 
+	/**
+	 * DEBUG: Get the list of waypoints being followed by the AI
+	 * 
+	 * @return
+	 */
 	public LinkedList<Point> getDestList() {
 		return this.destList;
 	}
@@ -608,20 +606,40 @@ public class Resources {
 
 	private Point AINextDest;
 
+	/**
+	 * DEBUG: Get the point which the AI is trying to get to
+	 * 
+	 * @return
+	 */
 	public Point getAINextdest() {
 		return AINextDest;
 	}
 
+	/**
+	 * DEBUG: Set the point that the AI is trying to get to
+	 * 
+	 * @param nd
+	 */
 	public void setAINextDest(Point nd) {
 		AINextDest = nd;
 	}
 
 	private Line normal;
 
+	/**
+	 * DEBUG: Get the normal to the next AI destination
+	 * 
+	 * @return
+	 */
 	public Line getNormal() {
 		return normal;
 	}
 
+	/**
+	 * DEBUG: Set the normal to the next AI destination
+	 * 
+	 * @param n
+	 */
 	public void setNormal(Line n) {
 		this.normal = n;
 	}
@@ -662,12 +680,24 @@ public class Resources {
 		return null;
 	}
 
+	/**
+	 * @return the music player object
+	 */
 	public MusicPlayer getMusicPlayer() {
 		return musicPlayer;
 	}
 
+	/**
+	 * set the music player object
+	 * 
+	 * @param mp
+	 */
 	public void setMusicPlayer(MusicPlayer mp) {
 		this.musicPlayer = mp;
+	}
+	
+	public void clearPlayerList(){
+		this.playerList = new ArrayList<>();
 	}
 
 }

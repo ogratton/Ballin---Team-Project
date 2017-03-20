@@ -5,6 +5,16 @@ import java.util.TreeSet;
 
 import resources.Map.Tile;
 
+/**
+ * Generates 2 masks for the map in resources
+ * proxMask: how close any given tile is to a bad tile
+ * costMask: costMask with an exponential decay formula passed over it
+ * 
+ * Used for pathfinding and Map.randPointOnMap
+ * 
+ * @author Oliver Gratton
+ *
+ */
 public class MapCosts
 {
 	private Resources resources;
@@ -16,6 +26,13 @@ public class MapCosts
 	int width, height;
 	int biggestDimension;
 
+	/**
+	 * Everything is performed in the constructor,
+	 * hence there is no need to store the MapCosts object
+	 * Just call this constructor and everything will be done
+	 * 
+	 * @param resources game resources that must have had its map set
+	 */
 	public MapCosts(Resources resources)
 	{
 		this.resources = resources;
@@ -35,6 +52,9 @@ public class MapCosts
 		resources.getMap().setCostMask(costMask);
 	}
 
+	/**
+	 * DEBUG: Print the proximity mask array
+	 */
 	@SuppressWarnings("unused")
 	private void printProxMask()
 	{
@@ -48,6 +68,9 @@ public class MapCosts
 		}
 	}
 	
+	/**
+	 * DEBUG: Print the Cost mask array
+	 */
 	@SuppressWarnings("unused")
 	private void printCostMask()
 	{
@@ -67,7 +90,6 @@ public class MapCosts
 	 * An abyss tile obviously has the highest cost and the cost decreases
 	 * exponentially as we move farther from the edge
 	 * 
-	 * @param resources we will add the array directly into resources
 	 */
 	private void genMapCostsMask()
 	{
@@ -106,7 +128,7 @@ public class MapCosts
 	 * 
 	 * @param i
 	 * @param j
-	 * @return
+	 * @return how far away it is from a bad tile
 	 */
 	private int findProx(int i, int j)
 	{

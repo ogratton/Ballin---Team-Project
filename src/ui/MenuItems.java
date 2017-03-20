@@ -51,6 +51,7 @@ public class MenuItems extends UIRes {
 	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseButton(startButton, true);
+		
 		startButton.addActionListener(e -> {
 			PlayGame.start(resources);
 

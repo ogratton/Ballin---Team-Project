@@ -66,6 +66,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		// create the elements of the game
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths);
+		
+		LayeredPane.victoryShowing = false;
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -194,6 +196,11 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
+	public void end(){
+		LayeredPane.victoryShowing = false;
+		this.dispose();
+	}
+	
 	/**
 	 * Key adapter to receive input from keyboard
 	 * 
@@ -240,6 +247,12 @@ public class GameComponent extends JFrame implements ActionListener {
 			blockKey = resources.getBlock();
 			dashKey = resources.getDash();
 
+		}
+		
+		public void keyTyped(KeyEvent e){
+			if(LayeredPane.victoryShowing){
+				end();
+			}
 		}
 
 		@Override
