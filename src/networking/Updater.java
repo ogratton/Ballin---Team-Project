@@ -55,8 +55,8 @@ public class Updater extends JPanel implements Observer {
 			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {		
 				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
 				
-				info.sendDashing = hasDashingChanged(characters.get(i).isDashing()) ? true : false;
-				info.sendBlocking = hasBlockingChanged(characters.get(i).isBlocking()) ? true : false;
+				//info.sendDashing = hasDashingChanged(characters.get(i).isDashing()) ? true : false;
+				//info.sendBlocking = hasBlockingChanged(characters.get(i).isBlocking()) ? true : false;
 				
 //				if(info.sendDashing) {
 //					System.out.println("dashing sent by client");
