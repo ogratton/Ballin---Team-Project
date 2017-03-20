@@ -20,6 +20,7 @@ import gamemodes.LastManStanding;
 import graphics.Graphics;
 import resources.Character;
 import resources.Map;
+import resources.MapCosts;
 import resources.MapReader;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -48,8 +49,11 @@ public class ClientListener extends Listener {
    			switch(message.getNote()) {
    			case COMPLETED:
    				System.out.println("Received sessions from Server");
+   				System.out.println("Current Session ID: " + cModel.getSessionId());
+   				//cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
+   				System.out.println("Number of Sessions: " + sessions.values().size());
    				break;
    			case CREATED:
    				System.out.println("Session created");
@@ -59,23 +63,25 @@ public class ClientListener extends Listener {
    				break;
    			case JOINED:
    				System.out.println("Session Joined");
+   				cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
-   				cModel.setSessionId(message.getCurrentSessionId());
    				break;
    			case LEFT:
    				System.out.println("Session Left");
+   				cModel.setSessionId(null);
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
-   				cModel.setSessionId(null);
    				break;
    			}
    			break;
    		case SEND_ID:
    			cModel.setClientInformation(new ClientInformation(message.getSenderId(), message.getMessage()));
    			cModel.setConnection(connection);
-   			SessionListMenu sessionList = new SessionListMenu(client);
+   			
+   			SessionListMenu sessionList = new SessionListMenu(client, this.cModel);
 			UIRes.switchPanel(sessionList);
+			System.out.println("Client ID: " + cModel.getMyId());
    			// Create a thread for the GUI:
 //   		    ClientGUI gui = new ClientGUI(cModel, message.getMessage(), client);
 //   		    gui.start();
@@ -121,8 +127,14 @@ public class ClientListener extends Listener {
    				
    				Session session = cModel.getSession(cModel.getSessionId());
    				String mapName = session.getSessionName();
+   				Map.World style = session.getTileset();
    				Map.World tileset = session.getTileset();
    				Mode modeName = session.getGameMode();
+   				mapName = "map0";
+   				Map map = new Map(1200, 650, style, mapName);
+   				resources.setMap(map);
+   				new MapCosts(resources);
+   				
    				GameModeFFA mode;
    				switch(modeName) {
    				case Deathmatch:
@@ -140,12 +152,11 @@ public class ClientListener extends Listener {
    				}
    				resources.gamemode = mode;
    				
-				resources.setMap(new Map(1200, 675, tileset, mapName));
+				resources.setMap(map);
 				//new MapCosts(resources);
    				cModel.setResources(resources);
    				
-   				// create ui thread
-   				Graphics g = new Graphics(resources, updater, false);
+   				Graphics g = new Graphics(resources, null, false);
    				g.start();
    				
    				break;
@@ -168,6 +179,7 @@ public class ClientListener extends Listener {
            							players.get(i).setFalling(charactersList.get(j).isFalling());
            							players.get(i).setDead(charactersList.get(j).isDead());
            							players.get(i).setDashing(charactersList.get(j).isDashing());
+           							players.get(i).setStamina(charactersList.get(j).getStamina());
            							
            							//System.out.println(charactersList.get(j).isDashing());
            						}

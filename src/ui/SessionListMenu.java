@@ -5,6 +5,7 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,6 +22,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import networking.ClientInformation;
 import networking.Command;
+import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
@@ -29,15 +31,22 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
-public class SessionListMenu extends JPanel implements Observer{
+public class SessionListMenu<ComponentDataModel> extends JPanel implements Observer {
 	
 	private String lobbyName;
 	private String gameModeName;
 	private String mapName;
-	private Session session;
-	private InLobbyMenu lobbyPanel;
 	
-	public SessionListMenu(Client client){
+	private Session session;
+	private Client client;
+	private ConnectionDataModel cModel;
+	private InLobbyMenu lobby ;
+	
+	
+	public SessionListMenu(Client client, ConnectionDataModel cModel){
+		this.cModel = cModel;
+		cModel.addObserver(this);
+		lobby = new InLobbyMenu(session, client, cModel, this);
 		updateSessionsPanel(client);
 		setLayout(new BorderLayout());
 		add(addSessionButtons(client, this), BorderLayout.PAGE_START);
@@ -60,6 +69,8 @@ public class SessionListMenu extends JPanel implements Observer{
 				gameModeName = ((Choice) inputs[3]).getSelectedItem();
 
 				mapName = ((Choice) inputs[5]).getSelectedItem();
+				
+				System.out.println("Map name: " + this.mapName);
 
 				Map.World mapTiles = null;
 
@@ -70,27 +81,31 @@ public class SessionListMenu extends JPanel implements Observer{
 
 				Mode gameMode = null;
 				for (Resources.Mode mode : Resources.Mode.values()) {
-					if (mode.toString().compareTo(gameModeName) == 0)
+					if (mode.toString().compareTo(this.gameModeName) == 0)
 						gameMode = mode;
 				}
-
-				Session newSession = new Session(lobbyName, new ClientInformation(UIRes.username), mapName, mapTiles,
+				
+				
+				
+				Session newSession = new Session(this.lobbyName, new ClientInformation(cModel.getMyId(), UIRes.username), this.mapName, mapTiles,
 						gameMode, UIRes.username, 0);
 				
-				this.session = newSession;
+				System.out.println("Session map name: " + newSession.getMapName());
+				
 
-				Message createMessage = new Message(Command.SESSION, Note.CREATE, UIRes.cModel.getMyId(), "", "", "",
+				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "",
 						newSession);
+				
+				
 				try {
-					client.sendTCP(createMessage);
+					cModel.getConnection().sendTCP(createMessage);
 					System.out.println("Session creation sent.");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				
-				InLobbyMenu lobby = new InLobbyMenu(newSession, client);
-
-				updateSessionsPanel(client);
+				lobby.setSession(newSession);
+				//lobby.setModel(cModel);
 				UIRes.switchPanel(lobby);
 			}
 
@@ -111,20 +126,20 @@ public class SessionListMenu extends JPanel implements Observer{
 					index = i;
 			}
 
-			Message joinMessage = new Message(Command.SESSION, Note.JOIN, UIRes.cModel.getMyId(), "",
-					UIRes.cModel.getAllSessions().get(index).getId(), UIRes.cModel.getAllSessions().get(index).getId());
-			
-			
+			Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
+					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 					
 			try {
-				client.sendTCP(joinMessage);
-				session = UIRes.cModel.getAllSessions().get(index);
-				InLobbyMenu lobby = new InLobbyMenu(session, client);
-				UIRes.switchPanel(lobby);
+				cModel.getConnection().sendTCP(joinMessage);
+				
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			
+			lobby.setSession(cModel.getAllSessions().get(index));
+			//lobby.setModel(cModel);
+			UIRes.switchPanel(lobby);
 		});
 
 		UIRes.customiseButton(button, true);
@@ -134,11 +149,10 @@ public class SessionListMenu extends JPanel implements Observer{
 	JButton refreshSessionList(Client client) {
 		JButton button = new JButton("Refresh");
 		button.addActionListener(e -> {
-			Message message = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), null, UIRes.cModel.getSessionId(),
+			Message message = new Message(Command.SESSION, Note.INDEX, cModel.getMyId(), null, cModel.getSessionId(),
 					null);
 			try {
-				client.sendTCP(message);
-				updateSessionsPanel(client);
+				cModel.getConnection().sendTCP(message);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -206,9 +220,9 @@ public class SessionListMenu extends JPanel implements Observer{
 		UIRes.sessionsPanels.removeAll();
 		UIRes.sessionPanelsList.removeAll(UIRes.sessionPanelsList);
 		UIRes.sessionsPanels.setLayout(new BoxLayout(UIRes.sessionsPanels, BoxLayout.Y_AXIS));
-		for (int i = 0; i < UIRes.cModel.getAllSessions().size(); i++) {
-			JPanel session = getSessionPanel(UIRes.cModel.getAllSessions().get(i));
-			if (!UIRes.cModel.getAllSessions().get(i).getAllClients().isEmpty()) {
+		for (int i = 0; i < cModel.getAllSessions().size(); i++) {
+			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
+			if (!cModel.getAllSessions().get(i).getAllClients().isEmpty()) {
 				UIRes.sessionPanelsList.add(session);
 				UIRes.sessionsPanels.add(session);
 			}
@@ -267,8 +281,8 @@ public class SessionListMenu extends JPanel implements Observer{
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		updateSessionsPanel(client);
 		repaint();
-		
 	}
 
 }

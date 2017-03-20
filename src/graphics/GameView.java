@@ -23,6 +23,7 @@ import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
+import resources.Powerup.Power;
 import resources.Resources;
 import resources.Resources.Mode;
 import ui.UIRes;
@@ -62,7 +63,6 @@ public class GameView extends JPanel implements Observer {
 	private BufferedImage mapSprite;
 	private BufferedImage bigMapSprite;
 	private BufferedImage currentMapSprite;
-	private BufferedImage previewMapSprite;
 
 	// for debugging pathfinding
 	private boolean debugPaths = false;
@@ -124,11 +124,7 @@ public class GameView extends JPanel implements Observer {
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(mapSprite, 0, 0, (int) fullScreenMapWidth, (int) fullScreenMapHeight, 0, 0, w, h, null);
 		g.dispose();
-		previewMapSprite = new BufferedImage(960, 520, mapSprite.getType());
-		g = previewMapSprite.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(mapSprite, 0, 0, 960, 520, 0, 0, w, h, null);
-		g.dispose();
+
 		currentMapSprite = mapSprite;
 	}
 	
@@ -332,11 +328,21 @@ public class GameView extends JPanel implements Observer {
 						(int) adjustedPlayerSize, this);
 
 				// draw the arrowhead for the player
-
-				g.drawImage(character.getArrow(fullscreen), actualX,
+				// if the player is actually controlling this character have it glow
+				boolean me = false;
+				
+				try{
+					me = UIRes.cModel.getMyCharacter().equals(character);
+				}catch(NullPointerException e){
+					me = character.equals(resources.getPlayerList().get(0));
+				}
+				
+				g.drawImage(character.getArrow(fullscreen, me), actualX,
 						(int) (actualY + (currentOffset - (50 * currentMultiplier) + deathModifier)),
 						(int) adjustedPlayerSize, (int) adjustedPlayerSize, this);
-
+				
+				// if the character has the bomb draw that (hot potato)
+				
 				if (resources.mode == Mode.HotPotato) {
 					if (character.hasBomb()) {
 						g.drawImage(SheetDeets.getBombSprite(), actualX + (int) (30 * currentMultiplier),
@@ -358,6 +364,12 @@ public class GameView extends JPanel implements Observer {
 								(int) (actualY + currentOffset + deathModifier + (39.5 * currentMultiplier)));
 
 					}
+				}
+				
+				// if the character has spikes draw them
+				
+				if(character.hasPowerup() && character.getLastPowerup() == Power.Spike && !character.isDead()){
+					g.drawImage(character.getSpikes(true), actualX - (int)(8 * currentMultiplier), (int)(actualY + currentOffset - (8 * currentMultiplier)), this);
 				}
 
 				// if the player is dashing, draw the fire sprite
@@ -420,6 +432,8 @@ public class GameView extends JPanel implements Observer {
 			}
 		}
 
+		// draw any powerups on the map
+		
 		for (Powerup p : resources.getPowerupList()) {
 			if (p.isActive()) {
 				g.drawImage(p.getSprite(), (int) ((p.getX() - p.getRadius()) * currentMultiplier),
@@ -437,13 +451,9 @@ public class GameView extends JPanel implements Observer {
 			g.fillRect(0, (int) (currentWindowHeight - currentOffset), (int) currentWindowWidth, (int) currentOffset);
 		}
 
-		if (resources.gamemode.isGameOver()) {
-			g.setColor(Color.YELLOW);
-			g.fillRect(600, 200, 500, 500);
-			g.setColor(Color.RED);
-			g.drawString("you are winner", 650, 650);
-		}
-
+		
+		// do the sync
+		
 		Toolkit.getDefaultToolkit().sync();
 	}
 
@@ -495,9 +505,6 @@ public class GameView extends JPanel implements Observer {
 		setPreferredSize(new Dimension((int) (currentMapWidth + currentOffset * 2),
 				(int) (currentMapHeight + currentOffset * 2)));
 	}
-	
-	public BufferedImage getMapSprite(){
-		return this.previewMapSprite;
-	}
+
 
 }

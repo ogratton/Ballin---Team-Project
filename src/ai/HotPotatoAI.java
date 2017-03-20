@@ -41,6 +41,10 @@ public class HotPotatoAI extends AITemplate
 
 	}
 
+	/**
+	 * Not really necessary for this mode but here unless
+	 * we get here by accident
+	 */
 	@Override
 	protected void rovingBehaviour() throws InterruptedException
 	{
@@ -50,11 +54,13 @@ public class HotPotatoAI extends AITemplate
 		if (character.hasBomb())
 		{
 			setBehaviour(Behaviour.AGGRESSIVE);
+//			System.out.println(">" + character.getName() + " has become aggressive through roving");
 			return;
 		}
 		else
 		{
 			setBehaviour(Behaviour.COWARD);
+//			System.out.println(">" + character.getName() + " has become cowardly through roving");
 			return;
 		}
 
@@ -78,6 +84,7 @@ public class HotPotatoAI extends AITemplate
 					// if no-one else has it, assume we do
 					// should never happen
 					setBehaviour(Behaviour.AGGRESSIVE);
+//					System.out.println(">" + character.getName() + " has become aggressive through NPE");
 				}
 
 				// work out our distance to them
@@ -135,6 +142,7 @@ public class HotPotatoAI extends AITemplate
 		else
 		{
 			setBehaviour(Behaviour.AGGRESSIVE);
+//			System.out.println(">" + character.getName() + " has been given the bomb");
 			return;
 		}
 
@@ -149,11 +157,14 @@ public class HotPotatoAI extends AITemplate
 	{
 		if (character.hasBomb())
 		{
+			// TODO I think the problem is that when a player explodes their position remains, like a ghost
+			
 			defaultAggressiveBehaviour();
 		}
 		else
 		{
 			setBehaviour(Behaviour.COWARD);
+//			System.out.println(">" + character.getName() + " has lost the bomb");
 		}
 	}
 

@@ -2,7 +2,6 @@ package ai;
 
 import java.awt.Point;
 
-import ai.pathfinding.StaticHeuristics;
 import resources.Character;
 import resources.Resources;
 
@@ -59,10 +58,11 @@ public class FightingAI extends AITemplate
 			if (distToNearestPlayer < 1000)
 			{
 				setBehaviour(Behaviour.AGGRESSIVE);
-				//return;
-				// XXX Even though we should return here, it seems to work better if we don't
-				// So I shall leave it
-				// This is why in pathfinding test it does loads of random points after the player is killed
+				// XXX this is a curious return statement as in general the game works
+				// better without it, except for the small issue of its absence sometimes
+				// causing the AI to sit and pathfind forever
+				// Probably best to leave it in...
+				return;
 			}
 
 			Point charPos = getCurrentTileCoords();
@@ -85,11 +85,12 @@ public class FightingAI extends AITemplate
 
 	/**
 	 * This AI has no need for this behaviour
-	 * Left blank
+	 * Just go back to roving
 	 */
 	@Override
 	protected void cowardBehaviour() throws InterruptedException
 	{
+		setBehaviour(Behaviour.ROVING);
 	}
 
 	/**

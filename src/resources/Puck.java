@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.Observable;
 
 import graphics.sprites.SheetDeets;
-
+// Deprecated?
 public class Puck extends Observable implements Collidable_Circle {
 	int radius = 4;
 	double x,y,dx,dy = 0;

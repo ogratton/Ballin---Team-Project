@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
 import resources.Character;
+import resources.Resources;
+import ui.UIRes;
 
 /**
  * The sprite half of a player info panel
@@ -19,6 +21,7 @@ import resources.Character;
 public class SpriteHalf extends JPanel {
 
 	private Character character;
+	private Resources resources;
 	private boolean powerupPresent = false;
 	private boolean bombPresent = false;
 
@@ -27,12 +30,13 @@ public class SpriteHalf extends JPanel {
 	 * @param character the character detailed by the panel
 	 */
 	
-	public SpriteHalf(Character character) {
+	public SpriteHalf(Character character, Resources resources) {
 		
 		this.character = character;
+		this.resources = resources;
 		repaint();
 		
-		setPreferredSize(new Dimension(175, 50));
+		setPreferredSize(new Dimension(150, 50));
 		
 	}
 
@@ -44,24 +48,32 @@ public class SpriteHalf extends JPanel {
 		
 		super.paintComponent(g);
 		
-		g.drawImage(character.getArrow(false), 25, -15, this);
-		g.drawImage(character.getFirstFrame(), 75, 0, this);
+		boolean me = false;
+		
+		try{
+			me = UIRes.cModel.getMyCharacter().equals(character);
+		}catch(NullPointerException e){
+			me = character.equals(resources.getPlayerList().get(0));
+		}
+		
+		g.drawImage(character.getArrow(false, me), 0, -15, this);
+		g.drawImage(character.getFirstFrame(), 50, 0, this);
 		
 		if (character.hasPowerup()) {
 
-			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 125, 0, this);
+			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
 			powerupPresent = true;
 		} else if (powerupPresent) {
-			g.clearRect(125, 0, 50, 50);
+			g.clearRect(100, 0, 50, 50);
 			powerupPresent = false;
 		}
 		
 		if (character.hasBomb()) {
 
-			g.drawImage(SheetDeets.getBombSprite(), 125, 0, this);
+			g.drawImage(SheetDeets.getBombSprite(), 100, 0, this);
 			bombPresent = true;
 		} else if (bombPresent) {
-			g.clearRect(125, 0, 50, 50);
+			g.clearRect(100, 0, 50, 50);
 			bombPresent = false;
 		}
 	}

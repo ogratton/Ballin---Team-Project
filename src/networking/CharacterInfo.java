@@ -10,6 +10,7 @@ public class CharacterInfo {
 	public boolean sendDashing, sendBlocking;
 	private int playerNumber;
 	private int requestId;
+	private int stamina;
 	
 	public CharacterInfo() {
 		
@@ -22,7 +23,7 @@ public class CharacterInfo {
 		this.playerNumber = playerNumber;
 	}
 	
-	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId, int stamina) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -32,6 +33,7 @@ public class CharacterInfo {
 		this.isDashing = isDashing;
 		this.isBlocking = isBlocking;
 		this.requestId = requestId;
+		this.stamina = stamina;
 	}
 
 	public CharacterInfo(String id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean punch, boolean block, int requestId) {
@@ -165,5 +167,15 @@ public class CharacterInfo {
 	public void setRequestId(int requestId) {
 		this.requestId = requestId;
 	}
+
+	public int getStamina() {
+		return stamina;
+	}
+
+	public void setStamina(int stamina) {
+		this.stamina = stamina;
+	}
+	
+	
 	
 }

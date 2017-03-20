@@ -26,7 +26,14 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Resources resources;
 	private Random rand;
 	private int timer;
+	private boolean isServer;
 
+	/**
+	 * Create a new hot potato game mode.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public HotPotato(Resources resources) {
 		this.resources = resources;
 
@@ -38,13 +45,50 @@ public class HotPotato extends Thread implements GameModeFFA {
 		resources.gamemode = this;
 		this.rand = new Random();
 	}
+	
+	/**
+	 * Create a new hot potato game mode.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
+	public HotPotato(Resources resources, boolean isServer) {
+		this.resources = resources;
 
+		// Set up game
+		setAllLives(1);
+		randomRespawn();
+
+		resources.mode = Mode.HotPotato;
+		resources.gamemode = this;
+		this.rand = new Random();
+		this.isServer = isServer;
+	}
+
+	/*
+	 * Run the logic of this game mode.
+	 */
 	public void run() {
-		// Start game
+		// start the game
 		Physics p = new Physics(resources, false);
+		Graphics g = new Graphics(resources, null, false);
+		if(!isServer) {
+			SwingUtilities.invokeLater(g);
+		}
+		
+		try{
+		Thread.sleep(1500);
+		g.setCountdown(2);
+		Thread.sleep(1500);
+		g.setCountdown(1);
+		Thread.sleep(1500);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		g.begin();
 		p.start();
-		SwingUtilities.invokeLater(new Graphics(resources, null, false));
-
+		
 		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {
@@ -71,6 +115,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 	}
 
+	/**
+	 * Place a bomb on a random character.
+	 */
 	private void placeBomb() {
 		boolean success = false;
 		int p;
@@ -81,18 +128,21 @@ public class HotPotato extends Thread implements GameModeFFA {
 			c = players.get(p);
 			if (!c.isExploding() && !c.isDead() && !c.hasBomb()) {
 				c.hasBomb(true);
-				System.out.println("Player " + c.getPlayerNumber() + " has been given the bomb!");
+				System.out.println(c.getName() + " has been given the bomb!");
 				success = true;
 			}
 		}
 	}
 
+	/**
+	 * Find the character with a bomb placed on them and kill them.
+	 */
 	private void explodeBomb() {
 		for (Character c : resources.getPlayerList()) {
 			if (c.hasBomb()) {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
-				System.out.println("Player " + c.getPlayerNumber() + " exploded!");
+				System.out.println(c.getName() + " exploded!");
 				break;
 			}
 		}
@@ -126,6 +176,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		return winner;
 	}
 
+	/**
+	 * Check if the game is over and if so find the last player alive.
+	 */
 	private void checkWinner() {
 		if (playersRemaining() == 1) {
 			gameOver = true;
@@ -166,6 +219,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 		return scores;
 	}
 
+	/**
+	 * @return An ArrayList of each character's time of death, in ascending
+	 *         order.
+	 */
 	public ArrayList<Character> getOrderedTimesOfDeath() {
 		ArrayList<Character> times = new ArrayList<Character>();
 		times.addAll(resources.getPlayerList());
@@ -190,5 +247,5 @@ public class HotPotato extends Thread implements GameModeFFA {
 	public int getTime() {
 		return this.timer;
 	}
-	
+
 }

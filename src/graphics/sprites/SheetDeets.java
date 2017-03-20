@@ -35,10 +35,12 @@ public class SheetDeets {
 
 	/**
 	 * Get the set of sprites for a given class
-	 * @param c the class
+	 * 
+	 * @param c
+	 *            the class
 	 * @return the set of sprites
 	 */
-	
+
 	public static BufferedImage getSpriteSetFromClass(Character.Class c) {
 
 		int x = 0;
@@ -61,9 +63,6 @@ public class SheetDeets {
 			break;
 		case HORSE:
 			x = 5;
-			break;
-		case DEFAULT:
-			x = 0;
 			break;
 		}
 
@@ -143,26 +142,28 @@ public class SheetDeets {
 	};
 
 	public static final BufferedImage MISC = Sprite.loadSpriteSheet(Sprite.SheetType.MISC);
-	
+
 	public static final int MISC_COLS = 8;
 	public static final int MISC_ROWS = 1;
 	public static final int MISC_SIZEX = 50;
 	public static final int MISC_SIZEY = 50;
-	
+
 	/**
 	 * Get the relevant sprite from the type
-	 * @param m the type of sprite
+	 * 
+	 * @param m
+	 *            the type of sprite
 	 * @return the sprite set
 	 */
-	
-	public static BufferedImage getMiscSpritesFromType(Misc m){
-		
+
+	public static BufferedImage getMiscSpritesFromType(Misc m) {
+
 		int y = 0;
 		int x = 0;
 		int numX = 0;
 		int numY = 0;
-		
-		switch(m){
+
+		switch (m) {
 		case DASH:
 			y = 0;
 			numX = 8;
@@ -183,69 +184,84 @@ public class SheetDeets {
 			numY = 1;
 		default:
 			break;
-			
+
 		}
-		
+
 		return Sprite.getSprite(MISC, x, y, 50 * numX, 50 * numY);
-		
+
 	}
-	
+
 	/**
 	 * Get the correct powerup sprite from the powerup type
-	 * @param p the powerup type
+	 * 
+	 * @param p
+	 *            the powerup type
 	 * @return the powerup sprite
 	 */
-	
-	public static BufferedImage getPowerUpSpriteFromType(Powerup.Power p){
-		
+
+	public static BufferedImage getPowerUpSpriteFromType(Powerup.Power p) {
+
 		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
-		
-		switch(p){
+
+		switch (p) {
 		case Speed:
-			return Sprite.getSprite(set, 1, 0, MISC_SIZEX, MISC_SIZEY);	
+			return Sprite.getSprite(set, 1, 0, MISC_SIZEX, MISC_SIZEY);
 		case Mass:
 			return Sprite.getSprite(set, 2, 0, MISC_SIZEX, MISC_SIZEY);
+		case Spike:
+			return Sprite.getSprite(set, 3, 0, MISC_SIZEX, MISC_SIZEY);
 		default:
-			return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);	 
-		}	
-		
+			return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);
+		}
+
 	}
-	
+
 	/**
 	 * Get the bomb sprite
+	 * 
 	 * @return the bomb sprite
 	 */
-	
-	public static BufferedImage getBombSprite(){
+
+	public static BufferedImage getBombSprite() {
 		BufferedImage set = getMiscSpritesFromType(Misc.POWERUP);
-		
-		return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);	
-		
+
+		return Sprite.getSprite(set, 0, 0, MISC_SIZEX, MISC_SIZEY);
+
 	}
 
 	// ARROWHEAD TILES
 
+	public static final BufferedImage ARROWS = Sprite.loadSpriteSheet(Sprite.SheetType.ARROWS);
 
-		public static final BufferedImage ARROWS = Sprite.loadSpriteSheet(Sprite.SheetType.ARROWS);
-		
-		public static final int ARROWS_COLS = 9;
-		public static final int ARROWS_ROWS = 1;
-		public static final int ARROWS_SIZEX = 50;
-		public static final int ARROWS_SIZEY = 50;
-		
-		/**
-		 * Get the correct coloured arrow for a player
-		 * @param no the player number
-		 * @return the arrow
-		 */
-		
-		public static BufferedImage getArrowFromPlayer(int no){
-			
-			if(no > 8){
-				no = 0;
-			}
-			
-			return Sprite.getSprite(ARROWS, no, 0, ARROWS_SIZEX, ARROWS_SIZEY);
+	public static final int ARROWS_COLS = 9;
+	public static final int ARROWS_ROWS = 2;
+	public static final int ARROWS_SIZEX = 50;
+	public static final int ARROWS_SIZEY = 50;
+
+	/**
+	 * Get the correct coloured arrow for a player
+	 * 
+	 * @param no
+	 *            the player number
+	 * @return the arrow
+	 */
+
+	public static BufferedImage getArrowFromPlayer(int no) {
+
+		if (no > 8) {
+			no = 0;
 		}
-	
+
+		return Sprite.getSprite(ARROWS, no, 0, ARROWS_SIZEX, ARROWS_SIZEY * 2);
+	}
+
+	// SPIKES TILE
+
+	public static final BufferedImage SPIKES = Sprite.loadSpriteSheet(Sprite.SheetType.SPIKES);
+
+	public static final int SPIKES_COLS = 1;
+	public static final int SPIKES_ROWS = 1;
+	public static final int SPIKES_SIZEX = 66;
+	public static final int SPIKES_SIZEY = 66;
+
 }

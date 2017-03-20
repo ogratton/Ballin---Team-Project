@@ -1,6 +1,8 @@
 package gamemodes;
 
+import ai.AITemplate;
 import ai.FightingAI;
+import ai.HotPotatoAI;
 import audio.MusicPlayer;
 import resources.Character;
 import resources.Map;
@@ -9,95 +11,82 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 /**
- * I try and smash graphics with physics. It works ish
+ * Set up the game objects and launch the game.
  */
 
 public class PlayGame {
 
-	public static void main(String[] args){
-		
+	/**
+	 * Start the game directly for testing purposes only.
+	 */
+	public static void main(String[] args) {
+
 		Resources resources = new Resources();
-		
+
 		resources.setMusicPlayer(new MusicPlayer(resources, "grandma"));
-		
+
 		start(resources);
-		
+
 	}
-	
+
+	/**
+	 * Initialise game objects and start the game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public static void start(Resources resources) {
-		
+
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.LastManStanding; 
-		Map.World style = Map.World.DESERT;
-		
-		
+		resources.mode = Mode.HotPotato;
+		Map.World style = Map.World.CAVE;
+
 		// Music setting:
-		
-		if (!Resources.silent)
-		{
+
+		if (!Resources.silent) {
 			// 30 second gamemode needs 30 seconds of music
-			if (resources.mode == Mode.Deathmatch)
-			{
-				if (style == Map.World.DESERT)
-				{
+			if (resources.mode == Mode.Deathmatch) {
+				if (style == Map.World.DESERT) {
 					resources.getMusicPlayer().changePlaylist("paris30");
-				}
-				else if (style == Map.World.SPACE)
-				{
+				} else if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm30");
-				}
-				else
-				{
+				} else {
 					resources.getMusicPlayer().changePlaylist("thirty");
 				}
 			}
 			// looping music
-			else
-			{
-				if (style == Map.World.DESERT)
-				{
+			else {
+				if (style == Map.World.DESERT) {
 					resources.getMusicPlayer().changePlaylist("parisLoop");
-				}
-				else if (style == Map.World.SPACE)
-				{
+				} else if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm");
-				}
-				else
-				{
+				} else {
 					resources.getMusicPlayer().changePlaylist("frog");
 				}
-			} 
+			}
 		}
 		
+		resources.clearPlayerList();
 		
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");
 		// Will want a way to choose how many AIs to add
-		Character player1 = new Character(Character.Class.ARCHER, 0, "CPU1");
-		Character player2 = new Character(Character.Class.HORSE, 0, "CPU2");
+
 		resources.addPlayerToList(player);
-		resources.addPlayerToList(player1);
-		resources.addPlayerToList(player2);
-		// Create AIs
-		FightingAI ai1 = new FightingAI(resources, player1);
-		player1.setAI(ai1);
-		ai1.start();
-		FightingAI ai2 = new FightingAI(resources, player2);
-		ai2.start();
-		player2.setAI(ai2);
-		
-		for(int i = 3; i < 8; i++){
-			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
+
+
+		for (int i = 1; i < 8; i++) {
+			Character character = new Character(Character.Class.getRandomClass(), i+1, "CPU" + i);
 			resources.addPlayerToList(character);
-			FightingAI ai = new FightingAI(resources, character);
+			AITemplate ai = (resources.mode == Mode.HotPotato) ? new HotPotatoAI(resources, character) : new FightingAI(resources, character);
 			character.setAI(ai);
 			ai.start();
 		}
 		GameModeFFA mode;
-		switch(resources.mode) {
+		switch (resources.mode) {
 		case Deathmatch:
 			mode = new Deathmatch(resources);
 			break;
@@ -112,20 +101,14 @@ public class PlayGame {
 			break;
 		}
 		((Thread) mode).start();
-		
-		if (!Resources.silent)
-		{
+
+		if (!Resources.silent) {
 			// must resume after changing playlist
-			if (resources.getMusicPlayer().isAlive())
-			{
+			if (resources.getMusicPlayer().isAlive()) {
 				resources.getMusicPlayer().resumeMusic();
-			}
-			else
-			{
+			} else {
 				resources.getMusicPlayer().start();
-			} 
+			}
 		}
-		
-		
 	}
 }

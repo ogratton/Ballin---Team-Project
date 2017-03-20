@@ -95,7 +95,7 @@ public class ServerListener extends Listener {
 				  	case CREATE:
 				  		System.out.println("Creating Session.");
 				  		senderClient = clients.get(message.getSenderId());
-				  		if(senderClient.getSessionId() != null) {
+				  		if(senderClient.getSessionId() != null && (!senderClient.getSessionId().equals(""))) {
 				  			sessions.get(senderClient.getSessionId()).removeClient(senderClient.getId());
 				  		}
 				  		session = (Session)message.getObject();
@@ -103,6 +103,8 @@ public class ServerListener extends Listener {
 				  		resourcesMap.put(session.getId(), new Resources());
 				  		senderClient.setSessionId(session.getId());
 				  		response = new Message(Command.SESSION, Note.CREATED, senderClient.getId(), null, session.getId(), null, sessions);
+				  		
+				  		System.out.println("Client ID: " + senderClient.getId());
 				  		
 				  		// Sends the response to everyone connected to the server.
 				  		for(Connection c : connections.values()) {
@@ -116,7 +118,7 @@ public class ServerListener extends Listener {
 				  		senderClient = clients.get(message.getSenderId());
 				  		sessionId = message.getTargetSessionId();
 					  
-				  		if(senderClient.getSessionId() != null) {
+				  		if(senderClient.getSessionId() != null && (!senderClient.getSessionId().equals(""))) {
 				  			sessions.get(senderClient.getSessionId()).removeClient(senderClient.getId());
 				  		}
 				  		session = sessions.get(sessionId);
@@ -134,9 +136,17 @@ public class ServerListener extends Listener {
 				  	case LEAVE:
 				  		senderClient = clients.get(message.getSenderId());
 				  		senderClient.setReady(false);
-				  		sessionId = message.getTargetSessionId();
+				  		sessionId = message.getCurrentSessionId();
 				  		session = sessions.get(sessionId);
-				  		sessions.get(sessionId).removeClient(senderClient.getId());
+				  		System.out.println("Session ID: " + sessionId);
+				  		System.out.println("Number of clients in the sessions: " + session.getAllClients().size());
+				  		System.out.println("Sender Client ID: " + senderClient.getId());
+				  		session.removeClient(senderClient.getId());
+				  		
+				  		for(int i=0; i<session.getAllClients().size(); i++) {
+				  			System.out.println("Client ID: " + session.getAllClients().get(i).getId());
+				  		}
+				  		
 				  		senderClient.setSessionId("");
 				  		
 				  		// If the host leaves, set a new host for the session.
@@ -145,6 +155,7 @@ public class ServerListener extends Listener {
 				  			session.setHostName(newHost.getName());
 				  		}
 				  		
+				  		System.out.println("Number of clients in the sessions: " + session.getAllClients().size());
 				  		// If there are no clients in the session, delete the session.
 				  		if(session.getAllClients().size() <= 0) {
 				  			sessions.remove(session.getId());
@@ -153,10 +164,14 @@ public class ServerListener extends Listener {
 				  		response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
 				  		//Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		System.out.println("Number of Clients: " + session.getAllClients().size());
+				  		Connection conn = connections.get(senderClient.getId());
+				  		conn.sendTCP(response);
 				  		
 				  	// Sends the response to everyone connected to the server.
+				  		
+				  		Message response1 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response);
+				  			c.sendTCP(response1);
 				  		}
 				  		
 				  		break;
@@ -171,25 +186,35 @@ public class ServerListener extends Listener {
 			  		case STOP:
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(false);
+			  			session = sessions.get(message.getCurrentSessionId());
+			  			client = session.getClient(message.getSenderId());
+			  			client.setReady(false);
 			  			break;
 			  		// Fires when the client presses "Ready"
 			  		case START:
 			  			session = sessions.get(message.getCurrentSessionId());
+			  			client = session.getClient(message.getSenderId());
+			  			client.setReady(true);
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(true);
-			  			List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  			
-			  			// Update player colour and class type of the client on the server.
-			  			for(int i=0; i<characters.size(); i++) {
-			  				if(characters.get(i).equals(client.getId())) {
-			  					characters.get(i).setPlayerNumber(client.getPlayerNumber());
-			  					characters.get(i).setClassType(client.getCharacterClass());
-			  				}
-			  			}
-					  
+			  			//System.out.println("Current Session ID: " + message.getCurrentSessionId());
+			  			//System.out.println("Current Session: " + session);
 			  			// If all the clients are ready, then start the game.
 			  			if(session.allClientsReady()) {
+
 			  				NetworkingDemo.startServerGame(session, resourcesMap, sessions, connections);
+			  				
+			  				List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
+			  				
+			  				// Update player colour and class type of the client on the server.
+				  			for(int i=0; i<characters.size(); i++) {
+				  				if(characters.get(i).equals(client.getId())) {
+				  					characters.get(i).setPlayerNumber(client.getPlayerNumber());
+				  					characters.get(i).setClassType(client.getCharacterClass());
+				  				}
+				  			}
+				  			
 			  				session.setGameInProgress(true);
 			  				//List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  				List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
@@ -231,12 +256,15 @@ public class ServerListener extends Listener {
 			  					c.setDown(info.isDown());
 			  					c.setRight(info.isRight());
 			  					c.setLeft(info.isLeft());
-			  					if(info.sendDashing) {
+			  					if(info.isDashing()) {
 			  						c.setDashing(info.isDashing());
 			  					}
-			  					if(info.sendBlocking) {
-			  						c.setBlocking(info.isBlocking());
-			  					}
+//			  					if(info.sendDashing) {
+//			  						c.setDashing(info.isDashing());
+//			  					}
+//			  					if(info.sendBlocking) {
+//			  						c.setBlocking(info.isBlocking());
+//			  					}
 			  				}
 			  			}
 					  
@@ -252,6 +280,33 @@ public class ServerListener extends Listener {
 	
 	public void disconnected(Connection connection) {
 		System.out.println("Disconnection");
+		
+		// Removing client from the server.
+		for (Map.Entry<String, Connection> entry : connections.entrySet()) {
+		    String key = entry.getKey();
+		    Connection value = entry.getValue();
+		    if(value.equals(connection)) {
+		    	ClientInformation client = clients.get(key);
+		    	clients.remove(key);
+		    	connections.remove(key);
+		    	
+		    	
+		    	String sessionId = client.getSessionId();
+		    	if(sessionId != null) {
+		    		sessions.get(sessionId).removeClient(key);
+			    	
+			    	Resources resources = resourcesMap.get(sessionId);
+			    	ArrayList<resources.Character> characters = resources.getPlayerList();
+			    	for(int i=0; i<characters.size(); i++) {
+			    		if(characters.get(i).getId().equals(key)) {
+			    			characters.get(i).setLives(0);
+			    			characters.get(i).setDead(true);
+			    		}
+			    	}
+		    	}
+		    }
+		    break;
+		}
 	}
 }
 

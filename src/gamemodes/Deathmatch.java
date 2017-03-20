@@ -22,9 +22,16 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private int timer = 30;
-	
+	private boolean isServer = false;
+
 	private String victoryMusic = "grandma";
 
+	/**
+	 * Create a new deathmatch game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public Deathmatch(Resources resources) {
 		this.resources = resources;
 
@@ -34,20 +41,57 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 	}
+	
+	/**
+	 * Create a new deathmatch game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
+	public Deathmatch(Resources resources, boolean isServer) {
+		this.resources = resources;
 
-	public int getTime(){
+		// Set up game
+		setAllLives(-1);
+		randomRespawn();
+		resources.mode = Mode.Deathmatch;
+		resources.gamemode = this;
+		this.isServer = isServer;
+	}
+
+	@Override
+	public int getTime() {
 		return this.timer;
 	}
-	
+
+	/*
+	 * Run the logic of this game mode.
+	 */
 	public void run() {
 		// Start game
 		Physics p = new Physics(resources, false);
-		p.start();
-		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
-		
 		Graphics g = new Graphics(resources, null, false);
-		g.start();
+		if(!isServer) {
+			SwingUtilities.invokeLater(g);
+		}
 		
+		try{
+		Thread.sleep(1500);
+		g.setCountdown(2);
+		Thread.sleep(1500);
+		g.setCountdown(1);
+		Thread.sleep(1500);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		g.begin();
+		p.start();
+		
+		
+		//Graphics g = new Graphics(resources, null, false);
+		//g.start();
+
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + timer + " seconds");
@@ -63,12 +107,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		// TODO pause/change music too
-		if (!Resources.silent)
-		{
+		if (!Resources.silent) {
 			resources.getMusicPlayer().changePlaylist(victoryMusic);
 			resources.getMusicPlayer().resumeMusic();
 		}
-		
+
 		System.out.println("WE HAVE A WINNER");
 		getWinner();
 		System.out.println(
@@ -81,7 +124,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * Spawn a random powerup in a random location
+	 * Spawn a random powerup in a random location.
 	 */
 	private void spawnPowerup() {
 		Powerup p = new Powerup();
@@ -124,7 +167,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		return scores;
 	}
 
-	// Useless for this game mode
 	@Override
 	public void resetLives() {
 		setAllLives(-1);
@@ -136,4 +178,5 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
+
 }
