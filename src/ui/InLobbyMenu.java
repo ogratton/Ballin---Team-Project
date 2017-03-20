@@ -49,7 +49,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 		JButton button = new JButton("Leave Lobby");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			
+			System.out.println("Session ID sent: " + UIRes.cModel.getSessionId());
 			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, UIRes.cModel.getMyId(), "", UIRes.cModel.getSessionId(),
 					UIRes.cModel.getHighlightedSessionId());
 			try {

@@ -246,12 +246,15 @@ public class ServerListener extends Listener {
 			  					c.setDown(info.isDown());
 			  					c.setRight(info.isRight());
 			  					c.setLeft(info.isLeft());
-			  					if(info.sendDashing) {
+			  					if(info.isDashing()) {
 			  						c.setDashing(info.isDashing());
 			  					}
-			  					if(info.sendBlocking) {
-			  						c.setBlocking(info.isBlocking());
-			  					}
+//			  					if(info.sendDashing) {
+//			  						c.setDashing(info.isDashing());
+//			  					}
+//			  					if(info.sendBlocking) {
+//			  						c.setBlocking(info.isBlocking());
+//			  					}
 			  				}
 			  			}
 					  

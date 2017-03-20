@@ -174,6 +174,8 @@ public class ConnectionDataModel extends Observable {
 	
 	public synchronized void setResources(Resources res) {
 		data.setResources(res);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public boolean isReady() {
