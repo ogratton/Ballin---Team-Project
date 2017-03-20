@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -37,7 +38,7 @@ public class SplashScreen extends JPanel {
 			modeGoal = "Try to survive for as long as possible with five lives!";
 			break;
 		case HotPotato:
-			modeGoal = "Avoid the bomb and pass it to your foes before it goes off!";
+			modeGoal = "Avoid the bomb and pass it to your foes before it blows!";
 			break;
 		default:
 			break;
@@ -53,6 +54,17 @@ public class SplashScreen extends JPanel {
 		label2.setAlignmentX(CENTER_ALIGNMENT);
 		add(label2);
 
+		String up = KeyEvent.getKeyText(resources.getUp());
+		String down = KeyEvent.getKeyText(resources.getDown());
+		String left = KeyEvent.getKeyText(resources.getLeft());
+		String right =  KeyEvent.getKeyText(resources.getRight());
+		String dash = KeyEvent.getKeyText(resources.getDash());
+		
+		JLabel label4 = new JLabel("Up: " + up + " Left: " + left + " Down: " + down + " Right: " + right + " Dash: " + dash);
+		UIRes.setCustomFont(label4, 32);
+		label4.setAlignmentX(CENTER_ALIGNMENT);
+		add(label4);
+		
 		JLabel label3 = new JLabel("Press any key to start");
 		UIRes.setCustomFont(label3, 32);
 		label3.setAlignmentX(CENTER_ALIGNMENT);

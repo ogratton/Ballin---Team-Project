@@ -20,9 +20,11 @@ public class VictoryScreen extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		Resources.Mode mode = resources.mode;
-		Character character = resources.getMyCharacter();
+		Character character = null;
 		
-		if(character == null){
+		try{
+			character = UIRes.cModel.getMyCharacter();
+		}catch(NullPointerException e){
 			character = resources.getPlayerList().get(0);
 		}
 
@@ -76,6 +78,11 @@ public class VictoryScreen extends JPanel {
 		label3.setAlignmentX(CENTER_ALIGNMENT);
 		add(label3);
 
+		JLabel label4 = new JLabel("Press any key to exit");
+		UIRes.setCustomFont(label4, 32);
+		label4.setAlignmentX(CENTER_ALIGNMENT);
+		add(label4);
+		
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
 
 	}
