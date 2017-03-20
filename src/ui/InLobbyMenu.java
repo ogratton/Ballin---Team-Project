@@ -31,11 +31,13 @@ public class InLobbyMenu extends JPanel implements Observer{
 	private Session session;
 	private Client client;
 	private ConnectionDataModel cModel;
+	private SessionListMenu sessionList;
 	
-	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel){
+	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel, SessionListMenu sessionList){
 		this.session = session;
 		this.client = client;
 		this.cModel = cModel;
+		this.sessionList = sessionList;
 		
 		cModel.addObserver(this);
 		
@@ -58,12 +60,10 @@ public class InLobbyMenu extends JPanel implements Observer{
 			try {
 				cModel.getConnection().sendTCP(leaveMessage);
 				cModel.setReady(false);
-				SessionListMenu lobbyList = new SessionListMenu(client, cModel);
+				//SessionListMenu lobbyList = new SessionListMenu(client, cModel);
 				System.out.println("model changed: " + cModel.hasChanged());
 				updateInLobbyPanel();
-				repaint();
-				revalidate();
-				UIRes.switchPanel(lobbyList);
+				UIRes.switchPanel(sessionList);
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -149,9 +149,8 @@ public class InLobbyMenu extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		System.out.println(UIRes.username + " lobby update reached");
 		updateInLobbyPanel();
-	//	repaint();
-	//	validate();
-		updateUI();
+		repaint();
+		validate();
 	}
 
 }

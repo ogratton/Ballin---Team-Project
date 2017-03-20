@@ -46,7 +46,7 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 	public SessionListMenu(Client client, ConnectionDataModel cModel){
 		this.cModel = cModel;
 		cModel.addObserver(this);
-		lobby = new InLobbyMenu(session, client, cModel);
+		lobby = new InLobbyMenu(session, client, cModel, this);
 		updateSessionsPanel(client);
 		setLayout(new BorderLayout());
 		add(addSessionButtons(client, this), BorderLayout.PAGE_START);
