@@ -71,14 +71,15 @@ public class Physics extends Thread implements ActionListener {
 				if (c != d && !c.isDead() && !d.isDead()) {
 					CND cnd = detectCollision(c,d);
 					if(cnd.collided) {
-						collide(c,d,cnd);
-						// If playing hot potato, pass bomb if you have it
 						if (c.hasBomb() && resources.mode == Mode.HotPotato) {
 							c.hasBomb(false);
 							d.hasBomb(true);
 //							System.out.println("Player " + c.getPlayerNumber() + " has passed the bomb to player " 
 //									+ d.getPlayerNumber() + "!");
 						}
+						collide(c,d,cnd);
+						// If playing hot potato, pass bomb if you have it
+						
 					}
 				}
 			}
@@ -277,6 +278,11 @@ public class Physics extends Thread implements ActionListener {
 		move(c);
 	}
 	
+	/**
+	 * Checks if a character is dead. If so, c 
+	 * @param c
+	 * @return
+	 */
 	private boolean dead(Collidable_Circle c) {
 		if(!c.isDead()) {//if stationary, give speed:
 			if(Math.abs(c.getDx()) < 0.00001) {
@@ -318,6 +324,10 @@ public class Physics extends Thread implements ActionListener {
 		return dead;
 	}
 	
+	/**
+	 * Calculates wall collision.
+	 * @param c
+	 */
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
 		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());

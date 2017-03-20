@@ -44,29 +44,18 @@ public class PhysicsTests {
 
 	@Test
 	public void testActionPerformed1() {
-		final int args = 100;
-		double x[] = new double[args];
-		double y[] = new double[args];
-		double dx[] = new double[args];
-		double dy[] = new double[args];
-		
-		for (int i = 0; i < dy.length; i++) {
-			testActionPerformed1(x[i], y[i], dx[i], dy[i]);
-		}
-	}
-	
-	private void testActionPerformed1(double x, double y, double dx, double dy) {
 		//Test physics.actionPerformed().
 		//Test single character movement:
 		Character c1 = new Character(1, x, y, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
-		
-		c1.setDx(dx);
-		c1.setDy(dy);
 		
 		physics.actionPerformed(ev);
 		
 		assertTrue(Double.compare(c1.getX(), x + dx) == 0);
 		assertTrue(Double.compare(c1.getY(), y + dy) == 0);
+		
+	}
+	
+	private void testActionPerformed1(double x, double y, double dx, double dy) {
 		
 	}
 	
