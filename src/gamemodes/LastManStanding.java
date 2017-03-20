@@ -23,6 +23,11 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 
+	/**
+	 * Create a new last man standing game mode.
+	 * @param resources The resources object being used for the game.
+	 * @param maxLives The maximum number of lives for the game.
+	 */
 	public LastManStanding(Resources resources, int maxLives) {
 		this.maxLives = maxLives;
 		this.resources = resources;
@@ -35,6 +40,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		resources.gamemode = this;
 	}
 
+	/* 
+	 * Run the logic of this game mode.
+	 */
 	public void run() {
 		// Start game
 		Physics p = new Physics(resources, false);
@@ -114,6 +122,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		return winner;
 	}
 
+	/**
+	 * Find the winner if the game is over.
+	 */
 	private void checkWinner() {
 		if (playersRemaining() == 1) {
 			gameOver = true;
@@ -154,6 +165,10 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		return scores;
 	}
 	
+	/**
+	 * @return An ArrayList of each character's time of death, in ascending
+	 *         order.
+	 */
 	public ArrayList<Character> getOrderedTimesOfDeath() {
 		ArrayList<Character> times = new ArrayList<Character>();
 		times.addAll(resources.getPlayerList());

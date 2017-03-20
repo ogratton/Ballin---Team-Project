@@ -11,8 +11,6 @@
 # q = EDGE_NESW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 # TRANSITION TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 # r = EDGE_ABYSS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-# WALL TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-# s = WALL,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 # 48 x 26 MAP FOLLOWS,,,# 1200 x 650,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
 a,a,j,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,g,a,a
@@ -22,13 +20,13 @@ a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
-a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,e,e,e,e,e,e,e,e,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,r,r,r,r,r,r,r,r,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a,a,a,a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
+a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,c,c,c,c,c,c,c,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a
 a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a

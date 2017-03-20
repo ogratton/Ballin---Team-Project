@@ -116,6 +116,10 @@ public class GameComponent extends JFrame implements ActionListener {
 		bar.paint();
 		bar.updateScores();
 		bar.updateStats();
+		
+		if(resources.gamemode.isGameOver()){
+			layers.victory();
+		}
 
 	}
 

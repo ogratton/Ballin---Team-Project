@@ -32,7 +32,7 @@ public class SpriteHalf extends JPanel {
 		this.character = character;
 		repaint();
 		
-		setPreferredSize(new Dimension(175, 50));
+		setPreferredSize(new Dimension(150, 50));
 		
 	}
 
@@ -44,24 +44,24 @@ public class SpriteHalf extends JPanel {
 		
 		super.paintComponent(g);
 		
-		g.drawImage(character.getArrow(false), 25, -15, this);
-		g.drawImage(character.getFirstFrame(), 75, 0, this);
+		g.drawImage(character.getArrow(false), 0, -15, this);
+		g.drawImage(character.getFirstFrame(), 50, 0, this);
 		
 		if (character.hasPowerup()) {
 
-			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 125, 0, this);
+			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
 			powerupPresent = true;
 		} else if (powerupPresent) {
-			g.clearRect(125, 0, 50, 50);
+			g.clearRect(100, 0, 50, 50);
 			powerupPresent = false;
 		}
 		
 		if (character.hasBomb()) {
 
-			g.drawImage(SheetDeets.getBombSprite(), 125, 0, this);
+			g.drawImage(SheetDeets.getBombSprite(), 100, 0, this);
 			bombPresent = true;
 		} else if (bombPresent) {
-			g.clearRect(125, 0, 50, 50);
+			g.clearRect(100, 0, 50, 50);
 			bombPresent = false;
 		}
 	}

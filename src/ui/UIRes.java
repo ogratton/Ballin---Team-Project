@@ -63,9 +63,10 @@ public class UIRes {
 	public static final Color colour = Color.BLACK;
 	
 	public static JPanel sessionsPanels = new JPanel();
+	public static JPanel playersPanel = new JPanel();
 	
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
-	public ArrayList<JPanel> inLobbyList = new ArrayList<JPanel>();
+	
 	
 	public static int numberIcons = Character.Class.values().length - 1;
 	

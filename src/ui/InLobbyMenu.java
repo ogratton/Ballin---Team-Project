@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,11 +30,14 @@ public class InLobbyMenu extends JPanel implements Observer {
 	
 	public InLobbyMenu(Session session, Client client){
 		this.session = session;
+		
+		UIRes.cModel.addObserver(this);
+		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 		buttonPanel.add(leaveLobbyButton(client));
-		add(buttonPanel);
+		add(buttonPanel, BorderLayout.PAGE_START);
 		updateInLobbyPanel();
 	}
 	
@@ -46,6 +50,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 			try {
 				client.sendTCP(leaveMessage);
 				UIRes.cModel.setReady(false);
+				UIRes.cModel.deleteObserver(this);
 				SessionListMenu lobbyList = new SessionListMenu(client);
 				UIRes.switchPanel(lobbyList);
 
@@ -57,20 +62,24 @@ public class InLobbyMenu extends JPanel implements Observer {
 	}
 	
 	void updateInLobbyPanel() {
+		UIRes.playersPanel.removeAll();
 		for (int i = 1; i < this.getComponentCount(); i++) {
 			this.remove(i);
 		}
 		for (int i = 0; i < session.getAllClients().size(); i++) {
-			addPlayerToLobby(this, session.getAllClients().get(i), i + 1);
+			addPlayerToLobby(session.getAllClients().get(i), i + 1);
 		}
-		System.out.println("Clients in this session:" + session.getAllClients().size());
+		
+		add(UIRes.playersPanel, BorderLayout.CENTER);
 		repaint();
+		revalidate();
+
 	}
 	
-	JPanel addPlayerToLobby(JPanel panel, ClientInformation client, int index) {
-		JPanel playerPanel = new JPanel();
-		playerPanel.setPreferredSize(new Dimension(panel.getWidth(), playerPanel.getHeight()));
-		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+	void addPlayerToLobby(ClientInformation client, int index) {
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension((int)(this.getWidth() * 0.95), (int)(this.getHeight() * 0.15)));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JLabel playerLabel = new JLabel(client.getName());
 
 		Choice characterClass = new Choice();
@@ -79,7 +88,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 		}
 
 		Color colour = UIRes.resources.getPlayerColor(index);
-		playerPanel.setBorder(BorderFactory.createLineBorder(colour, 15));
+		panel.setBorder(BorderFactory.createLineBorder(colour, 15));
 
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
@@ -96,22 +105,22 @@ public class InLobbyMenu extends JPanel implements Observer {
 			System.out.println(client.isReady());
 		});
 
-		playerPanel.add(Box.createHorizontalGlue());
-		playerPanel.add(playerLabel);
-		playerPanel.add(Box.createHorizontalGlue());
-		playerPanel.add(characterClass);
-		playerPanel.add(Box.createHorizontalGlue());
-		playerPanel.add(readyCheck);
-		playerPanel.add(Box.createHorizontalGlue());
-		panel.add(playerPanel);
-		panel.add(Box.createVerticalStrut(20));
-		return panel;
+		panel.add(Box.createHorizontalGlue());
+		panel.add(playerLabel);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(characterClass);
+		panel.add(Box.createHorizontalGlue());
+		panel.add(readyCheck);
+		panel.add(Box.createHorizontalGlue());
+		UIRes.playersPanel.add(panel);
+		UIRes.playersPanel.add(Box.createVerticalStrut(20));
+		UIRes.playersPanel.repaint();
+
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		updateInLobbyPanel();
-		repaint();
 	}
 
 }

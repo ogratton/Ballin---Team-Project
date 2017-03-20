@@ -9,68 +9,62 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 /**
- * I try and smash graphics with physics. It works ish
+ * Set up the game objects and launch the game.
  */
 
 public class PlayGame {
 
-	public static void main(String[] args){
-		
+	/**
+	 * Start the game directly for testing purposes only.
+	 */
+	public static void main(String[] args) {
+
 		Resources resources = new Resources();
-		
+
 		resources.setMusicPlayer(new MusicPlayer(resources, "grandma"));
-		
+
 		start(resources);
-		
+
 	}
-	
+
+	/**
+	 * Initialise game objects and start the game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 */
 	public static void start(Resources resources) {
-		
+
 		// TODO these should be parameters for start
-		String mapName = "asteroid";
-		resources.mode = Mode.LastManStanding; 
-		Map.World style = Map.World.DESERT;
-		
-		
+		String mapName = "pit";
+		resources.mode = Mode.HotPotato;
+		Map.World style = Map.World.LAVA;
+
 		// Music setting:
-		
-		if (!Resources.silent)
-		{
+
+		if (!Resources.silent) {
 			// 30 second gamemode needs 30 seconds of music
-			if (resources.mode == Mode.Deathmatch)
-			{
-				if (style == Map.World.DESERT)
-				{
+			if (resources.mode == Mode.Deathmatch) {
+				if (style == Map.World.DESERT) {
 					resources.getMusicPlayer().changePlaylist("paris30");
-				}
-				else if (style == Map.World.SPACE)
-				{
+				} else if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm30");
-				}
-				else
-				{
+				} else {
 					resources.getMusicPlayer().changePlaylist("thirty");
 				}
 			}
 			// looping music
-			else
-			{
-				if (style == Map.World.DESERT)
-				{
+			else {
+				if (style == Map.World.DESERT) {
 					resources.getMusicPlayer().changePlaylist("parisLoop");
-				}
-				else if (style == Map.World.SPACE)
-				{
+				} else if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm");
-				}
-				else
-				{
+				} else {
 					resources.getMusicPlayer().changePlaylist("frog");
 				}
-			} 
+			}
 		}
-		
-		
+
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
@@ -88,8 +82,8 @@ public class PlayGame {
 		FightingAI ai2 = new FightingAI(resources, player2);
 		ai2.start();
 		player2.setAI(ai2);
-		
-		for(int i = 3; i < 8; i++){
+
+		for (int i = 3; i < 8; i++) {
 			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
 			resources.addPlayerToList(character);
 			FightingAI ai = new FightingAI(resources, character);
@@ -97,7 +91,7 @@ public class PlayGame {
 			ai.start();
 		}
 		GameModeFFA mode;
-		switch(resources.mode) {
+		switch (resources.mode) {
 		case Deathmatch:
 			mode = new Deathmatch(resources);
 			break;
@@ -112,20 +106,14 @@ public class PlayGame {
 			break;
 		}
 		((Thread) mode).start();
-		
-		if (!Resources.silent)
-		{
+
+		if (!Resources.silent) {
 			// must resume after changing playlist
-			if (resources.getMusicPlayer().isAlive())
-			{
+			if (resources.getMusicPlayer().isAlive()) {
 				resources.getMusicPlayer().resumeMusic();
-			}
-			else
-			{
+			} else {
 				resources.getMusicPlayer().start();
-			} 
+			}
 		}
-		
-		
 	}
 }
