@@ -29,7 +29,7 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
-public class SessionListMenu extends JPanel implements Observer{
+public class SessionListMenu extends JPanel implements Observer {
 	
 	private String lobbyName;
 	private String gameModeName;
