@@ -48,7 +48,8 @@ public class ClientListener extends Listener {
    			switch(message.getNote()) {
    			case COMPLETED:
    				System.out.println("Received sessions from Server");
-   				cModel.setSessionId(message.getCurrentSessionId());
+   				System.out.println("Current Session ID: " + cModel.getSessionId());
+   				//cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
    				System.out.println("Number of Sessions: " + sessions.values().size());
@@ -64,7 +65,6 @@ public class ClientListener extends Listener {
    				cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
-   				cModel.setSessionId(message.getCurrentSessionId());
    				break;
    			case LEFT:
    				System.out.println("Session Left");
