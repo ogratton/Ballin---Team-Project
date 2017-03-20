@@ -138,6 +138,7 @@ public class ServerListener extends Listener {
 				  		senderClient.setReady(false);
 				  		sessionId = message.getCurrentSessionId();
 				  		session = sessions.get(sessionId);
+				  		System.out.println("Session ID: " + sessionId);
 				  		System.out.println("Number of clients in the sessions: " + session.getAllClients().size());
 				  		System.out.println("Sender Client ID: " + senderClient.getId());
 				  		session.removeClient(senderClient.getId());
@@ -163,10 +164,14 @@ public class ServerListener extends Listener {
 				  		response = new Message(Command.SESSION, Note.LEFT, senderClient.getId(), null, null, null, sessions);
 				  		//Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		System.out.println("Number of Clients: " + session.getAllClients().size());
+				  		Connection conn = connections.get(senderClient.getId());
+				  		conn.sendTCP(response);
 				  		
 				  	// Sends the response to everyone connected to the server.
+				  		
+				  		Message response1 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response);
+				  			c.sendTCP(response1);
 				  		}
 				  		
 				  		break;
