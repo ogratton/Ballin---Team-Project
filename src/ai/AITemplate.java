@@ -117,7 +117,7 @@ public abstract class AITemplate extends Thread
 		try
 		{
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
-			Thread.sleep(500);
+			Thread.sleep(300);
 
 			while (!character.isDead())
 			{
