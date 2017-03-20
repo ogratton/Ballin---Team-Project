@@ -193,6 +193,14 @@ public class Physics extends Thread implements ActionListener {
 
 			// If a special button has been pressed, perform the ability if
 			// possible
+			if (c.getDashCooldown() != 0) {
+				c.incrementDashCooldown();
+//				c.setDashing(false);
+				if (c.getDashCooldown() > 500) {
+					c.setDashCooldown(0);
+					System.out.println("Resetting dash cooldown");
+				}
+			}
 			if (special(c)) {
 				return;
 			}

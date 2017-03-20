@@ -146,6 +146,9 @@ public class Character extends Observable implements Collidable_Circle {
 	private int teamNumber;
 
 	private int requestId;
+	
+	private boolean reqDashing = false;
+	private int dashCooldown = 0;
 
 	private String name;
 
@@ -1734,5 +1737,25 @@ public class Character extends Observable implements Collidable_Circle {
 	 */
 	public void incrementDeaths() {
 		this.deaths++;
+	}
+	
+	public int getDashCooldown() {
+		return dashCooldown;
+	}
+
+	public void incrementDashCooldown() {
+		this.dashCooldown++;
+	}
+	
+	public void setDashCooldown(int n) {
+		dashCooldown = n;
+	}
+
+	public boolean isReqDashing() {
+		return reqDashing;
+	}
+
+	public void setReqDashing(boolean reqDashing) {
+		this.reqDashing = reqDashing;
 	}
 }
