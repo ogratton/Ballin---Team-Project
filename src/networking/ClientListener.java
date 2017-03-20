@@ -48,6 +48,7 @@ public class ClientListener extends Listener {
    			switch(message.getNote()) {
    			case COMPLETED:
    				System.out.println("Received sessions from Server");
+   				cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
    				System.out.println("Number of Sessions: " + sessions.values().size());
@@ -60,15 +61,16 @@ public class ClientListener extends Listener {
    				break;
    			case JOINED:
    				System.out.println("Session Joined");
+   				cModel.setSessionId(message.getCurrentSessionId());
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
    				cModel.setSessionId(message.getCurrentSessionId());
    				break;
    			case LEFT:
    				System.out.println("Session Left");
+   				cModel.setSessionId(null);
    				sessions = (ConcurrentMap<String, Session>)message.getObject();
    				cModel.setSessionsTable(sessions);
-   				cModel.setSessionId(null);
    				break;
    			}
    			break;
