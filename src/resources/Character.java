@@ -8,8 +8,7 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.UUID;
 
-import ai.FightingAI;
-import ai.FightingAI;
+import ai.AITemplate;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
@@ -71,7 +70,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 
 	private boolean isAI = false;
-	private FightingAI ai;
+	private AITemplate ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -1708,7 +1707,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * @return The AI this character is being controlled by.
 	 */
-	public FightingAI getAI() {
+	public AITemplate getAI() {
 		return ai;
 	}
 
@@ -1716,7 +1715,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @param ai
 	 *            The new AI to control this character.
 	 */
-	public void setAI(FightingAI ai) {
+	public void setAI(AITemplate ai) {
 		setAI(true);
 		this.ai = ai;
 	}

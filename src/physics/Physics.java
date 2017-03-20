@@ -8,12 +8,12 @@ import javax.swing.Timer;
 
 import ai.AITemplate;
 import ai.FightingAI;
+import ai.HotPotatoAI;
 import resources.Character;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
-import resources.Map.World;
 import resources.NetworkMove;
 import resources.Powerup;
 import resources.Puck;
@@ -161,11 +161,12 @@ public class Physics extends Thread implements ActionListener {
 					// BasicAI ai = new BasicAI(resources, c);
 
 					AITemplate ai;
-					if (resources.mode == Mode.Deathmatch || resources.mode == Mode.LastManStanding) {
-						ai = new FightingAI(resources, c);
-					} else {
-						// XXX TEMPORARILY THEY ARE ALL THE SAME
-						// SO WE HAVE NO CHOICE
+					if (resources.mode == Mode.HotPotato)
+					{
+						ai = new HotPotatoAI(resources, c);
+					}
+					else
+					{
 						ai = new FightingAI(resources, c);
 					}
 
