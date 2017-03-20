@@ -37,8 +37,8 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "pit";
-		resources.mode = Mode.LastManStanding;
-		Map.World style = Map.World.DESERT;
+		resources.mode = Mode.Deathmatch;
+		Map.World style = Map.World.LAVA;
 
 		// Music setting:
 

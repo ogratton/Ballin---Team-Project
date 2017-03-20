@@ -21,7 +21,7 @@ import ui.UIRes;
 @SuppressWarnings("serial")
 public class SplashScreen extends JPanel {
 
-	public SplashScreen(Resources resources, GameView view) {
+	public SplashScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
