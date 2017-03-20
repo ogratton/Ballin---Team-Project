@@ -3,6 +3,7 @@ package graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
+import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -39,7 +40,7 @@ public class LayeredPane extends JLayeredPane {
 	 *            the debugpaths flag
 	 */
 
-	public LayeredPane(Resources resources, boolean debugPaths) {
+	public LayeredPane(Resources resources, boolean debugPaths, JFrame frame) {
 
 		super();
 
@@ -56,8 +57,8 @@ public class LayeredPane extends JLayeredPane {
 		splash.setBounds(((x - 1200) / 2) , ((y - 250) / 2), 1200, 250);
 		
 		InGameMenu menu = new InGameMenu();
-		inGameMenu = menu.getInGameMenuPanel(400, 400); 
-		inGameMenu.setBounds(((x - 400) / 2) , ((y - 400) / 2), 400, 400);
+		inGameMenu = menu.getInGameMenuPanel(frame, 600, 500); 
+		inGameMenu.setBounds(((x - 600) / 2) , ((y - 500) / 2), 600, 500);
 		add(inGameMenu, new Integer(10));
 		add(view, new Integer(15));
 		add(splash, new Integer(20));

@@ -2,10 +2,13 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
@@ -17,7 +20,7 @@ import resources.Map;
 
 public class InGameMenu extends BaseMenu {
 
-	public JPanel getInGameMenuPanel(int width, int height){
+	public JPanel getInGameMenuPanel(JFrame frame, int width, int height){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
@@ -28,11 +31,22 @@ public class InGameMenu extends BaseMenu {
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
 		addResumeToGameButton(panel2, panel);
+		getButtonAndIcon(panel2, getBackToStartMenuButton(frame));
 		addOptionsButton(panel2);
 		addExitButton(panel2);
 		map.add(panel2, BorderLayout.CENTER);
 		panel.add(map);
 		return panel;
+	}
+	
+	JButton getBackToStartMenuButton(JFrame frame) {
+		JButton button = new JButton("Back to Main Menu");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e -> {
+			frame.dispose();
+			UIRes.switchPanel(UIRes.startPanel);
+		});
+		return button;
 	}
 	
 }
