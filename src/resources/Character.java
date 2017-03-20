@@ -28,6 +28,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private static final double default_restitution = 0.7; // 'bounciness'
 	private static final double blue_mass_mult = 50;
 	private static final double red_speed_mult = 2;
+	private static final double spike_rest_mult = 4.0;
 	private static final Random r = new Random();
 
 	public enum Heading {
@@ -1451,6 +1452,12 @@ public class Character extends Observable implements Collidable_Circle {
 			setMaxDy(maxdy / 2);
 			setAcc(acc / 2);
 			break;
+		case Spike:
+			setRestitution(restitution * spike_rest_mult);
+			setMaxDx(maxdx / 10);
+			setMaxDy(maxdy / 10);
+			setMass(mass * 10);
+			break;
 		}
 		hasPowerup = true;
 	}
@@ -1470,6 +1477,12 @@ public class Character extends Observable implements Collidable_Circle {
 			setMaxDx(maxdx * 2);
 			setMaxDy(maxdy * 2);
 			setAcc(acc * 2);
+			break;
+		case Spike:
+			setRestitution(restitution / spike_rest_mult);
+			setMaxDx(maxdx * 10);
+			setMaxDy(maxdy * 10);
+			setMass(mass / 10);
 			break;
 		}
 		hasPowerup = false;
