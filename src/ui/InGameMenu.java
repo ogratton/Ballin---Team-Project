@@ -43,7 +43,7 @@ public class InGameMenu extends BaseMenu {
 		JButton button = new JButton("Back to Main Menu");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			frame.dispose();
+			frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;
