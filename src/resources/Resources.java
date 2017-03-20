@@ -47,8 +47,6 @@ public class Resources {
 	private int right = default_right;
 	private int dash = default_dash;
 	private int block = default_block;
-	
-	public ArrayList<JPanel> lobbyList = new ArrayList<JPanel>();
 
 	// sound effect "volume" (0 is normal)
 	// can be as negative as you like but no larger than about 10 I think

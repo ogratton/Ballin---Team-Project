@@ -38,10 +38,10 @@ public abstract class AITemplate extends Thread
 	protected Behaviour behaviour = Behaviour.ROVING; // default
 
 	//	private int raycast_length = 10;
-	protected static final double BRAKING_CONSTANT = 40; // how many ms to brake for. 40-50 seems good
+	protected static final double BRAKING_CONSTANT = 35; // how many ms to brake for. 40-50 seems good
 	protected static final double FUZZINESS = 20;
 	//	private final long reaction_time = 5; // can be increased once ray-casting is implemented
-	protected static final long TICK = 30; // loop every <tick>ms
+	protected static final long TICK = 40; // loop every <tick>ms
 	protected static long PRESCIENCE = TICK * 1; // how many ms ahead we look for our predicted point
 
 	protected ArrayList<Tile> bad_tiles;
@@ -316,7 +316,7 @@ public abstract class AITemplate extends Thread
 			{
 				// player has died in the time since we found them
 				setBehaviour(Behaviour.ROVING);
-//				return;
+				return;
 			}
 
 		}
