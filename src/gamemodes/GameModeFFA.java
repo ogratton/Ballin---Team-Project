@@ -40,4 +40,5 @@ public interface GameModeFFA {
 	 * Respawns all the players in a random location
 	 */
 	public void randomRespawn();
+
 }

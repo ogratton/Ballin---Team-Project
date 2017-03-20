@@ -22,6 +22,8 @@ import ui.UIRes;
 @SuppressWarnings("serial")
 public class SplashScreen extends JPanel {
 
+	private JLabel label3;
+	
 	public SplashScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -47,11 +49,13 @@ public class SplashScreen extends JPanel {
 		JLabel label = new JLabel(modeName);
 		UIRes.setCustomFont(label, 64);
 		label.setAlignmentX(CENTER_ALIGNMENT);
+		label.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label);
 		
 		JLabel label2 = new JLabel(modeGoal);
 		UIRes.setCustomFont(label2, 18);
 		label2.setAlignmentX(CENTER_ALIGNMENT);
+		label2.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label2);
 
 		String up = KeyEvent.getKeyText(resources.getUp());
@@ -63,15 +67,26 @@ public class SplashScreen extends JPanel {
 		JLabel label4 = new JLabel("Up: " + up + " Left: " + left + " Down: " + down + " Right: " + right + " Dash: " + dash);
 		UIRes.setCustomFont(label4, 32);
 		label4.setAlignmentX(CENTER_ALIGNMENT);
+		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label4);
 		
-		JLabel label3 = new JLabel("Press any key to start");
-		UIRes.setCustomFont(label3, 32);
+		label3 = new JLabel(3 + "");
+		UIRes.setCustomFont(label3,128);
 		label3.setAlignmentX(CENTER_ALIGNMENT);
+		label3.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label3);
 		
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
 
+	}
+	
+	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
+	
+	public void setCountdown(int i){
+		label3.setText(i + "");
 	}
 
 }

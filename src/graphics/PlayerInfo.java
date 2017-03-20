@@ -37,7 +37,7 @@ public class PlayerInfo extends JPanel {
 		setLayout(new BorderLayout());
 
 		text = new TextHalf(character, resources);
-		sprites = new SpriteHalf(character);
+		sprites = new SpriteHalf(character, resources);
 		
 		add(text,BorderLayout.CENTER);
 		add(sprites,BorderLayout.WEST);
