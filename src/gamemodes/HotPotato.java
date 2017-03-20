@@ -27,7 +27,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Random rand;
 	private int timer;
 	private boolean isServer;
-	private int countdown = 3;
 
 	/**
 	 * Create a new hot potato game mode.

@@ -23,7 +23,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Resources resources;
 	private int timer = 30;
 	private boolean isServer = false;
-	private int countdown = 3;
 
 	private String victoryMusic = "grandma";
 
