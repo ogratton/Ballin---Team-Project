@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import gamemodes.GameModeFFA;
 import resources.Resources;
 
 /**
@@ -188,6 +189,8 @@ public class ServerListener extends Listener {
     			// Fires when the message is something to do with the game state
 			  	case GAME:
 			  		GameData data;
+			  		List<ClientInformation> tempClients;
+			  		Connection c;
 			  		switch(message.getNote()) {
 			  		// Fires when the client presses "Not Ready"
 			  		case STOP:
@@ -196,6 +199,16 @@ public class ServerListener extends Listener {
 			  			session = sessions.get(message.getCurrentSessionId());
 			  			client = session.getClient(message.getSenderId());
 			  			client.setReady(false);
+			  			
+			  			Message response1 = new Message(Command.SESSION, Note.COMPLETED, message.getSenderId(), null, null, null, sessions);
+			  			tempClients = session.getAllClients();
+		  				// Sends the response to everyone in the session.
+		  				// This update who is ready for each client in the session
+		  				for(int i=0; i<tempClients.size(); i++) {
+		  					c = connections.get(tempClients.get(i).getId());
+		  					c.sendTCP(response1);
+		  				}
+			  			
 			  			break;
 			  		// Fires when the client presses "Ready"
 			  		case START:
@@ -234,15 +247,41 @@ public class ServerListener extends Listener {
 			  				data = new GameData(characterInfo);
 			  				// Creates a message to send to all clients connected to the session
 			  				Message startGame = new Message(Command.GAME, Note.START, message.getSenderId(), message.getReceiverId(), message.getCurrentSessionId(), message.getTargetSessionId(), data);
-			  				
-			  				List<ClientInformation> tempClients = session.getAllClients();
-			  				Connection c;
+			  				tempClients = session.getAllClients();
 			  				// Sends the response to everyone in the session.
 			  				// This will start the game for everyone
 			  				for(int i=0; i<tempClients.size(); i++) {
 			  					c = connections.get(tempClients.get(i).getId());
 			  					c.sendTCP(startGame);
 			  				}
+			  				
+			  				//// Countdown
+			  				try {
+								Thread.sleep(1000);
+								Message countdown = new Message(Command.GAME, Note.COUNTDOWN, message.getSenderId(), message.getReceiverId(), message.getCurrentSessionId(), message.getTargetSessionId());
+								for(int i=0; i<tempClients.size(); i++) {
+				  					c = connections.get(tempClients.get(i).getId());
+				  					c.sendTCP(countdown);
+				  				}
+								Thread.sleep(1000);
+								for(int i=0; i<tempClients.size(); i++) {
+				  					c = connections.get(tempClients.get(i).getId());
+				  					c.sendTCP(countdown);
+				  				}
+								Thread.sleep(1000);
+								for(int i=0; i<tempClients.size(); i++) {
+				  					c = connections.get(tempClients.get(i).getId());
+				  					c.sendTCP(countdown);
+				  				}
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			  				
+			  				Resources res = resourcesMap.get(session.getId());
+			  				GameModeFFA mode = res.gamemode;
+			  				
+			  				((Thread) mode).start();
 			  			}
 					  
 			  			break;
@@ -255,17 +294,17 @@ public class ServerListener extends Listener {
 			  			Resources res = resourcesMap.get(session.getId());
 			  			CharacterInfo info = data.getInfo();
 			  			for(int i=0; i<res.getPlayerList().size(); i++) {
-			  				resources.Character c = res.getPlayerList().get(i);
+			  				resources.Character ch = res.getPlayerList().get(i);
 			  				
 			  				// Only update the player that was changed.
-			  				if(info.getId().equals(c.getId())) {
+			  				if(info.getId().equals(ch.getId())) {
 			  					//c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
-			  					c.setUp(info.isUp());
-			  					c.setDown(info.isDown());
-			  					c.setRight(info.isRight());
-			  					c.setLeft(info.isLeft());
+			  					ch.setUp(info.isUp());
+			  					ch.setDown(info.isDown());
+			  					ch.setRight(info.isRight());
+			  					ch.setLeft(info.isLeft());
 			  					if(info.isDashing()) {
-			  						c.setDashing(info.isDashing());
+			  						ch.setDashing(info.isDashing());
 			  					}
 //			  					if(info.sendDashing) {
 //			  						c.setDashing(info.isDashing());

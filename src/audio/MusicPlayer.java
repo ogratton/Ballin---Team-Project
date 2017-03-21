@@ -228,6 +228,25 @@ public class MusicPlayer extends Thread
 			pauseMusic();
 		}
 	}
+	
+	/**
+	 * Is the music paused?
+	 * @return
+	 */
+	public boolean isPaused()
+	{
+		return paused;
+	}
+	
+	/**
+	 * Is the music player running
+	 * (Potentially deprecated variable)
+	 * @return
+	 */
+	public boolean isRunning()
+	{
+		return running;
+	}
 
 	/**
 	 * mute the music
