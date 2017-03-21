@@ -123,39 +123,9 @@ public class ClientListener extends Listener {
    				
    				resources = new Resources();
    				
-   				// Creates new characters for each characrer info sent by the server
-   				Character player;
-   				double x;
-   				double y;
-   				String id;
-   				CharacterInfo c;
-   				List<CharacterInfo> info = gameData.getCharactersList();
-   				Updater updater = new Updater(cModel, client, resources);
-   				for(int i=0; i<info.size(); i++) {
-   					c = info.get(i);
-   					id = c.getId();
-   					x = c.getX();
-   					y = c.getY();
-   					
-   					player = new Character(Character.Class.ARCHER, 1);
-   					player.setId(id);
-   					player.setXWithoutNotifying(x);
-   					player.setYWithoutNotifying(y);
-   					player.setPlayerNumber(c.getPlayerNumber());
-   					resources.addPlayerToList(player);
-   					cModel.getCharacters().put(id, player);
-   					
-   					// If the character is the character controlled by
-   					// this client, set the id in resources and observe the character.
-   					if(id.equals(cModel.getMyId())) {
-   						resources.setId(id);
-   						player.addObserver(updater);
-   					}
-   				}
-   				
    				// Get the variables chosen for the session
    				Session session = cModel.getSession(cModel.getSessionId());
-   				String mapName = session.getSessionName();
+   				String mapName = session.getMapName();
    				Map.World style = session.getTileset();
    				Map.World tileset = session.getTileset();
    				Mode modeName = session.getGameMode();
@@ -183,8 +153,42 @@ public class ClientListener extends Listener {
    				resources.gamemode = mode;
    				
 				resources.setMap(map);
+   				
+   				// Creates new characters for each characrer info sent by the server
+   				Character player;
+   				double x;
+   				double y;
+   				String id;
+   				CharacterInfo c;
+   				List<CharacterInfo> info = gameData.getCharactersList();
+   				Updater updater = new Updater(cModel, client, resources);
+   				for(int i=0; i<info.size(); i++) {
+   					c = info.get(i);
+   					id = c.getId();
+   					x = c.getX();
+   					y = c.getY();
+   					
+   					player = new Character(c.getType(), c.getPlayerNumber(), c.getName());
+   					player.setId(id);
+   					player.setXWithoutNotifying(x);
+   					player.setYWithoutNotifying(y);
+   					player.setPlayerNumber(c.getPlayerNumber());
+   					resources.addPlayerToList(player);
+   					cModel.getCharacters().put(id, player);
+   					
+   					// If the character is the character controlled by
+   					// this client, set the id in resources and observe the character.
+   					if(id.equals(cModel.getMyId())) {
+   						resources.setId(id);
+   						player.setName(cModel.getClientInformation().getName());
+   						player.addObserver(updater);
+   					}
+   				}
+   					
 				//new MapCosts(resources);
    				cModel.setResources(resources);
+
+   				//cModel.getResources().setCountdown(0);
    				
    				// Start the graphics
    				Graphics g = new Graphics(resources, null, false);
@@ -194,22 +198,21 @@ public class ClientListener extends Listener {
    			// Fires when an update message is sent by the server
    			case UPDATE:
    				if(cModel.getResources() != null) {
-   					//System.out.println("Got to Update on Client.");
+   					
    					
    					// Update all the variables for every player sent by the server.
    					gameData = (GameData)message.getObject();
        				List<CharacterInfo> charactersList = gameData.getCharactersList();
        				resources = cModel.getResources();
        				
-       				
-       				System.out.println("Game Over: " + resources.gamemode.isGameOver());
-       				System.out.println("Timer: " + resources.getTimer());
        				resources.setPowerUpList(deserialize(gameData.getPowerUps()));
        				resources.setTimer(gameData.getTimer());
        				List<resources.Character> players = resources.getPlayerList();
        					for(int i=0; i<players.size(); i++) {
            					for(int j=0; j<charactersList.size(); j++) {
            						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
+           							
+           							//System.out.println("X Pos: " + charactersList.get(j).getX());
            							players.get(i).setX(charactersList.get(j).getX());
            							players.get(i).setY(charactersList.get(j).getY());
            							players.get(i).setBlocking(charactersList.get(j).isBlocking());
@@ -234,6 +237,21 @@ public class ClientListener extends Listener {
    			case COUNTDOWN:
    				if(cModel.getResources() != null) {
    					cModel.getResources().decCountdown();
+   				}
+   				break;
+   			case FINISHED:
+   				cModel.setResources(new Resources());
+   				cModel.setReady(false);
+   				cModel.setGameInProgress(false);
+   				cModel.setCharacters(new ConcurrentHashMap<String, Character>());
+   			case REMOVE_PLAYER:
+   				String removeClientId = message.getReceiverId();
+   				ArrayList<Character> characters = cModel.getResources().getPlayerList();
+   				for(int i=0; i<characters.size(); i++) {
+   					if(characters.get(i).equals(removeClientId)) {
+   						characters.remove(i);
+   						break;
+   					}
    				}
    				break;
    			default:

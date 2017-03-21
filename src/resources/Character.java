@@ -1837,6 +1837,10 @@ public class Character extends Observable implements Collidable_Circle {
 	public void setSuicides(int suicides) {
 		this.suicides = suicides;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 	
 }

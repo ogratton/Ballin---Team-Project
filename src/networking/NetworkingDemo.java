@@ -80,7 +80,7 @@ public class NetworkingDemo {
 			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
 			
 			String id = clients.get(i).getId();
-			newPlayer = new Character(Character.Class.ARCHER, i+1);
+			newPlayer = new Character(clients.get(i).getCharacterClass(), clients.get(i).getPlayerNumber(), clients.get(i).getName());
 			newPlayer.setX(coords.x);
 			newPlayer.setY(coords.y);
 			newPlayer.setId(id);
@@ -91,7 +91,12 @@ public class NetworkingDemo {
 		// Put the specified number of AIs on the number randomly.
 		int size = resources.getPlayerList().size();
 		for(int i = 0; i < 8 - size; i++){
-			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
+			Point coords = resources.getMap().randPointOnMap();
+			Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+			Character character = new Character(Character.Class.getRandomClass(), 0, "CPU: " + i);
+			character.setX(coords.x);
+			character.setY(coords.y);
 			resources.addPlayerToList(character);
 			FightingAI ai = new FightingAI(resources, character);
 			character.setAI(ai);

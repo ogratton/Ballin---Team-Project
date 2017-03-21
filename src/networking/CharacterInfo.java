@@ -22,6 +22,8 @@ public class CharacterInfo {
 	private Power lastPowerUp;
 	private int kills, deaths, suicides, lives, score;
 	private boolean hasBomb;
+	private resources.Character.Class type;
+	private String name;
 	
 	public CharacterInfo() {
 		
@@ -34,11 +36,13 @@ public class CharacterInfo {
 	 * @param e The y position of the Character
 	 * @param playerNumber The player number
 	 */
-	public CharacterInfo(String id, double d, double e, int playerNumber) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, resources.Character.Class type, String name) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
 		this.playerNumber = playerNumber;
+		this.type = type;
+		this.name = name;
 	}
 	
 	/**
@@ -260,6 +264,22 @@ public class CharacterInfo {
 
 	public void setHasBomb(boolean hasBomb) {
 		this.hasBomb = hasBomb;
+	}
+
+	public resources.Character.Class getType() {
+		return type;
+	}
+
+	public void setType(resources.Character.Class type) {
+		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }
