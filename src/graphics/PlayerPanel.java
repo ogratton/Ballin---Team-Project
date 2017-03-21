@@ -35,7 +35,7 @@ public class PlayerPanel extends JPanel {
 
 		setLayout(new GridLayout(2, 1));
 
-		ArrayList<Character> characters = resources.gamemode.getOrderedScores();
+		ArrayList<Character> characters = resources.getOrderedScores();
 		Collections.reverse(characters);
 		boxes = new ArrayList<>();
 

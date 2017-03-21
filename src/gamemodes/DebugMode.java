@@ -50,22 +50,6 @@ public class DebugMode extends Thread implements GameModeFFA
 	}
 
 	/**
-	 * We have to write this method to avoid errors but we don't really care
-	 * @return
-	 */
-	@Override
-	public ArrayList<Character> getOrderedScores()
-	{
-		ArrayList<Character> blagIt = new ArrayList<Character>();
-		for (Character c : resources.getPlayerList())
-		{
-			blagIt.add(c);
-		}
-
-		return blagIt;
-	}
-
-	/**
 	 * debug never ends
 	 * @return always false
 	 */
