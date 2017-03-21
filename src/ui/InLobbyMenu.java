@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -111,6 +113,10 @@ public class InLobbyMenu extends JPanel implements Observer{
 			characterClass.addItem(icon);
 		}
 		
+		if(client.getCharacterClass() != null){
+			characterClass.setSelectedItem(UIRes.getSpriteIcon(getCharacterIndex(client.getCharacterClass())));
+		}
+		
 		System.out.println(characterClass.getName());
 
 		Color colour = UIRes.resources.getPlayerColor(index);
@@ -118,53 +124,63 @@ public class InLobbyMenu extends JPanel implements Observer{
 
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
-		
-		
 		readyCheck.setForeground(Color.RED);
-		readyCheck.addActionListener(e -> {
-
-			if(client.isReady()) {
-				client.setReady(false);
-			}
-			else {
-				client.setReady(true);
-			}
-			if (client.isReady()) {
-				readyCheck.setForeground(Color.GREEN);
-				client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
-				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
-						try {
-							cModel.getConnection().sendTCP(message);
-							cModel.setReady(true);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-				
-			} else {
-				readyCheck.setForeground(Color.RED);
-				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
-						try {
-							cModel.getConnection().sendTCP(message);
-							cModel.setReady(false);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-			System.out.println(client.isReady());
-		});
+		
 		
 		if(this.cModel.getMyId().compareTo(client.getId()) != 0){
 			characterClass.setEnabled(false);
-			readyCheck.setFocusable(false);
+			
 		}
+		else{
+			readyCheck.addActionListener(e -> {
+				
+				System.out.println("Ready button is pressed by: " + client.getName());
+				
+				if(client.isReady()) {
+					client.setReady(false);
+				}
+				else {
+					client.setReady(true);
+				}
+				if (client.isReady()) {
+					readyCheck.setForeground(Color.GREEN);
+					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					client.setPlayerNumber(index);
+					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if(!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
+							try {
+								cModel.getConnection().sendTCP(message);
+								cModel.setReady(true);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+					
+				} else {
+					readyCheck.setForeground(Color.RED);
+					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if(!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+							try {
+								cModel.getConnection().sendTCP(message);
+								cModel.setReady(false);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				}
+				System.out.println(client.isReady());
+			});
+		}
+		
+		if(client.isReady())
+			readyCheck.setForeground(Color.GREEN);
+		else
+			readyCheck.setForeground(Color.RED);		
+		
 	
 
 		panel.add(Box.createHorizontalGlue());
@@ -197,6 +213,25 @@ public class InLobbyMenu extends JPanel implements Observer{
 		}
 	}
 	
+	int getCharacterIndex(Character.Class character){
+		switch (character) {
+		case WIZARD:
+			return 0;
+		case ARCHER:
+			return 1;
+		case WARRIOR:
+			return 2;
+		case MONK:
+			return 3;
+		case WITCH:
+			return 4;
+		case HORSE:
+			return 5;
+		default:
+			return 0;
+		}
+	}
+	
 	void setSession(Session session){
 		this.session = session;
 	}
@@ -209,7 +244,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		updateInLobbyPanel();
 		repaint();
-		validate();
+		revalidate();
 	}
 
 }

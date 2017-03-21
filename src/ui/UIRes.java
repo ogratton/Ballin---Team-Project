@@ -38,7 +38,7 @@ public class UIRes {
 	
 	public static Resources resources = new Resources();
 
-	public static final int width = getScreenWidth();
+	public static final int width = getScreenWidth() / 2;
 	public static final int height = getScreenHeight();
 
 	public static String username = "Player";
