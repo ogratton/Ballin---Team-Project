@@ -122,14 +122,19 @@ public class InLobbyMenu extends JPanel implements Observer{
 		
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
-			if (readyCheck.getForeground() == Color.RED) {
-				client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
-				System.out.println(getCharacter(characterClass.getSelectedIndex()));
-				readyCheck.setForeground(Color.GREEN);
+
+			if(client.isReady()) {
+				client.setReady(false);
+			}
+			else {
 				client.setReady(true);
+			}
+			if (client.isReady()) {
+				readyCheck.setForeground(Color.GREEN);
+				client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
+						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
 						try {
 							cModel.getConnection().sendTCP(message);
 							cModel.setReady(true);
@@ -141,7 +146,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 				
 			} else {
 				readyCheck.setForeground(Color.RED);
-				client.setReady(false);
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
 						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);

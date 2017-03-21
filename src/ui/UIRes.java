@@ -37,8 +37,10 @@ import resources.Resources;
 public class UIRes {
 	
 	public static Resources resources = new Resources();
+
 	public static final int width = getScreenWidth();
 	public static final int height = getScreenHeight();
+
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.09));
