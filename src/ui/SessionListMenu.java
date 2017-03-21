@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
-public class SessionListMenu<ComponentDataModel> extends JPanel implements Observer {
+public class SessionListMenu extends JPanel implements Observer {
 	
 	private String lobbyName;
 	private String gameModeName;
@@ -47,10 +48,11 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 		this.cModel = cModel;
 		cModel.addObserver(this);
 		lobby = new InLobbyMenu(session, client, cModel, this);
+		setOpaque(false);
 		updateSessionsPanel(client);
-		setLayout(new BorderLayout());
-		add(addSessionButtons(client, this), BorderLayout.PAGE_START);
-		add(UIRes.sessionsPanels, BorderLayout.CENTER);
+		//setLayout(new BorderLayout());
+		add(addSessionButtons(client, this));
+		add(UIRes.sessionsPanels);
 
 	}
 	
@@ -164,11 +166,11 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 	JPanel getSessionPanel(Session session) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel sessionName = UIRes.getLabel(session.getSessionName(), 20);
-		JLabel hostName = UIRes.getLabel(session.getHostName(), 20);
-		JLabel mapName = UIRes.getLabel(session.getMapName(), 20);
-		JLabel gameModeName = UIRes.getLabel("" + session.getGameMode(), 20);
-		JLabel numberPlayers = UIRes.getLabel(session.getAllClients().size() + "/8", 20);
+		JLabel sessionName = UIRes.getLabel(session.getSessionName(), 22);
+		JLabel hostName = UIRes.getLabel(session.getHostName(), 22);
+		JLabel mapName = UIRes.getLabel(session.getMapName(), 22);
+		JLabel gameModeName = UIRes.getLabel("" + session.getGameMode(), 22);
+		JLabel numberPlayers = UIRes.getLabel(session.getAllClients().size() + "/8", 22);
 		panel.add(Box.createHorizontalGlue());
 		panel.add(sessionName);
 		panel.add(Box.createHorizontalGlue());
@@ -234,15 +236,19 @@ public class SessionListMenu<ComponentDataModel> extends JPanel implements Obser
 	
 	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
 		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension((int)(UIRes.width * 0.95), (int)(UIRes.height * 0.12)));
+		panel.setOpaque(false);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JButton createSession = createSessionButton(client);
 		JButton joinSession = joinSessionButton(client);
 		JButton refreshSession = refreshSessionList(client);
 		JButton backToMainMenu = getBackToStartMenuButton();
-		panel.add(createSession);
-		panel.add(joinSession);
-		panel.add(refreshSession);
-		panel.add(backToMainMenu);
+		panel.add(Box.createHorizontalStrut(10));
+		UIRes.getButtonAndIcon(panel, createSession);
+		UIRes.getButtonAndIcon(panel, joinSession);
+	//	UIRes.getButtonAndIcon(panel, refreshSession);
+		UIRes.getButtonAndIcon(panel, backToMainMenu);
+		panel.add(Box.createHorizontalStrut(10));
 		return panel;
 	}
 	

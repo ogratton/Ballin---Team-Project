@@ -1,50 +1,57 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.sql.Timestamp;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import com.esotericsoftware.kryonet.Client;
 
+import graphics.sprites.SheetDeets;
+import graphics.sprites.Sprite;
+import graphics.sprites.Sprite.SheetType;
 import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
-import resources.Character;
 
 @SuppressWarnings("serial")
 public class InLobbyMenu extends JPanel implements Observer{
 	
 	private Session session;
-	private Client client;
 	private ConnectionDataModel cModel;
 	private SessionListMenu sessionList;
 	
 	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel, SessionListMenu sessionList){
 		this.session = session;
-		this.client = client;
 		this.cModel = cModel;
 		this.sessionList = sessionList;
 		
 		cModel.addObserver(this);
+		setOpaque(false);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		buttonPanel.setOpaque(false);
 		setLayout(new BorderLayout());
-		buttonPanel.add(leaveLobbyButton(client));
+		add(Box.createHorizontalStrut(10));
+		UIRes.getButtonAndIcon(buttonPanel, leaveLobbyButton(client));
+		add(Box.createHorizontalStrut(10));
 		add(buttonPanel, BorderLayout.PAGE_START);
 		updateInLobbyPanel();
 		add(UIRes.playersPanel, BorderLayout.CENTER);
@@ -52,6 +59,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 	
 	JButton leaveLobbyButton(Client client) {
 		JButton button = new JButton("Leave Lobby");
+		button.setOpaque(false);
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
 			
@@ -77,7 +85,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 		UIRes.playersPanel.removeAll();
 		if(cModel.getSessionId() != null && (!cModel.getSessionId().equals(""))) {
 			session = cModel.getSession(cModel.getSessionId());
-			System.out.println("Clients in this session at " + new Timestamp(System.currentTimeMillis()) + " :" + session.getAllClients().size());
 			for (int i = 0; i < session.getAllClients().size(); i++) {
 				addPlayerToLobby(session.getAllClients().get(i), i + 1);
 			}
@@ -89,18 +96,22 @@ public class InLobbyMenu extends JPanel implements Observer{
 	}
 	
 	void addPlayerToLobby(ClientInformation client, int index) {
+		UIRes.playersPanel.setOpaque(false);
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension((int)(this.getWidth() * 0.95), (int)(this.getHeight() * 0.15)));
+		panel.setPreferredSize(new Dimension((int)(UIRes.width * 0.95), (int)(UIRes.height * 0.12)));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel playerLabel = new JLabel(client.getName());
+		JLabel playerLabel = UIRes.getLabel(client.getName());
+		
 
-		Choice characterClass = new Choice();
-		for (Character.Class character : Character.Class.values()) {
-			characterClass.add(character + "");
+		JComboBox<ImageIcon> characterClass = new JComboBox<ImageIcon>();
+		for (int i = 0; i < UIRes.numberIcons; i++) {
+			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
+					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+			characterClass.addItem(new ImageIcon(icon));
 		}
 
 		Color colour = UIRes.resources.getPlayerColor(index);
-		panel.setBorder(BorderFactory.createLineBorder(colour, 15));
+		panel.setBorder(new CompoundBorder(new LineBorder(colour, 15), new EmptyBorder(10, 10, 10, 10)));
 
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
@@ -109,7 +120,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
 			if (readyCheck.getForeground() == Color.RED) {
-				System.out.println("Got here");
 				readyCheck.setForeground(Color.GREEN);
 				client.setReady(true);
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
@@ -149,7 +159,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 		panel.add(readyCheck);
 		panel.add(Box.createHorizontalGlue());
 		UIRes.playersPanel.add(panel);
-		UIRes.playersPanel.add(Box.createVerticalStrut(20));
 
 	}
 	
@@ -171,7 +180,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println(UIRes.username + " lobby update reached");
 		updateInLobbyPanel();
 		repaint();
 		validate();

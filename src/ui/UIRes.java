@@ -37,7 +37,7 @@ import resources.Resources;
 public class UIRes {
 	
 	public static Resources resources = new Resources();
-	public static final int width = 800;
+	public static final int width = 900;
 	public static final int height = 1000;
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
@@ -186,7 +186,7 @@ public class UIRes {
 		slider.setPaintLabels(true);
 	}
 
-	JLabel getLabel(String text) {
+	static JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
 		customiseLabel(label);
 		return label;
@@ -198,14 +198,14 @@ public class UIRes {
 		return label;
 	}
 
-	JLabel getSpriteIcon(int x) {
+	static JLabel getSpriteIcon(int x) {
 		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
 				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
 
-	JPanel getButtonAndIcon(JPanel panel, JButton button) {
+	static JPanel getButtonAndIcon(JPanel panel, JButton button) {
 		JPanel buttonPanel = new JPanel();
 		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);
