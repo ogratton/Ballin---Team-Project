@@ -89,7 +89,8 @@ public class NetworkingDemo {
 		}
 		
 		// Put the specified number of AIs on the number randomly.
-		for(int i = 0; i < session.getNumberOfAI(); i++){
+		int size = resources.getPlayerList().size();
+		for(int i = 0; i < 8 - size; i++){
 			Character character = new Character(Character.Class.MONK, 0, "CPU" + i);
 			resources.addPlayerToList(character);
 			FightingAI ai = new FightingAI(resources, character);
