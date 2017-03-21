@@ -39,7 +39,7 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.HotPotato;
+		resources.mode = Mode.LastManStanding;
 		Map.World style = Map.World.CAVE;
 
 		// Music setting:

@@ -29,6 +29,7 @@ public class Graphics extends Thread {
 		this.resources = resources;
 		this.updater = updater;
 		this.debugPaths = debugPaths;
+		this.comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 	}
 	
 	/**
@@ -38,6 +39,7 @@ public class Graphics extends Thread {
 	
 	public Graphics(Resources resources){
 		this.resources = resources;
+		this.comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 	}
 	
 	/**
@@ -46,7 +48,7 @@ public class Graphics extends Thread {
 	
 	public void run() {
 		
-		comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
+		
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							

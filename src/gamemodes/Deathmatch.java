@@ -84,8 +84,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}catch(InterruptedException e){
 			e.printStackTrace();
 		}
-		
-		g.begin();
+		if(!isServer){
+			g.begin();
+		}
 		p.start();
 		
 		
