@@ -79,6 +79,10 @@ public class ServerListener extends Listener {
                 idMessage.setSenderId(client.getId());
                 idMessage.setMessage(message.getMessage());
                 connection.sendTCP(idMessage);
+                
+                // Send the Client all the sessions.
+                response = new Message(Command.SESSION, Note.COMPLETED, client.getId(), null, null, null, sessions);
+                connection.sendTCP(response);
                 break;
             // Fires when the message is something to do with a session
     		case SESSION:
@@ -301,17 +305,19 @@ public class ServerListener extends Listener {
 		    	
 		    	// Remove the player from the resources for that session
 		    	String sessionId = client.getSessionId();
-		    	if(sessionId != null) {
+		    	if(sessionId != null && sessions.get(sessionId) != null) {
 		    		sessions.get(sessionId).removeClient(key);
 			    	
-			    	Resources resources = resourcesMap.get(sessionId);
-			    	ArrayList<resources.Character> characters = resources.getPlayerList();
-			    	for(int i=0; i<characters.size(); i++) {
-			    		if(characters.get(i).getId().equals(key)) {
-			    			characters.get(i).setLives(0);
-			    			characters.get(i).setDead(true);
-			    		}
-			    	}
+		    		if(sessions.get(sessionId).isGameInProgress()) {
+		    			Resources resources = resourcesMap.get(sessionId);
+				    	ArrayList<resources.Character> characters = resources.getPlayerList();
+				    	for(int i=0; i<characters.size(); i++) {
+				    		if(characters.get(i).getId().equals(key)) {
+				    			characters.get(i).setLives(0);
+				    			characters.get(i).setDead(true);
+				    		}
+				    	}
+		    		}
 		    	}
 		    }
 		    break;
