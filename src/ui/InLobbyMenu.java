@@ -169,14 +169,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 	Session getSession(){
 		return this.session;
 	}
-	
-	void setModel(ConnectionDataModel cModel){
-		this.cModel = cModel;
-	}
-	
-	ConnectionDataModel getModel(){
-		return this.cModel;
-	}
 
 	@Override
 	public void update(Observable o, Object arg) {

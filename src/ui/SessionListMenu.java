@@ -50,7 +50,6 @@ public class SessionListMenu extends JPanel implements Observer {
 		lobby = new InLobbyMenu(session, client, cModel, this);
 		setOpaque(false);
 		updateSessionsPanel(client);
-		//setLayout(new BorderLayout());
 		add(addSessionButtons(client, this));
 		add(UIRes.sessionsPanels);
 
@@ -107,7 +106,6 @@ public class SessionListMenu extends JPanel implements Observer {
 				}
 				
 				lobby.setSession(newSession);
-				//lobby.setModel(cModel);
 				UIRes.switchPanel(lobby);
 			}
 
@@ -140,7 +138,6 @@ public class SessionListMenu extends JPanel implements Observer {
 			}
 			
 			lobby.setSession(cModel.getAllSessions().get(index));
-			//lobby.setModel(cModel);
 			UIRes.switchPanel(lobby);
 		});
 
