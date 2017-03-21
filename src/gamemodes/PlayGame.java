@@ -39,7 +39,7 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "jacketpotato";
-		resources.mode = Mode.HotPotato;
+		resources.mode = Mode.Deathmatch;
 
 		Map.World style = Map.World.SPACE;
 
@@ -88,16 +88,16 @@ public class PlayGame {
 		GameModeFFA mode;
 		switch (resources.mode) {
 		case Deathmatch:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, false, true);
 			break;
 		case LastManStanding:
-			mode = new LastManStanding(resources, 5);
+			mode = new LastManStanding(resources, 5, false, true);
 			break;
 		case HotPotato:
-			mode = new HotPotato(resources);
+			mode = new HotPotato(resources, false, true);
 			break;
 		default:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, false, true);
 			break;
 		}
 		((Thread) mode).start();
