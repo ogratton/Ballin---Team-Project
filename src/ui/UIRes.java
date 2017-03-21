@@ -106,7 +106,7 @@ public class UIRes {
 		try {
 			customFont = Font
 					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir") + "/resources/fonts/04b.TTF"))
+							new File(System.getProperty("user.dir") + FilePaths.fonts +"04b.TTF"))
 					.deriveFont((float) size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);

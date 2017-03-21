@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import resources.FilePaths;
 import resources.Map;
 import resources.Map.Tile;
 
@@ -57,9 +58,8 @@ public class MapPreview extends JPanel {
 
 	public static void main(String[] args) {
 
-		String root = "./resources/maps/";
 
-		File folder = new File(root);
+		File folder = new File(FilePaths.maps);
 		File[] listOfFiles = folder.listFiles();
 
 		ArrayList<Map> maps = new ArrayList<Map>();

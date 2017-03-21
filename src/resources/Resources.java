@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JPanel;
-
-import ai.AITemplate;
-import ai.FightingAI;
 import ai.pathfinding.Line;
 import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
@@ -26,7 +22,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 
-	public static final boolean silent = true; // so alex can run the game :)
+	public static final boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug

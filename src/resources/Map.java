@@ -2,15 +2,11 @@ package resources;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.function.Function;
 
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
-import resources.Map.Tile;
 
 public class Map {
 	private int width, height;
@@ -26,7 +22,7 @@ public class Map {
 	private int[][] proxMask;
 	private double[][] costMask;
 
-	private String name;
+	private String filename; // filename minus extension
 	
 	// powerups
 	// private ArrayList<PowerUp> powerups;
@@ -58,59 +54,49 @@ public class Map {
 	/**
 	 * Create a default map with given width and height
 	 * 
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
+	 * @param width the width
+	 * @param height the height
+	 * @param filename the filename minus extension
 	 */
+	public Map(int width, int height, String filename) {
 
-	public Map(int width, int height, String name) {
-
-		this(new Point2D.Double(0, 0), width, height, default_friction, name);
+		this(new Point2D.Double(0, 0), width, height, default_friction, filename);
 	}
 
 	/**
 	 * Same as default but allows you to specify the tiles of the map and the
 	 * world
 	 * 
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
-	 * @param tile
-	 *            the array of tiles
-	 * @param world
-	 *            the world type
+	 * @param width the width
+	 * @param height the height
+	 * @param tile the array of tiles
+	 * @param world the world type
+	 * @param filename the filename minus extension
 	 */
 
-	public Map(int width, int height, World world, String mapName) {
-		this(new Point2D.Double(0, 0), width, height, default_friction, world, mapName);
+	public Map(int width, int height, World world, String filename) {
+		this(new Point2D.Double(0, 0), width, height, default_friction, world, filename);
 	}
 
 	/**
 	 * Create a default map with given physics and size
 	 * 
-	 * @param origin
-	 *            the origin point
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
-	 * @param friction
-	 *            the friction
-	 * @param gravity
-	 *            the gravity
-	 * @param walls
-	 *            the list of walls
+	 * @param origin the origin point
+	 * @param width the width
+	 * @param height the height
+	 * @param friction the friction
+	 * @param gravity the gravity
+	 * @param walls the list of walls
+	 * @param filename the filename minus extension
 	 */
 
-	public Map(Point2D origin, int width, int height, double friction, String name) {
+	public Map(Point2D origin, int width, int height, double friction, String filename) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
 		this.world = World.CAVE;
-		this.name = name;
+		this.filename = filename;
 		setFriction();
 
 		tiles = new Tile[height][width];
@@ -127,29 +113,23 @@ public class Map {
 	/**
 	 * Create a default map with given physics, size and tileset
 	 * 
-	 * @param origin
-	 *            the origin point
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
-	 * @param friction
-	 *            friction
-	 * @param gravity
-	 *            gravity
-	 * @param walls
-	 *            the list of walls
-	 * @param tiles
-	 *            the array of tiles
+	 * @param origin the origin point
+	 * @param width the width
+	 * @param height the height
+	 * @param friction friction
+	 * @param gravity gravity
+	 * @param walls the list of walls
+	 * @param tiles the array of tiles
+	 * @param filename the filename minus extension
 	 */
 
 	public Map(Point2D origin, int width, int height, double friction,
-			World worldType, String name) {
+			World worldType, String filename) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.friction = friction;
-		this.name = name;
+		this.filename = filename;
 		
 		// Create default map in case the following fails
 		Map.Tile[][] tiles = null;	
@@ -158,7 +138,7 @@ public class Map {
 		try
 		{
 
-			tiles = mr.readMap("./resources/maps/"+name+".csv");
+			tiles = mr.readMap(FilePaths.maps+filename+".csv");
 			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
@@ -570,7 +550,7 @@ public class Map {
 	}
 
 	public String getName(){
-		return this.name;
+		return this.filename;
 	}
 	
 }

@@ -64,7 +64,7 @@ public class MusicPlayer extends Thread
 	{
 		running = true;
 		musicFiles.get(currentSongIndex).play(gain);
-		System.out.println("Now Playing: " + nowPlaying());
+//		System.out.println("Now Playing: " + nowPlaying());
 		while (true)
 		{
 			
@@ -160,7 +160,7 @@ public class MusicPlayer extends Thread
 		// play the new song
 		musicFiles.get(currentSongIndex).play(gain);
 
-		System.out.println("Now Playing: " + nowPlaying());
+//		System.out.println("Now Playing: " + nowPlaying());
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class MusicPlayer extends Thread
 		// play the new song
 		musicFiles.get(currentSongIndex).play(gain);
 
-		System.out.println("Now Playing: " + nowPlaying());
+//		System.out.println("Now Playing: " + nowPlaying());
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class MusicPlayer extends Thread
 			paused = false;
 			musicFiles.get(currentSongIndex).resume(paused_at, gain);
 			paused_at = 0;
-			System.out.println("Now Playing: " + nowPlaying());
+//			System.out.println("Now Playing: " + nowPlaying());
 		}
 	}
 	

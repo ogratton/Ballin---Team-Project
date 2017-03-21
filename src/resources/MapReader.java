@@ -110,8 +110,9 @@ public class MapReader
 		MapReader mr = new MapReader();	
 		try
 		{
-			Map.Tile[][] map = mr.readMap("./resources/maps/potato2.csv");
+			Map.Tile[][] map = mr.readMap(FilePaths.maps + "potato2.csv");
 			System.out.println("I guess it worked then");
+			System.out.println(map);
 		}
 		catch (IOException e)
 		{

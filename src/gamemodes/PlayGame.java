@@ -38,8 +38,8 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "pit";
-		resources.mode = Mode.Deathmatch;
+		String mapName = "jacketpotato";
+		resources.mode = Mode.HotPotato;
 
 		Map.World style = Map.World.SPACE;
 
@@ -48,9 +48,7 @@ public class PlayGame {
 		if (!Resources.silent) {
 			// 30 second gamemode needs 30 seconds of music
 			if (resources.mode == Mode.Deathmatch) {
-				if (style == Map.World.DESERT) {
-					resources.getMusicPlayer().changePlaylist("paris30");
-				} else if (style == Map.World.SPACE) {
+				if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm30");
 				} else {
 					resources.getMusicPlayer().changePlaylist("thirty");
@@ -58,9 +56,7 @@ public class PlayGame {
 			}
 			// looping music
 			else {
-				if (style == Map.World.DESERT) {
-					resources.getMusicPlayer().changePlaylist("parisLoop");
-				} else if (style == Map.World.SPACE) {
+				if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm");
 				} else {
 					resources.getMusicPlayer().changePlaylist("frog");
