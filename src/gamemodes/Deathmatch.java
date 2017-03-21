@@ -23,6 +23,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Resources resources;
 	private boolean isServer = false;
 	private boolean finished = false;
+	private boolean singlePlayer = false;
 
 	private String victoryMusic = "grandma";
 
@@ -48,8 +49,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @param resources
 	 *            The resources object being used for the game.
 	 */
-	public Deathmatch(Resources resources, boolean isServer) {
+	public Deathmatch(Resources resources, boolean isServer, boolean singlePlayer) {
 		this.resources = resources;
+		this.singlePlayer = singlePlayer;
 
 		// Set up game
 		setAllLives(-1);
@@ -72,6 +74,20 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			SwingUtilities.invokeLater(g);
 		}
 
+		if (singlePlayer) {
+
+			try {
+				Thread.sleep(1000);
+				resources.setCountdown(2);
+				Thread.sleep(1000);
+				resources.setCountdown(1);
+				Thread.sleep(1000);
+				resources.setCountdown(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		p.start();
 
 		// Graphics g = new Graphics(resources, null, false);

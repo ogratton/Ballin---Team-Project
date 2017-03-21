@@ -213,8 +213,10 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	public void end() {
+		System.out.println("end");
 		resources.setFinished(false);
 		LayeredPane.victoryShowing = false;
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.dispose();
 	}
 
