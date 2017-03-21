@@ -25,7 +25,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private Random rand;
-	private int timer;
 	private boolean isServer;
 
 	/**
@@ -91,14 +90,13 @@ public class HotPotato extends Thread implements GameModeFFA {
 
 		p.start();
 
-		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {
 			try {
 				Thread.sleep(100);
 				resources.incrementTimer(1);
 				// Detonate bomb every 5 seconds
-				if (timer % 50 == 0 && playersRemaining() > 1) {
+				if (resources.getTimer() % 50 == 0 && playersRemaining() > 1) {
 					explodeBomb();
 					placeBomb();
 				}

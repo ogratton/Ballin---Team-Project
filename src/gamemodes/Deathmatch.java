@@ -144,7 +144,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver() {
-		return resources.getTimer() < 0;
+		return resources.getTimer() <= 0;
 	}
 
 	/**
