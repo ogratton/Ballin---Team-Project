@@ -7,9 +7,6 @@
 Licensed under Creative Commons: By Attribution 3.0 License <br>
 http://creativecommons.org/licenses/by/3.0/
 
-"Parisian Swing Guitars 3" John Ahlin
-From Epidemic Sound
-
 All other 'music' by Oliver Gratton
 
 <h2>Sprite Credits:</h2>
