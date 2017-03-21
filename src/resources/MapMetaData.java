@@ -1,6 +1,7 @@
 package resources;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import resources.Resources.Mode;
 
 /**
  * Extract what gamemodes a map is compatible with
+ * Example usage in main method
  * 
  * @author Oliver Gratton
  *
@@ -19,9 +21,13 @@ public class MapMetaData
 	private Mode[] gamemodes = Mode.values();
 	private ArrayList<String> gamemodeNames;
 
+	private ArrayList<Mode> compatibleModes;
+	private String name;
+
 	private String line = "";
 	private final String cvsSplitBy = ",";
-	private final String metadata = "@";
+	private final String gamemodeTag = "@GMs:";
+	private final String nameTag = "@Name:";
 
 	public MapMetaData()
 	{
@@ -35,28 +41,44 @@ public class MapMetaData
 	}
 
 	/**
+	 * @return the list of modes that were compatible with the last map
+	 * we ran readMetaData on
+	 */
+	public ArrayList<Mode> getCompatibleModes()
+	{
+		return compatibleModes;
+	}
+
+	/**
+	 * @return the name of the map we last ran readMetaData on
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
 	 * Read a map and return the list of gamemodes it can be played on
+	 * If tags occur twice, take the latter occurence (it overwrites)
 	 * 
 	 * @param filename
 	 * @throws IOException
 	 */
-	public ArrayList<Mode> readMetaData(String filename) throws IOException
+	public void readMetaData(String filename) throws IOException
 	{
 		br = new BufferedReader(new FileReader(filename));
 		ArrayList<Mode> compatibleModes = new ArrayList<Mode>();
 
 		while ((line = br.readLine()) != null)
 		{
-			if (line.startsWith(metadata))
+			if (line.startsWith(gamemodeTag))
 			{
 				// remove the leading symbol
-				line = line.substring(1);
+				line = line.substring(gamemodeTag.length());
 				// parse and write the metadata into resources
 				String[] items = line.split(cvsSplitBy);
 				for (int i = 0; i < items.length; i++)
 				{
-					// parse items[i] into resources.Mode enum and add to list in Map
-					// TODO if items[i] is in gamemodeNames, add corresponding mode to a list in the map object
 					String supposedMode = items[i].trim();
 					if (gamemodeNames.contains(supposedMode))
 					{
@@ -67,10 +89,14 @@ public class MapMetaData
 						System.err.println("WARNING: " + supposedMode + " is not a recognised GameMode. Ignoring");
 					}
 				}
+				this.compatibleModes = compatibleModes;
 			}
-		}
-
-		return compatibleModes;
+			else if (line.startsWith(nameTag))
+			{
+				line = line.substring(nameTag.length());
+				this.name = line.trim();
+			}
+		}	
 	}
 
 	/**
@@ -96,6 +122,14 @@ public class MapMetaData
 	public static void main(String[] args) throws IOException
 	{
 		MapMetaData mmd = new MapMetaData();
-		System.out.println(mmd.readMetaData(FilePaths.maps + "asteroid.csv"));
+		File folder = new File(FilePaths.maps);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++)
+		{
+			mmd.readMetaData(listOfFiles[i].toString());
+			System.out.println( mmd.getName() + ": " + mmd.getCompatibleModes());
+		}
+
 	}
 }
