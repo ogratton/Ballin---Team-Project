@@ -55,9 +55,6 @@ public class Resources {
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
 
-	// max deaths a character can have.
-	private int maxDeaths = 4;
-
 	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
 	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
 
@@ -100,6 +97,9 @@ public class Resources {
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
+	private int countdown = 3;
+	private boolean finished = false;
+	
 	/**
 	 * Creates a new resources object and defines which tiles are not walkable ('bad')
 	 */
@@ -110,6 +110,10 @@ public class Resources {
 		bad_tiles.add(Tile.WALL);
 	}
 
+	public void refresh() {
+		powerupList = new ArrayList<Powerup>();
+		globalTimer = 0;
+	}
 	/**
 	 * @return The current id.
 	 */
@@ -700,6 +704,22 @@ public class Resources {
 		this.playerList = new ArrayList<>();
 	}
 	
+	public void setCountdown(int i){
+		this.countdown = i;
+	}
+	
+	public int getCountdown(){
+		return this.countdown;
+	}
+	
+	public void setFinished(boolean finished){
+		this.finished = finished;
+	}
+	
+	public boolean isFinished(){
+		return this.finished;
+	}
+	
 	/**
 	 * @return An ArrayList of all characters, order by descending score
 	 */
@@ -710,4 +730,5 @@ public class Resources {
 		return scores;
 	}
 
+	
 }

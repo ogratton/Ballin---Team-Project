@@ -23,6 +23,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import networking.ClientInformation;
 import networking.Command;
+import networking.ConnectionData;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
@@ -243,7 +244,7 @@ public class SessionListMenu extends JPanel implements Observer {
 		panel.add(Box.createHorizontalStrut(10));
 		UIRes.getButtonAndIcon(panel, createSession);
 		UIRes.getButtonAndIcon(panel, joinSession);
-	//	UIRes.getButtonAndIcon(panel, refreshSession);
+		UIRes.getButtonAndIcon(panel, refreshSession);
 		UIRes.getButtonAndIcon(panel, backToMainMenu);
 		panel.add(Box.createHorizontalStrut(10));
 		return panel;
@@ -277,6 +278,9 @@ public class SessionListMenu extends JPanel implements Observer {
 		JButton button = new JButton("Back");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
+			
+			UIRes.cModel.getConnection().close();
+			
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;

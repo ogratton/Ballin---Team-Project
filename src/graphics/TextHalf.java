@@ -54,7 +54,7 @@ public class TextHalf extends JPanel {
 				blobs += "o";
 			}
 			
-			score .setText(blobs);
+			score.setText(blobs);
 		}
 
 		name.setAlignmentX(LEFT_ALIGNMENT);

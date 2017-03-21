@@ -29,6 +29,7 @@ public class Graphics extends Thread {
 		this.resources = resources;
 		this.updater = updater;
 		this.debugPaths = debugPaths;
+		this.comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 	}
 	
 	/**
@@ -38,6 +39,7 @@ public class Graphics extends Thread {
 	
 	public Graphics(Resources resources){
 		this.resources = resources;
+		this.comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 	}
 	
 	/**
@@ -46,29 +48,12 @@ public class Graphics extends Thread {
 	
 	public void run() {
 		
-		comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
+		
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							
 		comp.setTitle("" + resources.getId());
 		
-	}
-	
-	/**
-	 * Send the signal that the game has begun
-	 */
-	
-	public void begin(){
-		comp.begin();
-	}
-	
-	/**
-	 * Set the countdown
-	 * @param i the countdown
-	 */
-
-	public void setCountdown(int i){
-		comp.setCountdown(i);
 	}
 	
 }

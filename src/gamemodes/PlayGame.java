@@ -38,8 +38,9 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "asteroid";
+		String mapName = "potato";
 		resources.mode = Mode.HotPotato;
+
 		Map.World style = Map.World.CAVE;
 
 		// Music setting:
@@ -83,7 +84,6 @@ public class PlayGame {
 			resources.addPlayerToList(character);
 			AITemplate ai = (resources.mode == Mode.HotPotato) ? new HotPotatoAI(resources, character) : new FightingAI(resources, character);
 			character.setAI(ai);
-			ai.start();
 		}
 		GameModeFFA mode;
 		switch (resources.mode) {

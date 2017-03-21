@@ -39,10 +39,11 @@ public class InGameMenu extends BaseMenu {
 		return panel;
 	}
 	
-	JButton getBackToStartMenuButton(JFrame frame) {
+	static JButton getBackToStartMenuButton(JFrame frame) {
 		JButton button = new JButton("Back to Main Menu");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
+			UIRes.cModel.getConnection().close();
 			frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 			UIRes.switchPanel(UIRes.startPanel);
 		});
