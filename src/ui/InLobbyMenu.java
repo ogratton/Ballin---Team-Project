@@ -119,9 +119,14 @@ public class InLobbyMenu extends JPanel implements Observer{
 		
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
-			if (readyCheck.getForeground() == Color.RED) {
-				readyCheck.setForeground(Color.GREEN);
+			if(client.isReady()) {
+				client.setReady(false);
+			}
+			else {
 				client.setReady(true);
+			}
+			if (client.isReady()) {
+				readyCheck.setForeground(Color.GREEN);
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
 						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
@@ -135,7 +140,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 				}
 			} else {
 				readyCheck.setForeground(Color.RED);
-				client.setReady(false);
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
 						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
