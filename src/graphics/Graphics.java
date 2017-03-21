@@ -54,21 +54,4 @@ public class Graphics extends Thread {
 		
 	}
 	
-	/**
-	 * Send the signal that the game has begun
-	 */
-	
-	public void begin(){
-		comp.begin();
-	}
-	
-	/**
-	 * Set the countdown
-	 * @param i the countdown
-	 */
-
-	public void setCountdown(int i){
-		comp.setCountdown(i);
-	}
-	
 }

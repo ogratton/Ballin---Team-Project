@@ -100,6 +100,9 @@ public class Resources {
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
+	private int countdown = 3;
+	private boolean finished = false;
+	
 	/**
 	 * Creates a new resources object and defines which tiles are not walkable ('bad')
 	 */
@@ -698,6 +701,22 @@ public class Resources {
 	
 	public void clearPlayerList(){
 		this.playerList = new ArrayList<>();
+	}
+	
+	public void setCountdown(int i){
+		this.countdown = i;
+	}
+	
+	public int getCountdown(){
+		return this.countdown;
+	}
+	
+	public void setFinished(boolean finished){
+		this.finished = finished;
+	}
+	
+	public boolean isFinished(){
+		return this.finished;
 	}
 
 }

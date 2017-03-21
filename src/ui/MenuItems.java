@@ -84,7 +84,7 @@ public class MenuItems extends UIRes {
 		return startButton;
 	}
 
-	JButton getBackToStartMenuButton() {
+	public static JButton getBackToStartMenuButton() {
 		JButton button = new JButton("Back");
 		customiseButton(button, true);
 		button.addActionListener(e -> {

@@ -45,7 +45,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		resources.gamemode = this;
 		this.rand = new Random();
 	}
-	
+
 	/**
 	 * Create a new hot potato game mode.
 	 * 
@@ -72,23 +72,23 @@ public class HotPotato extends Thread implements GameModeFFA {
 		// start the game
 		Physics p = new Physics(resources, false);
 		Graphics g = new Graphics(resources, null, false);
-		if(!isServer) {
+		if (!isServer) {
 			SwingUtilities.invokeLater(g);
 		}
-		
-		try{
-		Thread.sleep(1500);
-		g.setCountdown(2);
-		Thread.sleep(1500);
-		g.setCountdown(1);
-		Thread.sleep(1500);
-		}catch(InterruptedException e){
+
+		try {
+			Thread.sleep(1000);
+			resources.setCountdown(2);
+			Thread.sleep(1000);
+			resources.setCountdown(1);
+			Thread.sleep(1000);
+			resources.setCountdown(0);
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		g.begin();
+
 		p.start();
-		
+
 		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {

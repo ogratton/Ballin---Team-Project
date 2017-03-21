@@ -94,7 +94,6 @@ public class NetworkingDemo {
 			resources.addPlayerToList(character);
 			FightingAI ai = new FightingAI(resources, character);
 			character.setAI(ai);
-			ai.start();
 		}
 
 		((Thread) mode).start();

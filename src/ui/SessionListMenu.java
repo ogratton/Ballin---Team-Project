@@ -243,7 +243,7 @@ public class SessionListMenu extends JPanel implements Observer {
 		panel.add(Box.createHorizontalStrut(10));
 		UIRes.getButtonAndIcon(panel, createSession);
 		UIRes.getButtonAndIcon(panel, joinSession);
-	//	UIRes.getButtonAndIcon(panel, refreshSession);
+		UIRes.getButtonAndIcon(panel, refreshSession);
 		UIRes.getButtonAndIcon(panel, backToMainMenu);
 		panel.add(Box.createHorizontalStrut(10));
 		return panel;
