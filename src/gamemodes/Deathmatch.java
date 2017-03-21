@@ -41,7 +41,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 	}
-	
+
 	/**
 	 * Create a new deathmatch game.
 	 * 
@@ -71,26 +71,25 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources, false);
 		Graphics g = new Graphics(resources, null, false);
-		if(!isServer) {
+		if (!isServer) {
 			SwingUtilities.invokeLater(g);
 		}
-		
-		try{
-		Thread.sleep(1500);
-		g.setCountdown(2);
-		Thread.sleep(1500);
-		g.setCountdown(1);
-		Thread.sleep(1500);
-		}catch(InterruptedException e){
+
+		try {
+			Thread.sleep(1500);
+			g.setCountdown(2);
+			Thread.sleep(1500);
+			g.setCountdown(1);
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		g.begin();
 		p.start();
-		
-		
-		//Graphics g = new Graphics(resources, null, false);
-		//g.start();
+
+		// Graphics g = new Graphics(resources, null, false);
+		// g.start();
 
 		while (!isGameOver()) {
 			try {
