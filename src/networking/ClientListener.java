@@ -216,6 +216,12 @@ public class ClientListener extends Listener {
            				}
    				}
    				break;
+   			case COUNTDOWN:
+   				if(cModel.getResources() != null) {
+   					Resources res = cModel.getResources();
+   				
+   				}
+   				break;
    			default:
    				break;
    			}

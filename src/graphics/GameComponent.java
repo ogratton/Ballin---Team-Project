@@ -32,13 +32,11 @@ public class GameComponent extends JFrame implements ActionListener {
 	private ArrayList<Character> characters;
 	private Timer timer;
 	public static LayeredPane layers;
-	private boolean seenVictory = false;
 	private TopBar bar;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
 
 	private boolean fullScreen = false;
-	private boolean keyPressed = false;
 
 	int oldValueX, newValueX, oldValueY, newValueY;
 
@@ -132,13 +130,12 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		if (resources.gamemode.isGameOver()) {
 			layers.victory();
-			
-			if(!keyPressed){
-				seenVictory = true;
-			}
 		}
 		
 		if(resources.isFinished()){
+			resources.setFinished(false);
+			resources.setCountdown(3);
+			LayeredPane.splashShowing = true;
 			end();
 		}
 
@@ -216,6 +213,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	public void end() {
+		resources.setFinished(false);
 		LayeredPane.victoryShowing = false;
 		this.dispose();
 	}
@@ -271,12 +269,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		@Override
 		public void keyReleased(KeyEvent e) {
 
-			keyPressed = false;
-			
-			if (LayeredPane.victoryShowing && !seenVictory) {
-				seenVictory = true;
-			}
-
 			int key = e.getKeyCode();
 			
 			if (key == leftKey) {
@@ -293,17 +285,9 @@ public class GameComponent extends JFrame implements ActionListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			
-			keyPressed = true;
 			
 			int key = e.getKeyCode();
 
-			if (LayeredPane.victoryShowing && !seenVictory) {
-				e.consume();
-			}
-			
-			if (LayeredPane.victoryShowing && seenVictory) {
-				end();
-			}
 			
 			if (LayeredPane.splashShowing) {
 				

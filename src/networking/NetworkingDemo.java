@@ -95,8 +95,6 @@ public class NetworkingDemo {
 			FightingAI ai = new FightingAI(resources, character);
 			character.setAI(ai);
 		}
-
-		((Thread) mode).start();
 		
 		// Add the resources object to the resources HashMap.
 		resourcesMap.put(session.getId(), resources);

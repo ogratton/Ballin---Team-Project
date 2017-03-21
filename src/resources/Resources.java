@@ -55,9 +55,6 @@ public class Resources {
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
 
-	// max deaths a character can have.
-	private int maxDeaths = 4;
-
 	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
 	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
 
@@ -113,6 +110,10 @@ public class Resources {
 		bad_tiles.add(Tile.WALL);
 	}
 
+	public void refresh() {
+		powerupList = new ArrayList<Powerup>();
+		globalTimer = 0;
+	}
 	/**
 	 * @return The current id.
 	 */
@@ -729,4 +730,5 @@ public class Resources {
 		return scores;
 	}
 
+	
 }
