@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import resources.FilePaths;
 import resources.Map;
 
 /**
@@ -58,7 +59,7 @@ public class Sprite {
 			break;
 		}
 
-		String address = "./resources/sprites/" + sheetType + ".png";
+		String address = FilePaths.sprites + sheetType + ".png";
 
 		try {
 			sprite = ImageIO.read(new File(address));

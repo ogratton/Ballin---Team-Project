@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import com.esotericsoftware.kryonet.Client;
 
+@Deprecated
 public class ClientGUI extends Thread {
 	private ConnectionDataModel model;
 	private String name;

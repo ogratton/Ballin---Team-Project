@@ -69,6 +69,13 @@ public class SplashScreen extends JPanel {
 		String right =  KeyEvent.getKeyText(resources.getRight());
 		String dash = KeyEvent.getKeyText(resources.getDash());
 		
+
+		JLabel label5 = new JLabel("Movement");
+		UIRes.setCustomFont(label5, 32);
+		label5.setAlignmentX(CENTER_ALIGNMENT);
+		label5.setBorder(new EmptyBorder(10, 10, 10, 10));
+		add(label5);
+		
 		JLabel label4 = new JLabel("Up: " + up + " Left: " + left + " Down: " + down + " Right: " + right + " Dash: " + dash);
 		UIRes.setCustomFont(label4, 32);
 		label4.setAlignmentX(CENTER_ALIGNMENT);

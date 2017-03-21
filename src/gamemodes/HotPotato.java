@@ -26,6 +26,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Resources resources;
 	private Random rand;
 	private boolean isServer;
+	private boolean singlePlayer = false;
 
 	/**
 	 * Create a new hot potato game mode.
@@ -51,12 +52,14 @@ public class HotPotato extends Thread implements GameModeFFA {
 	 * @param resources
 	 *            The resources object being used for the game.
 	 */
-	public HotPotato(Resources resources, boolean isServer) {
+	public HotPotato(Resources resources, boolean isServer, boolean singlePlayer) {
 		this.resources = resources;
 
 		// Set up game
 		setAllLives(1);
 		randomRespawn();
+		
+		this.singlePlayer = singlePlayer;
 
 		resources.mode = Mode.HotPotato;
 		resources.gamemode = this;
@@ -76,6 +79,20 @@ public class HotPotato extends Thread implements GameModeFFA {
 			SwingUtilities.invokeLater(g);
 		}
 
+		if (singlePlayer) {
+
+			try {
+				Thread.sleep(1000);
+				resources.setCountdown(2);
+				Thread.sleep(1000);
+				resources.setCountdown(1);
+				Thread.sleep(1000);
+				resources.setCountdown(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		p.start();
 
 		placeBomb();
@@ -159,9 +176,11 @@ public class HotPotato extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
+	public ArrayList<Character> getWinners() {
 		checkWinner();
-		return winner;
+		ArrayList<Character> winners = new ArrayList<>();
+		winners.add(winner);
+		return winners;
 	}
 
 	/**

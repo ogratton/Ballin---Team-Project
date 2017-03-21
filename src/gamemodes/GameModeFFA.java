@@ -14,8 +14,8 @@ public interface GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner();
-	
+	public ArrayList<Character> getWinners();
+
 	/**
 	 * @return Whether the game has ended
 	 */
@@ -25,11 +25,10 @@ public interface GameModeFFA {
 	 * Reset all player lives to maximum
 	 */
 	public void resetLives();
-	
+
 	/**
 	 * Respawns all the players in a random location
 	 */
 	public void randomRespawn();
 
-	
 }

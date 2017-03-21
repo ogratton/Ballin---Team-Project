@@ -23,11 +23,15 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;//
 	private boolean isServer = false;//
+	private boolean singlePlayer = false;
 
 	/**
 	 * Create a new last man standing game mode.
-	 * @param resources The resources object being used for the game.
-	 * @param maxLives The maximum number of lives for the game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 * @param maxLives
+	 *            The maximum number of lives for the game.
 	 */
 	public LastManStanding(Resources resources, int maxLives) {
 		this.maxLives = maxLives;
@@ -36,40 +40,59 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		// Set up game
 		setAllLives(maxLives);
 		randomRespawn();
-		
+
 		resources.mode = Mode.LastManStanding;
 		resources.gamemode = this;
 	}
-	
+
 	/**
 	 * Create a new last man standing game mode.
-	 * @param resources The resources object being used for the game.
-	 * @param maxLives The maximum number of lives for the game.
+	 * 
+	 * @param resources
+	 *            The resources object being used for the game.
+	 * @param maxLives
+	 *            The maximum number of lives for the game.
 	 */
-	public LastManStanding(Resources resources, int maxLives, boolean isServer) {
+	public LastManStanding(Resources resources, int maxLives, boolean isServer, boolean singlePlayer) {
 		this.maxLives = maxLives;
 		this.resources = resources;
+		this.singlePlayer = singlePlayer;
 
 		// Set up game
 		setAllLives(maxLives);
 		randomRespawn();
-		
+
 		resources.mode = Mode.LastManStanding;
 		resources.gamemode = this;
 		this.isServer = isServer;
 	}
 
-	/* 
+	/*
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		//start the game
+		// start the game
 		Physics p = new Physics(resources, false);
-		if(!isServer) {
+		if (!isServer) {
 			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
+
 		}
-		
+
+		if (singlePlayer) {
+
+			try {
+				Thread.sleep(1000);
+				resources.setCountdown(2);
+				Thread.sleep(1000);
+				resources.setCountdown(1);
+				Thread.sleep(1000);
+				resources.setCountdown(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
 		p.start();
 
 		while (!isGameOver()) {
@@ -140,9 +163,11 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
+	public ArrayList<Character> getWinners() {
 		checkWinner();
-		return winner;
+		ArrayList<Character> winners = new ArrayList<>();
+		winners.add(winner);
+		return winners;
 	}
 
 	/**
@@ -187,7 +212,8 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	public ArrayList<Character> getOrderedTimesOfDeath() {
 		ArrayList<Character> times = new ArrayList<Character>();
 		times.addAll(resources.getPlayerList());
-		times.sort((a, b) -> (a.getTimeOfDeath() > b.getTimeOfDeath()) ? -1 : (a.getTimeOfDeath() < b.getTimeOfDeath()) ? 1 : 0);
+		times.sort((a, b) -> (a.getTimeOfDeath() > b.getTimeOfDeath()) ? -1
+				: (a.getTimeOfDeath() < b.getTimeOfDeath()) ? 1 : 0);
 		return times;
 	}
 

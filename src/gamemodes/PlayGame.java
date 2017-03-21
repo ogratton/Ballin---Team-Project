@@ -48,9 +48,7 @@ public class PlayGame {
 		if (!Resources.silent) {
 			// 30 second gamemode needs 30 seconds of music
 			if (resources.mode == Mode.Deathmatch) {
-				if (style == Map.World.DESERT) {
-					resources.getMusicPlayer().changePlaylist("paris30");
-				} else if (style == Map.World.SPACE) {
+				if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm30");
 				} else {
 					resources.getMusicPlayer().changePlaylist("thirty");
@@ -58,9 +56,7 @@ public class PlayGame {
 			}
 			// looping music
 			else {
-				if (style == Map.World.DESERT) {
-					resources.getMusicPlayer().changePlaylist("parisLoop");
-				} else if (style == Map.World.SPACE) {
+				if (style == Map.World.SPACE) {
 					resources.getMusicPlayer().changePlaylist("ultrastorm");
 				} else {
 					resources.getMusicPlayer().changePlaylist("frog");
@@ -88,16 +84,16 @@ public class PlayGame {
 		GameModeFFA mode;
 		switch (resources.mode) {
 		case Deathmatch:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, false, true);
 			break;
 		case LastManStanding:
-			mode = new LastManStanding(resources, 5);
+			mode = new LastManStanding(resources, 5, false, true);
 			break;
 		case HotPotato:
-			mode = new HotPotato(resources);
+			mode = new HotPotato(resources, false, true);
 			break;
 		default:
-			mode = new Deathmatch(resources);
+			mode = new Deathmatch(resources, false, true);
 			break;
 		}
 		((Thread) mode).start();

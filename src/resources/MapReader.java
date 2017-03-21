@@ -18,6 +18,7 @@ public class MapReader
 	private String line = "";
 	private final String cvsSplitBy = ",";
 	private final String comment = "#";
+	private final String metadata = "@";
 	
 	private  Hashtable<String, Map.Tile> tileDict;
 
@@ -65,7 +66,7 @@ public class MapReader
 
 		while ((line = br.readLine()) != null)
 		{
-			if (!line.startsWith(comment))
+			if (!line.startsWith(comment) && !line.startsWith(metadata))
 			{
 				// use comma as separator
 				String[] items = line.split(cvsSplitBy);
@@ -109,8 +110,9 @@ public class MapReader
 		MapReader mr = new MapReader();	
 		try
 		{
-			Map.Tile[][] map = mr.readMap("./resources/maps/potato2.csv");
+			Map.Tile[][] map = mr.readMap(FilePaths.maps + "potato2.csv");
 			System.out.println("I guess it worked then");
+			System.out.println(map);
 		}
 		catch (IOException e)
 		{

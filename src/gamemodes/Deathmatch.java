@@ -23,6 +23,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Resources resources;
 	private boolean isServer = false;
 	private boolean finished = false;
+	private boolean singlePlayer = false;
 
 	private String victoryMusic = "grandma";
 
@@ -48,8 +49,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @param resources
 	 *            The resources object being used for the game.
 	 */
-	public Deathmatch(Resources resources, boolean isServer) {
+	public Deathmatch(Resources resources, boolean isServer, boolean singlePlayer) {
 		this.resources = resources;
+		this.singlePlayer = singlePlayer;
 
 		// Set up game
 		setAllLives(-1);
@@ -72,6 +74,20 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			SwingUtilities.invokeLater(g);
 		}
 
+		if (singlePlayer) {
+
+			try {
+				Thread.sleep(1000);
+				resources.setCountdown(2);
+				Thread.sleep(1000);
+				resources.setCountdown(1);
+				Thread.sleep(1000);
+				resources.setCountdown(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		p.start();
 
 		// Graphics g = new Graphics(resources, null, false);
@@ -98,7 +114,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 
 		System.out.println("WE HAVE A WINNER");
-		getWinner();
+		getWinners();
 		System.out.println(
 				"Player " + winner.getPlayerNumber() + " achieved the highest score of  " + winner.getScore() + "!");
 		ArrayList<Character> scores = resources.getOrderedScores();
@@ -139,9 +155,25 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
-		winner = resources.getOrderedScores().get(0);
-		return winner;
+	public ArrayList<Character> getWinners() {
+
+		ArrayList<Character> scores = resources.getOrderedScores();
+
+		winner = scores.get(0);
+
+		ArrayList<Character> winners = new ArrayList<>();
+
+		int score = winner.getScore();
+
+		for (Character c : scores) {
+
+			if (score == c.getScore()) {
+				winners.add(c);
+			}
+
+		}
+
+		return winners;
 	}
 
 	@Override

@@ -31,9 +31,10 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
-
+	
 	private boolean client = false;
-
+	private int bombPassTimer = 0;
+	
 	/**
 	 * Create the physics engine.
 	 * 
@@ -88,27 +89,25 @@ public class Physics extends Thread implements ActionListener {
 			// System.out.println("hp: " + c.getHealth());
 			// }
 			update(c);
+			
 			for (Character d : resources.getPlayerList()) {
 				// check collisions
 				if (c != d && !c.isDead() && !d.isDead()) {
 					CND cnd = detectCollision(c, d);
 					if (cnd.collided) {
-						collide(c, d, cnd);
-						// If playing hot potato, pass bomb if you have it
-						if (c.hasBomb() && resources.mode == Mode.HotPotato) {
-							c.hasBomb(false);
-							d.hasBomb(true);
-							// System.out.println("Player " +
-							// c.getPlayerNumber() + " has passed the bomb to
-							// player "
-							// + d.getPlayerNumber() + "!");
+						// If playing hot potato, if bomb hasn't passed on yet, pass bomb if you have it
+						if(resources.mode == Mode.HotPotato){
+								if (c.hasBomb() && bombPassTimer == 0) {
+									c.hasBomb(false);
+									d.hasBomb(true);
+									bombPassTimer = 100;
+								}
 						}
 						collide(c, d, cnd);
-						// If playing hot potato, pass bomb if you have it
-
 					}
 				}
 			}
+			if(bombPassTimer > 0) bombPassTimer--;
 			// Check collisions with powerups
 			for (Powerup p : resources.getPowerupList()) {
 				CND cnd = detectCollision(c, p);
@@ -261,6 +260,7 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 150) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
+					c.incrementScore(-1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();
@@ -361,28 +361,28 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
-		Tile t2 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
-		if (t2 == Tile.WALL) { // right edge
-			if (c.getDx() < 0.1)
-				c.setDx(1);
+		Tile t1 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
+		if (t1 == Tile.WALL) { // right edge
+			if (c.getDx() < 0.5)
+				c.setDx(0.5);
 			c.setDx(0 - Math.abs(c.getDx()));
 		}
-		t2 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
-		if (t2 == Tile.WALL) { // left edge
-			if (c.getDx() < 0.1)
-				c.setDx(1);
+		t1 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
+		if (t1 == Tile.WALL) { // left edge
+			if (c.getDx() < 0.5)
+				c.setDx(0.5);
 			c.setDx(Math.abs(c.getDx()));
 		}
-		t2 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
-		if (t2 == Tile.WALL) { // bottom edge
-			if (c.getDy() < 0.1)
-				c.setDx(1);
+		t1 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
+		if (t1 == Tile.WALL) { // bottom edge
+			if (c.getDy() < 0.5)
+				c.setDx(0.5);
 			c.setDy(0 - Math.abs(c.getDy()));
 		}
-		t2 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
-		if (t2 == Tile.WALL) { // top edge
-			if (c.getDy() < 0.1)
-				c.setDx(1);
+		t1 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
+		if (t1 == Tile.WALL) { // top edge
+			if (c.getDy() < 0.5)
+				c.setDx(0.5);
 			c.setDy(Math.abs(c.getDy()));
 		}
 
@@ -532,7 +532,7 @@ public class Physics extends Thread implements ActionListener {
 		double dy2 = Math.pow(dy, 2);
 		if ((dx2 + dy2) <= r) {
 			double distance = Math.sqrt(dx2 + dy2);
-			if (distance != 0) {
+			if (distance != 0) { // avoid divide by zero
 				cnd.collided = true;
 				cnd.collisionDepth = r - distance;
 				// normalise collision normal

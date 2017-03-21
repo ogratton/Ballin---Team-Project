@@ -213,8 +213,10 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	public void end() {
+		System.out.println("end");
 		resources.setFinished(false);
 		LayeredPane.victoryShowing = false;
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.dispose();
 	}
 
@@ -313,7 +315,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				if (LayeredPane.menuShowing)
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(10));
 				else
-					layers.setLayer(LayeredPane.inGameMenu, new Integer(20));
+					layers.setLayer(LayeredPane.inGameMenu, new Integer(30));
 				LayeredPane.menuShowing = !LayeredPane.menuShowing;
 			}
 
