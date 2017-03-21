@@ -24,20 +24,10 @@ import resources.Resources;
 public abstract class BaseMenu extends MenuItems
 {
 
-	public static int getScreenWidth()
-	{
-		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-	}
-
-	public static int getScreenHeight()
-	{
-		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-	}
-
 	static JFrame createFrame()
 	{
 		JFrame frame = new JFrame();
-		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
+		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(getScreenWidth(), getScreenHeight(), ""))));
 		frame.setResizable(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
@@ -82,7 +72,7 @@ public abstract class BaseMenu extends MenuItems
 
 	JPanel addSpriteIcon(JPanel panel, int x)
 	{
-		panel.add(getSpriteIcon(x));
+		panel.add(getSpriteLabel(x));
 		return panel;
 	}
 
