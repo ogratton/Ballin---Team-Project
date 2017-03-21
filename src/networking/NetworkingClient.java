@@ -1,5 +1,6 @@
 package networking;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -8,6 +9,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
 import networking.GameData.Tag;
+import resources.Powerup;
+import resources.Powerup.Power;
+import resources.Collidable_Circle.CollidableType;
 import resources.Resources.Mode;
 import ui.UIRes;
 
@@ -96,5 +100,7 @@ public class NetworkingClient extends Thread {
 		  kryo.register(resources.Map.World.class);
 		  kryo.register(Mode.class);
 		  kryo.register(resources.Character.Class.class);
+		  kryo.register(Power.class);
+	      kryo.register(SerializablePowerUp.class);
 	}
 }

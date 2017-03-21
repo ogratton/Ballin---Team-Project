@@ -72,15 +72,15 @@ public class MenuItems extends UIRes {
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			resources.refresh();
-//			JFrame frame = new JFrame();
-//			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
-//					JOptionPane.PLAIN_MESSAGE);
-//			if (input != null) {
-				NetworkingClient client = new NetworkingClient("localhost", username);
+			JFrame frame = new JFrame();
+			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+					JOptionPane.PLAIN_MESSAGE);
+			if (input != null) {
+				NetworkingClient client = new NetworkingClient(input, username);
 				client.start();
-//			} else {
-//				frame.dispose();
-//			}
+			} else {
+				frame.dispose();
+			}
 		});
 		return startButton;
 	}

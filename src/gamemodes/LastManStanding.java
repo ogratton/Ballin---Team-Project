@@ -65,20 +65,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	public void run() {
 		//start the game
 		Physics p = new Physics(resources, false);
-		Graphics g = new Graphics(resources, null, false);
 		if(!isServer) {
+			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
-			
-			try {
-				Thread.sleep(1000);
-				resources.setCountdown(2);
-				Thread.sleep(1000);
-				resources.setCountdown(1);
-				Thread.sleep(1000);
-				resources.setCountdown(0);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		p.start();
@@ -151,9 +140,11 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
+	public ArrayList<Character> getWinners() {
 		checkWinner();
-		return winner;
+		ArrayList<Character> winners = new ArrayList<>();
+		winners.add(winner);
+		return winners;
 	}
 
 	/**
@@ -213,11 +204,4 @@ public class LastManStanding extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
-
-	@Override
-	public int getTime() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

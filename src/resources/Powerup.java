@@ -38,6 +38,17 @@ public class Powerup extends Observable implements Collidable_Circle {
 		power = Power.values()[p];
 		sprite = SheetDeets.getPowerUpSpriteFromType(power);
 	}
+	
+	/**
+	 * Create a new powerup to be sent across the network.
+	 */
+	public Powerup(Power p, double x, double y, boolean active) {
+		power = p;
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
+		this.x = x;
+		this.y = y;
+		this.active = active;
+	}
 
 	@Override
 	public double getInvMass() {

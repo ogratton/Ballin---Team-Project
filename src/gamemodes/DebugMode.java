@@ -44,9 +44,9 @@ public class DebugMode extends Thread implements GameModeFFA
 	 * @return just the first player in the list
 	 */
 	@Override
-	public Character getWinner()
+	public ArrayList<Character> getWinners()
 	{
-		return resources.getPlayerList().get(0);
+		return resources.getPlayerList();
 	}
 
 	/**
@@ -88,11 +88,4 @@ public class DebugMode extends Thread implements GameModeFFA
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public int getTime() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

@@ -25,7 +25,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private Random rand;
-	private int timer;
 	private boolean isServer;
 
 	/**
@@ -69,35 +68,23 @@ public class HotPotato extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
+		resources.setTimer(0);
 		// start the game
 		Physics p = new Physics(resources, false);
-		Graphics g = new Graphics(resources, null, false);
 		if (!isServer) {
+			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
-			
-			try {
-				Thread.sleep(1000);
-				resources.setCountdown(2);
-				Thread.sleep(1000);
-				resources.setCountdown(1);
-				Thread.sleep(1000);
-				resources.setCountdown(0);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 		}
 
 		p.start();
 
-		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {
 			try {
 				Thread.sleep(100);
-				timer += 1;
+				resources.incrementTimer(1);
 				// Detonate bomb every 5 seconds
-				if (timer % 50 == 0 && playersRemaining() > 1) {
+				if (resources.getTimer() % 50 == 0 && playersRemaining() > 1) {
 					explodeBomb();
 					placeBomb();
 				}
@@ -172,9 +159,11 @@ public class HotPotato extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
+	public ArrayList<Character> getWinners() {
 		checkWinner();
-		return winner;
+		ArrayList<Character> winners = new ArrayList<>();
+		winners.add(winner);
+		return winners;
 	}
 
 	/**
@@ -235,10 +224,4 @@ public class HotPotato extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
-
-	@Override
-	public int getTime() {
-		return this.timer;
-	}
-
 }

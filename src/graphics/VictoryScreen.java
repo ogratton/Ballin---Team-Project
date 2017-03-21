@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -51,7 +52,7 @@ public class VictoryScreen extends JPanel {
 		boolean winner = false;
 
 		// check if this machine's character is the winner
-		if (character.equals(resources.gamemode.getWinner())) {
+		if (resources.gamemode.getWinners().contains(character)) {
 			text = "Winner!";
 			winner = true;
 		} else {
@@ -65,7 +66,22 @@ public class VictoryScreen extends JPanel {
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		add(label);
 
-		JLabel label4 = new JLabel("The winner was " + resources.gamemode.getWinner().getName());
+		ArrayList<Character> winners = resources.gamemode.getWinners();
+
+		String winnerText = "";
+
+		if (winners.size() == 1) {
+			winnerText = "The winner was " + winners.get(0).getName();
+		} else {
+			winnerText = "The winners were " + winners.get(0).getName();
+
+			for (int i = 1; i < winners.size(); i++) {
+				winnerText += ", " + winners.get(i).getName();
+			}
+
+		}
+
+		JLabel label4 = new JLabel(winnerText);
 		UIRes.setCustomFont(label4, 32);
 		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
 		label4.setAlignmentX(CENTER_ALIGNMENT);
@@ -78,8 +94,8 @@ public class VictoryScreen extends JPanel {
 			kds = "Kills: " + character.getKills() + " / Deaths: " + character.getDeaths() + " / Suicides: "
 					+ character.getSuicides();
 		}
-		
-		JLabel label2 = new JLabel();
+
+		JLabel label2 = new JLabel(kds);
 		UIRes.setCustomFont(label2, 18);
 		label2.setBorder(new EmptyBorder(10, 10, 10, 10));
 		label2.setAlignmentX(CENTER_ALIGNMENT);

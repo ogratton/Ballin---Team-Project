@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import resources.Powerup;
 import resources.Resources;
 
 public class ClientUpdater extends JPanel implements Observer {
@@ -59,11 +60,15 @@ public class ClientUpdater extends JPanel implements Observer {
 		for(int i=0; i<characters.size(); i++) {
 			c = characters.get(i);
 			//System.out.println("X: " + c.getX());
-			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina());
+			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb());
 			charactersList.add(info);
 		}
 		
 		GameData data = new GameData(charactersList);
+		ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
+		
+		data.setPowerUps(serializePowerUps(powerUps));
+		data.setTimer(resourcesMap.get(sessionId).getTimer());
 		Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
 		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 		ClientInformation client;
@@ -79,6 +84,15 @@ public class ClientUpdater extends JPanel implements Observer {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+	
+	public static ArrayList<SerializablePowerUp> serializePowerUps(ArrayList<Powerup> powerUps) {
+		ArrayList<SerializablePowerUp> serialized = new ArrayList<SerializablePowerUp>();
+		for(int i=0; i<powerUps.size(); i++) {
+			serialized.add(new SerializablePowerUp(powerUps.get(i).getPower(), powerUps.get(i).getX(), powerUps.get(i).getY(), powerUps.get(i).isActive()));
+		}
+		
+		return serialized;
 	}
 }
 

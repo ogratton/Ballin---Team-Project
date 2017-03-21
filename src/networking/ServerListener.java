@@ -255,6 +255,7 @@ public class ServerListener extends Listener {
 			  					c.sendTCP(startGame);
 			  				}
 			  				
+			  				//System.out.println("X: " + resourcesMap.get(session.getId()).getPlayerList().get(0).getX());
 			  				//// Countdown
 			  				try {
 								Thread.sleep(1000);
@@ -282,12 +283,14 @@ public class ServerListener extends Listener {
 			  				GameModeFFA mode = res.gamemode;
 			  				
 			  				((Thread) mode).start();
+			  				
 			  			}
 					  
 			  			break;
 			  		// This fires when the game state is updated by any of the clients
 			  		case UPDATE:
 			  			session = sessions.get(message.getCurrentSessionId());
+			  			//System.out.println("X: " + resourcesMap.get(session.getId()).getPlayerList().get(0).getX());
 					  
 			  			// Reads the updated data.
 			  			data = (GameData)message.getObject();
@@ -354,6 +357,7 @@ public class ServerListener extends Listener {
 				    		if(characters.get(i).getId().equals(key)) {
 				    			characters.get(i).setLives(0);
 				    			characters.get(i).setDead(true);
+				    			characters.remove(i);
 				    		}
 				    	}
 		    		}

@@ -1499,6 +1499,13 @@ public class Character extends Observable implements Collidable_Circle {
 	public Power getLastPowerup() {
 		return lastPowerup;
 	}
+	
+	/**
+	 * @param power The last power up applied to this character.
+	 */
+	public void setLastPowerup(Power power) {
+		lastPowerup = power;
+	}
 
 	/**
 	 * @return The time that this character last received a powerup.
@@ -1806,4 +1813,30 @@ public class Character extends Observable implements Collidable_Circle {
 	public void setReqDashing(boolean reqDashing) {
 		this.reqDashing = reqDashing;
 	}
+
+	public boolean isHasBomb() {
+		return hasBomb;
+	}
+
+	public void setHasBomb(boolean hasBomb) {
+		this.hasBomb = hasBomb;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
+
+	public void setDeaths(int deaths) {
+		this.deaths = deaths;
+	}
+
+	public void setSuicides(int suicides) {
+		this.suicides = suicides;
+	}
+	
+	
 }

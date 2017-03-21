@@ -21,7 +21,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 	private Character winner;
 	private Resources resources;
-	private int timer = 30;
 	private boolean isServer = false;
 	private boolean finished = false;
 
@@ -60,32 +59,17 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		this.isServer = isServer;
 	}
 
-	@Override
-	public int getTime() {
-		return this.timer;
-	}
-
 	/*
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
+		resources.setTimer(30);
 		// Start game
 		Physics p = new Physics(resources, false);
 
 		if (!isServer) {
 			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
-
-			try {
-				Thread.sleep(1000);
-				resources.setCountdown(2);
-				Thread.sleep(1000);
-				resources.setCountdown(1);
-				Thread.sleep(1000);
-				resources.setCountdown(0);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 
 		p.start();
@@ -95,12 +79,12 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		while (!isGameOver()) {
 			try {
-				System.out.println("Time remaining: " + timer + " seconds");
-				if (timer % 5 == 0) {
+				System.out.println("Time remaining: " + resources.getTimer() + " seconds");
+				if (resources.getTimer() % 5 == 0) {
 					spawnPowerup();
 				}
 				Thread.sleep(1000);
-				timer--;
+				resources.incrementTimer(-1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -114,7 +98,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 
 		System.out.println("WE HAVE A WINNER");
-		getWinner();
+		getWinners();
 		System.out.println(
 				"Player " + winner.getPlayerNumber() + " achieved the highest score of  " + winner.getScore() + "!");
 		ArrayList<Character> scores = resources.getOrderedScores();
@@ -149,15 +133,31 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver() {
-		return timer <= 0;
+		return resources.getTimer() <= 0;
 	}
 
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
-		winner = resources.getOrderedScores().get(0);
-		return winner;
+	public ArrayList<Character> getWinners() {
+
+		ArrayList<Character> scores = resources.getOrderedScores();
+
+		winner = scores.get(0);
+
+		ArrayList<Character> winners = new ArrayList<>();
+
+		int score = winner.getScore();
+
+		for (Character c : scores) {
+
+			if (score == c.getScore()) {
+				winners.add(c);
+			}
+
+		}
+
+		return winners;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package networking;
 
+import resources.Powerup.Power;
+
 /**
  * This encapsulates the updates to the position of a character which can be
  * sent across the network (unlike the Character class).
@@ -16,6 +18,10 @@ public class CharacterInfo {
 	public boolean sendDashing, sendBlocking;
 	private int playerNumber;
 	private int stamina;
+	private boolean hasPowerUp;
+	private Power lastPowerUp;
+	private int kills, deaths, suicides, lives, score;
+	private boolean hasBomb;
 	
 	public CharacterInfo() {
 		
@@ -48,7 +54,7 @@ public class CharacterInfo {
 	 * @param isBlocking Is the player blocking?
 	 * @param stamina The player stamina
 	 */
-	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina, boolean hasPowerUp, Power lastPowerUp, int kills, int deaths, int suicides, int lives, int score, boolean hasBomb) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -58,6 +64,14 @@ public class CharacterInfo {
 		this.isDashing = isDashing;
 		this.isBlocking = isBlocking;
 		this.stamina = stamina;
+		this.hasPowerUp = hasPowerUp;
+		this.lastPowerUp = lastPowerUp;
+		this.kills = kills;
+		this.deaths = deaths;
+		this.suicides = suicides;
+		this.lives = lives;
+		this.score = score;
+		this.hasBomb = hasBomb;
 	}
 	
 	/**
@@ -183,7 +197,69 @@ public class CharacterInfo {
 	public void setStamina(int stamina) {
 		this.stamina = stamina;
 	}
-	
-	
+
+	public boolean isHasPowerUp() {
+		return hasPowerUp;
+	}
+
+	public void setHasPowerUp(boolean hasPowerUp) {
+		this.hasPowerUp = hasPowerUp;
+	}
+
+	public Power getLastPowerUp() {
+		return lastPowerUp;
+	}
+
+	public void setLastPowerUp(Power lastPowerUp) {
+		this.lastPowerUp = lastPowerUp;
+	}
+
+	public int getKills() {
+		return kills;
+	}
+
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
+
+	public int getDeaths() {
+		return deaths;
+	}
+
+	public void setDeaths(int deaths) {
+		this.deaths = deaths;
+	}
+
+	public int getSuicides() {
+		return suicides;
+	}
+
+	public void setSuicides(int suicides) {
+		this.suicides = suicides;
+	}
+
+	public int getLives() {
+		return lives;
+	}
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public boolean isHasBomb() {
+		return hasBomb;
+	}
+
+	public void setHasBomb(boolean hasBomb) {
+		this.hasBomb = hasBomb;
+	}
 	
 }

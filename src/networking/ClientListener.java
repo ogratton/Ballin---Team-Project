@@ -1,6 +1,7 @@
 package networking;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import resources.Character;
 import resources.Map;
 import resources.MapCosts;
 import resources.MapReader;
+import resources.Powerup;
 import resources.Resources;
 import resources.Resources.Mode;
 import ui.SessionListMenu;
@@ -198,6 +200,12 @@ public class ClientListener extends Listener {
    					gameData = (GameData)message.getObject();
        				List<CharacterInfo> charactersList = gameData.getCharactersList();
        				resources = cModel.getResources();
+       				
+       				
+       				System.out.println("Game Over: " + resources.gamemode.isGameOver());
+       				System.out.println("Timer: " + resources.getTimer());
+       				resources.setPowerUpList(deserialize(gameData.getPowerUps()));
+       				resources.setTimer(gameData.getTimer());
        				List<resources.Character> players = resources.getPlayerList();
        					for(int i=0; i<players.size(); i++) {
            					for(int j=0; j<charactersList.size(); j++) {
@@ -209,7 +217,14 @@ public class ClientListener extends Listener {
            							players.get(i).setDead(charactersList.get(j).isDead());
            							players.get(i).setDashing(charactersList.get(j).isDashing());
            							players.get(i).setStamina(charactersList.get(j).getStamina());
-           							
+           							players.get(i).hasPowerup(charactersList.get(j).isHasPowerUp());
+           							players.get(i).setLastPowerup(charactersList.get(j).getLastPowerUp());
+           							players.get(i).setKills(charactersList.get(j).getKills());
+           							players.get(i).setDeaths(charactersList.get(j).getDeaths());
+           							players.get(i).setSuicides(charactersList.get(j).getSuicides());
+           							players.get(i).setLives(charactersList.get(j).getLives());
+           							players.get(i).setScore(charactersList.get(j).getScore());
+           							players.get(i).hasBomb(charactersList.get(j).isHasBomb());
            							//System.out.println(charactersList.get(j).isDashing());
            						}
            					}
@@ -218,8 +233,7 @@ public class ClientListener extends Listener {
    				break;
    			case COUNTDOWN:
    				if(cModel.getResources() != null) {
-   					Resources res = cModel.getResources();
-   				
+   					cModel.getResources().decCountdown();
    				}
    				break;
    			default:
@@ -231,5 +245,13 @@ public class ClientListener extends Listener {
    		}
        }
 
+	}
+	
+	public static ArrayList<Powerup> deserialize(ArrayList<SerializablePowerUp> serialized) {
+		ArrayList<Powerup> deserialized = new ArrayList<Powerup>();
+		for(int i=0; i<serialized.size(); i++) {
+			deserialized.add(new Powerup(serialized.get(i).getP(), serialized.get(i).getX(), serialized.get(i).getY(), serialized.get(i).isActive()));
+		}
+		return deserialized;
 	}
 }
