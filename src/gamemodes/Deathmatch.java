@@ -67,10 +67,22 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Start game
 		Physics p = new Physics(resources, false);
 
-		if(!isServer) {
+		if (!isServer) {
 			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
+
+			try {
+				Thread.sleep(1000);
+				resources.setCountdown(2);
+				Thread.sleep(1000);
+				resources.setCountdown(1);
+				Thread.sleep(1000);
+				resources.setCountdown(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+
 		p.start();
 
 		// Graphics g = new Graphics(resources, null, false);
@@ -154,6 +166,5 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
-	
 
 }

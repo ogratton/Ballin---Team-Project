@@ -37,8 +37,10 @@ import resources.Resources;
 public class UIRes {
 	
 	public static Resources resources = new Resources();
-	public static final int width = 1200;
-	public static final int height = 1000;
+
+	public static final int width = getScreenWidth() / 2;
+	public static final int height = getScreenHeight();
+
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.09));
@@ -69,7 +71,7 @@ public class UIRes {
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
 	
 	
-	public static int numberIcons = Character.Class.values().length - 1;
+	public static int numberIcons = Character.Class.values().length;
 	
 	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
 	
@@ -79,6 +81,17 @@ public class UIRes {
 	public static JPanel mainPanel = new JPanel();
 	public static JPanel startPanel = start.getStartMenuPanel();
 	public static JPanel optionsPanel = options.getOptionsPanel();
+	
+	
+	public static int getScreenWidth()
+	{
+		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	}
+
+	public static int getScreenHeight()
+	{
+		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	}
 	
 	public static void switchPanel(JPanel newPanel) {
 		mainPanel.removeAll();
@@ -198,21 +211,28 @@ public class UIRes {
 		return label;
 	}
 
-	static JLabel getSpriteIcon(int x) {
+	static JLabel getSpriteLabel(int x) {
 		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
 				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
+	
+	static ImageIcon getSpriteIcon(int x) {
+		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
+				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+		ImageIcon spriteIcon = new ImageIcon(icon);
+		return spriteIcon;
+	} 
 
 	static JPanel getButtonAndIcon(JPanel panel, JButton button) {
 		JPanel buttonPanel = new JPanel();
 		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.add(getSpriteIcon(x));
+		buttonPanel.add(getSpriteLabel(x));
 		buttonPanel.add(button);
-		buttonPanel.add(getSpriteIcon(x));
+		buttonPanel.add(getSpriteLabel(x));
 		buttonPanel.setOpaque(false);
 		panel.add(buttonPanel);
 		return panel;

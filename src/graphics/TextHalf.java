@@ -31,6 +31,8 @@ public class TextHalf extends JPanel {
 	 * 
 	 * @param character
 	 *            the character being detailed
+	 * @param resources
+	 *            the resources object
 	 */
 
 	public TextHalf(Character character, Resources resources) {
@@ -47,19 +49,19 @@ public class TextHalf extends JPanel {
 			score.setText(character.getScore() + "");
 		} else if (resources.mode == Mode.LastManStanding) {
 			int lives = character.getLives();
-			
+
 			String blobs = "";
-			
-			for(int i = 0; i < lives; i++){
+
+			for (int i = 0; i < lives; i++) {
 				blobs += "o";
 			}
-			
-			score .setText(blobs);
+
+			score.setText(blobs);
 		}
 
 		name.setAlignmentX(LEFT_ALIGNMENT);
 		score.setAlignmentX(RIGHT_ALIGNMENT);
-		
+
 		score.setBorder(new EmptyBorder(0, 0, 0, 10));
 
 		UIRes.setCustomFont(name, 20);
@@ -80,13 +82,13 @@ public class TextHalf extends JPanel {
 			score.setText(character.getScore() + "");
 		} else if (resources.mode == Mode.LastManStanding) {
 			int lives = character.getLives();
-			
+
 			String blobs = "";
-			
-			for(int i = 0; i < lives; i++){
+
+			for (int i = 0; i < lives; i++) {
 				blobs += "o";
 			}
-			
+
 			score.setText(blobs);
 		}
 

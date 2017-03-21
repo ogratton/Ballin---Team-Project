@@ -51,8 +51,8 @@ public class MenuItems extends UIRes {
 	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		customiseButton(startButton, true);
-		
 		startButton.addActionListener(e -> {
+			resources.refresh();
 			PlayGame.start(resources);
 
 			if (!Resources.silent) {
@@ -71,6 +71,7 @@ public class MenuItems extends UIRes {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
+			resources.refresh();
 //			JFrame frame = new JFrame();
 //			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
 //					JOptionPane.PLAIN_MESSAGE);

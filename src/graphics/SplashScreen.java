@@ -24,6 +24,11 @@ public class SplashScreen extends JPanel {
 
 	private JLabel label3;
 	
+	/**
+	 * Makes a new splash screen
+	 * @param resources the resources object
+	 */
+	
 	public SplashScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
