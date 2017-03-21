@@ -108,15 +108,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		setVisible(true);
 		pack();
 
-	}
-
-	/**
-	 * Set the countdown
-	 * @param i the countdown
-	 */
-	
-	public void setCountdown(int i){
-		layers.setCountdown(i);
+		
 	}
 	
 	/**
@@ -144,6 +136,10 @@ public class GameComponent extends JFrame implements ActionListener {
 			if(!keyPressed){
 				seenVictory = true;
 			}
+		}
+		
+		if(resources.isFinished()){
+			end();
 		}
 
 	}

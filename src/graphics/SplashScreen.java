@@ -27,7 +27,7 @@ public class SplashScreen extends JPanel {
 	public SplashScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		
 		Resources.Mode mode = resources.mode;
 		String modeName = resources.mode.toString();
 		String modeGoal = "";
@@ -77,7 +77,7 @@ public class SplashScreen extends JPanel {
 		add(label3);
 		
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
-
+		
 	}
 	
 	/**
@@ -88,5 +88,7 @@ public class SplashScreen extends JPanel {
 	public void setCountdown(int i){
 		label3.setText(i + "");
 	}
+	
+	
 
 }

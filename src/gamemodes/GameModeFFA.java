@@ -36,4 +36,5 @@ public interface GameModeFFA {
 	 */
 	public void randomRespawn();
 
+	
 }

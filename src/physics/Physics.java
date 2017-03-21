@@ -50,6 +50,13 @@ public class Physics extends Thread implements ActionListener {
 
 	@Override
 	public void run() {
+
+		for (Character c : resources.getPlayerList()) {
+			if (c.isAI()) {
+				c.getAI().start();
+			}
+		}
+
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -96,9 +103,9 @@ public class Physics extends Thread implements ActionListener {
 							// player "
 							// + d.getPlayerNumber() + "!");
 						}
-						collide(c,d,cnd);
+						collide(c, d, cnd);
 						// If playing hot potato, pass bomb if you have it
-						
+
 					}
 				}
 			}
@@ -164,12 +171,9 @@ public class Physics extends Thread implements ActionListener {
 					// BasicAI ai = new BasicAI(resources, c);
 
 					AITemplate ai;
-					if (resources.mode == Mode.HotPotato)
-					{
+					if (resources.mode == Mode.HotPotato) {
 						ai = new HotPotatoAI(resources, c);
-					}
-					else
-					{
+					} else {
 						ai = new FightingAI(resources, c);
 					}
 
@@ -199,7 +203,7 @@ public class Physics extends Thread implements ActionListener {
 			// possible
 			if (c.getDashCooldown() != 0) {
 				c.incrementDashCooldown();
-//				c.setDashing(false);
+				// c.setDashing(false);
 				if (c.getDashCooldown() > 500) {
 					c.setDashCooldown(0);
 					System.out.println("Resetting dash cooldown");

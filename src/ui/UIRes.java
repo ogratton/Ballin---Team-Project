@@ -37,7 +37,7 @@ import resources.Resources;
 public class UIRes {
 	
 	public static Resources resources = new Resources();
-	public static final int width = 900;
+	public static final int width = 1200;
 	public static final int height = 1000;
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));

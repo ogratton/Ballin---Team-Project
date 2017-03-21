@@ -3,14 +3,16 @@ package graphics;
 import java.awt.Color;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import resources.Resources;
 import resources.Character;
+import resources.Resources;
+import ui.InGameMenu;
 import ui.UIRes;
 
 /**
@@ -98,13 +100,10 @@ public class VictoryScreen extends JPanel {
 		label3.setAlignmentX(CENTER_ALIGNMENT);
 		label3.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label3);
-
-		// tell people how to leave
-		JLabel label4 = new JLabel("Press any key to exit");
-		UIRes.setCustomFont(label4, 32);
-		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
-		label4.setAlignmentX(CENTER_ALIGNMENT);
-		add(label4);
+		
+		JButton exit = InGameMenu.getBackToStartMenuButton();
+		exit.addActionListener(e -> resources.setFinished(true));
+		add(exit);
 
 		// nice border
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
