@@ -9,14 +9,16 @@ import java.util.Hashtable;
  * Reads a Comma Separated Value file and returns it as an ArrayList of lines
  * Could be done statically but for the dictionary
  * 
- * @author Oliver
+ * @author Oliver Gratton
  */
 public class MapReader
 {
 	private BufferedReader br;
+	
 	private String line = "";
-	private String cvsSplitBy = ",";
-	private String comment = "#";
+	private final String cvsSplitBy = ",";
+	private final String comment = "#";
+	
 	private  Hashtable<String, Map.Tile> tileDict;
 
 	/**
