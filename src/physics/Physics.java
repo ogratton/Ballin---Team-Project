@@ -259,6 +259,7 @@ public class Physics extends Thread implements ActionListener {
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 150) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
+					c.incrementScore(-1);
 					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();

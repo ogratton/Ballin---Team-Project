@@ -106,7 +106,15 @@ public class VictoryScreen extends JPanel {
 
 		switch (mode) {
 		case Deathmatch:
-			modeText = "You finished with " + character.getScore() + " points";
+
+			int puntos = character.getScore();
+
+			if (puntos == 1) {
+				modeText = "You finished with " + puntos + " point";
+			} else {
+
+				modeText = "You finished with " + puntos + " points";
+			}
 			break;
 		case HotPotato:
 			if (winner) {
@@ -119,7 +127,15 @@ public class VictoryScreen extends JPanel {
 			if (winner) {
 				modeText = "You survived the longest!";
 			} else {
-				modeText = "You survived for " + (character.getTimeOfDeath() / 100) + " seconds";
+
+				int tiempo = character.getTimeOfDeath();
+
+				if (tiempo == 1) {
+					modeText = "You survived for " + tiempo + " second";
+				} else {
+					modeText = "You survived for " + tiempo + " seconds";
+
+				}
 			}
 			break;
 		default:
