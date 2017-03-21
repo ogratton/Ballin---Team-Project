@@ -87,6 +87,7 @@ public class LayeredPane extends JLayeredPane {
 
 		if (splashShowing) {
 			splash.setCountdown(resources.getCountdown());
+			
 			if (resources.getCountdown() == 0) {
 				setLayer(splash, new Integer(5));
 				splashShowing = false;
@@ -100,7 +101,7 @@ public class LayeredPane extends JLayeredPane {
 
 	public void victory() {
 		VictoryScreen victory = new VictoryScreen(resources);
-		victory.setBounds(((x - 1100) / 2), ((y - 350) / 2), 1100, 350);
+		victory.setBounds(((x - 1100) / 2), ((y - 300) / 2), 1100, 300);
 		add(victory, new Integer(30));
 		victoryShowing = true;
 

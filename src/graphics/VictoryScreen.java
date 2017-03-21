@@ -12,11 +12,13 @@ import javax.swing.border.LineBorder;
 
 import resources.Character;
 import resources.Resources;
+import resources.Resources.Mode;
 import ui.InGameMenu;
 import ui.UIRes;
 
 /**
  * A class to hold the victory screen
+ * 
  * @author George Kaye
  *
  */
@@ -26,9 +28,11 @@ public class VictoryScreen extends JPanel {
 
 	/**
 	 * Create a new victory screen
-	 * @param resources the resources object
+	 * 
+	 * @param resources
+	 *            the resources object
 	 */
-	
+
 	public VictoryScreen(Resources resources) {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -53,7 +57,7 @@ public class VictoryScreen extends JPanel {
 		} else {
 			text = "Loser...";
 		}
-
+		
 		// add the winner text to a label
 		JLabel label = new JLabel(text);
 		UIRes.setCustomFont(label, 64);
@@ -61,13 +65,24 @@ public class VictoryScreen extends JPanel {
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		add(label);
 
+
+		JLabel label4 = new JLabel("The winner was " + resources.gamemode.getWinner().getName());
+		UIRes.setCustomFont(label4, 32);
+		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
+		label4.setAlignmentX(CENTER_ALIGNMENT);
+		add(label4);
+		
 		// add the player's stats to a label
-		JLabel label2 = new JLabel("Kills: " + character.getKills() + " / Deaths: " + character.getDeaths()
-				+ " / Suicides: " + character.getSuicides());
-		UIRes.setCustomFont(label2, 18);
-		label2.setBorder(new EmptyBorder(10, 10, 10, 10));
-		label2.setAlignmentX(CENTER_ALIGNMENT);
-		add(label2);
+
+		if (mode != Mode.HotPotato) {
+			JLabel label2 = new JLabel("Kills: " + character.getKills() + " / Deaths: " + character.getDeaths()
+					+ " / Suicides: " + character.getSuicides());
+			UIRes.setCustomFont(label2, 18);
+			label2.setBorder(new EmptyBorder(10, 10, 10, 10));
+			label2.setAlignmentX(CENTER_ALIGNMENT);
+			add(label2);
+		}
+
 
 		// provide different text depending on game mode
 		String modeText = "";
@@ -100,7 +115,7 @@ public class VictoryScreen extends JPanel {
 		label3.setAlignmentX(CENTER_ALIGNMENT);
 		label3.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label3);
-		
+
 		JButton exit = InGameMenu.getBackToStartMenuButton();
 		exit.addActionListener(e -> resources.setFinished(true));
 		add(exit);
