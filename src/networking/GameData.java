@@ -1,6 +1,9 @@
 package networking;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import resources.Powerup;
 
 /**
  * Packages a list of characters into an object so that it can be sent across the network.
@@ -22,6 +25,8 @@ public class GameData {
 	private Tag tag;
 	private List<CharacterInfo> characters;
 	private CharacterInfo info;
+	private ArrayList<SerializablePowerUp> powerUps;
+	private int timer;
 	
 	public GameData() {
 		
@@ -66,6 +71,22 @@ public class GameData {
 	 */
 	public Tag getTag() {
 		return tag;
+	}
+	
+	public ArrayList<SerializablePowerUp> getPowerUps() {
+		return powerUps;
+	}
+	
+	public void setPowerUps(ArrayList<SerializablePowerUp> powerUps) {
+		this.powerUps = powerUps;
+	}
+
+	public int getTimer() {
+		return timer;
+	}
+
+	public void setTimer(int timer) {
+		this.timer = timer;
 	}
 	
 }

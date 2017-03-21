@@ -17,11 +17,6 @@ public interface GameModeFFA {
 	public Character getWinner();
 	
 	/**
-	 * @return The time left in the game
-	 */
-	public int getTime();
-	
-	/**
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver();

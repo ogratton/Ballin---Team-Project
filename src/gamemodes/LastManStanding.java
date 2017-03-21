@@ -213,11 +213,4 @@ public class LastManStanding extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
-
-	@Override
-	public int getTime() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

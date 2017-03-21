@@ -52,13 +52,13 @@ public class PlayerStats extends JPanel {
 
 		switch (resources.mode) {
 		case Deathmatch:
-			modeText = "Time: " + resources.gamemode.getTime();
+			modeText = "Time: " + resources.getTimer();
 			break;
 		case LastManStanding:
 			modeText = "Lives: " + character.getLives();
 			break;
 		case HotPotato:
-			modeText = "Bomb: " + (50 - (resources.gamemode.getTime() % 50));
+			modeText = "Bomb: " + (50 - (resources.getTimer() % 50));
 		default:
 			break;
 		}
@@ -98,13 +98,13 @@ public class PlayerStats extends JPanel {
 
 		switch (resources.mode) {
 		case Deathmatch:
-			modeText = "Time: " + resources.gamemode.getTime();
+			modeText = "Time: " + resources.getTimer();
 			break;
 		case LastManStanding:
 			modeText = "Lives: " + character.getLives();
 			break;
 		case HotPotato:
-			modeText = "Bomb: " + (50 - (resources.gamemode.getTime() % 50));
+			modeText = "Bomb: " + (50 - (resources.getTimer() % 50));
 		default:
 			break;
 		}

@@ -1,5 +1,7 @@
 package networking;
 
+import java.awt.image.BufferedImage;
+
 // Usage:
 //        java Server
 //
@@ -14,9 +16,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 
 import networking.GameData.Tag;
+import resources.Powerup;
+import resources.Powerup.Power;
 import resources.Resources;
+import resources.Collidable_Circle.CollidableType;
 import resources.Resources.Mode;
 
 /**
@@ -81,5 +87,8 @@ public class NetworkingServer {
 		kryo.register(resources.Map.World.class);
 		kryo.register(Mode.class);
 		kryo.register(resources.Character.Class.class);
+		kryo.register(Power.class);
+		kryo.register(SerializablePowerUp.class);
+		
 	}
 }

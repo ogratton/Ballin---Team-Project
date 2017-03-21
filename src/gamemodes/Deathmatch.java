@@ -21,7 +21,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 	private Character winner;
 	private Resources resources;
-	private int timer = 30;
 	private boolean isServer = false;
 	private boolean finished = false;
 
@@ -60,15 +59,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		this.isServer = isServer;
 	}
 
-	@Override
-	public int getTime() {
-		return this.timer;
-	}
-
 	/*
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
+		resources.setTimer(30);
 		// Start game
 		Physics p = new Physics(resources, false);
 
@@ -83,12 +78,12 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		while (!isGameOver()) {
 			try {
-				System.out.println("Time remaining: " + timer + " seconds");
-				if (timer % 5 == 0) {
+				System.out.println("Time remaining: " + resources.getTimer() + " seconds");
+				if (resources.getTimer() % 5 == 0) {
 					spawnPowerup();
 				}
 				Thread.sleep(1000);
-				timer--;
+				resources.incrementTimer(-1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -137,7 +132,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver() {
-		return timer <= 0;
+		return resources.getTimer() < 0;
 	}
 
 	/**

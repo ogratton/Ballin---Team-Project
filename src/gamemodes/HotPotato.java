@@ -69,6 +69,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
+		resources.setTimer(0);
 		// start the game
 		Physics p = new Physics(resources, false);
 		Graphics g = new Graphics(resources, null, false);
@@ -94,7 +95,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		while (!isGameOver()) {
 			try {
 				Thread.sleep(100);
-				timer += 1;
+				resources.incrementTimer(1);
 				// Detonate bomb every 5 seconds
 				if (timer % 50 == 0 && playersRemaining() > 1) {
 					explodeBomb();
@@ -234,10 +235,4 @@ public class HotPotato extends Thread implements GameModeFFA {
 			resources.getMap().spawn(c);
 		}
 	}
-
-	@Override
-	public int getTime() {
-		return this.timer;
-	}
-
 }

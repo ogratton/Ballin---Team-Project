@@ -351,7 +351,7 @@ public class GameView extends JPanel implements Observer {
 						UIRes.setCustomFont(this, 14);
 						g.setColor(Color.WHITE);
 
-						int time = resources.gamemode.getTime();
+						int time = resources.getTimer();
 						int actualTime = 50 - (time % 50);
 
 						String zero = "";

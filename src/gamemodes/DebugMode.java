@@ -88,11 +88,4 @@ public class DebugMode extends Thread implements GameModeFFA
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public int getTime() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

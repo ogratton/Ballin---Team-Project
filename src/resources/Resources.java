@@ -518,6 +518,13 @@ public class Resources {
 	public ArrayList<Powerup> getPowerupList() {
 		return powerupList;
 	}
+	
+	/**
+	 * @param list An ArrayList of all powerups.
+	 */
+	public void setPowerUpList(ArrayList<Powerup> list) {
+		powerupList = list;
+	}
 
 	/**
 	 * @param p
@@ -628,6 +635,7 @@ public class Resources {
 	}
 
 	private Line normal;
+	private int timer;
 
 	/**
 	 * DEBUG: Get the normal to the next AI destination
@@ -707,6 +715,10 @@ public class Resources {
 		this.countdown = i;
 	}
 	
+	public void decCountdown(){
+		this.countdown -= 1;
+	}
+	
 	public int getCountdown(){
 		return this.countdown;
 	}
@@ -729,4 +741,19 @@ public class Resources {
 		return scores;
 	}
 
+	public void setTimer(int n) {
+		timer = n;
+	}
+	
+	public void resetTimer() {
+		timer = 0;
+	}
+	
+	public void incrementTimer(int i) {
+		timer+=i;		
+	}
+
+	public int getTimer() {
+		return this.timer;
+	}
 }
