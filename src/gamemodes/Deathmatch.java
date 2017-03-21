@@ -117,7 +117,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		getWinner();
 		System.out.println(
 				"Player " + winner.getPlayerNumber() + " achieved the highest score of  " + winner.getScore() + "!");
-		ArrayList<Character> scores = getOrderedScores();
+		ArrayList<Character> scores = resources.getOrderedScores();
 		for (Character c : scores) {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
@@ -156,16 +156,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @return The winning character
 	 */
 	public Character getWinner() {
-		winner = getOrderedScores().get(0);
+		winner = resources.getOrderedScores().get(0);
 		return winner;
-	}
-
-	@Override
-	public ArrayList<Character> getOrderedScores() {
-		ArrayList<Character> scores = new ArrayList<Character>();
-		scores.addAll(resources.getPlayerList());
-		scores.sort((a, b) -> (a.getScore() > b.getScore()) ? -1 : (a.getScore() < b.getScore()) ? 1 : 0);
-		return scores;
 	}
 
 	@Override

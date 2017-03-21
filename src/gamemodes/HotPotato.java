@@ -211,14 +211,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 		return remaining;
 	}
 
-	@Override
-	public ArrayList<Character> getOrderedScores() {
-		ArrayList<Character> scores = new ArrayList<Character>();
-		scores.addAll(resources.getPlayerList());
-		scores.sort((a, b) -> (a.getScore() > b.getScore()) ? -1 : (a.getScore() < b.getScore()) ? 1 : 0);
-		return scores;
-	}
-
 	/**
 	 * @return An ArrayList of each character's time of death, in ascending
 	 *         order.
