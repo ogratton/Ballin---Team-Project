@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import resources.Resources.Mode;
 
 /**
- * Extract map metadata from csv files
- * and add it to the given resources
+ * Extract what gamemodes a map is compatible with
  * 
  * @author Oliver Gratton
  *
@@ -17,32 +16,34 @@ import resources.Resources.Mode;
 public class MapMetaData
 {
 	private BufferedReader br;
-	private Resources resources;
 	private Mode[] gamemodes = Mode.values();
-	
+	private ArrayList<String> gamemodeNames;
+
 	private String line = "";
 	private final String cvsSplitBy = ",";
 	private final String metadata = "@";
-	
-	public MapMetaData(Resources resources)
+
+	public MapMetaData()
 	{
-		this.resources = resources;
-		
-		ArrayList<String> gamemodeNames = new ArrayList<String>();
+
+		gamemodeNames = new ArrayList<String>();
 		for (int i = 0; i < gamemodes.length; i++)
 		{
 			gamemodeNames.add(gamemodes[i].toString());
 		}
+
 	}
-	
+
 	/**
-	 * Read a map and write the metadata to the corresponding map object in resources
+	 * Read a map and return the list of gamemodes it can be played on
+	 * 
 	 * @param filename
 	 * @throws IOException
 	 */
-	public void readMetaData(String filename) throws IOException
+	public ArrayList<Mode> readMetaData(String filename) throws IOException
 	{
 		br = new BufferedReader(new FileReader(filename));
+		ArrayList<Mode> compatibleModes = new ArrayList<Mode>();
 
 		while ((line = br.readLine()) != null)
 		{
@@ -56,15 +57,45 @@ public class MapMetaData
 				{
 					// parse items[i] into resources.Mode enum and add to list in Map
 					// TODO if items[i] is in gamemodeNames, add corresponding mode to a list in the map object
+					String supposedMode = items[i].trim();
+					if (gamemodeNames.contains(supposedMode))
+					{
+						compatibleModes.add(correspondingMode(supposedMode));
+					}
+					else
+					{
+						System.err.println("WARNING: " + supposedMode + " is not a recognised GameMode. Ignoring");
+					}
 				}
 			}
 		}
+
+		return compatibleModes;
 	}
-	
-	public static void main(String[] args)
+
+	/**
+	 * Essentially convert from String to Mode enum
+	 * Should only be called when sure translation exists
+	 * 
+	 * @param supposedMode string to convert to enum value
+	 * @return enum value
+	 */
+	private Mode correspondingMode(String supposedMode)
 	{
-		Resources res = new Resources();
-		MapMetaData mmd = new MapMetaData(res);
+		for (int i = 0; i < gamemodes.length; i++)
+		{
+			if (gamemodes[i].toString().toLowerCase().equals(supposedMode.toLowerCase()))
+			{
+				return gamemodes[i];
+			}
+		}
+
+		throw new NullPointerException("correspondingMode in MapMetaData called when it shouldn't have been");
 	}
-	
+
+	public static void main(String[] args) throws IOException
+	{
+		MapMetaData mmd = new MapMetaData();
+		System.out.println(mmd.readMetaData(FilePaths.maps + "asteroid.csv"));
+	}
 }
