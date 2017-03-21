@@ -278,6 +278,8 @@ public class SessionListMenu extends JPanel implements Observer {
 			
 			if (mapPane == JOptionPane.OK_OPTION) {
 				this.mapName = mapNames[mapChoice.getSelectedIndex()];
+				this.tileSet = Map.World.values()[tileChoice.getSelectedIndex()];
+				System.out.println(tileSet.toString());
 				System.out.println(mapName);
 
 				JLabel gameModeLabel = new JLabel("Game mode: ");
