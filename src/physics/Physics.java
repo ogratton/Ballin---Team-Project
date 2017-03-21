@@ -31,9 +31,10 @@ public class Physics extends Thread implements ActionListener {
 	private Timer timer;
 	private final int DELAY = 10;
 	private Resources resources;
-
+	
 	private boolean client = false;
-
+	private int bombPassTimer = 0;
+	
 	/**
 	 * Create the physics engine.
 	 * 
@@ -88,27 +89,26 @@ public class Physics extends Thread implements ActionListener {
 			// System.out.println("hp: " + c.getHealth());
 			// }
 			update(c);
+			
 			for (Character d : resources.getPlayerList()) {
 				// check collisions
 				if (c != d && !c.isDead() && !d.isDead()) {
 					CND cnd = detectCollision(c, d);
 					if (cnd.collided) {
 						collide(c, d, cnd);
-						// If playing hot potato, pass bomb if you have it
-						if (c.hasBomb() && resources.mode == Mode.HotPotato) {
-							c.hasBomb(false);
-							d.hasBomb(true);
-							// System.out.println("Player " +
-							// c.getPlayerNumber() + " has passed the bomb to
-							// player "
-							// + d.getPlayerNumber() + "!");
+						// If playing hot potato, if bomb hasn't passed on yet, pass bomb if you have it
+						if(resources.mode == Mode.HotPotato){
+								if (c.hasBomb() && bombPassTimer == 0) {
+									c.hasBomb(false);
+									d.hasBomb(true);
+									bombPassTimer = 100;
+								}
 						}
-						collide(c, d, cnd);
-						// If playing hot potato, pass bomb if you have it
 
 					}
 				}
 			}
+			if(bombPassTimer > 0) bombPassTimer--;
 			// Check collisions with powerups
 			for (Powerup p : resources.getPowerupList()) {
 				CND cnd = detectCollision(c, p);
