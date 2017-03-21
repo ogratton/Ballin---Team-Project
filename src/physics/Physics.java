@@ -8,12 +8,12 @@ import javax.swing.Timer;
 
 import ai.AITemplate;
 import ai.FightingAI;
+import ai.HotPotatoAI;
 import resources.Character;
 import resources.Collidable;
 import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
-import resources.Map.World;
 import resources.NetworkMove;
 import resources.Powerup;
 import resources.Puck;
@@ -96,6 +96,9 @@ public class Physics extends Thread implements ActionListener {
 							// player "
 							// + d.getPlayerNumber() + "!");
 						}
+						collide(c,d,cnd);
+						// If playing hot potato, pass bomb if you have it
+						
 					}
 				}
 			}
@@ -161,11 +164,12 @@ public class Physics extends Thread implements ActionListener {
 					// BasicAI ai = new BasicAI(resources, c);
 
 					AITemplate ai;
-					if (resources.mode == Mode.Deathmatch || resources.mode == Mode.LastManStanding) {
-						ai = new FightingAI(resources, c);
-					} else {
-						// XXX TEMPORARILY THEY ARE ALL THE SAME
-						// SO WE HAVE NO CHOICE
+					if (resources.mode == Mode.HotPotato)
+					{
+						ai = new HotPotatoAI(resources, c);
+					}
+					else
+					{
 						ai = new FightingAI(resources, c);
 					}
 
@@ -294,6 +298,13 @@ public class Physics extends Thread implements ActionListener {
 		}
 		move(c);
 	}
+<<<<<<< HEAD
+	
+	/**
+	 * Checks if a character is dead. If so, c 
+	 * @param c
+	 * @return
+=======
 
 	/**
 	 * Checks whether or not a character is dead.
@@ -301,6 +312,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The character to check.
 	 * @return True if the character is dead.
+>>>>>>> 7e03e5e88f41c9407283cc1ba9d4035ea89e115f
 	 */
 	private boolean dead(Collidable_Circle c) {
 		if (!c.isDead()) {// if stationary, give speed:
@@ -342,12 +354,19 @@ public class Physics extends Thread implements ActionListener {
 		}
 		return dead;
 	}
+<<<<<<< HEAD
+	
+	/**
+	 * Calculates wall collision.
+	 * @param c
+=======
 
 	/**
 	 * Calculates any wall collisions of a character.
 	 * 
 	 * @param c
 	 *            The character to check collisions for.
+>>>>>>> 7e03e5e88f41c9407283cc1ba9d4035ea89e115f
 	 */
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.

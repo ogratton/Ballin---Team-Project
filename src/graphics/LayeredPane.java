@@ -54,7 +54,7 @@ public class LayeredPane extends JLayeredPane {
 		view.setBounds(0, 0, x, y);
 		
 		splash = new SplashScreen(resources);
-		splash.setBounds(((x - 1200) / 2) , ((y - 250) / 2), 1200, 250);
+		splash.setBounds(((x - 1200) / 2) , ((y - 400) / 2), 1200, 400);
 		
 		InGameMenu menu = new InGameMenu();
 		inGameMenu = menu.getInGameMenuPanel(frame, 600, 500); 
@@ -78,6 +78,15 @@ public class LayeredPane extends JLayeredPane {
 	}
 
 	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
+	
+	public void setCountdown(int i){
+		splash.setCountdown(i);
+	}
+	
+	/**
 	 * Repaint the views contained within this layered pane
 	 */
 
@@ -87,7 +96,7 @@ public class LayeredPane extends JLayeredPane {
 	
 	public void victory(){
 		VictoryScreen victory = new VictoryScreen(resources);
-		victory.setBounds(((x - 1100) / 2) , ((y - 300) / 2), 1100, 200);
+		victory.setBounds(((x - 1100) / 2) , ((y - 350) / 2), 1100, 350);
 		add(victory, new Integer(30));
 		victoryShowing = true;
 		

@@ -41,11 +41,13 @@ public class PlayerStats extends JPanel {
 
 		setPreferredSize(new Dimension(320, 100));
 
-		// make the labels
+		// these labels are the same regardless of game mode
 		stamina = new JLabel("Stamina: " + character.getStamina());
 		kda = new JLabel(
 				"K/D/S: " + character.getKills() + "/" + character.getDeaths() + "/" + character.getSuicides());
 
+		
+		// this text will show different info depending on game mode
 		String modeText = "";
 
 		switch (resources.mode) {
@@ -63,7 +65,7 @@ public class PlayerStats extends JPanel {
 
 		mode = new JLabel(modeText);
 
-		// this doesn't work. why
+		// set the text to be centered
 		stamina.setAlignmentX(CENTER_ALIGNMENT);
 		kda.setAlignmentX(CENTER_ALIGNMENT);
 		mode.setAlignmentX(CENTER_ALIGNMENT);
@@ -73,11 +75,12 @@ public class PlayerStats extends JPanel {
 		UIRes.setCustomFont(kda, 20);
 		UIRes.setCustomFont(mode, 20);
 
-		// stamina and kda will feature in every gamemode
+		// add all the labels
 		add(stamina);
 		add(kda);
 		add(mode);
 
+		// add some nice borders
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 1), new EmptyBorder(15, 35, 25, 35)));
 
 	}

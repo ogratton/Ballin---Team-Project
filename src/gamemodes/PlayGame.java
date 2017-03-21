@@ -1,6 +1,8 @@
 package gamemodes;
 
+import ai.AITemplate;
 import ai.FightingAI;
+import ai.HotPotatoAI;
 import audio.MusicPlayer;
 import resources.Character;
 import resources.Map;
@@ -37,7 +39,7 @@ public class PlayGame {
 
 		// TODO these should be parameters for start
 		String mapName = "asteroid";
-		resources.mode = Mode.Deathmatch;
+		resources.mode = Mode.HotPotato;
 		Map.World style = Map.World.CAVE;
 
 		// Music setting:
@@ -72,23 +74,14 @@ public class PlayGame {
 		// Create and add players
 		Character player = new Character(Character.Class.WIZARD, 1, "Player");
 		// Will want a way to choose how many AIs to add
-		Character player1 = new Character(Character.Class.ARCHER, 2, "CPU1");
-		Character player2 = new Character(Character.Class.HORSE, 3, "CPU2");
-		resources.addPlayerToList(player);
-		resources.addPlayerToList(player1);
-		resources.addPlayerToList(player2);
-		// Create AIs
-		FightingAI ai1 = new FightingAI(resources, player1);
-		player1.setAI(ai1);
-		ai1.start();
-		FightingAI ai2 = new FightingAI(resources, player2);
-		ai2.start();
-		player2.setAI(ai2);
 
-		for (int i = 3; i < 8; i++) {
+		resources.addPlayerToList(player);
+
+
+		for (int i = 1; i < 8; i++) {
 			Character character = new Character(Character.Class.getRandomClass(), i+1, "CPU" + i);
 			resources.addPlayerToList(character);
-			FightingAI ai = new FightingAI(resources, character);
+			AITemplate ai = (resources.mode == Mode.HotPotato) ? new HotPotatoAI(resources, character) : new FightingAI(resources, character);
 			character.setAI(ai);
 			ai.start();
 		}

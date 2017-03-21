@@ -63,13 +63,25 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		// Start game
+		//start the game
 		Physics p = new Physics(resources, false);
-		p.start();
-		
+		Graphics g = new Graphics(resources, null, false);
 		if(!isServer) {
-			SwingUtilities.invokeLater(new Graphics(resources, null, false));
+			SwingUtilities.invokeLater(g);
 		}
+		
+		try{
+		Thread.sleep(1500);
+		g.setCountdown(2);
+		Thread.sleep(1500);
+		g.setCountdown(1);
+		Thread.sleep(1500);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		g.begin();
+		p.start();
 
 		while (!isGameOver()) {
 			try {
@@ -215,4 +227,5 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 }

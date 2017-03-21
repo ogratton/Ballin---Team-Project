@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import ai.AITemplate.Behaviour;
 import ai.pathfinding.AStarSearch;
 import ai.pathfinding.Line;
 import ai.pathfinding.StaticHeuristics;
@@ -118,7 +117,7 @@ public abstract class AITemplate extends Thread
 		try
 		{
 			// The newborn AI stops to ponder life, and give me time to bring up the window and pay attention
-			Thread.sleep(500);
+			Thread.sleep(300);
 
 			while (!character.isDead())
 			{
@@ -327,14 +326,15 @@ public abstract class AITemplate extends Thread
 				// dash when we are close to the target
 				if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
 				{
-					character.setDashing(true);
+					character.requestDashing();
 				}
-				// if the player has moved considerably since we targeted them
-				else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70) // XXX 70 is experimental threshold
+				// if the player has moved considerably since we targeted them (or has died)
+				else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70 || currentTarget.isDead()) // XXX 70 is experimental threshold
 				{
 					// force recalculation next tick by clearing our waypoints
 					waypoints.clear();
 				}
+				
 			}
 			catch (NullPointerException e)
 			{
@@ -376,8 +376,8 @@ public abstract class AITemplate extends Thread
 		for (Character player : resources.getPlayerList())
 		{
 			String playerID = player.getId();
-			// don't hunt ourselves
-			if (!playerID.equals(id))
+			// don't hunt ourselves or ghosts
+			if (!playerID.equals(id) && !player.isDead())
 			{
 				Point playerLoc = getTargetLocation(player);
 				Point ourLoc = getOurLocation();
@@ -915,6 +915,7 @@ public abstract class AITemplate extends Thread
 	protected void setBehaviour(Behaviour behaviour)
 	{
 		this.behaviour = behaviour;
+		waypoints.clear();
 	}
 
 	/**

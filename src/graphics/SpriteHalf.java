@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
 import resources.Character;
+import resources.Resources;
+import ui.UIRes;
 
 /**
  * The sprite half of a player info panel
@@ -19,6 +21,7 @@ import resources.Character;
 public class SpriteHalf extends JPanel {
 
 	private Character character;
+	private Resources resources;
 	private boolean powerupPresent = false;
 	private boolean bombPresent = false;
 
@@ -27,9 +30,10 @@ public class SpriteHalf extends JPanel {
 	 * @param character the character detailed by the panel
 	 */
 	
-	public SpriteHalf(Character character) {
+	public SpriteHalf(Character character, Resources resources) {
 		
 		this.character = character;
+		this.resources = resources;
 		repaint();
 		
 		setPreferredSize(new Dimension(150, 50));
@@ -44,7 +48,15 @@ public class SpriteHalf extends JPanel {
 		
 		super.paintComponent(g);
 		
-		g.drawImage(character.getArrow(false), 0, -15, this);
+		boolean me = false;
+		
+		try{
+			me = UIRes.cModel.getMyCharacter().equals(character);
+		}catch(NullPointerException e){
+			me = character.equals(resources.getPlayerList().get(0));
+		}
+		
+		g.drawImage(character.getArrow(false, me), 0, -15, this);
 		g.drawImage(character.getFirstFrame(), 50, 0, this);
 		
 		if (character.hasPowerup()) {

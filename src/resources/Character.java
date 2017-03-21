@@ -8,8 +8,7 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.UUID;
 
-import ai.FightingAI;
-import ai.FightingAI;
+import ai.AITemplate;
 import audio.AudioFile;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
@@ -71,7 +70,7 @@ public class Character extends Observable implements Collidable_Circle {
 	}; // add to this as we develop more classes.
 
 	private boolean isAI = false;
-	private FightingAI ai;
+	private AITemplate ai;
 
 	// flags for keys pressed.
 	// e.g. if up is true, then the player/ai is holding the up button.
@@ -114,6 +113,10 @@ public class Character extends Observable implements Collidable_Circle {
 	private BufferedImage currentFrame;
 	private BufferedImage arrow;
 	private BufferedImage bigArrow;
+	private BufferedImage arrowMe;
+	private BufferedImage bigArrowMe;
+	private BufferedImage spikes;
+	private BufferedImage bigSpikes;
 	private Heading dashDirection = Heading.STILL;
 
 	// So we can control how long a character dashes/blocks for
@@ -147,7 +150,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private int teamNumber;
 
 	private int requestId;
-	
+
 	private boolean reqDashing = false;
 	private int dashCooldown = 0;
 
@@ -261,7 +264,9 @@ public class Character extends Observable implements Collidable_Circle {
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
-		arrow = SheetDeets.getArrowFromPlayer(playerNo);
+		arrow = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 0, 50, 50);
+		arrowMe = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 1, 50, 50);
+		spikes = SheetDeets.SPIKES;
 
 		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
 			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
@@ -1444,7 +1449,7 @@ public class Character extends Observable implements Collidable_Circle {
 		case Speed:
 			setMaxDx(maxdx * red_speed_mult);
 			setMaxDy(maxdy * red_speed_mult);
-//			setAcc(acc * 2);
+			// setAcc(acc * 2);
 			break;
 		case Mass:
 			setMass(mass * blue_mass_mult);
@@ -1470,7 +1475,7 @@ public class Character extends Observable implements Collidable_Circle {
 		case Speed:
 			setMaxDx(maxdx / red_speed_mult);
 			setMaxDy(maxdy / red_speed_mult);
-//			setAcc(acc / 2);
+			// setAcc(acc / 2);
 			break;
 		case Mass:
 			setMass(mass / blue_mass_mult);
@@ -1537,28 +1542,31 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * ???
+	 * Resizes a sprite based on a multiplier
 	 * 
 	 * @param image
+	 *            the original sprite
 	 * @param multiplier
-	 * @return
+	 *            the multiplier
+	 * @return the new sprite
 	 */
 	private BufferedImage resize(BufferedImage image, double multiplier) {
 		int w = image.getWidth();
 		int h = image.getHeight();
-		BufferedImage big = new BufferedImage((int) (50 * multiplier), (int) (50 * multiplier), image.getType());
+		BufferedImage big = new BufferedImage((int) (w * multiplier), (int) (h * multiplier), image.getType());
 		Graphics2D g = big.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(image, 0, 0, (int) (50 * multiplier), (int) (50 * multiplier), 0, 0, w, h, null);
+		g.drawImage(image, 0, 0, (int) (w * multiplier), (int) (h * multiplier), 0, 0, w, h, null);
 		g.dispose();
 
 		return big;
 	}
 
 	/**
-	 * ???
+	 * Makes appropriate sprites based on a multiplier
 	 * 
 	 * @param multiplier
+	 *            the multiplier
 	 */
 	public void makeSizeSprites(double multiplier) {
 
@@ -1578,23 +1586,50 @@ public class Character extends Observable implements Collidable_Circle {
 		}
 
 		bigArrow = resize(arrow, multiplier);
+		bigArrowMe = resize(arrowMe, multiplier);
+
+		bigSpikes = resize(spikes, multiplier);
 
 		currentFrame = bigRollingSprites.get(0);
 
 	}
 
 	/**
-	 * ???
+	 * Get this character's arrow sprite
 	 * 
 	 * @param fullscreen
-	 * @return
+	 *            whether the game is fullscreen
+	 * @param isPlayer
+	 *            if the character is the actual player's
+	 * @return the arrow sprite
 	 */
-	public BufferedImage getArrow(boolean fullscreen) {
+	public BufferedImage getArrow(boolean fullscreen, boolean isPlayer) {
 		if (fullscreen) {
+			if (isPlayer) {
+				return bigArrowMe;
+			}
 			return bigArrow;
 		}
 
+		if (isPlayer) {
+			return arrowMe;
+		}
 		return arrow;
+	}
+
+	/**
+	 * Get the spikes sprite for this character
+	 * 
+	 * @param fullscreen
+	 *            whether the game is fullscreen
+	 * @return the spikes sprite
+	 */
+	public BufferedImage getSpikes(boolean fullscreen) {
+		if (fullscreen) {
+			return bigSpikes;
+		}
+
+		return spikes;
 	}
 
 	/**
@@ -1672,7 +1707,7 @@ public class Character extends Observable implements Collidable_Circle {
 	/**
 	 * @return The AI this character is being controlled by.
 	 */
-	public FightingAI getAI() {
+	public AITemplate getAI() {
 		return ai;
 	}
 
@@ -1680,7 +1715,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @param ai
 	 *            The new AI to control this character.
 	 */
-	public void setAI(FightingAI ai) {
+	public void setAI(AITemplate ai) {
 		setAI(true);
 		this.ai = ai;
 	}
@@ -1751,7 +1786,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public void incrementDeaths() {
 		this.deaths++;
 	}
-	
+
 	public int getDashCooldown() {
 		return dashCooldown;
 	}
@@ -1759,7 +1794,7 @@ public class Character extends Observable implements Collidable_Circle {
 	public void incrementDashCooldown() {
 		this.dashCooldown++;
 	}
-	
+
 	public void setDashCooldown(int n) {
 		dashCooldown = n;
 	}

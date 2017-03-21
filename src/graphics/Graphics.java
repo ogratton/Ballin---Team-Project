@@ -13,9 +13,10 @@ import resources.Resources;
 
 public class Graphics extends Thread {
 
-	Resources resources;
-	Updater updater;
-	boolean debugPaths = false;
+	private Resources resources;
+	private Updater updater;
+	private boolean debugPaths = false;
+	private GameComponent comp;
 	
 	/**
 	 * Create a new Graphics thread, with resources and an updater
@@ -45,12 +46,29 @@ public class Graphics extends Thread {
 	
 	public void run() {
 		
-		GameComponent comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
+		comp = new GameComponent(resources, 1200, 650, updater, debugPaths);
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							
 		comp.setTitle("" + resources.getId());
 		
 	}
+	
+	/**
+	 * Send the signal that the game has begun
+	 */
+	
+	public void begin(){
+		comp.begin();
+	}
+	
+	/**
+	 * Set the countdown
+	 * @param i the countdown
+	 */
 
+	public void setCountdown(int i){
+		comp.setCountdown(i);
+	}
+	
 }

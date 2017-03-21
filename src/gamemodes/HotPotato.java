@@ -69,14 +69,26 @@ public class HotPotato extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		// Start game
+		// start the game
 		Physics p = new Physics(resources, false);
+		Graphics g = new Graphics(resources, null, false);
+		if(!isServer) {
+			SwingUtilities.invokeLater(g);
+		}
+		
+		try{
+		Thread.sleep(1500);
+		g.setCountdown(2);
+		Thread.sleep(1500);
+		g.setCountdown(1);
+		Thread.sleep(1500);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		
+		g.begin();
 		p.start();
 		
-		if(!isServer) {
-			SwingUtilities.invokeLater(new Graphics(resources, null, false));
-		}
-
 		timer = 0; // 10*speed of normal timer
 		placeBomb();
 		while (!isGameOver()) {
@@ -116,7 +128,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			c = players.get(p);
 			if (!c.isExploding() && !c.isDead() && !c.hasBomb()) {
 				c.hasBomb(true);
-				System.out.println("Player " + c.getPlayerNumber() + " has been given the bomb!");
+				System.out.println(c.getName() + " has been given the bomb!");
 				success = true;
 			}
 		}
@@ -130,7 +142,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			if (c.hasBomb()) {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
-				System.out.println("Player " + c.getPlayerNumber() + " exploded!");
+				System.out.println(c.getName() + " exploded!");
 				break;
 			}
 		}
@@ -235,4 +247,5 @@ public class HotPotato extends Thread implements GameModeFFA {
 	public int getTime() {
 		return this.timer;
 	}
+
 }
