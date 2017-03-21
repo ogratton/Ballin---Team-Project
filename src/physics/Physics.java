@@ -298,13 +298,6 @@ public class Physics extends Thread implements ActionListener {
 		}
 		move(c);
 	}
-<<<<<<< HEAD
-	
-	/**
-	 * Checks if a character is dead. If so, c 
-	 * @param c
-	 * @return
-=======
 
 	/**
 	 * Checks whether or not a character is dead.
@@ -312,7 +305,6 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The character to check.
 	 * @return True if the character is dead.
->>>>>>> 7e03e5e88f41c9407283cc1ba9d4035ea89e115f
 	 */
 	private boolean dead(Collidable_Circle c) {
 		if (!c.isDead()) {// if stationary, give speed:
@@ -354,19 +346,12 @@ public class Physics extends Thread implements ActionListener {
 		}
 		return dead;
 	}
-<<<<<<< HEAD
-	
-	/**
-	 * Calculates wall collision.
-	 * @param c
-=======
 
 	/**
 	 * Calculates any wall collisions of a character.
 	 * 
 	 * @param c
 	 *            The character to check collisions for.
->>>>>>> 7e03e5e88f41c9407283cc1ba9d4035ea89e115f
 	 */
 	private void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
