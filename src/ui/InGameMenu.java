@@ -44,7 +44,7 @@ public class InGameMenu extends BaseMenu {
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
 			UIRes.cModel.getConnection().close();
-			frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+			frame.dispose();
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;

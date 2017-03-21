@@ -6,13 +6,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +25,7 @@ import javax.swing.JTextField;
 
 import com.esotericsoftware.kryonet.Client;
 
+import graphics.MapPreview;
 import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionData;
@@ -28,24 +33,29 @@ import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
+import resources.FilePaths;
 import resources.Map;
+import resources.MapMetaData;
 import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
 public class SessionListMenu extends JPanel implements Observer {
-	
+
 	private String lobbyName;
-	private String gameModeName;
+	private Mode gameMode;
 	private String mapName;
-	
+	private Map.World tileSet;
+
 	private Session session;
 	private Client client;
 	private ConnectionDataModel cModel;
-	private InLobbyMenu lobby ;
-	
-	
-	public SessionListMenu(Client client, ConnectionDataModel cModel){
+	private InLobbyMenu lobby;
+	private MapMetaData mmd = new MapMetaData();
+	private File folder = new File(FilePaths.maps);
+	private File[] listOfFiles = folder.listFiles();
+
+	public SessionListMenu(Client client, ConnectionDataModel cModel) {
 		this.cModel = cModel;
 		cModel.addObserver(this);
 		lobby = new InLobbyMenu(session, client, cModel, this);
@@ -55,69 +65,41 @@ public class SessionListMenu extends JPanel implements Observer {
 		add(UIRes.sessionsPanels);
 
 	}
-	
+
 	JButton createSessionButton(Client client) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
-			JFrame frame = new JFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Object[] inputs = createLobbyWizard();
-			int optionPane = JOptionPane.showConfirmDialog(frame, inputs, "Create new lobby",
-					JOptionPane.OK_CANCEL_OPTION);
-
-			if (optionPane == JOptionPane.OK_OPTION) {
-				lobbyName = ((JTextField) inputs[1]).getText();
-
-				gameModeName = ((Choice) inputs[3]).getSelectedItem();
-
-				mapName = ((Choice) inputs[5]).getSelectedItem();
-				
-				System.out.println("Map name: " + this.mapName);
-
-				Map.World mapTiles = null;
-
-				for (Map.World map : Map.World.values()) {
-					if (map.toString().compareTo(mapName) == 0)
-						mapTiles = map;
-				}
-
-				Mode gameMode = null;
-				for (Resources.Mode mode : Resources.Mode.values()) {
-					if (mode.toString().compareTo(this.gameModeName) == 0)
-						gameMode = mode;
-				}
-				
-				
-				
-				Session newSession = new Session(this.lobbyName, new ClientInformation(cModel.getMyId(), UIRes.username), this.mapName, mapTiles,
-						gameMode, UIRes.username, 0);
-				
-				System.out.println("Session map name: " + newSession.getMapName());
-				
-
-				Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "",
-						newSession);
-				
-				
-				try {
-					cModel.getConnection().sendTCP(createMessage);
-					System.out.println("Session creation sent.");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				
-				lobby.setSession(newSession);
-				UIRes.switchPanel(lobby);
+			
+			try {
+				createLobbyWizard();
+			} catch (IOException e2) {
+				e2.printStackTrace();
 			}
 
-			else
-				frame.dispose();
+			Session newSession = new Session(this.lobbyName, new ClientInformation(cModel.getMyId(), UIRes.username),
+					this.mapName, this.tileSet, gameMode, UIRes.username, 0);
+
+			Message createMessage = new Message(Command.SESSION, Note.CREATE, cModel.getMyId(), "", "", "", newSession);
+
+			try {
+				cModel.getConnection().sendTCP(createMessage);
+				System.out.println("Session creation sent.");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+			lobby.setSession(newSession);
+			UIRes.switchPanel(lobby);
+			// }
+			//
+			// else
+			// frame.dispose();
 
 		});
 		UIRes.customiseButton(button, true);
 		return button;
 	}
-	
+
 	JButton joinSessionButton(Client client) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
@@ -129,15 +111,14 @@ public class SessionListMenu extends JPanel implements Observer {
 
 			Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
 					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
-					
+
 			try {
 				cModel.getConnection().sendTCP(joinMessage);
-				
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
+
 			lobby.setSession(cModel.getAllSessions().get(index));
 			UIRes.switchPanel(lobby);
 		});
@@ -160,7 +141,7 @@ public class SessionListMenu extends JPanel implements Observer {
 		UIRes.customiseButton(button, true);
 		return button;
 	}
-	
+
 	JPanel getSessionPanel(Session session) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -215,7 +196,7 @@ public class SessionListMenu extends JPanel implements Observer {
 		panel.requestFocus();
 		return panel;
 	}
-	
+
 	void updateSessionsPanel(Client client) {
 		UIRes.sessionsPanels.removeAll();
 		UIRes.sessionPanelsList.removeAll(UIRes.sessionPanelsList);
@@ -231,10 +212,10 @@ public class SessionListMenu extends JPanel implements Observer {
 		UIRes.sessionsPanels.repaint();
 		UIRes.sessionsPanels.revalidate();
 	}
-	
+
 	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension((int)(UIRes.width * 0.95), (int)(UIRes.height * 0.12)));
+		panel.setPreferredSize(new Dimension((int) (UIRes.width * 0.95), (int) (UIRes.height * 0.12)));
 		panel.setOpaque(false);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JButton createSession = createSessionButton(client);
@@ -249,43 +230,109 @@ public class SessionListMenu extends JPanel implements Observer {
 		panel.add(Box.createHorizontalStrut(10));
 		return panel;
 	}
-	
-	Object[] createLobbyWizard() {
+
+	@SuppressWarnings("unchecked")
+	void createLobbyWizard() throws IOException {
+		JFrame lobbyFrame = new JFrame();
+		JFrame mapFrame = new JFrame();
+		JFrame gameModeFrame = new JFrame();
+
 		JLabel lobbyNameLabel = new JLabel("Lobby name: ");
+		JTextField lobbyNameInput = new JTextField(UIRes.username + "'s lobby");
+		Object[] lobbyInfo = { lobbyNameLabel, lobbyNameInput };
+
+		JLabel mapLabel = new JLabel("Map: ");
+		JComboBox<MapPreview> mapChoice = new JComboBox<MapPreview>();
+		String[] mapNames = null;
+		mapNames = getMapFileNames();
+		
+		for (String map : mapNames) {
+			ArrayList<Map> mapList = new ArrayList<Map>();
+			mapList.add(new Map(1200, 650, Map.World.CAVE, map));
+			mapChoice.add(new MapPreview(mapList));
+		}
+
+		JLabel tileLabel = new JLabel("Tile set: ");
+		Choice tileChoice = new Choice();
+		for (Map.World tile : Map.World.values()) {
+			tileChoice.add(tile.toString());
+		}
+
+		Object[] mapInfo = { mapLabel, mapChoice, tileLabel, tileChoice };
 
 		JLabel gameModeLabel = new JLabel("Game mode: ");
 		Choice gameModeChoice = new Choice();
-		for (Resources.Mode gameMode : Resources.Mode.values()) {
-			gameModeChoice.add(gameMode.toString());
+		ArrayList<Mode> gameModeList = new ArrayList<Mode>();
+		gameModeList = getGameModes(this.mapName);
+		for (int i = 0; i < gameModeList.size(); i++) {
+			gameModeChoice.add(gameModeList.get(i).toString());
 		}
 
-		JLabel mapLabel = new JLabel("Map: ");
-		Choice mapChoice = new Choice();
-		for (Map.World map : Map.World.values()) {
-			mapChoice.add(map.toString());
-		}
+		Object[] gameModeInfo = { gameModeLabel, gameModeChoice };
 
 		UIRes.customiseLabel(lobbyNameLabel);
-		UIRes.customiseLabel(gameModeLabel);
 		UIRes.customiseLabel(mapLabel);
-		Object[] inputs = { lobbyNameLabel, new JTextField(UIRes.username + "'s lobby"), gameModeLabel, gameModeChoice,
-				mapLabel, mapChoice };
+		UIRes.customiseLabel(tileLabel);
+		UIRes.customiseLabel(gameModeLabel);
 
-		return inputs;
+		int lobbyPane = JOptionPane.showConfirmDialog(lobbyFrame, lobbyInfo, "Name your lobby: ",
+				JOptionPane.OK_CANCEL_OPTION);
+
+		if (lobbyPane == JOptionPane.OK_OPTION) {
+
+			this.lobbyName = ((JTextField) lobbyInfo[1]).getText();
+			lobbyFrame.dispose();
+
+			int mapPane = JOptionPane.showConfirmDialog(mapFrame, mapInfo,
+					"Select the map you would like to play on. This will influence what game modes you can play.",
+					JOptionPane.OK_CANCEL_OPTION);
+			if (mapPane == JOptionPane.OK_OPTION) {
+				this.mapName = ((JComboBox<MapPreview>) mapInfo[2]).getSelectedItem().toString();
+
+				int gameModePane = JOptionPane.showConfirmDialog(gameModeFrame, gameModeInfo,
+						"Select the game mode you would like to play: ", JOptionPane.OK_CANCEL_OPTION);
+
+				if (gameModePane == JOptionPane.OK_OPTION)
+					this.gameMode = mmd.correspondingMode(gameModeInfo[1].toString());
+				else
+					gameModeFrame.dispose();
+			} else
+				mapFrame.dispose();
+		}
+
+		else
+			lobbyFrame.dispose();
+
 	}
-	
+
 	JButton getBackToStartMenuButton() {
 		JButton button = new JButton("Back");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			
+
 			UIRes.cModel.getConnection().close();
-			
+
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;
 	}
 	
+	String[] getMapFileNames(){
+		String[] maps = new String[listOfFiles.length];
+		
+		for(int i = 0; i < maps.length; i++){
+			maps[i] = listOfFiles[i].toString().substring(0, listOfFiles[i].toString().length() - 4);
+		}
+		
+		return maps;
+	}
+
+	ArrayList<Mode> getGameModes(String map) throws IOException {
+		mmd.readMetaData(map);
+		ArrayList<Mode> gameModes = mmd.getCompatibleModes();
+		return gameModes;
+	}
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		updateSessionsPanel(client);

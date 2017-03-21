@@ -145,7 +145,9 @@ public class InLobbyMenu extends JPanel implements Observer{
 				if (client.isReady()) {
 					readyCheck.setForeground(Color.GREEN);
 					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					System.out.println(client.getCharacterClass().name());
 					client.setPlayerNumber(index);
+					System.out.println(client.getPlayerNumber());
 					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 						if(!cModel.isGameInProgress()) {
 							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);

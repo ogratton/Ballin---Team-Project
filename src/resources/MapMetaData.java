@@ -106,7 +106,7 @@ public class MapMetaData
 	 * @param supposedMode string to convert to enum value
 	 * @return enum value
 	 */
-	private Mode correspondingMode(String supposedMode)
+	public Mode correspondingMode(String supposedMode)
 	{
 		for (int i = 0; i < gamemodes.length; i++)
 		{
