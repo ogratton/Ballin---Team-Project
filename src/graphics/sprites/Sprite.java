@@ -70,7 +70,6 @@ public class Sprite {
 		return sprite;
 	}
 
-
 	/**
 	 * Get an individual sprite from a sprite sheet
 	 * 
@@ -91,6 +90,10 @@ public class Sprite {
 
 	/**
 	 * Draw one big map image from all the individual tiles
+	 * 
+	 * @param map
+	 *            the map
+	 * @return the map image
 	 */
 
 	public static BufferedImage createMap(Map map) {
@@ -111,14 +114,14 @@ public class Sprite {
 		// draw image
 		g2.setColor(oldColor);
 
-		for (int i = 0; i < height/tileSize;i++) {
-			for (int j = 0; j < width/tileSize; j++) {
+		for (int i = 0; i < height / tileSize; i++) {
+			for (int j = 0; j < width / tileSize; j++) {
 
 				g2.drawImage(map.getTileSprite(j, i), null, tileSize * j, tileSize * i);
 
 			}
 		}
-		
+
 		g2.dispose();
 		return newImage;
 	}

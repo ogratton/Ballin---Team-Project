@@ -57,7 +57,7 @@ public class VictoryScreen extends JPanel {
 		} else {
 			text = "Loser...";
 		}
-		
+
 		// add the winner text to a label
 		JLabel label = new JLabel(text);
 		UIRes.setCustomFont(label, 64);
@@ -65,24 +65,25 @@ public class VictoryScreen extends JPanel {
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		add(label);
 
-
 		JLabel label4 = new JLabel("The winner was " + resources.gamemode.getWinner().getName());
 		UIRes.setCustomFont(label4, 32);
 		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
 		label4.setAlignmentX(CENTER_ALIGNMENT);
 		add(label4);
-		
+
 		// add the player's stats to a label
+		String kds = "";
 
 		if (mode != Mode.HotPotato) {
-			JLabel label2 = new JLabel("Kills: " + character.getKills() + " / Deaths: " + character.getDeaths()
-					+ " / Suicides: " + character.getSuicides());
-			UIRes.setCustomFont(label2, 18);
-			label2.setBorder(new EmptyBorder(10, 10, 10, 10));
-			label2.setAlignmentX(CENTER_ALIGNMENT);
-			add(label2);
+			kds = "Kills: " + character.getKills() + " / Deaths: " + character.getDeaths() + " / Suicides: "
+					+ character.getSuicides();
 		}
-
+		
+		JLabel label2 = new JLabel();
+		UIRes.setCustomFont(label2, 18);
+		label2.setBorder(new EmptyBorder(10, 10, 10, 10));
+		label2.setAlignmentX(CENTER_ALIGNMENT);
+		add(label2);
 
 		// provide different text depending on game mode
 		String modeText = "";

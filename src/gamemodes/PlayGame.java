@@ -38,10 +38,10 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "potato";
+		String mapName = "jacketpotato";
 		resources.mode = Mode.HotPotato;
 
-		Map.World style = Map.World.CAVE;
+		Map.World style = Map.World.SPACE;
 
 		// Music setting:
 
