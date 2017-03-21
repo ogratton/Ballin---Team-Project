@@ -214,10 +214,25 @@ public class ServerListener extends Listener {
 			  		case START:
 			  			session = sessions.get(message.getCurrentSessionId());
 			  			session.setGameInProgress(true);
-			  			client = session.getClient(message.getSenderId());
-			  			client.setReady(true);
+			  			
+			  			ClientInformation sentClient = (ClientInformation)message.getObject();
+			  			
 			  			client = clients.get(message.getSenderId());
 			  			client.setReady(true);
+			  			
+			  			client = session.getClient(message.getSenderId());
+			  			client.setReady(true);
+			  			client.setCharacterClass(sentClient.getCharacterClass());
+			  			client.setPlayerNumber(sentClient.getPlayerNumber());
+			  			
+			  			Message response2 = new Message(Command.SESSION, Note.COMPLETED, message.getSenderId(), null, null, null, sessions);
+			  			tempClients = session.getAllClients();
+		  				// Sends the response to everyone in the session.
+		  				// This update who is ready for each client in the session
+		  				for(int i=0; i<tempClients.size(); i++) {
+		  					c = connections.get(tempClients.get(i).getId());
+		  					c.sendTCP(response2);
+		  				}
 			  			
 			  			//System.out.println("Current Session ID: " + message.getCurrentSessionId());
 			  			//System.out.println("Current Session: " + session);
@@ -228,20 +243,13 @@ public class ServerListener extends Listener {
 			  				
 			  				List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  				
-			  				// Update player colour and class type of the client on the server.
-				  			for(int i=0; i<characters.size(); i++) {
-				  				if(characters.get(i).equals(client.getId())) {
-				  					characters.get(i).setPlayerNumber(client.getPlayerNumber());
-				  					characters.get(i).setClassType(client.getCharacterClass());
-				  				}
-				  			}
 				  			
 			  				session.setGameInProgress(true);
 			  				//List<resources.Character> characters = resourcesMap.get(session.getId()).getPlayerList();
 			  				List<CharacterInfo> characterInfo = new ArrayList<CharacterInfo>();
 			  				for(int i=0; i<characters.size(); i++) {
 			  					resources.Character character = characters.get(i);
-			  					characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY(), character.getPlayerNumber()));
+			  					characterInfo.add(new CharacterInfo(character.getId(), character.getX(), character.getY(), character.getPlayerNumber(), character.getClassType(), character.getName()));
 			  				}
 						  
 			  				data = new GameData(characterInfo);
@@ -263,15 +271,9 @@ public class ServerListener extends Listener {
 								for(int i=0; i<tempClients.size(); i++) {
 				  					c = connections.get(tempClients.get(i).getId());
 				  					c.sendTCP(countdown);
-				  				}
-								Thread.sleep(1000);
-								for(int i=0; i<tempClients.size(); i++) {
-				  					c = connections.get(tempClients.get(i).getId());
+				  					Thread.sleep(1000);
 				  					c.sendTCP(countdown);
-				  				}
-								Thread.sleep(1000);
-								for(int i=0; i<tempClients.size(); i++) {
-				  					c = connections.get(tempClients.get(i).getId());
+				  					Thread.sleep(1000);
 				  					c.sendTCP(countdown);
 				  				}
 							} catch (InterruptedException e) {
@@ -281,6 +283,9 @@ public class ServerListener extends Listener {
 			  				
 			  				Resources res = resourcesMap.get(session.getId());
 			  				GameModeFFA mode = res.gamemode;
+			  				
+			  				GameEndChecker checker = new GameEndChecker(session.getId(), resourcesMap, sessions, connections, resourcesMap.get(session.getId()));
+			  				checker.start();
 			  				
 			  				((Thread) mode).start();
 			  				
@@ -348,7 +353,8 @@ public class ServerListener extends Listener {
 		    	// Remove the player from the resources for that session
 		    	String sessionId = client.getSessionId();
 		    	if(sessionId != null && sessions.get(sessionId) != null) {
-		    		sessions.get(sessionId).removeClient(key);
+		    		Session session = sessions.get(sessionId);
+		    		session.removeClient(key);
 			    	
 		    		if(sessions.get(sessionId).isGameInProgress()) {
 		    			Resources resources = resourcesMap.get(sessionId);
@@ -358,12 +364,24 @@ public class ServerListener extends Listener {
 				    			characters.get(i).setLives(0);
 				    			characters.get(i).setDead(true);
 				    			characters.remove(i);
+				    			Message removePlayer = new Message(Command.GAME, Note.REMOVE_PLAYER, null, key, sessionId, sessionId);
+				    			
+				    			List<ClientInformation> temp1Clients = session.getAllClients();
+				    			Connection c;
+				  				// Sends the response to everyone in the session.
+				  				// This will start the game for everyone
+				  				for(int j=0; j<temp1Clients.size(); j++) {
+				  					c = connections.get(temp1Clients.get(j).getId());
+				  					c.sendTCP(removePlayer);
+				  				}
+				  				System.out.println("Got here: ");
+				  				break;
 				    		}
 				    	}
 		    		}
+		    		break;
 		    	}
 		    }
-		    break;
 		}
 	}
 }
