@@ -1,21 +1,33 @@
 package networking;
 
+/**
+ * This encapsulates the updates to the position of a character which can be
+ * sent across the network (unlike the Character class).
+ * @author aaquibnaved
+ *
+ */
 public class CharacterInfo {
 
 	private double x;
 	private double y;
 	private String id;
-	private boolean up, right, left, down, jump, punch;
+	private boolean up, right, left, down;
 	private boolean isFalling, isDead, isDashing, isBlocking;
 	public boolean sendDashing, sendBlocking;
 	private int playerNumber;
-	private int requestId;
 	private int stamina;
 	
 	public CharacterInfo() {
 		
 	}
 	
+	/**
+	 * Initialise the CharacterInfo object using only x, y, id and player number.
+	 * @param id The Id of the Character
+	 * @param d The x position of the Character
+	 * @param e The y position of the Character
+	 * @param playerNumber The player number
+	 */
 	public CharacterInfo(String id, double d, double e, int playerNumber) {
 		this.x = d;
 		this.y = e;
@@ -23,7 +35,20 @@ public class CharacterInfo {
 		this.playerNumber = playerNumber;
 	}
 	
-	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int requestId, int stamina) {
+	/**
+	 * Initialise the CharacterInfo object using both x and y coordinates
+	 * as well as other variables such as if it is dashing or not.
+	 * @param id The ID of the Character
+	 * @param d The x position of the Character
+	 * @param e The y position of the Character
+	 * @param playerNumber The player number
+	 * @param isFalling Is the player falling?
+	 * @param isDead Is the player dead?
+	 * @param isDashing Is the player dashing?
+	 * @param isBlocking Is the player blocking?
+	 * @param stamina The player stamina
+	 */
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -32,20 +57,27 @@ public class CharacterInfo {
 		this.isDead = isDead;
 		this.isDashing = isDashing;
 		this.isBlocking = isBlocking;
-		this.requestId = requestId;
 		this.stamina = stamina;
 	}
-
-	public CharacterInfo(String id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean punch, boolean block, int requestId) {
+	
+	/**
+	 * Initialise without using player number or stamina.
+	 * @param id
+	 * @param up
+	 * @param right
+	 * @param left
+	 * @param down
+	 * @param dashing
+	 * @param block
+	 */
+	public CharacterInfo(String id, boolean up, boolean right, boolean left, boolean down, boolean dashing, boolean block) {
 		this.id = id;
 		this.up = up;
 		this.right = right;
 		this.left = left;
 		this.down = down;
 		this.isDashing = dashing;
-		this.punch = punch;
 		this.isBlocking = block;
-		this.requestId = requestId;
 	}
 
 	public boolean isUp() {
@@ -78,22 +110,6 @@ public class CharacterInfo {
 
 	public void setDown(boolean down) {
 		this.down = down;
-	}
-
-	public boolean isJump() {
-		return jump;
-	}
-
-	public void setJump(boolean jump) {
-		this.jump = jump;
-	}
-
-	public boolean isPunch() {
-		return punch;
-	}
-
-	public void setPunch(boolean punch) {
-		this.punch = punch;
 	}
 
 	public String getId() {
@@ -158,14 +174,6 @@ public class CharacterInfo {
 
 	public void setBlocking(boolean isBlocking) {
 		this.isBlocking = isBlocking;
-	}
-
-	public int getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(int requestId) {
-		this.requestId = requestId;
 	}
 
 	public int getStamina() {

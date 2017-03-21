@@ -37,10 +37,16 @@ public class ServerListener extends Listener {
 		this.connections = connections;
 	}
 	
+	/**
+	 * Fires when a client connects to the server.
+	 */
 	public void connected(Connection connection) {
 		System.out.println("Connection received from: " + connection.getRemoteAddressTCP().getHostName());
 	}
 	
+	/**
+	 * Fires when the server receives a message.
+	 */
 	public void received(Connection connection, Object object) {
 		
 		Message response;
@@ -81,10 +87,7 @@ public class ServerListener extends Listener {
     				case INDEX:
     					// Sends back all the sessions to all the clients
 					  	senderClient = clients.get(message.getSenderId());
-					  	//ConcurrentMap<String, SerializableSession> serialized = serialize(this.sessions);
 					  	response = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
-					  	//System.out.println("Sessions Inside While Loop: " + serialize(this.sessions).size());
-					  	//System.out.println("Number of Sessions: " + sessions.size());
 					  	
 					  	// Sends the response to everyone connected to the server.
 					  	for(Connection c : connections.values()) {
@@ -150,7 +153,7 @@ public class ServerListener extends Listener {
 				  		senderClient.setSessionId("");
 				  		
 				  		// If the host leaves, set a new host for the session.
-				  		if(session.getId().equals(senderClient.getSessionId()) && session.getAllClients().size() <= 0) {
+				  		if(session.getHostName().equals(senderClient.getName()) && session.getAllClients().size() >= 1) {
 				  			ClientInformation newHost = session.getAllClients().get(0);
 				  			session.setHostName(newHost.getName());
 				  		}
@@ -167,7 +170,7 @@ public class ServerListener extends Listener {
 				  		Connection conn = connections.get(senderClient.getId());
 				  		conn.sendTCP(response);
 				  		
-				  	// Sends the response to everyone connected to the server.
+				  		// Sends the response to everyone connected to the server.
 				  		
 				  		Message response1 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		for(Connection c : connections.values()) {
@@ -193,6 +196,7 @@ public class ServerListener extends Listener {
 			  		// Fires when the client presses "Ready"
 			  		case START:
 			  			session = sessions.get(message.getCurrentSessionId());
+			  			session.setGameInProgress(true);
 			  			client = session.getClient(message.getSenderId());
 			  			client.setReady(true);
 			  			client = clients.get(message.getSenderId());
@@ -278,6 +282,9 @@ public class ServerListener extends Listener {
     	}
 	}
 	
+	/**
+	 * Fires when a client disconnects.
+	 */
 	public void disconnected(Connection connection) {
 		System.out.println("Disconnection");
 		
@@ -285,12 +292,14 @@ public class ServerListener extends Listener {
 		for (Map.Entry<String, Connection> entry : connections.entrySet()) {
 		    String key = entry.getKey();
 		    Connection value = entry.getValue();
+		    
+		    // Remove the connection from the connections table
 		    if(value.equals(connection)) {
 		    	ClientInformation client = clients.get(key);
 		    	clients.remove(key);
 		    	connections.remove(key);
 		    	
-		    	
+		    	// Remove the player from the resources for that session
 		    	String sessionId = client.getSessionId();
 		    	if(sessionId != null) {
 		    		sessions.get(sessionId).removeClient(key);

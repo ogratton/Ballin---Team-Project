@@ -72,7 +72,7 @@ public class NetworkingDemo {
 			break;
 		}
 		
-		// Get the list of clients on teh session and put them on the map randomly.
+		// Get the list of clients on the session and put them on the map randomly.
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
 			Point coords = resources.getMap().randPointOnMap();
