@@ -90,8 +90,8 @@ public class Updater extends JPanel implements Observer {
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			//oldDashing = c.isDashing();
-			//oldBlocking = c.isBlocking();
+			oldDashing = c.isDashing();
+			oldBlocking = c.isBlocking();
 			return true;
 		}
 		else {
@@ -99,8 +99,8 @@ public class Updater extends JPanel implements Observer {
 			oldDown = c.isDown();
 			oldRight = c.isRight();
 			oldLeft = c.isLeft();
-			//oldDashing = c.isDashing();
-			//oldBlocking = c.isBlocking();
+			oldDashing = c.isDashing();
+			oldBlocking = c.isBlocking();
 			return false;
 		}
 	}
