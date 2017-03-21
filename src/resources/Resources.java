@@ -99,6 +99,7 @@ public class Resources {
 
 	private int countdown = 3;
 	private boolean finished = false;
+	private int timer = 30;
 	
 	/**
 	 * Creates a new resources object and defines which tiles are not walkable ('bad')
@@ -636,7 +637,6 @@ public class Resources {
 	}
 
 	private Line normal;
-	private int timer;
 
 	/**
 	 * DEBUG: Get the normal to the next AI destination
