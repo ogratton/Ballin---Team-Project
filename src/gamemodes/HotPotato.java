@@ -71,21 +71,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		resources.setTimer(0);
 		// start the game
 		Physics p = new Physics(resources, false);
-		Graphics g = new Graphics(resources, null, false);
 		if (!isServer) {
+			Graphics g = new Graphics(resources, null, false);
 			SwingUtilities.invokeLater(g);
-			
-			try {
-				Thread.sleep(1000);
-				resources.setCountdown(2);
-				Thread.sleep(1000);
-				resources.setCountdown(1);
-				Thread.sleep(1000);
-				resources.setCountdown(0);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 		}
 
 		p.start();

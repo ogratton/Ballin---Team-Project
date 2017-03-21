@@ -357,6 +357,7 @@ public class ServerListener extends Listener {
 				    		if(characters.get(i).getId().equals(key)) {
 				    			characters.get(i).setLives(0);
 				    			characters.get(i).setDead(true);
+				    			characters.remove(i);
 				    		}
 				    	}
 		    		}
