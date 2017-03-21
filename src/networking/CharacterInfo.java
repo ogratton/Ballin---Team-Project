@@ -39,6 +39,7 @@ public class CharacterInfo {
 		this.y = e;
 		this.id = id;
 		this.playerNumber = playerNumber;
+		this.isDead = false;
 	}
 	
 	/**
