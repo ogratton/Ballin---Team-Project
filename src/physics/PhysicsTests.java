@@ -55,14 +55,10 @@ public class PhysicsTests {
 		
 	}
 	
-	private void testActionPerformed1(double x, double y, double dx, double dy) {
-		
-	}
-	
 	@Test
 	public void testActionPerformed2() {
 		//Test physics.actionPerformed().
-		//Test one character movement:
+		//Test two character collision:
 		fail("Not yet implemented");
 	}
 	

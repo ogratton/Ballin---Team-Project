@@ -22,11 +22,6 @@ public interface GameModeFFA {
 	public int getTime();
 	
 	/**
-	 * @return An ArrayList of all characters, order by descending score
-	 */
-	public ArrayList<Character> getOrderedScores();
-
-	/**
 	 * @return Whether the game has ended
 	 */
 	public boolean isGameOver();

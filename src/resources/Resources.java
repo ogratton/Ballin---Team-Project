@@ -718,5 +718,15 @@ public class Resources {
 	public boolean isFinished(){
 		return this.finished;
 	}
+	
+	/**
+	 * @return An ArrayList of all characters, order by descending score
+	 */
+	public ArrayList<Character> getOrderedScores() {
+		ArrayList<Character> scores = new ArrayList<Character>();
+		scores.addAll(getPlayerList());
+		scores.sort((a, b) -> (a.getScore() > b.getScore()) ? -1 : (a.getScore() < b.getScore()) ? 1 : 0);
+		return scores;
+	}
 
 }

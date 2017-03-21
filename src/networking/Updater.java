@@ -53,18 +53,8 @@ public class Updater extends JPanel implements Observer {
 		List<resources.Character> characters = resources.getPlayerList();
 		for(int i=0; i<characters.size(); i++) {
 			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {		
-				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), false, characters.get(i).isBlocking(), resources.getNextRequestId());
+				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), characters.get(i).isBlocking());
 				
-				//info.sendDashing = hasDashingChanged(characters.get(i).isDashing()) ? true : false;
-				//info.sendBlocking = hasBlockingChanged(characters.get(i).isBlocking()) ? true : false;
-				
-//				if(info.sendDashing) {
-//					System.out.println("dashing sent by client");
-//				}
-				
-				resources.getRequests().add(info);
-				
-				//System.out.println("Request ID sent: " + resources.getRequestId());
 				GameData gameData = new GameData(info);
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
 				try {
@@ -75,13 +65,6 @@ public class Updater extends JPanel implements Observer {
 			}
 		}
 		repaint();
-	}
-	
-	private boolean any(resources.Character c) {
-		if(c.isUp() || c.isDown() || c.isLeft() || c.isRight() || c.isBlocking()) {
-			return true;
-		}
-		return false;
 	}
 	
 	private boolean hasControlsChanged(resources.Character c) {
@@ -101,28 +84,6 @@ public class Updater extends JPanel implements Observer {
 			oldLeft = c.isLeft();
 			oldDashing = c.isDashing();
 			oldBlocking = c.isBlocking();
-			return false;
-		}
-	}
-	
-	private boolean hasDashingChanged(boolean dash) {
-		if(dash != oldDashing) {
-			oldDashing = dash;
-			return true;
-		}
-		else {
-			oldDashing = dash;
-			return false;
-		}
-	}
-	
-	private boolean hasBlockingChanged(boolean blocking) {
-		if(blocking != oldBlocking) {
-			oldBlocking = blocking;
-			return true;
-		}
-		else {
-			oldBlocking = blocking;
 			return false;
 		}
 	}

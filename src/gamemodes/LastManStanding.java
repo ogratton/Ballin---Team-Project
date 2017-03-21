@@ -18,11 +18,11 @@ import resources.Resources.Mode;
  */
 public class LastManStanding extends Thread implements GameModeFFA {
 
-	private int maxLives;
+	private int maxLives;//
 	private boolean gameOver = false;
 	private Character winner;
-	private Resources resources;
-	private boolean isServer = false;
+	private Resources resources;//
+	private boolean isServer = false;//
 
 	/**
 	 * Create a new last man standing game mode.
@@ -95,7 +95,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		System.out.println("WE HAVE A WINNER");
 		System.out.println("Player " + winner.getPlayerNumber() + " survived the longest and reached a score of "
 				+ winner.getScore() + "!");
-		ArrayList<Character> scores = getOrderedScores();
+		ArrayList<Character> scores = resources.getOrderedScores();
 		for (Character c : scores) {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
@@ -191,14 +191,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		return remaining;
 	}
 
-	@Override
-	public ArrayList<Character> getOrderedScores() {
-		ArrayList<Character> scores = new ArrayList<Character>();
-		scores.addAll(resources.getPlayerList());
-		scores.sort((a, b) -> (a.getScore() > b.getScore()) ? -1 : (a.getScore() < b.getScore()) ? 1 : 0);
-		return scores;
-	}
-	
 	/**
 	 * @return An ArrayList of each character's time of death, in ascending
 	 *         order.
