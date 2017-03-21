@@ -44,9 +44,9 @@ public class DebugMode extends Thread implements GameModeFFA
 	 * @return just the first player in the list
 	 */
 	@Override
-	public Character getWinner()
+	public ArrayList<Character> getWinners()
 	{
-		return resources.getPlayerList().get(0);
+		return resources.getPlayerList();
 	}
 
 	/**

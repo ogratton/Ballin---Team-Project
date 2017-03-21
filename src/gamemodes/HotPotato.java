@@ -171,9 +171,11 @@ public class HotPotato extends Thread implements GameModeFFA {
 	/**
 	 * @return The winning character
 	 */
-	public Character getWinner() {
+	public ArrayList<Character> getWinners() {
 		checkWinner();
-		return winner;
+		ArrayList<Character> winners = new ArrayList<>();
+		winners.add(winner);
+		return winners;
 	}
 
 	/**
