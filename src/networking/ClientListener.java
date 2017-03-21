@@ -202,7 +202,8 @@ public class ClientListener extends Listener {
        				resources = cModel.getResources();
        				
        				
-       				
+       				System.out.println("Game Over: " + resources.gamemode.isGameOver());
+       				System.out.println("Timer: " + resources.getTimer());
        				resources.setPowerUpList(deserialize(gameData.getPowerUps()));
        				resources.setTimer(gameData.getTimer());
        				List<resources.Character> players = resources.getPlayerList();
