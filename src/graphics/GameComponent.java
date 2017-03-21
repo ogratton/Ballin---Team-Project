@@ -32,7 +32,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	private ArrayList<Character> characters;
 	private Timer timer;
 	public static LayeredPane layers;
-	private boolean seenVictory = false;
 	private TopBar bar;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
