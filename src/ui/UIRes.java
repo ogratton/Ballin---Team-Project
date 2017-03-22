@@ -1,7 +1,9 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
@@ -11,34 +13,33 @@ import java.io.File;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import com.esotericsoftware.kryonet.Client;
-
 import audio.AudioFile;
+import audio.MusicPlayer;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
-import networking.ClientListener;
 import networking.ConnectionData;
 import networking.ConnectionDataModel;
-import networking.NetworkingClient;
-import networking.Session;
 import resources.Character;
 import resources.FilePaths;
+import resources.Map;
 import resources.Resources;
 
 public class UIRes {
 	
 	public static Resources resources = new Resources();
 
-	public static final int width = getScreenWidth() / 2;
+	public static final int width = getScreenWidth();
 	public static final int height = getScreenHeight();
 
 	public static String username = "Player";
@@ -67,6 +68,7 @@ public class UIRes {
 	
 	public static JPanel sessionsPanels = new JPanel();
 	public static JPanel playersPanel = new JPanel();
+	public static InLobbyMenu lobby;
 	
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
 	
@@ -75,12 +77,9 @@ public class UIRes {
 	
 	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
 	
-	public static StartMenu start = new StartMenu();
-	public static OptionsMenu options = new OptionsMenu();
-	
 	public static JPanel mainPanel = new JPanel();
-	public static JPanel startPanel = start.getStartMenuPanel();
-	public static JPanel optionsPanel = options.getOptionsPanel();
+	public static StartMenu startPanel = new StartMenu();
+	public static OptionsMenu optionsPanel = new OptionsMenu(startPanel);
 	
 	
 	public static int getScreenWidth()
@@ -91,6 +90,12 @@ public class UIRes {
 	public static int getScreenHeight()
 	{
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	}
+	
+	static JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
+	{
+		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
+		return panel;
 	}
 	
 	public static void switchPanel(JPanel newPanel) {
@@ -118,7 +123,7 @@ public class UIRes {
 	
 	static void allignToCenter(JComponent comp) {
 		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+//		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 	}
 
 	static Color getRandomColour() {
@@ -191,7 +196,7 @@ public class UIRes {
 		}
 	}
 
-	void customiseSlider(JSlider slider) {
+	static void customiseSlider(JSlider slider) {
 		customiseComponent(slider, buttonSize, sliderRatio);
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(10);
@@ -236,6 +241,53 @@ public class UIRes {
 		buttonPanel.setOpaque(false);
 		panel.add(buttonPanel);
 		return panel;
+	}
+	
+	static JFrame createFrame()
+	{
+		JFrame frame = new JFrame();
+		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(getScreenWidth(), getScreenHeight(), ""))));
+		frame.setResizable(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
+		frame.setLayout(new BorderLayout());
+		frame.setContentPane(map);
+		frame.setLayout(new FlowLayout());
+		frame.setSize(width, height);
+		customiseMainPanel(frame);
+		frame.add(mainPanel);
+		return frame;
+	}
+
+	static void customiseMainPanel(JFrame frame)
+	{
+		customiseAllPanels(frame);
+		//mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setOpaque(false);
+		mainPanel.add(startPanel);
+
+		if (!Resources.silent)
+		{
+			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma");
+			resources.setMusicPlayer(musicPlayer);
+			musicPlayer.start();
+		}
+
+	}
+
+	static void customisePanel(JPanel panel, JFrame frame)
+	{
+		panel.setOpaque(false);
+		panel.setPreferredSize(frame.getSize());
+
+	}
+
+	static void customiseAllPanels(JFrame frame)
+	{
+		customisePanel(startPanel, frame);
+		customisePanel(optionsPanel, frame);
+		customisePanel(sessionsPanels , frame);
+
 	}
 
 }

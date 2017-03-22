@@ -15,6 +15,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import graphics.GameComponent;
+import graphics.LayeredPane;
 import graphics.sprites.Sprite;
 import resources.Map;
 
@@ -30,8 +32,13 @@ public class InGameMenu extends BaseMenu {
 		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
-		addResumeToGameButton(panel2, panel);
-		getButtonAndIcon(panel2, getBackToStartMenuButton(frame));
+		JButton backButton = goBack(backToPanel);
+		JButton button = new JButton("Back");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e -> {
+			UIRes.switchPanel(backToPanel);
+		});
+		UIRes.getButtonAndIcon(panel2, backButton)
 		addOptionsButton(panel2);
 		addExitButton(panel2);
 		map.add(panel2, BorderLayout.CENTER);
@@ -50,6 +57,16 @@ public class InGameMenu extends BaseMenu {
 			frame.dispose();
 			UIRes.switchPanel(UIRes.startPanel);
 		});
+		return button;
+	}
+	
+	JButton getResumeToGameButton(JPanel panel) {
+		JButton button = new JButton("Resume");
+		button.addActionListener(e -> {
+			GameComponent.layers.setLayer(panel, new Integer(10));
+			LayeredPane.menuShowing = !LayeredPane.menuShowing;
+		});
+		customiseButton(button, true);
 		return button;
 	}
 

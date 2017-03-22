@@ -21,7 +21,7 @@ public class MapMetaData
 {
 	private BufferedReader br;
 	private Mode[] gamemodes = Mode.values();
-	private ArrayList<String> gamemodeNames;
+	public ArrayList<String> gamemodeNames;
 
 	private ArrayList<Mode> compatibleModes;
 	private String name;
@@ -162,6 +162,6 @@ public class MapMetaData
 	
 	public static void main(String[] args) throws IOException
 	{
-		System.out.println(MapMetaData.getTable().get(Mode.HotPotato));
+		System.out.println(MapMetaData.getTable().get(Mode.Deathmatch));
 	}
 }

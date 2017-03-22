@@ -24,51 +24,7 @@ import resources.Resources;
 public abstract class BaseMenu extends MenuItems
 {
 
-	static JFrame createFrame()
-	{
-		JFrame frame = new JFrame();
-		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(getScreenWidth(), getScreenHeight(), ""))));
-		frame.setResizable(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
-		frame.setLayout(new BorderLayout());
-		frame.setContentPane(map);
-		frame.setLayout(new FlowLayout());
-		frame.setSize(width, height);
-		customiseMainPanel(frame);
-		frame.add(mainPanel);
-		return frame;
-	}
-
-	static void customiseMainPanel(JFrame frame)
-	{
-		customiseAllPanels(frame);
-		mainPanel.setOpaque(false);
-		mainPanel.add(startPanel);
-
-		if (!Resources.silent)
-		{
-			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma");
-			resources.setMusicPlayer(musicPlayer);
-			musicPlayer.start();
-		}
-
-	}
-
-	static void customisePanel(JPanel panel, JFrame frame)
-	{
-		panel.setOpaque(false);
-		panel.setPreferredSize(frame.getSize());
-
-	}
-
-	static void customiseAllPanels(JFrame frame)
-	{
-		customisePanel(startPanel, frame);
-		customisePanel(optionsPanel, frame);
-		customisePanel(sessionsPanels , frame);
-
-	}
+	
 
 	JPanel addSpriteIcon(JPanel panel, int x)
 	{
@@ -113,12 +69,6 @@ public abstract class BaseMenu extends MenuItems
 		JButton exitButton = getExitButton();
 		addSpace(panel, 0, 0.02);
 		getButtonAndIcon(panel, exitButton);
-		return panel;
-	}
-
-	JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
-	{
-		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
 	}
 
@@ -172,8 +122,8 @@ public abstract class BaseMenu extends MenuItems
 		 return panel;
 	 }
 	 
-	 JPanel addReturnButton(JPanel panel){
-		 JButton backButton = getBackToStartMenuButton();
+	 JPanel addReturnButton(JPanel panel, JPanel backToPanel){
+		 JButton backButton = goBack(backToPanel);
 		 getButtonAndIcon(panel,backButton);
 		 return panel;
 	 }
