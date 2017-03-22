@@ -54,28 +54,73 @@ public class ClientUpdater extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		//System.out.println("Updated");
-		List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
-		List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
-		resources.Character c;
-		for(int i=0; i<characters.size(); i++) {
-			c = characters.get(i);
-			//System.out.println("X: " + c.getX());
-			CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb());
-			charactersList.add(info);
+		if(resourcesMap.get(sessionId).gamemode != null) {
+			if(resourcesMap.get(sessionId).isGameOver()) {
+				System.out.println("Got here");
+				
+				List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
+				List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+				resources.Character c;
+				for(int i=0; i<characters.size(); i++) {
+					c = characters.get(i);
+					//System.out.println("X: " + c.getX());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
+					charactersList.add(info);
+				}
+				
+				GameData data = new GameData(charactersList);
+				ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
+				
+				data.setPowerUps(serializePowerUps(powerUps));
+				data.setTimer(0);
+				Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
+				List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
+				ClientInformation client;
+				for(int i = 0; i<clients.size(); i++) {
+					client = clients.get(i);
+					connections.get(client.getId()).sendTCP(message);
+				}
+				
+				if(resourcesMap.get(sessionId).gamemode.isGameOver()) {
+					Message message1 = new Message(Command.GAME, Note.FINISHED, null, null, null, null);
+					Message message2 = new Message(Command.SESSION, Note.COMPLETED, null, null, null, null, sessions);
+					
+					for(int i = 0; i<clients.size(); i++) {
+						client = clients.get(i);
+						client.setReady(false);
+						connections.get(client.getId()).sendTCP(message);
+						connections.get(client.getId()).sendTCP(message1);
+						connections.get(client.getId()).sendTCP(message2);
+					}
+				}
+			}
+			else {
+				List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
+				List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
+				resources.Character c;
+				for(int i=0; i<characters.size(); i++) {
+					c = characters.get(i);
+					//System.out.println("X: " + c.getX());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
+					charactersList.add(info);
+				}
+				
+				GameData data = new GameData(charactersList);
+				ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
+				
+				data.setPowerUps(serializePowerUps(powerUps));
+				data.setTimer(resourcesMap.get(sessionId).getTimer());
+				Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
+				List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
+				ClientInformation client;
+				for(int i = 0; i<clients.size(); i++) {
+					client = clients.get(i);
+					connections.get(client.getId()).sendUDP(message);
+				}
+			}
 		}
 		
-		GameData data = new GameData(charactersList);
-		ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
 		
-		data.setPowerUps(serializePowerUps(powerUps));
-		data.setTimer(resourcesMap.get(sessionId).getTimer());
-		Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
-		List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
-		ClientInformation client;
-		for(int i = 0; i<clients.size(); i++) {
-			client = clients.get(i);
-			connections.get(client.getId()).sendUDP(message);
-		}
 	}
 	
 	public String getSessionId() {

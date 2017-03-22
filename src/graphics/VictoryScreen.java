@@ -159,6 +159,7 @@ public class VictoryScreen extends JPanel {
 				resources.getMusicPlayer().changePlaylist("grandma");
 				resources.getMusicPlayer().resumeMusic();
 			}
+			UIRes.reset();
 		});
 
 		// nice border

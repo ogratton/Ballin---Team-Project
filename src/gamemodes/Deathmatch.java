@@ -56,7 +56,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		// Set up game
 		setAllLives(-1);
-		randomRespawn();
+		if(!isServer) {
+			randomRespawn();
+		}
 		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 		this.isServer = isServer;
@@ -91,7 +93,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			}
 		}
 		
-		if (!Resources.silent)
+		if (!Resources.silent && !isServer)
 		{
 			if (resources.getMap().getWorldType() == Map.World.SPACE) {
 				resources.getMusicPlayer().changePlaylist("ultrastorm30");
@@ -122,7 +124,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		// TODO pause/change music too
-		if (!Resources.silent) {
+		if (!Resources.silent && !isServer) {
 			resources.getMusicPlayer().changePlaylist(victoryMusic);
 			resources.getMusicPlayer().resumeMusic();
 		}
@@ -135,7 +137,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		for (Character c : scores) {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
-		System.out.println();
+		System.out.println("Deathmatch Ended");
+		resources.setGameOver(true);
 	}
 
 	/**

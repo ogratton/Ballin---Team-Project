@@ -374,7 +374,6 @@ public class ServerListener extends Listener {
 				  					c = connections.get(temp1Clients.get(j).getId());
 				  					c.sendTCP(removePlayer);
 				  				}
-				  				System.out.println("Got here: ");
 				  				break;
 				    		}
 				    	}
@@ -383,6 +382,20 @@ public class ServerListener extends Listener {
 		    	}
 		    }
 		}
+		
+		for (Map.Entry<String, Session> entry : sessions.entrySet()) {
+		    String key = entry.getKey();
+		    Session value = entry.getValue();
+		    
+		    if(value.getAllClients().size() <= 0) {
+		    	sessions.remove(key);
+		    }
+		}
+
+    	Message refresh = new Message(Command.SESSION, Note.COMPLETED, null, null, null, null, sessions);
+    	for(Connection c: connections.values()) {
+    		c.sendTCP(refresh);
+    	}
 	}
 }
 

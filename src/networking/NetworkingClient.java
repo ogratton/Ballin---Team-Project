@@ -54,8 +54,8 @@ public class NetworkingClient extends Thread {
 		}
 
 		// Gets the Connection Data Model from the UI Res object so that the UI has access to it.
-		UIRes uires = new UIRes();
-	    ConnectionDataModel cModel = uires.cModel;
+		
+	    ConnectionDataModel cModel = UIRes.cModel;
 	    System.out.println(cModel);
 		client.addListener(new ClientListener(cModel, client));
 		

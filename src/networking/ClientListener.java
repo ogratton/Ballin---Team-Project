@@ -121,7 +121,14 @@ public class ClientListener extends Listener {
    				gameData = (GameData)message.getObject();
    				cModel.setGameInProgress(true);
    				
-   				resources = new Resources();
+   				resources = new Resources(); 
+   				resources.setMusicPlayer(UIRes.resources.getMusicPlayer());
+   				resources.setUp(UIRes.resources.getUp());
+   				resources.setDown(UIRes.resources.getDown());
+   				resources.setRight(UIRes.resources.getRight());
+   				resources.setLeft(UIRes.resources.getLeft());
+   				resources.setDash(UIRes.resources.getDash());
+   				resources.setSFXGain(UIRes.resources.getSFXGain());
    				
    				// Get the variables chosen for the session
    				Session session = cModel.getSession(cModel.getSessionId());
@@ -129,7 +136,6 @@ public class ClientListener extends Listener {
    				Map.World style = session.getTileset();
    				Map.World tileset = session.getTileset();
    				Mode modeName = session.getGameMode();
-   				mapName = "map0";
    				Map map = new Map(1200, 650, style, mapName);
    				resources.setMap(map);
    				new MapCosts(resources);
@@ -184,6 +190,7 @@ public class ClientListener extends Listener {
    						player.addObserver(updater);
    					}
    				}
+   				
    					
 				//new MapCosts(resources);
    				cModel.setResources(resources);
@@ -228,6 +235,7 @@ public class ClientListener extends Listener {
            							players.get(i).setLives(charactersList.get(j).getLives());
            							players.get(i).setScore(charactersList.get(j).getScore());
            							players.get(i).hasBomb(charactersList.get(j).isHasBomb());
+           							//players.get(i).setDyingStep(charactersList.get(j).getDyingStep());
            							//System.out.println(charactersList.get(j).isDashing());
            						}
            					}
@@ -243,12 +251,13 @@ public class ClientListener extends Listener {
    				cModel.setResources(new Resources());
    				cModel.setReady(false);
    				cModel.setGameInProgress(false);
-   				cModel.setCharacters(new ConcurrentHashMap<String, Character>());
+   				//cModel.setCharacters(new ConcurrentHashMap<String, Character>());
    			case REMOVE_PLAYER:
    				String removeClientId = message.getReceiverId();
    				ArrayList<Character> characters = cModel.getResources().getPlayerList();
    				for(int i=0; i<characters.size(); i++) {
    					if(characters.get(i).equals(removeClientId)) {
+   		   				System.out.println("Player Deleted");
    						characters.remove(i);
    						break;
    					}
