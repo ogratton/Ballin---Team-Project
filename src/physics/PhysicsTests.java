@@ -153,7 +153,49 @@ public class PhysicsTests {
 
 	@Test
 	public void testSpecial() {
-		fail("Not yet implemented");
+		// set stamina
+		// set blocking/notblocking
+		// set dashing/notdashing
+		// set block/dashtimer
+		Character c = new Character();
+		c.setBlocking(false);
+		c.setDashing(false);
+		c.resetDashTimer();
+		c.resetBlockTimer();
+		c.setStamina(c.getMaxStamina());
+		assertFalse(physics.special(c));
+		
+		c.setDashing(true);
+		assertTrue(physics.special(c));
+		
+		c.setBlocking(true);
+		c.setDashing(true);
+		assertFalse(physics.special(c));
+		
+		c.setDashing(false);
+		assertTrue(physics.special(c));
+		
+		c.setBlocking(false);
+		c.setDashing(true);
+		c.setStamina(0);
+		assertFalse(physics.special(c));
+		
+		c.setBlocking(true);
+		c.setDashing(false);
+		c.resetDashTimer();
+		c.resetBlockTimer();
+		assertFalse(physics.special(c));
+		
+		c.incrementDashTimer();
+		c.setBlocking(false);
+		c.setDashing(true);
+		assertTrue(physics.special(c));
+		
+		c.resetDashTimer();
+		c.incrementBlockTimer();
+		c.setBlocking(true);
+		c.setDashing(false);
+		assertTrue(physics.special(c));
 	}
 
 	@Test
