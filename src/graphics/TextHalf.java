@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -73,6 +74,8 @@ public class TextHalf extends JPanel {
 
 		add(name, BorderLayout.CENTER);
 		add(score, BorderLayout.EAST);
+		
+		setPreferredSize(new Dimension(250, 50));
 
 	}
 

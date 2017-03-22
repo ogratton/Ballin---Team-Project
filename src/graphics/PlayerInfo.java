@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -47,7 +48,9 @@ public class PlayerInfo extends JPanel {
 		add(sprites, BorderLayout.WEST);
 
 		setBorder(new LineBorder(Color.BLACK, 1));
-
+		
+		setPreferredSize(new Dimension(400, 50));
+		
 	}
 
 	/**

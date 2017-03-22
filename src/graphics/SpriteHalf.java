@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
 import resources.Character;
+import resources.Powerup.Power;
 import resources.Resources;
 import ui.UIRes;
 
@@ -43,6 +45,8 @@ public class SpriteHalf extends JPanel {
 
 	public SpriteHalf(Character character, Resources resources) {
 
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
 		this.character = character;
 		this.resources = resources;
 		
@@ -50,11 +54,12 @@ public class SpriteHalf extends JPanel {
 		arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
 
 		arrowLabel = new JLabel(new ImageIcon(arrow));
-		arrowLabel.setPreferredSize(new Dimension(50, 50));
+		//arrowLabel.setMaximumSize(new Dimension(50, 50));
 		spriteLabel = new JLabel(new ImageIcon(sprite));
-		spriteLabel.setPreferredSize(new Dimension(50, 50));
+		//spriteLabel.setMaximumSize(new Dimension(50, 50));
 		powerupLabel = new JLabel();
-		powerupLabel.setPreferredSize(new Dimension(50, 50));
+		//powerupLabel.setMaximumSize(new Dimension(50, 50));
+		
 
 		add(arrowLabel);
 		add(spriteLabel);
