@@ -52,6 +52,8 @@ public class StartMenu extends JPanel{
 			UIRes.resources.refresh();
 			PlayGame.start(UIRes.resources, "plus", Mode.LastManStanding, Map.World.ICE);
 
+
+
 			if (!Resources.silent) {
 				// button sound effect
 				UIRes.audioPlayer.play();

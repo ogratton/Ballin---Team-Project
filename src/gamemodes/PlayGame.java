@@ -36,10 +36,7 @@ public class PlayGame {
 	 *            The resources object being used for the game.
 	 */
 	public static void start(Resources resources, String mapName, Mode modeType, Map.World style) {
-
-		// TODO these should be parameters for start
 		resources.mode = modeType;
-
 		// Music setting:
 
 		if (!Resources.silent) {

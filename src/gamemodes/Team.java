@@ -3,8 +3,8 @@ package gamemodes;
 import java.util.ArrayList;
 import resources.Character;
 
+@Deprecated
 /**
- * Deprecated?
  * Class to hold data for teams, intended to be used in team-based game modes
  * such as hockey. Contains some helpful functions which could be used in other
  * game modes, e.g. all players stored as a "team"

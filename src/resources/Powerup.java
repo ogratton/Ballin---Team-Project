@@ -40,6 +40,14 @@ public class Powerup extends Observable implements Collidable_Circle {
 	}
 	
 	/**
+	 * Create a new powerup containing a specified power.
+	 */
+	public Powerup(Power power) {
+		this.power = power;
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
+	}
+	
+	/**
 	 * Create a new powerup to be sent across the network.
 	 */
 	public Powerup(Power p, double x, double y, boolean active) {
