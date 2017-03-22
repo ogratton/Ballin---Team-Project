@@ -43,7 +43,7 @@ public class UIRes {
 	public static final int height = getScreenHeight();
 
 	public static String username = "Player";
-	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.11));
+	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.10));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.13));
 	public static MenuItems menuItems = new MenuItems();
 	public static String host;
