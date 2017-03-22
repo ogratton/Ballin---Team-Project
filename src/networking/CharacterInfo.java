@@ -24,6 +24,7 @@ public class CharacterInfo {
 	private boolean hasBomb;
 	private resources.Character.Class type;
 	private String name;
+	private int dyingStep;
 	
 	public CharacterInfo() {
 		
@@ -58,7 +59,7 @@ public class CharacterInfo {
 	 * @param isBlocking Is the player blocking?
 	 * @param stamina The player stamina
 	 */
-	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina, boolean hasPowerUp, Power lastPowerUp, int kills, int deaths, int suicides, int lives, int score, boolean hasBomb) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina, boolean hasPowerUp, Power lastPowerUp, int kills, int deaths, int suicides, int lives, int score, boolean hasBomb, int dyingStep) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -76,6 +77,7 @@ public class CharacterInfo {
 		this.lives = lives;
 		this.score = score;
 		this.hasBomb = hasBomb;
+		this.dyingStep = dyingStep;
 	}
 	
 	/**
@@ -281,5 +283,14 @@ public class CharacterInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public int getDyingStep() {
+		return dyingStep;
+	}
+
+	public void setDyingStep(int dyingStep) {
+		this.dyingStep = dyingStep;
+	}
+	
 	
 }

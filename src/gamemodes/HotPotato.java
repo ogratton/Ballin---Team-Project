@@ -59,7 +59,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 
 		// Set up game
 		setAllLives(1);
-		randomRespawn();
+		if(!isServer) {
+			randomRespawn();
+		}
 
 		this.singlePlayer = singlePlayer;
 

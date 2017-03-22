@@ -374,7 +374,6 @@ public class ServerListener extends Listener {
 				  					c = connections.get(temp1Clients.get(j).getId());
 				  					c.sendTCP(removePlayer);
 				  				}
-				  				System.out.println("Got here: ");
 				  				break;
 				    		}
 				    	}

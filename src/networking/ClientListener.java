@@ -140,6 +140,26 @@ public class ClientListener extends Listener {
    				resources.setMap(map);
    				new MapCosts(resources);
    				
+   				//  Set the game mode
+   				GameModeFFA mode;
+   				switch(modeName) {
+   				case Deathmatch:
+   					mode = new Deathmatch(resources);
+   					break;
+   				case LastManStanding:
+   					mode = new LastManStanding(resources, 5);
+   					break;
+   				case HotPotato:
+   					mode = new HotPotato(resources);
+   					break;
+   				default:
+   					mode = new Deathmatch(resources);
+   					break;
+   				}
+   				resources.gamemode = mode;
+   				
+				resources.setMap(map);
+   				
    				// Creates new characters for each characrer info sent by the server
    				Character player;
    				double x;
@@ -170,26 +190,6 @@ public class ClientListener extends Listener {
    						player.addObserver(updater);
    					}
    				}
-   				
-   				//  Set the game mode
-   				GameModeFFA mode;
-   				switch(modeName) {
-   				case Deathmatch:
-   					mode = new Deathmatch(resources);
-   					break;
-   				case LastManStanding:
-   					mode = new LastManStanding(resources, 5);
-   					break;
-   				case HotPotato:
-   					mode = new HotPotato(resources);
-   					break;
-   				default:
-   					mode = new Deathmatch(resources);
-   					break;
-   				}
-   				resources.gamemode = mode;
-   				
-				resources.setMap(map);
    				
    					
 				//new MapCosts(resources);
@@ -235,6 +235,7 @@ public class ClientListener extends Listener {
            							players.get(i).setLives(charactersList.get(j).getLives());
            							players.get(i).setScore(charactersList.get(j).getScore());
            							players.get(i).hasBomb(charactersList.get(j).isHasBomb());
+           							//players.get(i).setDyingStep(charactersList.get(j).getDyingStep());
            							//System.out.println(charactersList.get(j).isDashing());
            						}
            					}
@@ -250,12 +251,13 @@ public class ClientListener extends Listener {
    				cModel.setResources(new Resources());
    				cModel.setReady(false);
    				cModel.setGameInProgress(false);
-   				cModel.setCharacters(new ConcurrentHashMap<String, Character>());
+   				//cModel.setCharacters(new ConcurrentHashMap<String, Character>());
    			case REMOVE_PLAYER:
    				String removeClientId = message.getReceiverId();
    				ArrayList<Character> characters = cModel.getResources().getPlayerList();
    				for(int i=0; i<characters.size(); i++) {
    					if(characters.get(i).equals(removeClientId)) {
+   		   				System.out.println("Player Deleted");
    						characters.remove(i);
    						break;
    					}

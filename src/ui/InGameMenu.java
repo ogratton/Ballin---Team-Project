@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,6 +19,8 @@ import javax.swing.border.LineBorder;
 import graphics.GameComponent;
 import graphics.LayeredPane;
 import graphics.sprites.Sprite;
+import networking.ConnectionData;
+import networking.ConnectionDataModel;
 import resources.Map;
 
 
@@ -70,6 +73,10 @@ public class InGameMenu extends JPanel {
 			if(UIRes.cModel.getConnection() != null){
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);
+				UIRes.cModel.setGameInProgress(false);
+				UIRes.cModel.setCharacters(new ConcurrentHashMap<String, resources.Character>());
+				UIRes.cModel = new ConnectionDataModel(new ConnectionData());
+				UIRes.fullReset();
 				System.out.println("Disconnecting from server");
 			}
 			frame.dispose();

@@ -62,7 +62,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 
 		// Set up game
 		setAllLives(maxLives);
-		randomRespawn();
+		if(!isServer) {
+			randomRespawn();
+		}
 
 		resources.mode = Mode.LastManStanding;
 		resources.gamemode = this;

@@ -54,7 +54,7 @@ public class ClientUpdater extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		//System.out.println("Updated");
-		if(resourcesMap.get(sessionId).gamemode != null && !resourcesMap.get(sessionId).gamemode.isGameOver()) {
+		if(resourcesMap.get(sessionId).gamemode != null) {
 			if(resourcesMap.get(sessionId).isGameOver()) {
 				System.out.println("Got here");
 				
@@ -64,7 +64,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				for(int i=0; i<characters.size(); i++) {
 					c = characters.get(i);
 					//System.out.println("X: " + c.getX());
-					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
 					charactersList.add(info);
 				}
 				
@@ -72,7 +72,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
 				
 				data.setPowerUps(serializePowerUps(powerUps));
-				data.setTimer(resourcesMap.get(sessionId).getTimer());
+				data.setTimer(0);
 				Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
 				List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 				ClientInformation client;
@@ -81,15 +81,17 @@ public class ClientUpdater extends JPanel implements Observer {
 					connections.get(client.getId()).sendTCP(message);
 				}
 				
-				Message message1 = new Message(Command.GAME, Note.FINISHED, null, null, null, null);
-				Message message2 = new Message(Command.SESSION, Note.COMPLETED, null, null, null, null, sessions);
-				
-				for(int i = 0; i<clients.size(); i++) {
-					client = clients.get(i);
-					client.setReady(false);
-					connections.get(client.getId()).sendTCP(message);
-					connections.get(client.getId()).sendTCP(message1);
-					connections.get(client.getId()).sendTCP(message2);
+				if(resourcesMap.get(sessionId).gamemode.isGameOver()) {
+					Message message1 = new Message(Command.GAME, Note.FINISHED, null, null, null, null);
+					Message message2 = new Message(Command.SESSION, Note.COMPLETED, null, null, null, null, sessions);
+					
+					for(int i = 0; i<clients.size(); i++) {
+						client = clients.get(i);
+						client.setReady(false);
+						connections.get(client.getId()).sendTCP(message);
+						connections.get(client.getId()).sendTCP(message1);
+						connections.get(client.getId()).sendTCP(message2);
+					}
 				}
 			}
 			else {
@@ -99,7 +101,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				for(int i=0; i<characters.size(); i++) {
 					c = characters.get(i);
 					//System.out.println("X: " + c.getX());
-					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
 					charactersList.add(info);
 				}
 				

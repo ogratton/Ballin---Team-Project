@@ -72,6 +72,25 @@ public class UIRes {
 	
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
 	
+	/**
+	 * Just reset everything that might have changed
+	 */
+	public static void reset()
+	{
+		resources = new Resources();
+		menuItems = new MenuItems();
+	}
+	
+	/**
+	 * Just reset everything that might have changed
+	 */
+	public static void fullReset()
+	{
+		resources = new Resources();
+		menuItems = new MenuItems();
+		data = new ConnectionData();
+		cModel = new ConnectionDataModel(data);		
+	}
 	
 	public static int numberIcons = Character.Class.values().length;
 	

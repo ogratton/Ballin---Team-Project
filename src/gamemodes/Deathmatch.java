@@ -56,7 +56,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		// Set up game
 		setAllLives(-1);
-		randomRespawn();
+		if(!isServer) {
+			randomRespawn();
+		}
 		resources.mode = Mode.Deathmatch;
 		resources.gamemode = this;
 		this.isServer = isServer;
@@ -135,7 +137,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		for (Character c : scores) {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
-		System.out.println();
+		System.out.println("Deathmatch Ended");
 		resources.setGameOver(true);
 	}
 

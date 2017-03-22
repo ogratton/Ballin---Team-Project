@@ -1,7 +1,12 @@
 package ui;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import networking.ConnectionData;
+import networking.ConnectionDataModel;
 
 @SuppressWarnings("serial")
 public class BackButton extends JButton{
@@ -15,6 +20,10 @@ public class BackButton extends JButton{
 			if(UIRes.cModel.getConnection() != null){
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);
+				UIRes.cModel.setGameInProgress(false);
+				UIRes.cModel.setCharacters(new ConcurrentHashMap<String, resources.Character>());
+				UIRes.cModel = new ConnectionDataModel(new ConnectionData());
+				UIRes.fullReset();
 			}
 		});
 	}	
