@@ -1,5 +1,6 @@
 package physics;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -49,6 +50,9 @@ public class Physics extends Thread implements ActionListener {
 		this.client = client;
 	}
 
+	/**
+	 * Starts the physics loop.
+	 */
 	@Override
 	public void run() {
 
@@ -76,6 +80,9 @@ public class Physics extends Thread implements ActionListener {
 		timer.start();
 	}
 
+	/**
+	 * Does one 'tick' worth of simulation. 
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		resources.incrementGlobalTimer();
@@ -156,7 +163,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The character to update.
 	 */
-	private void update(Character c) {
+	protected void update(Character c) {
 		// if dead, don't do anything (yet):
 		if (c.isDead() && c.getLives() != 0) {
 			if (c.getDyingStep() >= 50) { // the last dyingStep is 50
@@ -166,10 +173,6 @@ public class Physics extends Thread implements ActionListener {
 					System.out.println("Respawn");
 				}
 				if (c.isAI()) {
-
-					// TODO need to respawn the right kind of AI
-
-					// BasicAI ai = new BasicAI(resources, c);
 
 					AITemplate ai;
 					if (resources.mode == Mode.HotPotato) {
@@ -281,12 +284,12 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * Deprecated? Calculate speed and location of collidable circles.
+	 * Calculate speed and location of collidable circles.
 	 * 
 	 * @param c
 	 *            The character to update.
 	 */
-	private void update(Collidable_Circle c) {
+	protected void update(Collidable_Circle c) {
 		// find terrain type:
 		Tile t = resources.getMap().tileAt(c.getX(), c.getY());
 		// check for falling.
@@ -312,7 +315,7 @@ public class Physics extends Thread implements ActionListener {
 	 *            The character to check.
 	 * @return True if the character is dead.
 	 */
-	private boolean dead(Collidable_Circle c) {
+	protected boolean dead(Collidable_Circle c) {
 		if (!c.isDead()) {// if stationary, give speed:
 			if (Math.abs(c.getDx()) < 0.00001) {
 				c.setDx(0.00001);
@@ -354,33 +357,50 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * Calculates any wall collisions of a character.
+	 * Calculates any wall collisions with a character.
 	 * 
 	 * @param c
 	 *            The character to check collisions for.
 	 */
-	private void calculateWallCollisions(Collidable_Circle c) {
+	protected void calculateWallCollisions(Collidable_Circle c) {
 		// Checks walls, if collided then collides.
+		
+		// get centre of current tile. For position correction.
+		Point p = resources.getMap().tileCoords(c.getX(), c.getY());
+		p = resources.getMap().tileCoordsToMapCoords(p.x, p.y);
+		
 		Tile t1 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
 		if (t1 == Tile.WALL) { // right edge
+			if(p.x < c.getX()) {
+				c.setX((p.x + c.getX())/2);
+			}
 			if (c.getDx() < 0.5)
 				c.setDx(0.5);
 			c.setDx(0 - Math.abs(c.getDx()));
 		}
 		t1 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
 		if (t1 == Tile.WALL) { // left edge
+			if(p.x > c.getX()) {
+				c.setX((p.x + c.getX())/2);
+			}
 			if (c.getDx() < 0.5)
 				c.setDx(0.5);
 			c.setDx(Math.abs(c.getDx()));
 		}
 		t1 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
 		if (t1 == Tile.WALL) { // bottom edge
+			if(p.y < c.getY()) {
+				c.setY((p.y + c.getY())/2);
+			}
 			if (c.getDy() < 0.5)
 				c.setDx(0.5);
 			c.setDy(0 - Math.abs(c.getDy()));
 		}
 		t1 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
 		if (t1 == Tile.WALL) { // top edge
+			if(p.y > c.getY()) {
+				c.setY((p.y + c.getY())/2);
+			}
 			if (c.getDy() < 0.5)
 				c.setDx(0.5);
 			c.setDy(Math.abs(c.getDy()));
@@ -396,7 +416,7 @@ public class Physics extends Thread implements ActionListener {
 	 *            The character to check.
 	 * @return Is the character blocking or dodging?
 	 */
-	private boolean special(Character c) {
+	protected boolean special(Character c) {
 		int stam = c.getStamina();
 		// Just pressed dash button
 		if (c.isDashing() && c.getDashTimer() == 0 && !c.isBlocking()) {
@@ -441,7 +461,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The circle to update.
 	 */
-	private void move(Collidable_Circle c) {
+	protected void move(Collidable_Circle c) {
 		// calculate location
 		double x = c.getX() + c.getDx();
 		double y = c.getY() + c.getDy();
@@ -460,7 +480,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param cnd
 	 *            The CND object which hold collision information.
 	 */
-	private void collide(Collidable c, Collidable d, CND cnd) {
+	protected void collide(Collidable c, Collidable d, CND cnd) {
 		// Calculate relative velocity
 		double rvx = c.getDx() - d.getDx();
 		double rvy = c.getDy() - d.getDy();
@@ -504,7 +524,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param cnd
 	 *            The CND object which holds collision information.
 	 */
-	private void collide(Character c, Character d, CND cnd) {
+	protected void collide(Character c, Character d, CND cnd) {
 		collide((Collidable) c, (Collidable) d, cnd);
 		// For scores (would be nice to somehow do something based on whether
 		// the collidable c/d is a collidable or a character)
@@ -522,7 +542,7 @@ public class Physics extends Thread implements ActionListener {
 	 *            The second collidable object.
 	 * @return The CND object holding collision information of this collision.
 	 */
-	private CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
+	protected CND detectCollision(Collidable_Circle c, Collidable_Circle d) {
 		CND cnd = new CND();
 		int r = c.getRadius() + d.getRadius();
 		r *= r; // reduce need for Math.sqrt()
@@ -550,7 +570,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The character to dash.
 	 */
-	private void dash(Character c) {
+	protected void dash(Character c) {
 		c.setBlocking(false);
 		// Dash in the direction the player is trying to move
 		if (c.getDashTimer() == 0) {
@@ -619,7 +639,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @param c
 	 *            The character to block.
 	 */
-	private void block(Character c) {
+	protected void block(Character c) {
 		c.setDashing(false);
 		// Start blocking - increase mass
 		if (c.getBlockTimer() == 0) {
