@@ -38,8 +38,8 @@ public class PlayGame {
 	public static void start(Resources resources) {
 
 		// TODO these should be parameters for start
-		String mapName = "jacketpotato";
-		resources.mode = Mode.HotPotato;
+		String mapName = "asteroid";
+		resources.mode = Mode.Deathmatch;
 
 		Map.World style = Map.World.SPACE;
 

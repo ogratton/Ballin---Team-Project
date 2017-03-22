@@ -8,7 +8,7 @@ import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
 import resources.Resources;
-// Deprecated?
+@Deprecated
 public class Hockey extends Thread implements GameModeTeams {
 
 	private Resources resources;

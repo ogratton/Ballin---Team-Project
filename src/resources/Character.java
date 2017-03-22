@@ -19,6 +19,7 @@ import resources.Powerup.Power;
  *
  */
 public class Character extends Observable implements Collidable_Circle {
+	// Changing these will break some character JUnit tests
 	private static final double default_mass = 1.0;
 	private static final int default_radius = 25;
 	private static final double default_max_speed_x = 2.75;
@@ -151,7 +152,6 @@ public class Character extends Observable implements Collidable_Circle {
 
 	private int requestId;
 
-	private boolean reqDashing = false;
 	private int dashCooldown = 0;
 
 	private String name;
@@ -594,9 +594,9 @@ public class Character extends Observable implements Collidable_Circle {
 
 	/**
 	 * Set the direction of the character based on the commands it is currently
-	 * receiving
+	 * receiving. (public for JUnit)
 	 */
-	private void setDirection() {
+	public void setDirection() {
 
 		if (isUp()) {
 			if (isLeft()) {
@@ -1499,9 +1499,10 @@ public class Character extends Observable implements Collidable_Circle {
 	public Power getLastPowerup() {
 		return lastPowerup;
 	}
-	
+
 	/**
-	 * @param power The last power up applied to this character.
+	 * @param power
+	 *            The last power up applied to this character.
 	 */
 	public void setLastPowerup(Power power) {
 		lastPowerup = power;
@@ -1794,53 +1795,66 @@ public class Character extends Observable implements Collidable_Circle {
 		this.deaths++;
 	}
 
+	/**
+	 * @return The cooldown remaining before this character can dash again.
+	 */
 	public int getDashCooldown() {
 		return dashCooldown;
 	}
 
+	/**
+	 * Increment the dash cooldown by 1.
+	 */
 	public void incrementDashCooldown() {
 		this.dashCooldown++;
 	}
 
+	/**
+	 * @param n
+	 *            Set the dash cooldown to a specified value.
+	 */
 	public void setDashCooldown(int n) {
 		dashCooldown = n;
 	}
 
-	public boolean isReqDashing() {
-		return reqDashing;
-	}
-
-	public void setReqDashing(boolean reqDashing) {
-		this.reqDashing = reqDashing;
-	}
-
-	public boolean isHasBomb() {
-		return hasBomb;
-	}
-
-	public void setHasBomb(boolean hasBomb) {
-		this.hasBomb = hasBomb;
-	}
-
+	/**
+	 * @param score
+	 *            Set this character's score to the specified value.
+	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	/**
+	 * @param kills
+	 *            Set this character's kills to the specified value.
+	 */
 	public void setKills(int kills) {
 		this.kills = kills;
 	}
 
+	/**
+	 * @param deaths
+	 *            Set this character's deaths to the specified value.
+	 */
 	public void setDeaths(int deaths) {
 		this.deaths = deaths;
 	}
 
+	/**
+	 * @param suicides
+	 *            Set this character's suicides to the specified value.
+	 */
 	public void setSuicides(int suicides) {
 		this.suicides = suicides;
 	}
 
+	/**
+	 * @param name
+	 *            Set this character's name to the specified string.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
 }
