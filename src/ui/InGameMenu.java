@@ -69,6 +69,7 @@ public class InGameMenu extends JPanel {
 			System.out.println("Is connected: " + (UIRes.cModel.getConnection() != null));
 			if(UIRes.cModel.getConnection() != null){
 				UIRes.cModel.getConnection().close();
+				UIRes.cModel.setSessionId(null);
 				System.out.println("Disconnecting from server");
 			}
 			frame.dispose();

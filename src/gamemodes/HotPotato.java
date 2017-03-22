@@ -118,6 +118,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 				System.out.println(c.getName() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
 			}
 		}
+		resources.setGameOver(true);
 	}
 
 	/**

@@ -121,7 +121,14 @@ public class ClientListener extends Listener {
    				gameData = (GameData)message.getObject();
    				cModel.setGameInProgress(true);
    				
-   				resources = new Resources();
+   				resources = new Resources(); 
+   				resources.setMusicPlayer(UIRes.resources.getMusicPlayer());
+   				resources.setUp(UIRes.resources.getUp());
+   				resources.setDown(UIRes.resources.getDown());
+   				resources.setRight(UIRes.resources.getRight());
+   				resources.setLeft(UIRes.resources.getLeft());
+   				resources.setDash(UIRes.resources.getDash());
+   				resources.setSFXGain(UIRes.resources.getSFXGain());
    				
    				// Get the variables chosen for the session
    				Session session = cModel.getSession(cModel.getSessionId());
@@ -129,30 +136,9 @@ public class ClientListener extends Listener {
    				Map.World style = session.getTileset();
    				Map.World tileset = session.getTileset();
    				Mode modeName = session.getGameMode();
-   				mapName = "map0";
    				Map map = new Map(1200, 650, style, mapName);
    				resources.setMap(map);
    				new MapCosts(resources);
-   				
-   				//  Set the game mode
-   				GameModeFFA mode;
-   				switch(modeName) {
-   				case Deathmatch:
-   					mode = new Deathmatch(resources);
-   					break;
-   				case LastManStanding:
-   					mode = new LastManStanding(resources, 5);
-   					break;
-   				case HotPotato:
-   					mode = new HotPotato(resources);
-   					break;
-   				default:
-   					mode = new Deathmatch(resources);
-   					break;
-   				}
-   				resources.gamemode = mode;
-   				
-				resources.setMap(map);
    				
    				// Creates new characters for each characrer info sent by the server
    				Character player;
@@ -184,6 +170,27 @@ public class ClientListener extends Listener {
    						player.addObserver(updater);
    					}
    				}
+   				
+   				//  Set the game mode
+   				GameModeFFA mode;
+   				switch(modeName) {
+   				case Deathmatch:
+   					mode = new Deathmatch(resources);
+   					break;
+   				case LastManStanding:
+   					mode = new LastManStanding(resources, 5);
+   					break;
+   				case HotPotato:
+   					mode = new HotPotato(resources);
+   					break;
+   				default:
+   					mode = new Deathmatch(resources);
+   					break;
+   				}
+   				resources.gamemode = mode;
+   				
+				resources.setMap(map);
+   				
    					
 				//new MapCosts(resources);
    				cModel.setResources(resources);

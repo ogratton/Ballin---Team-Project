@@ -118,6 +118,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 						"Player " + c.getPlayerNumber() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
 			}
 		}
+		resources.setGameOver(true);
 	}
 
 	/**

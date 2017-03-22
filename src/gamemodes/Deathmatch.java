@@ -107,7 +107,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Game has ended
 		p.pause();
 		// TODO pause/change music too
-		if (!Resources.silent) {
+		if (!Resources.silent && !isServer) {
 			resources.getMusicPlayer().changePlaylist(victoryMusic);
 			resources.getMusicPlayer().resumeMusic();
 		}
@@ -121,6 +121,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
 		}
 		System.out.println();
+		resources.setGameOver(true);
 	}
 
 	/**

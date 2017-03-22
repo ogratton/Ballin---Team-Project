@@ -40,12 +40,12 @@ public class NetworkingDemo {
 		
 		// Fetches the variables needed to generate the map from the session object.
 		String mapName = session.getMapName();
-		mapName = "map0";
 		Map.World style = session.getTileset();
 		
 		// Fetches the game mode from the session object.
 		Mode modeName = session.getGameMode();
 		
+		System.out.println(style);
 		// Crates the map using the variables.
 		Map map = new Map(1200, 650, style, mapName);
 		
@@ -55,24 +55,9 @@ public class NetworkingDemo {
 		resources.setMap(map);
 		new MapCosts(resources);
 		
-		// Select the correct game mode type.
-		GameModeFFA mode;
-		switch(modeName) {
-		case Deathmatch:
-			mode = new Deathmatch(resources, true, false);
-			break;
-		case LastManStanding:
-			mode = new LastManStanding(resources, 5, true, false);
-			break;
-		case HotPotato:
-			mode = new HotPotato(resources, true, false);
-			break;
-		default:
-			mode = new Deathmatch(resources, true, false);
-			break;
-		}
+		// Add the resources object to the resources HashMap.
+		resourcesMap.put(session.getId(), resources);
 		
-		// Get the list of clients on the session and put them on the map randomly.
 		List<ClientInformation> clients = session.getAllClients();
 		for(int i=0; i<clients.size(); i++) {
 			Point coords = resources.getMap().randPointOnMap();
@@ -102,8 +87,25 @@ public class NetworkingDemo {
 			character.setAI(ai);
 		}
 		
-		// Add the resources object to the resources HashMap.
-		resourcesMap.put(session.getId(), resources);
+		// Select the correct game mode type.
+		GameModeFFA mode;
+		switch(modeName) {
+		case Deathmatch:
+			mode = new Deathmatch(resources, true, false);
+			break;
+		case LastManStanding:
+			mode = new LastManStanding(resources, 5, true, false);
+			break;
+		case HotPotato:
+			mode = new HotPotato(resources, true, false);
+			break;
+		default:
+			mode = new Deathmatch(resources, true, false);
+			break;
+		}
+		
+		// Get the list of clients on the session and put them on the map randomly.
+		
 
 		//SwingUtilities.invokeLater(new Graphics(resources, null, false));
 	}

@@ -14,6 +14,7 @@ public class BackButton extends JButton{
 			System.out.println(UIRes.cModel.getConnection() == null);
 			if(UIRes.cModel.getConnection() != null){
 				UIRes.cModel.getConnection().close();
+				UIRes.cModel.setSessionId(null);
 			}
 		});
 	}	
