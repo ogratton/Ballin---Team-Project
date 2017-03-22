@@ -7,9 +7,11 @@ import javax.swing.SwingUtilities;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
+import resources.Map;
 import resources.Powerup;
 import resources.Resources;
 import resources.Resources.Mode;
+import ui.UIRes;
 
 /**
  * Play until the timer runs out.
@@ -78,14 +80,27 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			try {
 				Thread.sleep(1000);
 				resources.setCountdown(2);
+				UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
+				UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		if (!Resources.silent)
+		{
+			if (resources.getMap().getWorldType() == Map.World.SPACE) {
+				resources.getMusicPlayer().changePlaylist("ultrastorm30");
+			} else {
+				resources.getMusicPlayer().changePlaylist("thirty");
+			}
+			resources.getMusicPlayer().resumeMusic();
+		}
+		
 
 		p.start();
 

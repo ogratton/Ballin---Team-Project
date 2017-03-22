@@ -269,7 +269,8 @@ public class UIRes {
 
 		if (!Resources.silent)
 		{
-			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma");
+			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30");
+			musicPlayer.changePlaylist("grandma");
 			resources.setMusicPlayer(musicPlayer);
 			musicPlayer.start();
 		}

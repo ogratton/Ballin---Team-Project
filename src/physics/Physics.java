@@ -85,6 +85,9 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		if (resources.isFinished()) {
+			pause();
+		}
 		resources.incrementGlobalTimer();
 
 		// if hockey, move puck.
@@ -255,6 +258,7 @@ public class Physics extends Thread implements ActionListener {
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
 				if (!Resources.silent)
+					System.out.println("gain: " +resources.getSFXGain());
 					c.getRandDeathSound().play(resources.getSFXGain());
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");

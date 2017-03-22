@@ -80,6 +80,7 @@ public class MusicTester extends JPanel
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		resources.getMusicPlayer().start();
+//		resources.getMusicPlayer().resumeMusic();
 	}
 
 	public void paintComponent(Graphics g)

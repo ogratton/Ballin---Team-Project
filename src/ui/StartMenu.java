@@ -1,13 +1,22 @@
 package ui;
 
+import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,15 +26,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import gamemodes.PlayGame;
+import graphics.sprites.Sprite;
 import networking.NetworkingClient;
 import networking.NetworkingServer;
 import resources.Map;
+import resources.MapMetaData;
 import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel {
 
+	Mode gameMode = null;
+	String mapName = null;
+	Map.World tileSet = null;
+	
 	public StartMenu() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel titleLabel = UIRes.getLabel("Ballin'");
@@ -69,9 +84,103 @@ public class StartMenu extends JPanel {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
-			UIRes.resources.refresh();
-			PlayGame.start(UIRes.resources, "newpotato", Mode.HotPotato, Map.World.DESERT);
 
+			MapMetaData mmd = new MapMetaData();
+
+			JFrame mapFrame = new JFrame();
+			JFrame tileFrame = new JFrame();
+			JFrame gameModeFrame = new JFrame();
+
+			JLabel gameModeLabel = new JLabel("Game mode: ");
+			UIRes.customiseLabel(gameModeLabel);
+
+			Choice gameModeChoice = new Choice();
+			ArrayList<String> gameModeList = new ArrayList<String>();
+			gameModeList = mmd.gamemodeNames;
+			for (int i = 0; i < gameModeList.size(); i++) {
+				if (!gameModeList.get(i).equals("Hockey") && !gameModeList.get(i).equals("Debug"))
+					gameModeChoice.add(gameModeList.get(i));
+			}
+
+			Object[] gameModeInfo = { gameModeLabel, gameModeChoice };
+
+			int gameModePane = JOptionPane.showConfirmDialog(gameModeFrame, gameModeInfo, "Select the game mode: ",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (gameModePane == JOptionPane.OK_OPTION) {
+
+				gameMode = mmd.correspondingMode(gameModeChoice.getSelectedItem());
+
+				JLabel mapLabel = new JLabel("Map: ");
+				UIRes.customiseLabel(mapLabel);
+
+				JComboBox<ImageIcon> mapChoice = new JComboBox<ImageIcon>();
+				mapChoice.setPreferredSize(new Dimension(150, 100));
+
+				HashSet<String> mapNames = null;
+				try {
+					mapNames = MapMetaData.getTable().get(gameMode);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				for (String map : mapNames) {
+					ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.DESERT, map)));
+					Image image = icon.getImage();
+					Image mapIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
+					mapChoice.addItem(new ImageIcon(mapIcon));
+				}
+
+				Object[] mapInfo = { mapLabel, mapChoice };
+
+				int mapPane = JOptionPane.showConfirmDialog(mapFrame, mapInfo, "Select the map: ",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (mapPane == JOptionPane.OK_OPTION) {
+					Iterator<String> iterator = mapNames.iterator();
+					for (int i = 0; i < mapChoice.getSelectedIndex(); i++) {
+						iterator.next();
+					}
+					mapName = iterator.next();
+					System.out.println(mapName);
+
+					JLabel tileLabel = new JLabel("Tile set: ");
+					UIRes.customiseLabel(tileLabel);
+
+					JComboBox<ImageIcon> tileChoice = new JComboBox<ImageIcon>();
+					for (Map.World tile : Map.World.values()) {
+						ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, tile, mapName)));
+						Image image = icon.getImage();
+						Image tileIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
+						tileChoice.addItem(new ImageIcon(tileIcon));
+					}
+
+					Object[] tileInfo = { tileLabel, tileChoice };
+
+					int tilePane = JOptionPane.showConfirmDialog(tileFrame, tileInfo, "Select the tiles: ",
+							JOptionPane.OK_CANCEL_OPTION);
+
+					if (tilePane == JOptionPane.OK_OPTION) {
+						tileSet = Map.World.values()[tileChoice.getSelectedIndex()];
+
+					} else {
+						tileFrame.dispose();
+					}
+
+				} else
+					mapFrame.dispose();
+			} else
+				gameModeFrame.dispose();
+
+			System.out.println("Map: " + mapName);
+			System.out.println("Game mode: " + gameMode);
+			System.out.println("Tiles: " + tileSet);
+			
+			if (mapName != null && gameMode != null && tileSet != null) {
+				UIRes.resources.refresh();
+				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
+			}
+			
 			if (!Resources.silent) {
 				// button sound effect
 				UIRes.audioPlayer.play();

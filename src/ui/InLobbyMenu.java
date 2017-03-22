@@ -32,20 +32,23 @@ import networking.Note;
 import networking.Session;
 
 @SuppressWarnings("serial")
-public class InLobbyMenu extends JPanel implements Observer{
-	
+public class InLobbyMenu extends JPanel implements Observer {
+
 	private Session session;
 	private ConnectionDataModel cModel;
 	private SessionListMenu sessionList;
+	private int spriteIndex = 0;
 	
 	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel, SessionListMenu sessionList){
+
+
 		this.session = session;
 		this.cModel = cModel;
 		this.sessionList = sessionList;
-		
+
 		cModel.addObserver(this);
 		setOpaque(false);
-		
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		buttonPanel.setOpaque(false);
@@ -57,13 +60,13 @@ public class InLobbyMenu extends JPanel implements Observer{
 		updateInLobbyPanel();
 		add(UIRes.playersPanel, BorderLayout.CENTER);
 	}
-	
+
 	JButton leaveLobbyButton(Client client) {
 		JButton button = new JButton("Leave Lobby");
 		button.setOpaque(false);
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			
+
 			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(),
 					cModel.getHighlightedSessionId());
 			try {
@@ -78,36 +81,55 @@ public class InLobbyMenu extends JPanel implements Observer{
 		});
 		return button;
 	}
-	
+
 	void updateInLobbyPanel() {
 		Session session;
 		UIRes.playersPanel.removeAll();
-		if(cModel.getSessionId() != null && (!cModel.getSessionId().equals(""))) {
+		if (cModel.getSessionId() != null && (!cModel.getSessionId().equals(""))) {
 			session = cModel.getSession(cModel.getSessionId());
 			for (int i = 0; i < session.getAllClients().size(); i++) {
 				addPlayerToLobby(session.getAllClients().get(i), i + 1);
 			}
-		}
-		else {
+		} else {
 			session = getSession();
 		}
 
 	}
-	
+
 	void addPlayerToLobby(ClientInformation client, int index) {
 		UIRes.playersPanel.setOpaque(false);
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension((int)(UIRes.width * 0.95), (int)(UIRes.height * 0.12)));
+		panel.setPreferredSize(new Dimension((int) (UIRes.width * 0.95), (int) (UIRes.height * 0.12)));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel playerLabel = UIRes.getLabel(client.getName());
-		
 
+		String name = client.getName();
+
+		/*if (client.getName().length() > 7) {
+			name = client.getName().substring(0, 8);
+		}
+
+		if (client.getName().length() < 7) {
+			int spaces = 7 - client.getName().length();
+
+			name = client.getName();
+
+			for (int i = 0; i < spaces; i++) {
+				name += " ";
+			}
+		}*/
+
+		JLabel playerLabel = UIRes.getLabel(name);
+
+		playerLabel.setPreferredSize(new Dimension(327, 100));
+		
 		JComboBox<ImageIcon> characterClass = new JComboBox<ImageIcon>();
+		characterClass.setSize(new Dimension(50,50));
 		for (int i = 0; i < UIRes.numberIcons; i++) {
 			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
 					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 			characterClass.addItem(new ImageIcon(icon));
 		}
+		
 
 		Color colour = UIRes.resources.getPlayerColor(index);
 		panel.setBorder(new CompoundBorder(new LineBorder(colour, 15), new EmptyBorder(10, 10, 10, 10)));
@@ -116,30 +138,28 @@ public class InLobbyMenu extends JPanel implements Observer{
 		UIRes.customiseButton(readyCheck, false);
 		readyCheck.setForeground(Color.RED);
 		
-		if(this.cModel.getMyId().compareTo(client.getId()) != 0){
+		if (this.cModel.getMyId().compareTo(client.getId()) != 0) {
 			characterClass.setEnabled(false);
-			
-		}
-		else{
+
+		} else {
 			readyCheck.addActionListener(e -> {
-				
-				System.out.println("Ready button is pressed by: " + client.getName());
 				
 				if(client.isReady()) {
 					client.setReady(false);
-				}
-				else {
+				} else {
 					client.setReady(true);
 				}
 				if (client.isReady()) {
 					readyCheck.setForeground(Color.GREEN);
 					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					spriteIndex = characterClass.getSelectedIndex();
 					System.out.println(client.getCharacterClass().name());
 					client.setPlayerNumber(index);
 					System.out.println(client.getPlayerNumber());
-					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-						if(!cModel.isGameInProgress()) {
-							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
+					if (cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if (!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null,
+									cModel.getSessionId(), null, client);
 							try {
 								cModel.getConnection().sendTCP(message);
 								cModel.setReady(true);
@@ -148,12 +168,13 @@ public class InLobbyMenu extends JPanel implements Observer{
 							}
 						}
 					}
-					
+
 				} else {
 					readyCheck.setForeground(Color.RED);
-					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-						if(!cModel.isGameInProgress()) {
-							Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+					if (cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if (!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null,
+									cModel.getSessionId(), null);
 							try {
 								cModel.getConnection().sendTCP(message);
 								cModel.setReady(false);
@@ -166,13 +187,16 @@ public class InLobbyMenu extends JPanel implements Observer{
 				System.out.println(client.isReady());
 			});
 		}
-		
-		if(client.isReady()){
+
+		if (client.isReady()) {
 			readyCheck.setForeground(Color.GREEN);
-			characterClass.setSelectedItem(client.getCharacterClass());
+			for(int i = 0; i < UIRes.numberIcons; i++){
+				if(client.getCharacterClass().toString().equals(getCharacter(i).toString()))
+					characterClass.setSelectedIndex(i);
+			}
 		}
 		else
-			readyCheck.setForeground(Color.RED);	
+			readyCheck.setForeground(Color.RED);
 
 		panel.add(Box.createHorizontalGlue());
 		panel.add(playerLabel);
@@ -184,16 +208,16 @@ public class InLobbyMenu extends JPanel implements Observer{
 		UIRes.playersPanel.add(panel);
 
 	}
-	
-	void setSession(Session session){
+
+	void setSession(Session session) {
 		this.session = session;
 	}
-	
-	Session getSession(){
+
+	Session getSession() {
 		return this.session;
 	}
-	
-	Character.Class getCharacter(int index){
+
+	Character.Class getCharacter(int index) {
 		switch (index) {
 		case 0:
 			return Character.Class.WIZARD;
@@ -211,8 +235,8 @@ public class InLobbyMenu extends JPanel implements Observer{
 			return Character.Class.WIZARD;
 		}
 	}
-	
-	int getCharacterIndex(Character.Class character){
+
+	int getCharacterIndex(Character.Class character) {
 		switch (character) {
 		case WIZARD:
 			return 0;
