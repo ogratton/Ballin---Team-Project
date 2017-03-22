@@ -158,14 +158,14 @@ public class UIRes {
 		comp.setForeground(colour);
 	}
 
-	static void customiseButton(JButton button, boolean addListener) {
+	static void customiseButton(JButton button, boolean addHoverEffect) {
 		customiseComponent(button, buttonSize, buttonRatio);
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
 		button.setOpaque(false);
 		button.setFocusable(false);
 		button.setForeground(colour);
-		if (addListener) {
+		if (addHoverEffect) {
 			button.addMouseListener(new MouseListener() {
 
 				@Override

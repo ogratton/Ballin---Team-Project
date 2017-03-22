@@ -222,11 +222,10 @@ public class SessionListMenu extends JPanel implements Observer {
 		JButton createSession = createSessionButton(client);
 		JButton joinSession = joinSessionButton(client);
 		JButton refreshSession = refreshSessionList(client);
-		JButton backToMainMenu = getBackToStartMenuButton();
 		UIRes.getButtonAndIcon(panel, createSession);
 		UIRes.getButtonAndIcon(panel, joinSession);
 		UIRes.getButtonAndIcon(panel, refreshSession);
-		UIRes.getButtonAndIcon(panel, backToMainMenu);
+		UIRes.getButtonAndIcon(panel, new BackButton(UIRes.startPanel, "Back"));
 		return panel;
 	}
 
@@ -325,18 +324,6 @@ public class SessionListMenu extends JPanel implements Observer {
 		else
 			lobbyFrame.dispose();
 
-	}
-
-	JButton getBackToStartMenuButton() {
-		JButton button = new JButton("Back");
-		UIRes.customiseButton(button, true);
-		button.addActionListener(e -> {
-
-			UIRes.cModel.getConnection().close();
-
-			UIRes.switchPanel(UIRes.startPanel);
-		});
-		return button;
 	}
 
 	String[] getMapFileNames() {
