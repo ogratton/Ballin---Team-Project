@@ -144,7 +144,7 @@ public class StartMenu extends JPanel {
 					mapName = iterator.next();
 					System.out.println(mapName);
 
-					JLabel tileLabel = new JLabel("Tile set: ");
+					JLabel tileLabel = new JLabel("Tile: ");
 					UIRes.customiseLabel(tileLabel);
 
 					JComboBox<ImageIcon> tileChoice = new JComboBox<ImageIcon>();

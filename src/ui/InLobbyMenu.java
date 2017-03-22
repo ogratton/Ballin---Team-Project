@@ -106,20 +106,6 @@ public class InLobbyMenu extends JPanel implements Observer {
 
 		String name = client.getName();
 
-		/*if (client.getName().length() > 7) {
-			name = client.getName().substring(0, 8);
-		}
-
-		if (client.getName().length() < 7) {
-			int spaces = 7 - client.getName().length();
-
-			name = client.getName();
-
-			for (int i = 0; i < spaces; i++) {
-				name += " ";
-			}
-		}*/
-
 		JLabel playerLabel = UIRes.getLabel(name);
 
 		playerLabel.setPreferredSize(new Dimension(327, 100));
