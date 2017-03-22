@@ -22,7 +22,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 
-	public static final boolean silent = true; // so alex can run the game :)
+	public static final boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
@@ -96,6 +96,8 @@ public class Resources {
 	private int countdown = 3;
 	private boolean finished = false;
 	private int timer = 30;
+	
+	private boolean lowGraphics = false;
 	
 	/**
 	 * Creates a new resources object and defines which tiles are not walkable ('bad')
@@ -752,5 +754,13 @@ public class Resources {
 
 	public int getTimer() {
 		return this.timer;
+	}
+	
+	public boolean isLowGraphics(){
+		return this.lowGraphics;
+	}
+	
+	public void setLowGraphics(boolean low){
+		this.lowGraphics = low;
 	}
 }

@@ -120,6 +120,7 @@ public class VictoryScreen extends JPanel {
 			if (winner) {
 				modeText = "You survived the gauntlet!";
 			} else {
+
 				modeText = "You survived for " + (character.getTimeOfDeath() / 100) + " seconds";
 			}
 			break;
@@ -131,9 +132,9 @@ public class VictoryScreen extends JPanel {
 				int tiempo = character.getTimeOfDeath();
 
 				if (tiempo == 1) {
-					modeText = "You survived for " + tiempo + " second";
+					modeText = "You survived for " + (tiempo / 100) + " second";
 				} else {
-					modeText = "You survived for " + tiempo + " seconds";
+					modeText = "You survived for " + (tiempo / 100) + " seconds";
 
 				}
 			}
@@ -152,7 +153,11 @@ public class VictoryScreen extends JPanel {
 		JButton exit = new JButton("Back");
 		UIRes.customiseButton(exit, true);
 		UIRes.getButtonAndIcon(this, exit);
-		exit.addActionListener(e -> resources.setFinished(true));
+		exit.addActionListener(e -> {
+			resources.setFinished(true);
+			resources.getMusicPlayer().changePlaylist("grandma");
+			resources.getMusicPlayer().resumeMusic();
+		});
 
 		// nice border
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));

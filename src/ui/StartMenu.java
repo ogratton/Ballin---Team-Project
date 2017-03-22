@@ -50,8 +50,8 @@ public class StartMenu extends JPanel{
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
-			
-			PlayGame.start(UIRes.resources, "asteroid", Mode.Deathmatch, Map.World.CAKE);
+			PlayGame.start(UIRes.resources, "newpotato", Mode.HotPotato, Map.World.DESERT);
+
 
 
 			if (!Resources.silent) {

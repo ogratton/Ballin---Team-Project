@@ -20,6 +20,12 @@ import graphics.LayeredPane;
 import graphics.sprites.Sprite;
 import resources.Map;
 
+
+/**
+ * 
+ * @author Diana Dinca
+ *
+ */
 @SuppressWarnings("serial")
 public class InGameMenu extends JPanel {
 
