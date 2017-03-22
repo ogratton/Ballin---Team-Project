@@ -72,6 +72,7 @@ public class PathFindingTest
 		if (!hotPotato)
 		{
 			FightingAI ai = new FightingAI(resources, player);
+			player.setAI(ai);
 			if (followSetPoints)
 			{
 				testPoirot(player, ai);
@@ -86,14 +87,15 @@ public class PathFindingTest
 			DebugMode mode = new DebugMode(resources);
 			mode.start();
 
-			ai.start();
+			//ai.start();
 		}
 		else
 		{
 			HotPotatoAI ai = new HotPotatoAI(resources, player);
 			HotPotato mode = new HotPotato(resources);
+			player.setAI(ai);
 			mode.start();
-			ai.start();
+			//ai.start();
 		}
 
 	}
