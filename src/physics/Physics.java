@@ -85,6 +85,9 @@ public class Physics extends Thread implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		if (resources.isFinished()) {
+			pause();
+		}
 		resources.incrementGlobalTimer();
 
 		// if hockey, move puck.

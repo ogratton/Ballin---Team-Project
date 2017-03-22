@@ -155,8 +155,10 @@ public class VictoryScreen extends JPanel {
 		UIRes.getButtonAndIcon(this, exit);
 		exit.addActionListener(e -> {
 			resources.setFinished(true);
-			resources.getMusicPlayer().changePlaylist("grandma");
-			resources.getMusicPlayer().resumeMusic();
+			if (!resources.getMusicPlayer().nowPlaying().equals("grandma")) {
+				resources.getMusicPlayer().changePlaylist("grandma");
+				resources.getMusicPlayer().resumeMusic();
+			}
 		});
 
 		// nice border

@@ -85,7 +85,6 @@ public class StartMenu extends JPanel {
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 
-
 			MapMetaData mmd = new MapMetaData();
 
 			JFrame mapFrame = new JFrame();

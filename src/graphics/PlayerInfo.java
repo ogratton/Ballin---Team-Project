@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -22,7 +23,9 @@ public class PlayerInfo extends JPanel {
 
 	private SpriteHalf sprites;
 	private TextHalf text;
-	
+	private Character character;
+	private boolean hasPowerup;
+
 	/**
 	 * Create a new player info panel
 	 * 
@@ -33,34 +36,44 @@ public class PlayerInfo extends JPanel {
 	public PlayerInfo(Character character, Resources resources) {
 
 		super();
-		
+
+		this.character = character;
+
 		setLayout(new BorderLayout());
 
 		text = new TextHalf(character, resources);
 		sprites = new SpriteHalf(character, resources);
-		
-		add(text,BorderLayout.CENTER);
-		add(sprites,BorderLayout.WEST);
-		
+
+		add(text, BorderLayout.CENTER);
+		add(sprites, BorderLayout.WEST);
+
 		setBorder(new LineBorder(Color.BLACK, 1));
 		
+		setPreferredSize(new Dimension(400, 50));
+		
 	}
-	
+
 	/**
 	 * Update the score on the panel
 	 */
-	
-	
-	public void updateScore(){
+
+	public void update() {
 		text.updateScore();
-	}
-	
-	/**
-	 * Repaint the sprites on the panel
-	 */
-	
-	public void paint(){
-		sprites.repaint();
+
+		if (!hasPowerup) {
+
+			if (character.hasPowerup()) {
+				sprites.addPowerup();
+				hasPowerup = true;
+			}
+		}
+
+		else {
+			if (!character.hasPowerup()) {
+				sprites.removePowerup();
+				hasPowerup = false;
+			}
+		}
 	}
 
 }
