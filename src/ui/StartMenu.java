@@ -1,7 +1,11 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,16 +18,16 @@ import javax.swing.border.LineBorder;
 
 import gamemodes.PlayGame;
 import networking.NetworkingClient;
+import networking.NetworkingServer;
 import resources.Map;
 import resources.Resources;
 import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
-public class StartMenu extends JPanel{
-	
-	public StartMenu(){
+public class StartMenu extends JPanel {
+
+	public StartMenu() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	//	setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		JLabel titleLabel = UIRes.getLabel("Ballin'");
 		JLabel usernameLabel = UIRes.getLabel("Welcome, " + UIRes.username + "!");
 		JButton usernameButton = getUsername(usernameLabel);
@@ -31,10 +35,10 @@ public class StartMenu extends JPanel{
 		UIRes.addSpace(this, 0, 0.1);
 		add(titleLabel);
 		UIRes.addSpace(this, 0, 0.1);
+		UIRes.getButtonAndIcon(this, startServerButton());
 		UIRes.getButtonAndIcon(this, getPlaySingleplayerButton());
 		UIRes.getButtonAndIcon(this, getPlayMultiplayerButton());
 		UIRes.getButtonAndIcon(this, usernameButton);
-		//UIRes.optionsPanel.setBackToPanel(this);
 		UIRes.getButtonAndIcon(this, new OptionsButton());
 		UIRes.getButtonAndIcon(this, new ExitButton());
 
@@ -42,17 +46,31 @@ public class StartMenu extends JPanel{
 
 	public static void main(String[] args) {
 		JFrame frame = UIRes.createFrame();
-		frame.setVisible(true);	
+		frame.setVisible(true);
 	}
-	
+
+	JButton startServerButton() {
+		JButton startServer = new JButton("Start Server");
+		JFrame frame = new JFrame();
+		UIRes.customiseButton(startServer, true);
+		startServer.addActionListener(e -> {
+			try {
+				NetworkingServer.main(null);
+				JOptionPane.showMessageDialog(frame,
+						"This is your ip address: " + Inet4Address.getLocalHost().getHostAddress());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		return startServer;
+	}
+
 	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
 			PlayGame.start(UIRes.resources, "plus", Mode.LastManStanding, Map.World.ICE);
-
-
 
 			if (!Resources.silent) {
 				// button sound effect
@@ -65,7 +83,7 @@ public class StartMenu extends JPanel{
 		});
 		return startButton;
 	}
-	
+
 	JButton getPlayMultiplayerButton() {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		UIRes.customiseButton(startButton, true);
@@ -83,7 +101,7 @@ public class StartMenu extends JPanel{
 		});
 		return startButton;
 	}
-	
+
 	JButton getUsername(JLabel label) {
 		JButton usernameButton = new JButton("Change username");
 		UIRes.customiseButton(usernameButton, true);
@@ -102,4 +120,3 @@ public class StartMenu extends JPanel{
 	}
 
 }
-

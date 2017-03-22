@@ -248,6 +248,7 @@ public class UIRes {
 		JFrame frame = new JFrame();
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(getScreenWidth(), getScreenHeight(), ""))));
 		frame.setResizable(true);
+		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation((getScreenWidth() - width) / 2, (getScreenHeight() - height) / 2);
 		frame.setLayout(new BorderLayout());

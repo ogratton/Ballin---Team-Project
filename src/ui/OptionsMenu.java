@@ -103,7 +103,6 @@ public class OptionsMenu extends JPanel{
 		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(UIRes.resources.getDefaultRight()).toUpperCase(),
 				"right"));
 		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase(), "dash"));
-		panel.add(getControlButton("Block:", KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase(), "block"));
 
 		panel.setOpaque(false);
 		return panel;

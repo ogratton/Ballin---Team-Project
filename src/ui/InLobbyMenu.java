@@ -167,8 +167,10 @@ public class InLobbyMenu extends JPanel implements Observer{
 			});
 		}
 		
-		if(client.isReady())
+		if(client.isReady()){
 			readyCheck.setForeground(Color.GREEN);
+			characterClass.setSelectedItem(client.getCharacterClass());
+		}
 		else
 			readyCheck.setForeground(Color.RED);	
 
