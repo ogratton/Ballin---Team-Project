@@ -149,9 +149,10 @@ public class VictoryScreen extends JPanel {
 		label3.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label3);
 
-		JButton exit = InGameMenu.getBackToStartMenuButton();
+		JButton exit = new JButton("Back");
+		UIRes.customiseButton(exit, true);
+		UIRes.getButtonAndIcon(this, exit);
 		exit.addActionListener(e -> resources.setFinished(true));
-		add(exit);
 
 		// nice border
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));

@@ -14,7 +14,9 @@ import javax.swing.border.LineBorder;
 
 import gamemodes.PlayGame;
 import networking.NetworkingClient;
+import resources.Map;
 import resources.Resources;
+import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel{
@@ -48,7 +50,7 @@ public class StartMenu extends JPanel{
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
-			PlayGame.start(UIRes.resources);
+			PlayGame.start(UIRes.resources, "asteroid", Mode.Deathmatch, Map.World.CAKE);
 
 			if (!Resources.silent) {
 				// button sound effect
