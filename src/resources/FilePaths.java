@@ -14,7 +14,7 @@ public class FilePaths
 	public static final String music = audio + "music/";
 	public static final String sfx = audio + "sfx/";
 	
-	public static final String fonts = resources + "fonts/";
+	public static final String fonts = "/resources/fonts/";
 	
 	public static final String maps = resources + "maps/";
 	
