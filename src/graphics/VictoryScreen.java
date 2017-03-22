@@ -120,6 +120,7 @@ public class VictoryScreen extends JPanel {
 			if (winner) {
 				modeText = "You survived the gauntlet!";
 			} else {
+
 				modeText = "You survived for " + (character.getTimeOfDeath() / 100) + " seconds";
 			}
 			break;
@@ -131,9 +132,9 @@ public class VictoryScreen extends JPanel {
 				int tiempo = character.getTimeOfDeath();
 
 				if (tiempo == 1) {
-					modeText = "You survived for " + tiempo + " second";
+					modeText = "You survived for " + (tiempo / 100) + " second";
 				} else {
-					modeText = "You survived for " + tiempo + " seconds";
+					modeText = "You survived for " + (tiempo / 100) + " seconds";
 
 				}
 			}

@@ -50,7 +50,7 @@ public class StartMenu extends JPanel{
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
-			PlayGame.start(UIRes.resources, "asteroid", Mode.Deathmatch, Map.World.CAKE);
+			PlayGame.start(UIRes.resources, "plus", Mode.LastManStanding, Map.World.ICE);
 
 			if (!Resources.silent) {
 				// button sound effect
