@@ -93,6 +93,8 @@ public class InLobbyMenu extends JPanel implements Observer {
 		} else {
 			session = getSession();
 		}
+		UIRes.playersPanel.repaint();
+		UIRes.playersPanel.revalidate();
 
 	}
 
