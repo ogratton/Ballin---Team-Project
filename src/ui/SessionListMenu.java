@@ -143,7 +143,7 @@ public class SessionListMenu extends JPanel implements Observer {
 		return button;
 	}
 
-	JPanel getSessionPanel(Session session) {
+	JPanel getSessionPanel(Session session, boolean inProgress) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JLabel sessionName = UIRes.getLabel(session.getSessionName(), 22);
@@ -165,35 +165,39 @@ public class SessionListMenu extends JPanel implements Observer {
 		panel.setFocusable(true);
 		Color background = panel.getBackground();
 
-		panel.addMouseListener(new MouseListener() {
+		if (!inProgress) {
+			panel.addMouseListener(new MouseListener() {
 
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				for (int i = 0; i < UIRes.sessionPanelsList.size(); i++) {
-					if (UIRes.sessionPanelsList.get(i).isFocusOwner())
-						UIRes.sessionPanelsList.get(i).setBackground(background);
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					for (int i = 0; i < UIRes.sessionPanelsList.size(); i++) {
+						if (UIRes.sessionPanelsList.get(i).isFocusOwner())
+							UIRes.sessionPanelsList.get(i).setBackground(background);
+					}
+					panel.requestFocus();
+					panel.setBackground(Color.RED);
 				}
-				panel.requestFocus();
-				panel.setBackground(Color.RED);
-			}
 
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-			}
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+				}
 
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-			}
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+				}
 
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+				}
 
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+				}
 
-		});
+			});
+		}
+		else
+			panel.setBackground(Color.LIGHT_GRAY);
 		panel.requestFocus();
 		return panel;
 	}
@@ -203,15 +207,12 @@ public class SessionListMenu extends JPanel implements Observer {
 		UIRes.sessionPanelsList.removeAll(UIRes.sessionPanelsList);
 		UIRes.sessionsPanels.setLayout(new BoxLayout(UIRes.sessionsPanels, BoxLayout.Y_AXIS));
 		for (int i = 0; i < cModel.getAllSessions().size(); i++) {
-			JPanel session = getSessionPanel(cModel.getAllSessions().get(i));
-			if (!cModel.getAllSessions().get(i).getAllClients().isEmpty()) {
-				UIRes.sessionPanelsList.add(session);
-				UIRes.sessionsPanels.add(session);
-			}
+			JPanel session = getSessionPanel(cModel.getAllSessions().get(i), cModel.getAllSessions().get(i).isGameInProgress());
+			UIRes.sessionPanelsList.add(session);
+			UIRes.sessionsPanels.add(session);
 		}
-
-		UIRes.sessionsPanels.repaint();
 		UIRes.sessionsPanels.revalidate();
+		UIRes.sessionsPanels.repaint();
 	}
 
 	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
@@ -254,7 +255,7 @@ public class SessionListMenu extends JPanel implements Observer {
 			ArrayList<String> gameModeList = new ArrayList<String>();
 			gameModeList = mmd.gamemodeNames;
 			for (int i = 0; i < gameModeList.size(); i++) {
-				if(!gameModeList.get(i).equals("Hockey") && !gameModeList.get(i).equals("Debug"))
+				if (!gameModeList.get(i).equals("Hockey") && !gameModeList.get(i).equals("Debug"))
 					gameModeChoice.add(gameModeList.get(i));
 			}
 
@@ -264,9 +265,9 @@ public class SessionListMenu extends JPanel implements Observer {
 					JOptionPane.OK_CANCEL_OPTION);
 
 			if (gameModePane == JOptionPane.OK_OPTION) {
-				
+
 				this.gameMode = mmd.correspondingMode(gameModeChoice.getSelectedItem());
-				
+
 				JLabel mapLabel = new JLabel("Map: ");
 				UIRes.customiseLabel(mapLabel);
 
@@ -288,7 +289,7 @@ public class SessionListMenu extends JPanel implements Observer {
 
 				if (mapPane == JOptionPane.OK_OPTION) {
 					Iterator<String> iterator = mapNames.iterator();
-					for(int i = 0; i < mapChoice.getSelectedIndex(); i++){
+					for (int i = 0; i < mapChoice.getSelectedIndex(); i++) {
 						iterator.next();
 					}
 					this.mapName = iterator.next();

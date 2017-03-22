@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Checkbox;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
@@ -8,8 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Iterator;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,12 +31,23 @@ public class OptionsMenu extends JPanel{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel musicLabel = UIRes.getLabel("Music Volume");
 		JLabel soundLabel = UIRes.getLabel("Sound Volume");
+		JLabel controlsLabel = UIRes.getLabel("Controls");
 		UIRes.getButtonAndIcon(this, new BackButton(this.backToPanel, "Back"));
+		add(Box.createVerticalStrut(10));
 		add(musicLabel);
+		add(Box.createVerticalStrut(3));
 		add(getMusicSlider());
+		add(Box.createVerticalStrut(10));
 		add(soundLabel);
+		add(Box.createVerticalStrut(3));
 		add(getAudioSlider());
+		add(Box.createVerticalStrut(10));
+		add(getGraphicsSettings());
+		add(Box.createVerticalStrut(10));
+		add(controlsLabel);
+		add(Box.createVerticalStrut(3));
 		add(getControlsPanel());
+		add(Box.createVerticalStrut(10));
 		UIRes.getButtonAndIcon(this, getResetControlsButton());
 	}
 	
@@ -65,10 +79,35 @@ public class OptionsMenu extends JPanel{
 		});
 		return audioSlider;
 	}
+	
+	JPanel getGraphicsSettings(){
+		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension((int)(UIRes.width * 0.85), (int)(UIRes.height * 0.1)));
+		panel.setOpaque(false);
+		panel.setLayout(new GridLayout(1,0));
+		JLabel graphicsQuality = UIRes.getLabel("Graphics Quality");
+		JButton qualityButton = new JButton("High Quality");
+		UIRes.customiseButton(qualityButton, true);
+		qualityButton.addActionListener(e -> {
+			if(UIRes.resources.isLowGraphics()){
+				UIRes.resources.setLowGraphics(false);
+				qualityButton.setText("High Quality");
+			}
+			else {
+				UIRes.resources.setLowGraphics(true);
+				qualityButton.setText("Low Quality");
+			}
+		});
+		
+		panel.add(graphicsQuality);
+		panel.add(qualityButton);
+		return panel;
+		
+	}
 
 	JPanel getControlButton(String buttonLabel, String buttonName, String name) {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.1)));
+		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.15)));
 		panel.setOpaque(false);
 		GridLayout controlsGrid = new GridLayout(0, 2);
 		panel.setLayout(controlsGrid);
@@ -91,7 +130,7 @@ public class OptionsMenu extends JPanel{
 
 	JPanel getControlsPanel() {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.32)));
+		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.30)));
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
@@ -103,7 +142,6 @@ public class OptionsMenu extends JPanel{
 		panel.add(getControlButton("Move right:", KeyEvent.getKeyText(UIRes.resources.getDefaultRight()).toUpperCase(),
 				"right"));
 		panel.add(getControlButton("Dash:", KeyEvent.getKeyText(UIRes.resources.getDefaultDash()).toUpperCase(), "dash"));
-		panel.add(getControlButton("Block:", KeyEvent.getKeyText(UIRes.resources.getDefaultBlock()).toUpperCase(), "block"));
 
 		panel.setOpaque(false);
 		return panel;

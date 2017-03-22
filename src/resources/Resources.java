@@ -11,6 +11,7 @@ import ai.pathfinding.Line;
 import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
+import graphics.LayeredPane;
 import resources.Map.Tile;
 
 //import graphics.old.CharacterModel;
@@ -112,6 +113,11 @@ public class Resources {
 	public void refresh() {
 		powerupList = new ArrayList<Powerup>();
 		globalTimer = 0;
+		setFinished(false);
+		setCountdown(3);
+		setFinished(false);
+		LayeredPane.victoryShowing = false;
+		LayeredPane.splashShowing = true;
 	}
 	/**
 	 * @return The current id.

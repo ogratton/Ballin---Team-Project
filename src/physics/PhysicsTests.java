@@ -153,7 +153,49 @@ public class PhysicsTests {
 
 	@Test
 	public void testSpecial() {
-		fail("Not yet implemented");
+		// set stamina
+		// set blocking/notblocking
+		// set dashing/notdashing
+		// set block/dashtimer
+		Character c = new Character();
+		c.setBlocking(false);
+		c.setDashing(false);
+		c.resetDashTimer();
+		c.resetBlockTimer();
+		c.setStamina(c.getMaxStamina());
+		assertFalse(physics.special(c));
+		
+		c.setDashing(true);
+		assertTrue(physics.special(c));
+		
+		c.setBlocking(true);
+		c.setDashing(true);
+		assertFalse(physics.special(c));
+		
+		c.setDashing(false);
+		assertTrue(physics.special(c));
+		
+		c.setBlocking(false);
+		c.setDashing(true);
+		c.setStamina(0);
+		assertFalse(physics.special(c));
+		
+		c.setBlocking(true);
+		c.setDashing(false);
+		c.resetDashTimer();
+		c.resetBlockTimer();
+		assertFalse(physics.special(c));
+		
+		c.incrementDashTimer();
+		c.setBlocking(false);
+		c.setDashing(true);
+		assertTrue(physics.special(c));
+		
+		c.resetDashTimer();
+		c.incrementBlockTimer();
+		c.setBlocking(true);
+		c.setDashing(false);
+		assertTrue(physics.special(c));
 	}
 
 	@Test
@@ -212,11 +254,47 @@ public class PhysicsTests {
 
 	@Test
 	public void testDash() {
-		fail("Not yet implemented");
+		Character c = new Character();
+		c.setStamina(60);
+		// test while not moving
+		c.setDx(0);
+		c.setDy(0);
+		physics.dash(c);
+		assertTrue(c.getStamina() == 150);
+		assertTrue(c.getDx() == 0);
+		assertTrue(c.getDy() == 0);
+		// test while moving in 1 direction, 25 times
+		c.setDx(1);
+		c.setDy(0);
+		c.setLeft(true);
+		physics.dash(c);
+		assertTrue(c.getStamina() == 150);
+		assertTrue(c.getMovingDirection() == Heading.W);
+		assertTrue(c.getDx() == 2*-c.getMaxDx());
+		for (int i = 0; i < 24; i++) {
+			physics.dash(c);
+		}
+		assertFalse(c.isDashing());
+		assertTrue(c.getDashTimer() == 0);
+		assertTrue(c.getDx() == -c.getMaxDx());
 	}
 
 	@Test
 	public void testBlock() {
-		fail("Not yet implemented");
+		Character c = new Character();
+		c.setStamina(75);
+		double initialSpeed = 1;
+		double initialMass = c.getMass();
+		c.setDx(initialSpeed);
+		c.setDy(initialSpeed);
+		physics.block(c);
+		assertTrue(c.getStamina() == 75);
+		assertTrue(c.getMass() == 10 * initialMass);
+		for (int i = 0; i < 24; i++) {
+			physics.block(c);
+		}
+		assertFalse(c.isBlocking());
+		assertTrue(c.getBlockTimer() == 0);
+		assertTrue(c.getDx() < initialSpeed);
 	}
 }

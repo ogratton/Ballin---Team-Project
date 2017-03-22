@@ -89,7 +89,7 @@ public class PlayerStats extends JPanel {
 	 * Update the text on the labels to reflect the current game situation
 	 */
 
-	public void updateStats() {
+	public void update() {
 
 		stamina.setText("Stamina: " + character.getStamina());
 		kda.setText("K/D/S: " + character.getKills() + "/" + character.getDeaths() + "/" + character.getSuicides());

@@ -2,7 +2,10 @@ package graphics;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import graphics.sprites.SheetDeets;
@@ -25,6 +28,11 @@ public class SpriteHalf extends JPanel {
 	private Resources resources;
 	private boolean powerupPresent = false;
 	private boolean bombPresent = false;
+	private JLabel arrowLabel;
+	private JLabel spriteLabel;
+	private JLabel powerupLabel;
+	private BufferedImage sprite;
+	private BufferedImage arrow;
 
 	/**
 	 * Create a new sprite half
@@ -39,46 +47,35 @@ public class SpriteHalf extends JPanel {
 		this.resources = resources;
 		repaint();
 
+		sprite = character.getFirstFrame();
+		arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
+
+		arrowLabel = new JLabel(new ImageIcon(arrow));
+		arrowLabel.setPreferredSize(new Dimension(50, 50));
+		spriteLabel = new JLabel(new ImageIcon(sprite));
+		spriteLabel.setPreferredSize(new Dimension(50, 50));
+		powerupLabel = new JLabel();
+		powerupLabel.setPreferredSize(new Dimension(50, 50));
+
 		setPreferredSize(new Dimension(150, 50));
 
 	}
 
 	/**
-	 * Repaint the panel
+	 * Add a powerup
 	 */
-
-	public void paintComponent(Graphics g) {
-
-		super.paintComponent(g);
-
-		boolean me = false;
-
-		try {
-			me = UIRes.cModel.getMyCharacter().equals(character);
-		} catch (NullPointerException e) {
-			me = character.equals(resources.getPlayerList().get(0));
-		}
-
-		g.drawImage(character.getArrow(false, me), 0, -15, this);
-		g.drawImage(character.getFirstFrame(), 50, 0, this);
-
-		if (character.hasPowerup()) {
-
-			g.drawImage(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup()), 100, 0, this);
-			powerupPresent = true;
-		} else if (powerupPresent) {
-			g.clearRect(100, 0, 50, 50);
-			powerupPresent = false;
-		}
-
-		if (character.hasBomb()) {
-
-			g.drawImage(SheetDeets.getBombSprite(), 100, 0, this);
-			bombPresent = true;
-		} else if (bombPresent) {
-			g.clearRect(100, 0, 50, 50);
-			bombPresent = false;
-		}
+	
+	public void addPowerup(){
+		powerupLabel.setIcon(new ImageIcon(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup())));
+		
+	}
+	
+	/**
+	 * Remove a powerup
+	 */
+	
+	public void removePowerup(){
+		powerupLabel.setIcon(null);
 	}
 
 }

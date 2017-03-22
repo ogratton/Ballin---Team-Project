@@ -29,23 +29,22 @@ import resources.Map;
 @SuppressWarnings("serial")
 public class InGameMenu extends JPanel {
 
-	public InGameMenu(JFrame frame, int width, int height) {
+	public InGameMenu(JFrame frame, JPanel optionsPanel, int width, int height) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
 		JPanel panel2 = new JPanel();
+		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		BackButton backToStartMenuButton = new BackButton(UIRes.startPanel, "Back to Main Menu");
 		backToStartMenuButton.addActionListener(e -> {
 			frame.dispose();
 		});
-		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		map.setLayout(new BorderLayout());
 		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
 		UIRes.getButtonAndIcon(panel2, getResumeToGameButton(this));
 		UIRes.getButtonAndIcon(panel2, backToMainMenuButton(frame));
-		UIRes.getButtonAndIcon(panel2, new OptionsButton());
-		UIRes.optionsPanel.setBackToPanel(panel2);
+		UIRes.getButtonAndIcon(panel2, getOptionsMenu(optionsPanel));
 		UIRes.getButtonAndIcon(panel2, new ExitButton());
 		map.add(panel2, BorderLayout.CENTER);
 		add(map);
@@ -75,6 +74,15 @@ public class InGameMenu extends JPanel {
 			frame.dispose();
 		});
 		
+		return button;
+	}
+	
+	JButton getOptionsMenu(JPanel panel){
+		JButton button = new JButton("Options");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e -> {
+			GameComponent.layers.setLayer(panel, new Integer(40));
+		});
 		return button;
 	}
 

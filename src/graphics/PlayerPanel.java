@@ -54,23 +54,14 @@ public class PlayerPanel extends JPanel {
 	}
 
 	/**
-	 * Paint all the boxes
-	 */
-
-	public void paint() {
-		for (PlayerInfo box : boxes) {
-			box.paint();
-		}
-	}
-
-	/**
 	 * Update all the scores in the boxes
 	 */
 
-	public void updateScores() {
+	public void update() {
 		for (PlayerInfo box : boxes) {
 
-			box.updateScore();
+			box.update();
+			
 		}
 
 	}
