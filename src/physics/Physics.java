@@ -661,7 +661,7 @@ public class Physics extends Thread implements ActionListener {
 	 * @author alexander stores the collision normal and depth for a collision
 	 *         (I miss Haskell tuples so much right now).
 	 */
-	private class CND {
+	protected class CND {
 		/**
 		 * whether or not a collision has happened
 		 */
