@@ -50,6 +50,7 @@ public class PlayerInfo extends JPanel {
 	 * Update the score on the panel
 	 */
 	
+	
 	public void updateScore(){
 		text.updateScore();
 	}

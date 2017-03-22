@@ -153,7 +153,11 @@ public class VictoryScreen extends JPanel {
 		JButton exit = new JButton("Back");
 		UIRes.customiseButton(exit, true);
 		UIRes.getButtonAndIcon(this, exit);
-		exit.addActionListener(e -> resources.setFinished(true));
+		exit.addActionListener(e -> {
+			resources.setFinished(true);
+			resources.getMusicPlayer().changePlaylist("grandma");
+			resources.getMusicPlayer().resumeMusic();
+		});
 
 		// nice border
 		setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 2), new EmptyBorder(50, 50, 50, 50)));
