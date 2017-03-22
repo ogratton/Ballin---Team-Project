@@ -45,8 +45,7 @@ public class SpriteHalf extends JPanel {
 
 		this.character = character;
 		this.resources = resources;
-		repaint();
-
+		
 		sprite = character.getFirstFrame();
 		arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
 
@@ -57,6 +56,10 @@ public class SpriteHalf extends JPanel {
 		powerupLabel = new JLabel();
 		powerupLabel.setPreferredSize(new Dimension(50, 50));
 
+		add(arrowLabel);
+		add(spriteLabel);
+		add(powerupLabel);
+		
 		setPreferredSize(new Dimension(150, 50));
 
 	}
