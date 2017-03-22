@@ -158,7 +158,7 @@ public class UIRes {
 		comp.setForeground(colour);
 	}
 
-	static void customiseButton(JButton button, boolean addHoverEffect) {
+	public static void customiseButton(JButton button, boolean addHoverEffect) {
 		customiseComponent(button, buttonSize, buttonRatio);
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
@@ -217,20 +217,20 @@ public class UIRes {
 	}
 
 	static JLabel getSpriteLabel(int x) {
-		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
-				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
+				50, 50);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
 	
 	static ImageIcon getSpriteIcon(int x) {
-		BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, x,
-				SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
+				50, 50);
 		ImageIcon spriteIcon = new ImageIcon(icon);
 		return spriteIcon;
 	} 
 
-	static JPanel getButtonAndIcon(JPanel panel, JButton button) {
+	public static JPanel getButtonAndIcon(JPanel panel, JButton button) {
 		JPanel buttonPanel = new JPanel();
 		int x = new SecureRandom().nextInt(numberIcons);
 		buttonPanel.setMaximumSize(buttonSize);

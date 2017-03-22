@@ -22,7 +22,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Character winner;
 	private Resources resources;
 	private boolean isServer = false;
-	private boolean finished = false;
 	private boolean singlePlayer = false;
 
 	private String victoryMusic = "grandma";
@@ -87,7 +86,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 				e.printStackTrace();
 			}
 		}
-		
+
 		p.start();
 
 		// Graphics g = new Graphics(resources, null, false);
@@ -156,23 +155,15 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * @return The winning character
 	 */
 	public ArrayList<Character> getWinners() {
-
 		ArrayList<Character> scores = resources.getOrderedScores();
-
 		winner = scores.get(0);
-
 		ArrayList<Character> winners = new ArrayList<>();
-
 		int score = winner.getScore();
-
 		for (Character c : scores) {
-
 			if (score == c.getScore()) {
 				winners.add(c);
 			}
-
 		}
-
 		return winners;
 	}
 

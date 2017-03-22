@@ -121,12 +121,12 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * Set the number of lives for all players to the specified value
+	 * Set the number of lives for all players to the specified value.
 	 * 
 	 * @param n
 	 *            Number of lives
 	 */
-	private void setAllLives(int n) {
+	public void setAllLives(int n) {
 		for (Character c : resources.getPlayerList()) {
 			c.setLives(n);
 		}
