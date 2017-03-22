@@ -8,8 +8,10 @@ import javax.swing.SwingUtilities;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
+import resources.Map;
 import resources.Resources;
 import resources.Resources.Mode;
+import ui.UIRes;
 
 /**
  * Random player is given a bomb to hold. After a few seconds the person holding
@@ -84,8 +86,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 			try {
 				Thread.sleep(1000);
 				resources.setCountdown(2);
+				UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
+				UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
@@ -94,6 +98,16 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 
 		p.start();
+		
+		if (!Resources.silent)
+		{
+			if (resources.getMap().getWorldType() == Map.World.SPACE) {
+				resources.getMusicPlayer().changePlaylist("ultrastorm");
+			} else {
+				resources.getMusicPlayer().changePlaylist("frog");
+			}
+			resources.getMusicPlayer().resumeMusic();
+		}
 
 		placeBomb();
 		while (!isGameOver()) {

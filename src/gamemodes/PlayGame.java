@@ -37,29 +37,11 @@ public class PlayGame {
 	 */
 	public static void start(Resources resources, String mapName, Mode modeType, Map.World style) {
 		resources.mode = modeType;
-		// Music setting:
+		
+		resources.getMusicPlayer().pauseMusic();
 
-		if (!Resources.silent) {
-			// 30 second gamemode needs 30 seconds of music
-			if (resources.mode == Mode.Deathmatch) {
-				if (style == Map.World.SPACE) {
-					resources.getMusicPlayer().changePlaylist("ultrastorm30");
-				} else {
-					resources.getMusicPlayer().changePlaylist("thirty");
-				}
-			}
-			// looping music
-			else {
-				if (style == Map.World.SPACE) {
-					resources.getMusicPlayer().changePlaylist("ultrastorm");
-				} else {
-					resources.getMusicPlayer().changePlaylist("frog");
-				}
-			}
-		}
-		
 		resources.clearPlayerList();
-		
+
 		resources.setMap(new Map(1200, 650, style, mapName));
 		new MapCosts(resources);
 		// Create and add players
@@ -68,11 +50,11 @@ public class PlayGame {
 
 		resources.addPlayerToList(player);
 
-
 		for (int i = 1; i < 8; i++) {
-			Character character = new Character(Character.Class.getRandomClass(), i+1, "CPU" + i);
+			Character character = new Character(Character.Class.getRandomClass(), i + 1, "CPU" + i);
 			resources.addPlayerToList(character);
-			AITemplate ai = (resources.mode == Mode.HotPotato) ? new HotPotatoAI(resources, character) : new FightingAI(resources, character);
+			AITemplate ai = (resources.mode == Mode.HotPotato) ? new HotPotatoAI(resources, character)
+					: new FightingAI(resources, character);
 			character.setAI(ai);
 		}
 		GameModeFFA mode;
@@ -92,13 +74,5 @@ public class PlayGame {
 		}
 		((Thread) mode).start();
 
-		if (!Resources.silent) {
-			// must resume after changing playlist
-			if (resources.getMusicPlayer().isAlive()) {
-				resources.getMusicPlayer().resumeMusic();
-			} else {
-				resources.getMusicPlayer().start();
-			}
-		}
 	}
 }

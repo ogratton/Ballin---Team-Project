@@ -272,6 +272,7 @@ public class SessionListMenu extends JPanel implements Observer {
 				UIRes.customiseLabel(mapLabel);
 
 				JComboBox<ImageIcon> mapChoice = new JComboBox<ImageIcon>();
+				mapChoice.setPreferredSize(new Dimension(150, 100));
 
 				HashSet<String> mapNames = MapMetaData.getTable().get(this.gameMode);
 

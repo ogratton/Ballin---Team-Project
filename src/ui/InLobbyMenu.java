@@ -37,6 +37,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 	private Session session;
 	private ConnectionDataModel cModel;
 	private SessionListMenu sessionList;
+	private int spriteIndex = 0;
 	
 	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel, SessionListMenu sessionList){
 		this.session = session;
@@ -103,6 +104,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 		
 
 		JComboBox<ImageIcon> characterClass = new JComboBox<ImageIcon>();
+		characterClass.setSize(new Dimension(50,50));
 		for (int i = 0; i < UIRes.numberIcons; i++) {
 			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
 					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
@@ -116,14 +118,13 @@ public class InLobbyMenu extends JPanel implements Observer{
 		UIRes.customiseButton(readyCheck, false);
 		readyCheck.setForeground(Color.RED);
 		
+		
 		if(this.cModel.getMyId().compareTo(client.getId()) != 0){
 			characterClass.setEnabled(false);
 			
 		}
 		else{
 			readyCheck.addActionListener(e -> {
-				
-				System.out.println("Ready button is pressed by: " + client.getName());
 				
 				if(client.isReady()) {
 					client.setReady(false);
@@ -134,6 +135,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 				if (client.isReady()) {
 					readyCheck.setForeground(Color.GREEN);
 					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					spriteIndex = characterClass.getSelectedIndex();
 					System.out.println(client.getCharacterClass().name());
 					client.setPlayerNumber(index);
 					System.out.println(client.getPlayerNumber());
@@ -169,7 +171,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 		
 		if(client.isReady()){
 			readyCheck.setForeground(Color.GREEN);
-			characterClass.setSelectedItem(client.getCharacterClass());
+			characterClass.setSelectedIndex(spriteIndex);
 		}
 		else
 			readyCheck.setForeground(Color.RED);	

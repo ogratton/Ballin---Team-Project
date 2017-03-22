@@ -70,7 +70,7 @@ public class AudioFile implements LineListener
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
@@ -97,7 +97,7 @@ public class AudioFile implements LineListener
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
@@ -138,7 +138,7 @@ public class AudioFile implements LineListener
 				int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
 				gain += offset;
 			}
-			gainControl.setValue(gain);
+			if (gainControl != null) gainControl.setValue(gain);
 			clip.start();
 			playState = PlayState.PLAYING;
 		}
@@ -177,12 +177,20 @@ public class AudioFile implements LineListener
 	 */
 	public void setGain(float gain)
 	{
-		gainControl.setValue(gain);
+		if (gainControl != null) gainControl.setValue(gain);
 	}
 
 	public float getGain()
 	{
-		return gainControl.getValue();
+		if (gainControl != null) 
+		{
+			return gainControl.getValue();
+		}
+		else
+		{
+			return 0;
+		}
+		
 	}
 
 	/**
@@ -224,7 +232,7 @@ public class AudioFile implements LineListener
 		}
 		clip.setFramePosition(res_pos);
 		int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
-		gainControl.setValue(gain + offset);
+		if (gainControl != null) gainControl.setValue(gain + offset);
 		clip.start();
 		playState = PlayState.PLAYING;
 	}
