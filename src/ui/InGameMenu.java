@@ -20,44 +20,30 @@ import graphics.LayeredPane;
 import graphics.sprites.Sprite;
 import resources.Map;
 
-public class InGameMenu extends BaseMenu {
+@SuppressWarnings("serial")
+public class InGameMenu extends JPanel {
 
-	public JPanel getInGameMenuPanel(JFrame frame, int width, int height) {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	public InGameMenu(JFrame frame, int width, int height) {
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
 		JPanel panel2 = new JPanel();
+		BackButton backToStartMenuButton = new BackButton(UIRes.startPanel, "Back to Main Menu");
+		backToStartMenuButton.addActionListener(e -> {
+			frame.dispose();
+		});
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		map.setLayout(new BorderLayout());
 		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
-		JButton backButton = goBack(backToPanel);
-		JButton button = new JButton("Back");
-		UIRes.customiseButton(button, true);
-		button.addActionListener(e -> {
-			UIRes.switchPanel(backToPanel);
-		});
-		UIRes.getButtonAndIcon(panel2, backButton)
-		addOptionsButton(panel2);
-		addExitButton(panel2);
+		UIRes.getButtonAndIcon(panel2, getResumeToGameButton(this));
+		UIRes.getButtonAndIcon(panel2, backToMainMenuButton(frame));
+		UIRes.getButtonAndIcon(panel2, new OptionsButton());
+		UIRes.optionsPanel.setBackToPanel(panel2);
+		UIRes.getButtonAndIcon(panel2, new ExitButton());
 		map.add(panel2, BorderLayout.CENTER);
-		panel.add(map);
-		return panel;
-	}
+		add(map);
 
-	static JButton getBackToStartMenuButton(JFrame frame) {
-		JButton button = new JButton("Back to Main Menu");
-		UIRes.customiseButton(button, true);
-		button.addActionListener(e -> {
-			try {
-				UIRes.cModel.getConnection().close();
-			} catch (NullPointerException e1) {
-			}
-			frame.dispose();
-			UIRes.switchPanel(UIRes.startPanel);
-		});
-		return button;
 	}
 	
 	JButton getResumeToGameButton(JPanel panel) {
@@ -66,7 +52,23 @@ public class InGameMenu extends BaseMenu {
 			GameComponent.layers.setLayer(panel, new Integer(10));
 			LayeredPane.menuShowing = !LayeredPane.menuShowing;
 		});
-		customiseButton(button, true);
+		UIRes.customiseButton(button, true);
+		return button;
+	}
+	
+	JButton backToMainMenuButton(JFrame frame){
+		JButton button = new JButton("Back to Main Menu");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e ->{;
+			UIRes.switchPanel(UIRes.startPanel);
+			System.out.println("Is connected: " + (UIRes.cModel.getConnection() != null));
+			if(UIRes.cModel.getConnection() != null){
+				UIRes.cModel.getConnection().close();
+				System.out.println("Disconnecting from server");
+			}
+			frame.dispose();
+		});
+		
 		return button;
 	}
 

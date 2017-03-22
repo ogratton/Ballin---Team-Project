@@ -58,7 +58,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		// Set up game
 		setAllLives(1);
 		randomRespawn();
-		
+
 		this.singlePlayer = singlePlayer;
 
 		resources.mode = Mode.HotPotato;
@@ -92,7 +92,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 				e.printStackTrace();
 			}
 		}
-		
+
 		p.start();
 
 		placeBomb();
@@ -121,9 +121,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * Place a bomb on a random character.
+	 * Place a bomb on a random character. (Public for JUnit)
 	 */
-	private void placeBomb() {
+	public void placeBomb() {
 		boolean success = false;
 		int p;
 		ArrayList<Character> players = resources.getPlayerList();
@@ -140,9 +140,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 	}
 
 	/**
-	 * Find the character with a bomb placed on them and kill them.
+	 * Find the character with a bomb placed on them and kill them. (Public for
+	 * JUnit)
 	 */
-	private void explodeBomb() {
+	public void explodeBomb() {
 		for (Character c : resources.getPlayerList()) {
 			if (c.hasBomb()) {
 				c.setExploding(true);

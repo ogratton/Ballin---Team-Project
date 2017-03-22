@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import resources.Character;
 
+@Deprecated
 /**
- * Deprecated?
  * Interface for all game modes which are team based.
  * 
  * @author Luke

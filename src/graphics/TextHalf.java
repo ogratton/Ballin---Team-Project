@@ -57,6 +57,10 @@ public class TextHalf extends JPanel {
 			}
 
 			score.setText(blobs);
+		} else if (resources.mode == Mode.HotPotato) {
+			if (character.isDead()) {
+				score.setText("dead");
+			}
 		}
 
 		name.setAlignmentX(LEFT_ALIGNMENT);
@@ -90,6 +94,10 @@ public class TextHalf extends JPanel {
 			}
 
 			score.setText(blobs);
+		} else if (resources.mode == Mode.HotPotato) {
+			if (character.isDead()) {
+				score.setText("dead");
+			}
 		}
 
 	}

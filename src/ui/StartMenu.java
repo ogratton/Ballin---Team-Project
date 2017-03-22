@@ -1,21 +1,29 @@
 package ui;
 
+import java.awt.Color;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import gamemodes.PlayGame;
 import networking.NetworkingClient;
+import resources.Map;
 import resources.Resources;
+import resources.Resources.Mode;
 
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel{
 	
 	public StartMenu(){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	//	setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		JLabel titleLabel = UIRes.getLabel("Ballin'");
 		JLabel usernameLabel = UIRes.getLabel("Welcome, " + UIRes.username + "!");
 		JButton usernameButton = getUsername(usernameLabel);
@@ -26,8 +34,9 @@ public class StartMenu extends JPanel{
 		UIRes.getButtonAndIcon(this, getPlaySingleplayerButton());
 		UIRes.getButtonAndIcon(this, getPlayMultiplayerButton());
 		UIRes.getButtonAndIcon(this, usernameButton);
-		UIRes.getButtonAndIcon(this, getOptionsButton());
-		UIRes.getButtonAndIcon(this, getExitButton());
+		//UIRes.optionsPanel.setBackToPanel(this);
+		UIRes.getButtonAndIcon(this, new OptionsButton());
+		UIRes.getButtonAndIcon(this, new ExitButton());
 
 	}
 
@@ -41,7 +50,9 @@ public class StartMenu extends JPanel{
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
-			PlayGame.start(UIRes.resources);
+			
+			PlayGame.start(UIRes.resources, "asteroid", Mode.Deathmatch, Map.World.CAKE);
+
 
 			if (!Resources.silent) {
 				// button sound effect
@@ -88,24 +99,6 @@ public class StartMenu extends JPanel{
 			}
 		});
 		return usernameButton;
-	}
-	
-	JButton getOptionsButton() {
-		JButton optionsButton = new JButton("Options");
-		UIRes.customiseButton(optionsButton, true);
-		optionsButton.addActionListener(e -> {
-			UIRes.switchPanel(UIRes.optionsPanel);
-		});
-		return optionsButton;
-	}
-
-	JButton getExitButton() {
-		JButton exitButton = new JButton("Exit");
-		exitButton.addActionListener(e -> {
-			System.exit(0);
-		});
-		UIRes.customiseButton(exitButton, true);
-		return exitButton;
 	}
 
 }

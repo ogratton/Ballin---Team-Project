@@ -114,50 +114,63 @@ public class InLobbyMenu extends JPanel implements Observer{
 
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
-
-		
 		readyCheck.setForeground(Color.RED);
-		readyCheck.addActionListener(e -> {
-			if(client.isReady()) {
-				client.setReady(false);
-			}
-			else {
-				client.setReady(true);
-			}
-			if (client.isReady()) {
-				readyCheck.setForeground(Color.GREEN);
-				client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
-				System.out.println(client.getCharacterClass().name());
-				client.setPlayerNumber(index);
-				System.out.println(client.getPlayerNumber());
-				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
-						try {
-							cModel.getConnection().sendTCP(message);
-							cModel.setReady(true);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
+		
+		if(this.cModel.getMyId().compareTo(client.getId()) != 0){
+			characterClass.setEnabled(false);
+			
+		}
+		else{
+			readyCheck.addActionListener(e -> {
 				
-			} else {
-				readyCheck.setForeground(Color.RED);
-				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
-						try {
-							cModel.getConnection().sendTCP(message);
-							cModel.setReady(false);
-						} catch (Exception e1) {
-							e1.printStackTrace();
+				System.out.println("Ready button is pressed by: " + client.getName());
+				
+				if(client.isReady()) {
+					client.setReady(false);
+				}
+				else {
+					client.setReady(true);
+				}
+				if (client.isReady()) {
+					readyCheck.setForeground(Color.GREEN);
+					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					System.out.println(client.getCharacterClass().name());
+					client.setPlayerNumber(index);
+					System.out.println(client.getPlayerNumber());
+					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if(!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
+							try {
+								cModel.getConnection().sendTCP(message);
+								cModel.setReady(true);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+					
+				} else {
+					readyCheck.setForeground(Color.RED);
+					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+						if(!cModel.isGameInProgress()) {
+							Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+							try {
+								cModel.getConnection().sendTCP(message);
+								cModel.setReady(false);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
 						}
 					}
 				}
-			}
-			System.out.println(client.isReady());
-		});
+				System.out.println(client.isReady());
+			});
+		}
+		
+		if(client.isReady())
+			readyCheck.setForeground(Color.GREEN);
+		else
+			readyCheck.setForeground(Color.RED);	
 
 		panel.add(Box.createHorizontalGlue());
 		panel.add(playerLabel);
