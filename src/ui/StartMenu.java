@@ -48,7 +48,7 @@ public class StartMenu extends JPanel{
 		UIRes.customiseButton(startButton, true);
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
-			PlayGame.start(UIRes.resources);
+			//PlayGame.start(UIRes.resources);
 
 			if (!Resources.silent) {
 				// button sound effect

@@ -254,7 +254,8 @@ public class SessionListMenu extends JPanel implements Observer {
 			ArrayList<String> gameModeList = new ArrayList<String>();
 			gameModeList = mmd.gamemodeNames;
 			for (int i = 0; i < gameModeList.size(); i++) {
-				gameModeChoice.add(gameModeList.get(i));
+				if(!gameModeList.get(i).equals("Hockey") && !gameModeList.get(i).equals("Debug"))
+					gameModeChoice.add(gameModeList.get(i));
 			}
 
 			Object[] gameModeInfo = { gameModeLabel, gameModeChoice };
@@ -263,7 +264,9 @@ public class SessionListMenu extends JPanel implements Observer {
 					JOptionPane.OK_CANCEL_OPTION);
 
 			if (gameModePane == JOptionPane.OK_OPTION) {
+				
 				this.gameMode = mmd.correspondingMode(gameModeChoice.getSelectedItem());
+				
 				JLabel mapLabel = new JLabel("Map: ");
 				UIRes.customiseLabel(mapLabel);
 
@@ -272,7 +275,7 @@ public class SessionListMenu extends JPanel implements Observer {
 				HashSet<String> mapNames = MapMetaData.getTable().get(this.gameMode);
 
 				for (String map : mapNames) {
-					ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.CAVE, map)));
+					ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.DESERT, map)));
 					Image image = icon.getImage();
 					Image mapIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
 					mapChoice.addItem(new ImageIcon(mapIcon));
