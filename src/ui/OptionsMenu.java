@@ -21,30 +21,20 @@ import resources.Resources;
 @SuppressWarnings("serial")
 public class OptionsMenu extends JPanel{
 	
-	private JPanel backToPanel;
+	private JPanel backToPanel = UIRes.startPanel;
 
 	public OptionsMenu(JPanel backToPanel){
-		this.setBackToPanel(backToPanel);
-		
+		this.backToPanel = backToPanel;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel musicLabel = UIRes.getLabel("Music Volume");
 		JLabel soundLabel = UIRes.getLabel("Sound Volume");
-		add(goBack(backToPanel));
+		UIRes.getButtonAndIcon(this, new BackButton(this.backToPanel, "Back"));
 		add(musicLabel);
 		add(getMusicSlider());
 		add(soundLabel);
 		add(getAudioSlider());
 		add(getControlsPanel());
-		add(getResetControlsButton());
-	}
-	
-	public static JButton goBack(JPanel backToPanel) {
-		JButton button = new JButton("Back");
-		UIRes.customiseButton(button, true);
-		button.addActionListener(e -> {
-			UIRes.switchPanel(backToPanel);
-		});
-		return button;
+		UIRes.getButtonAndIcon(this, getResetControlsButton());
 	}
 	
 	JSlider getMusicSlider() {

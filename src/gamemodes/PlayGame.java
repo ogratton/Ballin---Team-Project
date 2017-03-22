@@ -25,7 +25,7 @@ public class PlayGame {
 
 		resources.setMusicPlayer(new MusicPlayer(resources, "grandma"));
 
-		start(resources);
+		start(resources, "asteroid", Mode.Deathmatch, Map.World.CAVE);
 
 	}
 
@@ -35,14 +35,8 @@ public class PlayGame {
 	 * @param resources
 	 *            The resources object being used for the game.
 	 */
-	public static void start(Resources resources) {
-
-		// TODO these should be parameters for start
-		String mapName = "asteroid";
-		resources.mode = Mode.Deathmatch;
-
-		Map.World style = Map.World.SPACE;
-
+	public static void start(Resources resources, String mapName, Mode modeType, Map.World style) {
+		resources.mode = modeType;
 		// Music setting:
 
 		if (!Resources.silent) {

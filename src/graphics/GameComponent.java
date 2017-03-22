@@ -106,17 +106,16 @@ public class GameComponent extends JFrame implements ActionListener {
 		setVisible(true);
 		pack();
 
-		
 	}
-	
+
 	/**
 	 * Send the signal that the game has begun
 	 */
-	
-	public void begin(){
+
+	public void begin() {
 		layers.setLayer(LayeredPane.splash, new Integer(5));
 	}
-	
+
 	/**
 	 * What to do on each tick
 	 */
@@ -131,8 +130,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		if (resources.gamemode.isGameOver()) {
 			layers.victory();
 		}
-		
-		if(resources.isFinished()){
+
+		if (resources.isFinished()) {
 			resources.setFinished(false);
 			resources.setCountdown(3);
 			LayeredPane.splashShowing = true;
@@ -309,7 +308,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(firstPlayerIndex).setBlocking(true);
 			} else if (key == KeyEvent.VK_BACK_SPACE) {
 				System.exit(0);
-			} else if (key == KeyEvent.VK_Z) {
+			}else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
 			} else if (key == KeyEvent.VK_ESCAPE) {
 				if (LayeredPane.menuShowing)
@@ -320,6 +319,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 
 		}
-	}
+}
 
 }
