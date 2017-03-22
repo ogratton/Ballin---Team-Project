@@ -129,6 +129,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 			characterClass.addItem(new ImageIcon(icon));
 		}
+		
 
 		Color colour = UIRes.resources.getPlayerColor(index);
 		panel.setBorder(new CompoundBorder(new LineBorder(colour, 15), new EmptyBorder(10, 10, 10, 10)));
@@ -189,11 +190,13 @@ public class InLobbyMenu extends JPanel implements Observer {
 
 		if (client.isReady()) {
 			readyCheck.setForeground(Color.GREEN);
-			characterClass.setSelectedIndex(spriteIndex);
+			for(int i = 0; i < UIRes.numberIcons; i++){
+				if(client.getCharacterClass().toString().equals(getCharacter(i).toString()))
+					characterClass.setSelectedIndex(i);
+			}
 		}
 		else
-			readyCheck.setForeground(Color.RED);	
-			//characterClass.setSelectedItem(client.getCharacterClass());
+			readyCheck.setForeground(Color.RED);
 
 		panel.add(Box.createHorizontalGlue());
 		panel.add(playerLabel);
