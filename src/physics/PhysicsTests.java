@@ -102,8 +102,8 @@ public class PhysicsTests {
 				
 				physics.actionPerformed(ev);
 				if(verbose) System.out.println(h + " step " + step + ": dx " + dx + ", dy " + dy + ", coords: (" + x + "," + y + ")");
-				assertTrue(Double.compare(c1.getX(), x + dx) == 0);
-				assertTrue(Double.compare(c1.getY(), y + dy) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getX(), x + dx) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getY(), y + dy) == 0);
 			}
 		}
 		
@@ -123,5 +123,93 @@ public class PhysicsTests {
 		
 		fail("Not yet implemented");
 	}
+	@Test
+	public void testUpdateCharacter() {
+		fail("Not yet implemented");
+	}
 
+	@Test
+	public void testUpdateCollidable_Circle() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDead() {
+		
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCalculateWallCollisions() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSpecial() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testMove() {
+		// calculate dx,dy; apply them to x,y.
+		Character c1 = new Character(1, 50, 50, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
+		double x = 50,y = 50;
+		for(double dx = -50; dx < 51; dx++){
+			for(double dy = -50; dy < 51; dy++){
+				c1.setX(x);
+				c1.setY(y);
+				c1.setDx(dx);
+				c1.setDy(dy);
+				physics.move(c1);
+				assertTrue("Moving in the x-axis.", Double.compare(c1.getX(), x + dx) == 0);
+				assertTrue("Moving in the y-axis.", Double.compare(c1.getY(), y + dy) == 0);
+			}
+		}
+	}
+
+	@Test
+	public void testCollideCollidableCollidableCND() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCollideCharacterCharacterCND() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDetectCollision() {
+		Character c1 = new Character(10, 26, 50, 25, Heading.E, Class.HORSE, 0, "C1");
+		Character c2 = new Character(10, 75, 50, 25, Heading.W, Class.WARRIOR, 1, "C2");
+		Physics.CND cnd = physics.detectCollision(c1,c2);
+		assertTrue("Collision Detection 1",cnd.collided);
+		c1.setX(20);
+		cnd = physics.detectCollision(c1,c2);
+		assertTrue("Collision Detection 2 (No collision)",!cnd.collided);
+		for(int i = 0; i < 1000; i++){
+			//1000 tests
+			c1.setX(Math.random() * 100);
+			c1.setY(Math.random() * 100);
+			c2.setX(Math.random() * 100);
+			c2.setY(Math.random() * 100);
+			cnd = physics.detectCollision(c1, c2);
+			boolean collision = false;
+			double dist = Math.sqrt(Math.pow(Math.abs(c1.getX()) - Math.abs(c2.getX()), 2) + Math.pow(Math.abs(c1.getY()) - Math.abs(c2.getY()), 2));
+			if(dist <= (c1.getRadius() + c2.getRadius())) {
+				collision = true;
+			}
+			if(verbose) System.out.println("Distance between two characters: " + dist + ", radius: 25.0, collisionDetected: " + cnd.collided);
+			assertTrue("Collision Detection Random Test", cnd.collided == collision);
+		}
+	}
+
+	@Test
+	public void testDash() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testBlock() {
+		fail("Not yet implemented");
+	}
 }
