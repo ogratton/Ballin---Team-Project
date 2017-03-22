@@ -3,12 +3,9 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -32,8 +29,6 @@ import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
-import resources.Character;
-import resources.Character.Class;
 
 @SuppressWarnings("serial")
 public class InLobbyMenu extends JPanel implements Observer{
@@ -73,6 +68,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 			try {
 				cModel.getConnection().sendTCP(leaveMessage);
 				cModel.setReady(false);
+				//SessionListMenu lobbyList = new SessionListMenu(client, cModel);
 				System.out.println("model changed: " + cModel.hasChanged());
 				updateInLobbyPanel();
 				UIRes.switchPanel(sessionList);
@@ -109,81 +105,51 @@ public class InLobbyMenu extends JPanel implements Observer{
 
 		JComboBox<ImageIcon> characterClass = new JComboBox<ImageIcon>();
 		for (int i = 0; i < UIRes.numberIcons; i++) {
-			ImageIcon icon = UIRes.getSpriteIcon(i);
-			characterClass.addItem(icon);
+			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
+					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+			characterClass.addItem(new ImageIcon(icon));
 		}
-		
-		if(client.getCharacterClass() != null){
-			characterClass.setSelectedItem(UIRes.getSpriteIcon(getCharacterIndex(client.getCharacterClass())));
-		}
-		
-		System.out.println(characterClass.getName());
 
 		Color colour = UIRes.resources.getPlayerColor(index);
 		panel.setBorder(new CompoundBorder(new LineBorder(colour, 15), new EmptyBorder(10, 10, 10, 10)));
 
 		JButton readyCheck = new JButton("Ready");
 		UIRes.customiseButton(readyCheck, false);
+
+		
 		readyCheck.setForeground(Color.RED);
-		
-		
-		if(this.cModel.getMyId().compareTo(client.getId()) != 0){
-			characterClass.setEnabled(false);
-			
-		}
-		else{
-			readyCheck.addActionListener(e -> {
-				
-				System.out.println("Ready button is pressed by: " + client.getName());
-				
-				if(client.isReady()) {
-					client.setReady(false);
-				}
-				else {
-					client.setReady(true);
-				}
-				if (client.isReady()) {
-					readyCheck.setForeground(Color.GREEN);
-					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
-					System.out.println(client.getCharacterClass().name());
-					client.setPlayerNumber(index);
-					System.out.println(client.getPlayerNumber());
-					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-						if(!cModel.isGameInProgress()) {
-							Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
-							try {
-								cModel.getConnection().sendTCP(message);
-								cModel.setReady(true);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-					
-				} else {
-					readyCheck.setForeground(Color.RED);
-					if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
-						if(!cModel.isGameInProgress()) {
-							Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
-							try {
-								cModel.getConnection().sendTCP(message);
-								cModel.setReady(false);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
+		readyCheck.addActionListener(e -> {
+			if (readyCheck.getForeground() == Color.RED) {
+				readyCheck.setForeground(Color.GREEN);
+				client.setReady(true);
+				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+					if(!cModel.isGameInProgress()) {
+						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
+						try {
+							cModel.getConnection().sendTCP(message);
+							cModel.setReady(true);
+						} catch (Exception e1) {
+							e1.printStackTrace();
 						}
 					}
 				}
-				System.out.println(client.isReady());
-			});
-		}
-		
-		if(client.isReady())
-			readyCheck.setForeground(Color.GREEN);
-		else
-			readyCheck.setForeground(Color.RED);		
-		
-	
+			} else {
+				readyCheck.setForeground(Color.RED);
+				client.setReady(false);
+				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
+					if(!cModel.isGameInProgress()) {
+						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
+						try {
+							cModel.getConnection().sendTCP(message);
+							cModel.setReady(false);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			System.out.println(client.isReady());
+		});
 
 		panel.add(Box.createHorizontalGlue());
 		panel.add(playerLabel);
@@ -194,44 +160,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 		panel.add(Box.createHorizontalGlue());
 		UIRes.playersPanel.add(panel);
 
-	}
-	
-	Character.Class getCharacter(int index){
-		switch (index) {
-		case 0:
-			return Class.WIZARD;
-		case 1:
-			return Class.ARCHER;
-		case 2:
-			return Class.WARRIOR;
-		case 3:
-			return Class.MONK;
-		case 4:
-			return Class.WITCH;
-		case 5:
-			return Class.HORSE;
-		default:
-			return Class.WIZARD;
-		}
-	}
-	
-	int getCharacterIndex(Character.Class character){
-		switch (character) {
-		case WIZARD:
-			return 0;
-		case ARCHER:
-			return 1;
-		case WARRIOR:
-			return 2;
-		case MONK:
-			return 3;
-		case WITCH:
-			return 4;
-		case HORSE:
-			return 5;
-		default:
-			return 0;
-		}
 	}
 	
 	void setSession(Session session){
@@ -246,7 +174,7 @@ public class InLobbyMenu extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		updateInLobbyPanel();
 		repaint();
-		revalidate();
+		validate();
 	}
 
 }
