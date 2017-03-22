@@ -15,9 +15,10 @@ public class TopBarTests {
 	public void setUp(){
 		
 		Resources resources = new Resources();
-		Graphics g = new Graphics(resources);
+		Game
 		
 		Character alice = new Character(Character.Class.WIZARD);
+		Character bob = new 
 		
 		
 		
