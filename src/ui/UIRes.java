@@ -43,8 +43,8 @@ public class UIRes {
 	public static final int height = getScreenHeight();
 
 	public static String username = "Player";
-	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
-	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.09));
+	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.11));
+	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.13));
 	public static MenuItems menuItems = new MenuItems();
 	public static String host;
 	public static final int VOL_MAX = 100;
@@ -53,7 +53,7 @@ public class UIRes {
 	public static boolean isPressed;
 	public static ArrayList<String> controlsList = new ArrayList<String>();
 	public static ArrayList<JButton> buttonsList = new ArrayList<JButton>();
-	public static final double buttonRatio = 0.23;
+	public static final double buttonRatio = 0.25;
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
