@@ -65,7 +65,7 @@ public class LayeredPane extends JLayeredPane {
 		view.setBounds(0, 0, x, y);
 
 		splash = new SplashScreen(resources);
-		splash.setBounds(((x - 1200) / 2), ((y - 550) / 2), 1200, 450);
+		splash.setBounds(((x - 1200) / 2), ((y - 600) / 2), 1200, 500);
 
 		
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.width, UIRes.height, ""))));
@@ -90,9 +90,9 @@ public class LayeredPane extends JLayeredPane {
 		panel2.add(Box.createHorizontalStrut(50));
 		panel2.add(map);
 		
-		InGameMenu inGameMenu = new InGameMenu(frame, panel2, 600, 500);
+		InGameMenu inGameMenu = new InGameMenu(frame, panel2, 650, 500);
 		LayeredPane.inGameMenu = inGameMenu;
-		inGameMenu.setBounds(((x - 600) / 2), ((y - 500) / 2), 600, 500);
+		inGameMenu.setBounds(((x - 650) / 2), ((y - 600) / 2), 650, 500);
 		
 		add(panel2, new Integer(5));
 		add(inGameMenu, new Integer(10));
