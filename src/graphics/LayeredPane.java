@@ -8,6 +8,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import resources.Resources;
+import resources.Resources.Mode;
 import ui.InGameMenu;
 
 /**
@@ -63,6 +64,10 @@ public class LayeredPane extends JLayeredPane {
 		add(view, new Integer(15));
 		add(splash, new Integer(20));
 
+		if(resources.mode == Mode.Debug){
+			setLayer(splash, new Integer(5));
+		}
+		
 		setVisible(true);
 
 	}
