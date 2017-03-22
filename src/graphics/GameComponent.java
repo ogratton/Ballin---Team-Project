@@ -132,7 +132,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		}
 
 		if (resources.isFinished()) {
-			resources.setFinished(false);
 			resources.setCountdown(3);
 			LayeredPane.splashShowing = true;
 			end();
