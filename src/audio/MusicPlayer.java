@@ -1,6 +1,7 @@
 package audio;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import resources.FilePaths;
 import resources.Resources;
@@ -33,9 +34,13 @@ public class MusicPlayer extends Thread
 	 * this is where the frame position is stored after a pause
 	 */
 	private int paused_at;
+	
+	private Hashtable<String, AudioFile> trackDict;
 
 	/**
 	 * Initiate the player with a playlist of files
+	 * These files will be all the files it can play in the object's life,
+	 * so choose well
 	 * 
 	 * @param files the 'songs' to play
 	 */
@@ -45,9 +50,13 @@ public class MusicPlayer extends Thread
 		this.resources = resources;
 		
 		musicFiles = new ArrayList<AudioFile>();
+		trackDict = new Hashtable<String, AudioFile>();
+		
 		for (String file : files)
 		{
-			musicFiles.add(new AudioFile(resources, FilePaths.music + file + ".wav", file));
+			AudioFile af = new AudioFile(resources, FilePaths.music + file + ".wav", file);
+			musicFiles.add(af);
+			trackDict.put(file, af);
 		}
 
 		currentSongIndex = 0;
@@ -109,7 +118,15 @@ public class MusicPlayer extends Thread
 		ArrayList<AudioFile> tempMusicFiles = new ArrayList<AudioFile>();
 		for (String file : files)
 		{
-			tempMusicFiles.add(new AudioFile(resources, FilePaths.music + file + ".wav", file));
+			if (trackDict.get(file) != null)
+			{
+				tempMusicFiles.add(trackDict.get(file));
+			}
+			else
+			{
+				System.err.println("Unrecognised track: " + file);
+			}
+			
 		}
 
 		musicFiles = tempMusicFiles;
