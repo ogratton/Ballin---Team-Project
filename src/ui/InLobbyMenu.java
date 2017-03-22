@@ -23,6 +23,7 @@ import com.esotericsoftware.kryonet.Client;
 import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
+import resources.Character;
 import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionDataModel;
@@ -68,8 +69,6 @@ public class InLobbyMenu extends JPanel implements Observer{
 			try {
 				cModel.getConnection().sendTCP(leaveMessage);
 				cModel.setReady(false);
-				//SessionListMenu lobbyList = new SessionListMenu(client, cModel);
-				System.out.println("model changed: " + cModel.hasChanged());
 				updateInLobbyPanel();
 				UIRes.switchPanel(sessionList);
 
@@ -119,12 +118,21 @@ public class InLobbyMenu extends JPanel implements Observer{
 		
 		readyCheck.setForeground(Color.RED);
 		readyCheck.addActionListener(e -> {
-			if (readyCheck.getForeground() == Color.RED) {
-				readyCheck.setForeground(Color.GREEN);
+			if(client.isReady()) {
+				client.setReady(false);
+			}
+			else {
 				client.setReady(true);
+			}
+			if (client.isReady()) {
+				readyCheck.setForeground(Color.GREEN);
+				client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+				System.out.println(client.getCharacterClass().name());
+				client.setPlayerNumber(index);
+				System.out.println(client.getPlayerNumber());
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
-						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null);
+						Message message = new Message(Command.GAME, Note.START, cModel.getMyId(), null, cModel.getSessionId(), null, client);
 						try {
 							cModel.getConnection().sendTCP(message);
 							cModel.setReady(true);
@@ -133,9 +141,9 @@ public class InLobbyMenu extends JPanel implements Observer{
 						}
 					}
 				}
+				
 			} else {
 				readyCheck.setForeground(Color.RED);
-				client.setReady(false);
 				if(cModel.getSession(cModel.getSessionId()).getAllClients().size() > 0) {
 					if(!cModel.isGameInProgress()) {
 						Message message = new Message(Command.GAME, Note.STOP, cModel.getMyId(), null, cModel.getSessionId(), null);
@@ -168,6 +176,44 @@ public class InLobbyMenu extends JPanel implements Observer{
 	
 	Session getSession(){
 		return this.session;
+	}
+	
+	Character.Class getCharacter(int index){
+		switch (index) {
+		case 0:
+			return Character.Class.WIZARD;
+		case 1:
+			return Character.Class.ARCHER;
+		case 2:
+			return Character.Class.WARRIOR;
+		case 3:
+			return Character.Class.MONK;
+		case 4:
+			return Character.Class.WITCH;
+		case 5:
+			return Character.Class.HORSE;
+		default:
+			return Character.Class.WIZARD;
+		}
+	}
+	
+	int getCharacterIndex(Character.Class character){
+		switch (character) {
+		case WIZARD:
+			return 0;
+		case ARCHER:
+			return 1;
+		case WARRIOR:
+			return 2;
+		case MONK:
+			return 3;
+		case WITCH:
+			return 4;
+		case HORSE:
+			return 5;
+		default:
+			return 0;
+		}
 	}
 
 	@Override

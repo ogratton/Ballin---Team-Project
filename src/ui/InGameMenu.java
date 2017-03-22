@@ -32,8 +32,13 @@ public class InGameMenu extends BaseMenu {
 		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
 		panel2.setLayout(box);
 		panel2.setOpaque(false);
-		addResumeToGameButton(panel2, panel);
-		getButtonAndIcon(panel2, getBackToStartMenuButton(frame));
+		JButton backButton = goBack(backToPanel);
+		JButton button = new JButton("Back");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e -> {
+			UIRes.switchPanel(backToPanel);
+		});
+		UIRes.getButtonAndIcon(panel2, backButton)
 		addOptionsButton(panel2);
 		addExitButton(panel2);
 		map.add(panel2, BorderLayout.CENTER);

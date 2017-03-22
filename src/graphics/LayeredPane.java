@@ -56,10 +56,10 @@ public class LayeredPane extends JLayeredPane {
 		splash = new SplashScreen(resources);
 		splash.setBounds(((x - 1200) / 2), ((y - 550) / 2), 1200, 450);
 
-		InGameMenu menu = new InGameMenu();
-		inGameMenu = menu.getInGameMenuPanel(frame, 600, 500);
-		inGameMenu.setBounds(((x - 600) / 2), ((y - 600) / 2), 600, 500);
-		add(inGameMenu, new Integer(10));
+//		InGameMenu menu = new InGameMenu();
+//		inGameMenu = menu.getInGameMenuPanel(frame, 600, 500);
+//		inGameMenu.setBounds(((x - 600) / 2), ((y - 600) / 2), 600, 500);
+//		add(inGameMenu, new Integer(10));
 		add(view, new Integer(15));
 		add(splash, new Integer(20));
 

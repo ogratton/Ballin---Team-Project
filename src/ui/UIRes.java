@@ -68,6 +68,7 @@ public class UIRes {
 	
 	public static JPanel sessionsPanels = new JPanel();
 	public static JPanel playersPanel = new JPanel();
+	public static InLobbyMenu lobby;
 	
 	public static ArrayList<JPanel> sessionPanelsList = new ArrayList<JPanel>();
 	
