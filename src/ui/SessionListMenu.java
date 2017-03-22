@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -233,6 +234,7 @@ public class SessionListMenu extends JPanel implements Observer {
 	void createLobbyWizard() throws IOException {
 		JFrame lobbyFrame = new JFrame();
 		JFrame mapFrame = new JFrame();
+		JFrame tileFrame = new JFrame();
 		JFrame gameModeFrame = new JFrame();
 
 		JLabel lobbyNameLabel = new JLabel("Lobby name: ");
@@ -245,63 +247,75 @@ public class SessionListMenu extends JPanel implements Observer {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if (lobbyPane == JOptionPane.OK_OPTION) {
+			this.lobbyName = lobbyNameInput.getText();
 
-			this.lobbyName = ((JTextField) lobbyInfo[1]).getText();
-			lobbyFrame.dispose();
-
-			JLabel mapLabel = new JLabel("Map: ");
-			UIRes.customiseLabel(mapLabel);
+			JLabel gameModeLabel = new JLabel("Game mode: ");
+			UIRes.customiseLabel(gameModeLabel);
 			
-			JComboBox<ImageIcon> mapChoice = new JComboBox<ImageIcon>();
-			
-			String[] mapNames = null;
-			mapNames = getMapFileNames();
-
-			for (String map : mapNames) {
-				ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.CAVE, map)));
-				Image image = icon.getImage();
-				Image mapIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
-				mapChoice.addItem(new ImageIcon(mapIcon));
+			Choice gameModeChoice = new Choice();
+			ArrayList<String> gameModeList = new ArrayList<String>();
+			gameModeList = mmd.gamemodeNames;
+			for (int i = 0; i < gameModeList.size(); i++) {
+				gameModeChoice.add(gameModeList.get(i));
 			}
 
-			JLabel tileLabel = new JLabel("Tile set: ");
-			UIRes.customiseLabel(tileLabel);
-			Choice tileChoice = new Choice();
-			for (Map.World tile : Map.World.values()) {
-				tileChoice.add(tile.toString());
-			}
+			Object[] gameModeInfo = { gameModeLabel, gameModeChoice };
 
-			Object[] mapInfo = { mapLabel, mapChoice, tileLabel, tileChoice };
-			int mapPane = JOptionPane.showConfirmDialog(mapFrame, mapInfo,
-					"Select the map and tiles: ",
+			int gameModePane = JOptionPane.showConfirmDialog(gameModeFrame, gameModeInfo, "Select the game mode: ",
 					JOptionPane.OK_CANCEL_OPTION);
-			
-			if (mapPane == JOptionPane.OK_OPTION) {
-				this.mapName = mapNames[mapChoice.getSelectedIndex()];
-				this.tileSet = Map.World.values()[tileChoice.getSelectedIndex()];
-				System.out.println(tileSet.toString());
-				System.out.println(mapName);
 
-				JLabel gameModeLabel = new JLabel("Game mode: ");
-				UIRes.customiseLabel(gameModeLabel);
-				Choice gameModeChoice = new Choice();
-				ArrayList<Mode> gameModeList = new ArrayList<Mode>();
-				gameModeList = getGameModes(this.mapName);
-				for (int i = 0; i < gameModeList.size(); i++) {
-					gameModeChoice.add(gameModeList.get(i).toString());
+			if (gameModePane == JOptionPane.OK_OPTION) {
+				this.gameMode = mmd.correspondingMode(gameModeChoice.getSelectedItem());
+				JLabel mapLabel = new JLabel("Map: ");
+				UIRes.customiseLabel(mapLabel);
+
+				JComboBox<ImageIcon> mapChoice = new JComboBox<ImageIcon>();
+
+				HashSet<String> mapNames = MapMetaData.getTable().get(this.gameMode);
+
+				for (String map : mapNames) {
+					ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.CAVE, map)));
+					Image image = icon.getImage();
+					Image mapIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
+					mapChoice.addItem(new ImageIcon(mapIcon));
 				}
 
-				Object[] gameModeInfo = { gameModeLabel, gameModeChoice };
+				Object[] mapInfo = { mapLabel, mapChoice };
 
-				int gameModePane = JOptionPane.showConfirmDialog(gameModeFrame, gameModeInfo,
-						"Select the game mode: ", JOptionPane.OK_CANCEL_OPTION);
+				int mapPane = JOptionPane.showConfirmDialog(mapFrame, mapInfo, "Select the map: ",
+						JOptionPane.OK_CANCEL_OPTION);
 
-				if (gameModePane == JOptionPane.OK_OPTION)
-					this.gameMode = mmd.correspondingMode(gameModeChoice.getSelectedItem());
-				else
-					gameModeFrame.dispose();
+				if (mapPane == JOptionPane.OK_OPTION) {
+					this.mapName = mapChoice.getSelectedItem().toString();
+					JLabel tileLabel = new JLabel("Tile set: ");
+					UIRes.customiseLabel(tileLabel);
+					
+					Choice tileChoice = new Choice();
+					for (Map.World tile : Map.World.values()) {
+						ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, tile, this.mapName)));
+						Image image = icon.getImage();
+						Image tileIcon = image.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
+						mapChoice.addItem(new ImageIcon(tileIcon));
+					}
+
+					Object[] tileInfo = { tileLabel, tileChoice };
+
+					int tilePane = JOptionPane.showConfirmDialog(tileFrame, tileInfo, "Select the tiles: ",
+							JOptionPane.OK_CANCEL_OPTION);
+
+					if (tilePane == JOptionPane.OK_OPTION) {
+						this.tileSet = Map.World.values()[tileChoice.getSelectedIndex()];
+
+
+					} else {
+						tileFrame.dispose();
+					}
+
+				} else
+					mapFrame.dispose();
 			} else
-				mapFrame.dispose();
+				gameModeFrame.dispose();
+
 		}
 
 		else
@@ -332,7 +346,7 @@ public class SessionListMenu extends JPanel implements Observer {
 	}
 
 	ArrayList<Mode> getGameModes(String map) throws IOException {
-		map = FilePaths.maps+ map + ".csv";
+		map = FilePaths.maps + map + ".csv";
 		mmd.readMetaData(map);
 		ArrayList<Mode> gameModes = mmd.getCompatibleModes();
 		return gameModes;
