@@ -20,7 +20,7 @@ import resources.Map;
 
 public class InGameMenu extends BaseMenu {
 
-	public JPanel getInGameMenuPanel(JFrame frame, int width, int height){
+	public JPanel getInGameMenuPanel(JFrame frame, int width, int height) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(width, height, ""))));
@@ -38,16 +38,19 @@ public class InGameMenu extends BaseMenu {
 		panel.add(map);
 		return panel;
 	}
-	
+
 	static JButton getBackToStartMenuButton(JFrame frame) {
 		JButton button = new JButton("Back to Main Menu");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
-			UIRes.cModel.getConnection().close();
+			try {
+				UIRes.cModel.getConnection().close();
+			} catch (NullPointerException e1) {
+			}
 			frame.dispose();
 			UIRes.switchPanel(UIRes.startPanel);
 		});
 		return button;
 	}
-	
+
 }
