@@ -135,8 +135,15 @@ public class PhysicsTests {
 
 	@Test
 	public void testDead() {
-		
-		fail("Not yet implemented");
+		Character c1 = new Character(10, -1, 50, 25, Heading.STILL, Class.HORSE, 0, "Test");
+		assertFalse("Character shouldn't be dead yet.",physics.dead(c1));
+		c1.setX(-50);
+		assertTrue("Character should be dead now.", physics.dead(c1));
+		for(int i = 0; i < 1000; i++) {
+			c1.setX((Math.random() * 200) - 100);
+			if(verbose) System.out.println("Character x: " + c1.getX());
+			assertTrue("Random Dead Test", physics.dead(c1) == (c1.getX() < -50));
+		}
 	}
 
 	@Test

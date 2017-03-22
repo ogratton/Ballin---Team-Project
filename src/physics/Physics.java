@@ -309,7 +309,7 @@ public class Physics extends Thread implements ActionListener {
 	}
 
 	/**
-	 * Checks whether or not a character is dead.
+	 * Checks whether or not a character who is falling is dead.
 	 * 
 	 * @param c
 	 *            The character to check.
