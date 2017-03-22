@@ -54,6 +54,7 @@ public class NetworkingDemo {
 		Resources resources = new Resources();
 		resources.setMap(map);
 		new MapCosts(resources);
+		Resources.silent = true;
 		
 		// Add the resources object to the resources HashMap.
 		resourcesMap.put(session.getId(), resources);
@@ -66,8 +67,8 @@ public class NetworkingDemo {
 			
 			String id = clients.get(i).getId();
 			newPlayer = new Character(clients.get(i).getCharacterClass(), clients.get(i).getPlayerNumber(), clients.get(i).getName());
-			newPlayer.setX(coords.x);
-			newPlayer.setY(coords.y);
+//			newPlayer.setX(coords.x);
+//			newPlayer.setY(coords.y);
 			newPlayer.setId(id);
 			newPlayer.addObserver(new ClientUpdater(session.getId(), resourcesMap, sessions, connections));
 			resources.addPlayerToList(newPlayer);
@@ -76,12 +77,12 @@ public class NetworkingDemo {
 		// Put the specified number of AIs on the number randomly.
 		int size = resources.getPlayerList().size();
 		for(int i = 0; i < 8 - size; i++){
-			Point coords = resources.getMap().randPointOnMap();
-			Point tile = resources.getMap().tileCoords(coords.x, coords.y);
-			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
+//			Point coords = resources.getMap().randPointOnMap();
+//			Point tile = resources.getMap().tileCoords(coords.x, coords.y);
+//			coords = resources.getMap().tileCoordsToMapCoords(tile.x, tile.y);
 			Character character = new Character(Character.Class.getRandomClass(), 0, "CPU: " + i);
-			character.setX(coords.x);
-			character.setY(coords.y);
+//			character.setX(coords.x);
+//			character.setY(coords.y);
 			resources.addPlayerToList(character);
 			FightingAI ai = new FightingAI(resources, character);
 			character.setAI(ai);

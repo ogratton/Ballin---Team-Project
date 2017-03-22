@@ -91,7 +91,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			}
 		}
 		
-		if (!Resources.silent)
+		if (!Resources.silent && !isServer)
 		{
 			if (resources.getMap().getWorldType() == Map.World.SPACE) {
 				resources.getMusicPlayer().changePlaylist("ultrastorm30");

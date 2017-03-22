@@ -257,9 +257,10 @@ public class Physics extends Thread implements ActionListener {
 				c.setDead(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
-				if (!Resources.silent)
+				if (!Resources.silent) {
 					System.out.println("gain: " +resources.getSFXGain());
 					c.getRandDeathSound().play(resources.getSFXGain());
+				}
 				// Calculate score changes
 				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
