@@ -20,7 +20,7 @@ import javax.swing.border.LineBorder;
 
 import com.esotericsoftware.kryonet.Client;
 
-import graphics.sprites.SheetDeets;
+import graphics.sprites.SheetDetails;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
 import resources.Character;
@@ -114,7 +114,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 		characterClass.setSize(new Dimension(50,50));
 		for (int i = 0; i < UIRes.numberIcons; i++) {
 			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
-					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
+					SheetDetails.CHARACTERS_SIZEX, SheetDetails.CHARACTERS_SIZEY);
 			characterClass.addItem(new ImageIcon(icon));
 		}
 		

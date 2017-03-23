@@ -109,25 +109,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="13" language="java" name="graphics.sprites.SheetDetails" project="f1" 
-    file="/f1/src/graphics/sprites/SheetDetails.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2128" y="560"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <enumeration id="14" language="java" name="graphics.sprites.SheetDetails.Misc" project="f1" 
-    file="/f1/src/graphics/sprites/SheetDetails.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2476" y="561"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <class id="15" language="java" name="graphics.sprites.Sprite" project="f1" file="/f1/src/graphics/sprites/Sprite.java" 
+  <class id="13" language="java" name="graphics.sprites.Sprite" project="f1" file="/f1/src/graphics/sprites/Sprite.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1651" y="100"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -136,7 +118,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="graphics.GameComponent" project="f1" file="/f1/src/graphics/GameComponent.java" 
+  <class id="14" language="java" name="graphics.GameComponent" project="f1" file="/f1/src/graphics/GameComponent.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="726" y="856"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -145,7 +127,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="17" language="java" name="graphics.GameComponent.TAdapter" project="f1" 
+  <class id="15" language="java" name="graphics.GameComponent.TAdapter" project="f1" 
     file="/f1/src/graphics/GameComponent.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="682" y="1212"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -154,7 +136,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="18" language="java" name="resources.Resources" project="f1" file="/f1/src/resources/Resources.java" 
+  <class id="16" language="java" name="resources.Resources" project="f1" file="/f1/src/resources/Resources.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="84" width="104" x="318" y="1020"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -163,134 +145,106 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <nesting id="19">    
-    <end type="SOURCE" refId="15"/>    
+  <nesting id="17">    
+    <end type="SOURCE" refId="13"/>    
     <end type="TARGET" refId="12"/>  
   </nesting>  
-  <dependency id="20">    
-    <end type="SOURCE" refId="13"/>    
+  <nesting id="18">    
+    <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="15"/>  
-  </dependency>  
-  <nesting id="21">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="17"/>  
   </nesting>  
-  <dependency id="22">    
+  <dependency id="19">    
     <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="13"/>  
   </dependency>  
-  <dependency id="23">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="15"/>  
-  </dependency>  
-  <association id="24">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="25" name="victory"/>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
+  <association id="20">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="21" name="comp"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="14" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="27">    
+  <association id="23">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="28" name="comp"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
+      <attribute id="24" name="resources"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="16" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="30">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="31" name="resources"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="33">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="13"/>  
-  </dependency>  
-  <association id="34">    
+  <association id="26">    
     <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="35" name="view"/>      
-      <multiplicity id="36" minimum="0" maximum="1"/>    
+      <attribute id="27" name="view"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="37">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="38" name="layers"/>      
-      <multiplicity id="39" minimum="0" maximum="1"/>    
+  <association id="29">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="30" name="layers"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="40">    
+  <association id="32">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="41" name="sprites"/>      
-      <multiplicity id="42" minimum="0" maximum="1"/>    
+      <attribute id="33" name="sprites"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="43">    
+  <association id="35">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="44" name="players"/>      
-      <multiplicity id="45" minimum="0" maximum="1"/>    
+      <attribute id="36" name="players"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="46">    
+  <association id="38">    
     <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="47" name="splash"/>      
-      <multiplicity id="48" minimum="0" maximum="1"/>    
+      <attribute id="39" name="splash"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="49">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <association id="50">    
+  <association id="41">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="51" name="stats"/>      
-      <multiplicity id="52" minimum="0" maximum="1"/>    
+      <attribute id="42" name="stats"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="53">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="54" name="bar"/>      
-      <multiplicity id="55" minimum="0" maximum="1"/>    
+  <association id="44">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="45" name="bar"/>      
+      <multiplicity id="46" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="56">    
+  <association id="47">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="57" name="boxes"/>      
-      <multiplicity id="58" minimum="0" maximum="2147483647"/>    
+      <attribute id="48" name="boxes"/>      
+      <multiplicity id="49" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="59">    
+  <association id="50">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="60" name="text"/>      
-      <multiplicity id="61" minimum="0" maximum="1"/>    
+      <attribute id="51" name="text"/>      
+      <multiplicity id="52" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="62">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

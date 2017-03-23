@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import graphics.sprites.SheetDeets;
+import graphics.sprites.SheetDetails;
 import resources.Character;
 import resources.Powerup.Power;
 import resources.Resources;
@@ -51,7 +51,7 @@ public class SpriteHalf extends JPanel {
 		this.resources = resources;
 		
 		sprite = character.getFirstFrame();
-		arrow = SheetDeets.getArrowFromPlayer(character.getPlayerNumber());
+		arrow = SheetDetails.getArrowFromPlayer(character.getPlayerNumber());
 
 		arrowLabel = new JLabel(new ImageIcon(arrow));
 		//arrowLabel.setMaximumSize(new Dimension(50, 50));
@@ -74,7 +74,7 @@ public class SpriteHalf extends JPanel {
 	 */
 	
 	public void addPowerup(){
-		powerupLabel.setIcon(new ImageIcon(SheetDeets.getPowerUpSpriteFromType(character.getLastPowerup())));
+		powerupLabel.setIcon(new ImageIcon(SheetDetails.getPowerUpSpriteFromType(character.getLastPowerup())));
 		
 	}
 	

@@ -38,7 +38,7 @@ public class VictoryScreen extends JPanel {
 	 */
 
 	public VictoryScreen(Resources resources) {
-
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		Resources.Mode mode = resources.mode;
