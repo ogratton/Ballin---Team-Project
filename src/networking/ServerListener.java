@@ -371,7 +371,7 @@ public class ServerListener extends Listener {
 				    		if(characters.get(i).getId().equals(key)) {
 				    			characters.get(i).setLives(0);
 				    			characters.get(i).setDead(true);
-				    			characters.remove(i);
+				    			//characters.remove(i);
 				    			Message removePlayer = new Message(Command.GAME, Note.REMOVE_PLAYER, null, key, sessionId, sessionId);
 				    			
 				    			List<ClientInformation> temp1Clients = session.getAllClients();

@@ -255,15 +255,15 @@ public class ClientListener extends Listener {
    				cModel.setGameInProgress(false);
    				//cModel.setCharacters(new ConcurrentHashMap<String, Character>());
    			case REMOVE_PLAYER:
-   				String removeClientId = message.getReceiverId();
-   				ArrayList<Character> characters = cModel.getResources().getPlayerList();
-   				for(int i=0; i<characters.size(); i++) {
-   					if(characters.get(i).equals(removeClientId)) {
-   		   				System.out.println("Player Deleted");
-   						characters.remove(i);
-   						break;
-   					}
-   				}
+//   				String removeClientId = message.getReceiverId();
+//   				ArrayList<Character> characters = cModel.getResources().getPlayerList();
+//   				for(int i=0; i<characters.size(); i++) {
+//   					if(characters.get(i).equals(removeClientId)) {
+//   		   				System.out.println("Player Deleted");
+//   						characters.get(i).setDead(true);
+//   						break;
+//   					}
+//   				}
    				break;
    			default:
    				break;
