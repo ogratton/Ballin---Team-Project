@@ -214,7 +214,7 @@ public class MapCosts
 	 * @param x
 	 * @return
 	 */
-	private double costEquation(int x)
+	protected double costEquation(int x)
 	{
 		return 100 * Math.pow(Math.E, -x); // XXX (arbitrary choice!) 100 * Math.pow(Math.E, -x) + 1
 	}
