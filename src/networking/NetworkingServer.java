@@ -39,7 +39,7 @@ public class NetworkingServer {
 	
 	public static void main(String[] args) throws Exception {
 		
-		//Log.DEBUG();
+		Log.DEBUG();
 		
 		// Initialise all the different Hash Maps which store the information about each different session and game.
 		// Key is the Client ID.

@@ -271,11 +271,19 @@ public class ServerListener extends Listener {
 								for(int i=0; i<tempClients.size(); i++) {
 				  					c = connections.get(tempClients.get(i).getId());
 				  					c.sendTCP(countdown);
-				  					Thread.sleep(1000);
+				  				}
+			  					Thread.sleep(1000);
+								for(int i=0; i<tempClients.size(); i++) {
+				  					c = connections.get(tempClients.get(i).getId());
 				  					c.sendTCP(countdown);
-				  					Thread.sleep(1000);
+				  					
+				  				}
+								Thread.sleep(1000);
+								for(int i=0; i<tempClients.size(); i++) {
+				  					c = connections.get(tempClients.get(i).getId());
 				  					c.sendTCP(countdown);
 				  				}
+								
 							} catch (InterruptedException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
