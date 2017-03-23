@@ -122,7 +122,8 @@ public class PhysicsTests {
 	@Test
 	public void testUpdateCollidable_Circle() {
 		Collidable_Circle c;
-		physics.update(c);
+		//physics.update(c);
+		fail("do stuff!");
 	}
 
 	@Test
