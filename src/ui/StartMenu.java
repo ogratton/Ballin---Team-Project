@@ -191,15 +191,14 @@ public class StartMenu extends JPanel {
 			if (mapName != null && gameMode != null && tileSet != null) {
 				UIRes.resources.refresh();
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
-			}
-			
-			if (!Resources.silent) {
-				// XXX pause music
-//				musicPlayer.changePlaylist("thirty");
-//				musicPlayer.resumeMusic();
-				musicPlayer.pauseMusic();
 				
-				
+				if (!Resources.silent) {
+					// XXX pause music
+//					musicPlayer.changePlaylist("thirty");
+//					musicPlayer.resumeMusic();
+					musicHandler.setResources(UIRes.resources);
+					musicPlayer.pauseMusic();	
+				}
 			}
 
 		});

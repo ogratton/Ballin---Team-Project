@@ -129,6 +129,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 			}
 		}
 		resources.setGameOver(true);
+		resources.setSong("grandma");
 	}
 
 	/**

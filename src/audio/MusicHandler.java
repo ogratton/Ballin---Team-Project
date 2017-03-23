@@ -31,7 +31,7 @@ public class MusicHandler extends Thread
 			
 			try 
 			{
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e)
 			{
 			}

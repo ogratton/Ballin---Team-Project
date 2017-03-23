@@ -129,6 +129,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			}
 		}
 		resources.setGameOver(true);
+		resources.setSong("grandma");
 	}
 
 	/**

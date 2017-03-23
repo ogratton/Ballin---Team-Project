@@ -116,8 +116,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		if (!doneWithThisGame) {
 			
-			System.out.println(resources.getTimer());
-			
 			layers.repaint();
 			bar.update();
 

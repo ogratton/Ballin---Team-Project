@@ -50,6 +50,7 @@ public class OptionsMenu extends JPanel{
 		UIRes.getButtonAndIcon(this, getResetControlsButton());
 		add(Box.createVerticalStrut(3));
 		UIRes.getButtonAndIcon(this, new BackButton(this.backToPanel, "Back"));
+		this.musicPlayer = musicPlayer;
 	}
 	
 	JSlider getMusicSlider() {

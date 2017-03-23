@@ -68,7 +68,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		resources.setTimer(7);
+		resources.setTimer(30);
 		// Start game
 		Physics p = new Physics(resources, false);
 
