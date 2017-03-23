@@ -22,7 +22,7 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-
+	//XXX Variables
 	public static boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
@@ -80,7 +80,7 @@ public class Resources {
 
 	// destination list for pathfinding
 	private LinkedList<Point> destList = new LinkedList<Point>();
-	// XXX For debugging AI:
+	// For debugging AI:
 	private Point projectedPos;
 	// The next position that the AI will aim for:
 	private Point AINextDest;
@@ -119,6 +119,9 @@ public class Resources {
 		bad_tiles.add(Tile.WALL);
 	}
 
+	/**
+	 * Sets the values of all the resources to their defaults.
+	 */
 	public void refresh() {
 		powerupList = new ArrayList<Powerup>();
 		globalTimer = 0;
@@ -128,61 +131,29 @@ public class Resources {
 		LayeredPane.victoryShowing = false;
 		LayeredPane.splashShowing = true;
 	}
-	/**
-	 * @return The current id.
-	 */
-	public String getId() {
-		return id;
-	}
 
+	//XXX General functions
 	/**
-	 * @param id
-	 *            The new id.
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return The current request id.
-	 */
-	public int getRequestId() {
-		return this.requestId;
-	}
-
-	/**
-	 * @param id
-	 *            The new request id.
-	 */
-	public void setRequestId(int id) {
-		this.requestId = id;
-	}
-
-	/**
-	 * Increment the request id by 1.
-	 */
-	public void incRequestId() {
-		this.requestId++;
-	}
-
-	/**
-	 * Increments and returns the returns id.
+	 * Add a character to the player list
 	 * 
-	 * @return The next request id.
+	 * @param character
+	 *            The character to add to the player list.
 	 */
-	public int getNextRequestId() {
-		this.incRequestId();
-		return this.requestId;
+	public void addPlayerToList(Character character) {
+		playerList.add(character);
 	}
 
-	public List<networking.CharacterInfo> getRequests() {
-		return requests;
+	/**
+	 * Set a player list
+	 * 
+	 * @param playerList
+	 *            the player list
+	 */
+	public void setPlayerList(ArrayList<Character> playerList) {
+		this.playerList = playerList;
 	}
 
-	public void setRequests(List<networking.CharacterInfo> list) {
-		requests = list;
-	}
-
+	//XXX Controls functions
 	/**
 	 * Get the default up keybinding
 	 * 
@@ -439,26 +410,9 @@ public class Resources {
 		return playerList;
 	}
 
-	/**
-	 * Add a character to the player list
-	 * 
-	 * @param character
-	 *            The character to add to the player list.
-	 */
-	public void addPlayerToList(Character character) {
-		playerList.add(character);
-	}
-
-	/**
-	 * Set a player list
-	 * 
-	 * @param playerList
-	 *            the player list
-	 */
-	public void setPlayerList(ArrayList<Character> playerList) {
-		this.playerList = playerList;
-	}
-
+	
+	
+	//XXX Map/playing field functions
 	/**
 	 * Get the map
 	 * 
@@ -608,9 +562,9 @@ public class Resources {
 		}
 	}
 
-
+	//XXX AI Functions!
 	/**
-	 * XXX Debug for drawing predicted position of AI
+	 * Debug for drawing predicted position of AI
 	 * 
 	 * @return
 	 */
@@ -619,7 +573,7 @@ public class Resources {
 	}
 
 	/**
-	 * XXX Debug for drawing predicted position of AI
+	 * Debug for drawing predicted position of AI
 	 * 
 	 * @param pos
 	 */
@@ -663,7 +617,63 @@ public class Resources {
 	public void setNormal(Line n) {
 		this.normal = n;
 	}
+	
+	// XXX NETWORKING FUNCTIONS:
+	/**
+	 * @return The current id.
+	 */
+	public String getId() {
+		return id;
+	}
 
+	/**
+	 * @param id
+	 *            The new id.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return The current request id.
+	 */
+	public int getRequestId() {
+		return this.requestId;
+	}
+
+	/**
+	 * @param id
+	 *            The new request id.
+	 */
+	public void setRequestId(int id) {
+		this.requestId = id;
+	}
+
+	/**
+	 * Increment the request id by 1.
+	 */
+	public void incRequestId() {
+		this.requestId++;
+	}
+
+	/**
+	 * Increments and returns the returns id.
+	 * 
+	 * @return The next request id.
+	 */
+	public int getNextRequestId() {
+		this.incRequestId();
+		return this.requestId;
+	}
+
+	public List<networking.CharacterInfo> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(List<networking.CharacterInfo> list) {
+		requests = list;
+	}
+	
 	public LinkedList<NetworkMove> getClientMoves() {
 		return clientMoves;
 	}
