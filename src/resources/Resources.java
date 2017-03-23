@@ -128,8 +128,8 @@ public class Resources {
 		setFinished(false);
 		setCountdown(3);
 		setFinished(false);
-		LayeredPane.victoryShowing = false;
-		LayeredPane.splashShowing = true;
+		//LayeredPane.victoryShowing = false;
+		//LayeredPane.splashShowing = true;
 	}
 
 	//XXX General functions

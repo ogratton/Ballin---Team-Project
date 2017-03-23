@@ -3,7 +3,7 @@ package resources;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
 
-import graphics.sprites.SheetDeets;
+import graphics.sprites.SheetDetails;
 // Deprecated?
 public class Puck extends Observable implements Collidable_Circle {
 	int radius = 4;
@@ -12,7 +12,7 @@ public class Puck extends Observable implements Collidable_Circle {
 	double restitution = 10;
 	boolean falling,dead = false;
 	private CollidableType type = CollidableType.Puck;
-	private BufferedImage sprite = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.PUCK);
+	private BufferedImage sprite = SheetDetails.getMiscSpritesFromType(SheetDetails.Misc.PUCK);
 	private Character lastCollidedWith = null;
 	private int lastCollidedTime = -1;
 	private boolean visible;

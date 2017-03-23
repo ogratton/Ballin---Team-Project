@@ -25,7 +25,7 @@ import javax.swing.JSlider;
 
 import audio.AudioFile;
 import audio.MusicPlayer;
-import graphics.sprites.SheetDeets;
+import graphics.sprites.SheetDetails;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
 import networking.ConnectionData;
@@ -236,14 +236,14 @@ public class UIRes {
 	}
 
 	static JLabel getSpriteLabel(int x) {
-		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
+		BufferedImage icon = Sprite.getSprite(SheetDetails.CHARACTERS, 0, x,
 				50, 50);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
 	
 	static ImageIcon getSpriteIcon(int x) {
-		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
+		BufferedImage icon = Sprite.getSprite(SheetDetails.CHARACTERS, 0, x,
 				50, 50);
 		ImageIcon spriteIcon = new ImageIcon(icon);
 		return spriteIcon;

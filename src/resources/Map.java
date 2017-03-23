@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import graphics.sprites.SheetDeets;
+import graphics.sprites.SheetDetails;
 import graphics.sprites.Sprite;
 
 public class Map {
@@ -100,7 +100,7 @@ public class Map {
 		setFriction();
 
 		tiles = new Tile[height][width];
-		tileSet = SheetDeets.getTileSetFromWorld(world);
+		tileSet = SheetDetails.getTileSetFromWorld(world);
 
 		for (int i = 0; i < height; i++) {
 
@@ -152,7 +152,7 @@ public class Map {
 		this.world = worldType;
 		setFriction();
 
-		tileSet = SheetDeets.getTileSetFromWorld(world);
+		tileSet = SheetDetails.getTileSetFromWorld(world);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class Map {
 	 */
 
 	public int getTileSize() {
-		return SheetDeets.TILES_SIZEX;
+		return SheetDetails.TILES_SIZEX;
 	}
 
 	/**
@@ -335,7 +335,7 @@ public class Map {
 			b = 3;
 		}
 
-		return Sprite.getSprite(tileSet, a, b, SheetDeets.TILES_SIZEX, SheetDeets.TILES_SIZEY);
+		return Sprite.getSprite(tileSet, a, b, SheetDetails.TILES_SIZEX, SheetDetails.TILES_SIZEY);
 
 	}
 
@@ -359,7 +359,7 @@ public class Map {
 	public void setWorldType(World world) {
 		this.world = world;
 		setFriction();
-		tileSet = SheetDeets.getTileSetFromWorld(world);
+		tileSet = SheetDetails.getTileSetFromWorld(world);
 	}
 
 	/**
@@ -370,8 +370,8 @@ public class Map {
 	 * @return
 	 */
 	public Tile tileAt(double x, double y) {
-		int row = (int) (x / SheetDeets.TILES_SIZEX);
-		int column = (int) (y / SheetDeets.TILES_SIZEY);
+		int row = (int) (x / SheetDetails.TILES_SIZEX);
+		int column = (int) (y / SheetDetails.TILES_SIZEY);
 		// may crash if tiles not initialised.
 		// check if column,row is in the tile array:
 		return tileAt(column, row);
@@ -400,8 +400,8 @@ public class Map {
 	 * @return A point with x as column and y as row
 	 */
 	public Point tileCoords(double x, double y) {
-		int row = (int) (x / SheetDeets.TILES_SIZEX);
-		int column = (int) (y / SheetDeets.TILES_SIZEY);
+		int row = (int) (x / SheetDetails.TILES_SIZEX);
+		int column = (int) (y / SheetDetails.TILES_SIZEY);
 		// may crash if tiles not initialised.
 		// check if column,row is in the tile array:
 		if (column >= 0 && row >= 0 && column < tiles.length && row < tiles[0].length) {
@@ -420,7 +420,7 @@ public class Map {
 	 */
 	public Point tileCoordsOnMap(double x, double y) {
 		Point p = tileCoords(x,y);
-		return new Point((int)p.getX() * SheetDeets.TILES_SIZEX, (int)p.getY() * SheetDeets.TILES_SIZEY);
+		return new Point((int)p.getX() * SheetDetails.TILES_SIZEX, (int)p.getY() * SheetDetails.TILES_SIZEY);
 	}
 	
 	/**
@@ -432,8 +432,8 @@ public class Map {
 	 */
 	public Point tileCoordsToMapCoords(int row, int col)
 	{
-		int x = (int) (col * SheetDeets.TILES_SIZEX + 0.5 * SheetDeets.TILES_SIZEX);
-		int y = (int) (row * SheetDeets.TILES_SIZEY + 0.5 * SheetDeets.TILES_SIZEX);
+		int x = (int) (col * SheetDetails.TILES_SIZEX + 0.5 * SheetDetails.TILES_SIZEX);
+		int y = (int) (row * SheetDetails.TILES_SIZEY + 0.5 * SheetDetails.TILES_SIZEX);
 		return new Point(x,y);
 		
 	}

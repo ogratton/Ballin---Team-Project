@@ -67,8 +67,6 @@ public class GameComponent extends JFrame implements ActionListener {
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths, this);
 
-		LayeredPane.victoryShowing = false;
-
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
 				model.addObserver(layers.getView());
@@ -126,12 +124,13 @@ public class GameComponent extends JFrame implements ActionListener {
 		bar.update();
 
 		if (resources.gamemode.isGameOver()) {
-			layers.victory();
+			layers.setVictory(true);
 		}
 
 		if (resources.isFinished()) {
+			layers.setVictory(false);
 			resources.setCountdown(3);
-			LayeredPane.splashShowing = true;
+			layers.setSplash(true);
 			end();
 		}
 
@@ -211,7 +210,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	public void end() {
 		System.out.println("end");
 		resources.setFinished(false);
-		LayeredPane.victoryShowing = false;
+		layers.setVictory(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.dispose();
 	}
@@ -283,13 +282,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			
-			
 			int key = e.getKeyCode();
-
-			
-			if (LayeredPane.splashShowing) {
-				
-			}
 
 			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(true);

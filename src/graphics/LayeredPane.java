@@ -33,13 +33,14 @@ public class LayeredPane extends JLayeredPane {
 
 	public GameView view;
 	public static boolean menuShowing = false;
-	public static boolean splashShowing = true;
-	public static boolean victoryShowing = false;
+	public boolean splashShowing = true;
+	public boolean victoryShowing = false;
 	public static JPanel inGameMenu;
 	public static JPanel optionsPanel;
 	public static JPanel panel2;
 	public static SplashScreen splash;
 	private Resources resources;
+	private VictoryScreen victory;
 	private int x;
 	private int y;
 
@@ -130,16 +131,25 @@ public class LayeredPane extends JLayeredPane {
 		}
 	}
 
-	/**
-	 * Display the victory splash screen
-	 */
 
-	public void victory() {
-		VictoryScreen victory = new VictoryScreen(resources);
-		victory.setBounds(((x - 1100) / 2), ((y - 500) / 2), 1100, 400);
-		add(victory, new Integer(25));
-		victoryShowing = true;
-
+	public void setVictory(boolean vis){
+		if(vis){
+			 victory = new VictoryScreen(resources);
+				victory.setBounds(((x - 1100) / 2), ((y - 500) / 2), 1100, 400);
+				add(victory, new Integer(25));
+				victoryShowing = true;
+		} else {
+			setLayer(victory, new Integer(6));
+		}
 	}
-
+	
+	public void setSplash(boolean vis){
+		if(vis){
+			setLayer(splash, new Integer(25));
+			splashShowing = true;
+		} else {
+			setLayer(splash, new Integer(5));
+		}
+	}
+	
 }
