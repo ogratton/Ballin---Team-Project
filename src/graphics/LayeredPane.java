@@ -5,9 +5,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -39,6 +37,7 @@ public class LayeredPane extends JLayeredPane {
 	public static JPanel optionsPanel;
 	public static JPanel panel2;
 	public static SplashScreen splash;
+	private VictoryScreen victory;
 	private Resources resources;
 	private int x;
 	private int y;
@@ -71,17 +70,12 @@ public class LayeredPane extends JLayeredPane {
 		
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.width, UIRes.height, ""))));
 		map.setLayout(new BorderLayout());
-		panel2 = new JPanel();
-		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
-		
 		optionsPanel = UIRes.optionsPanel;
-		
-		panel2.setBounds(0, 0, UIRes.width, UIRes.height);
-		
-		panel2.setOpaque(false);
-		
 		map.add(optionsPanel, BorderLayout.CENTER);
 		
+		panel2 = new JPanel();
+		panel2.setBounds(0, 0, UIRes.width, UIRes.height);
+		panel2.setOpaque(false);
 		panel2.add(Box.createHorizontalStrut(50));
 		panel2.add(map);
 		
@@ -135,7 +129,7 @@ public class LayeredPane extends JLayeredPane {
 	 */
 
 	public void victory() {
-		VictoryScreen victory = new VictoryScreen(resources);
+		victory = new VictoryScreen(resources);
 		victory.setBounds(((x - 1100) / 2), ((y - 500) / 2), 1100, 400);
 		add(victory, new Integer(25));
 		victoryShowing = true;
