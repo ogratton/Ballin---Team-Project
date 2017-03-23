@@ -109,10 +109,8 @@ public class ClientUpdater extends JPanel implements Observer {
 				
 				GameData data = new GameData(charactersList);
 				ArrayList<Powerup> powerUps = resourcesMap.get(sessionId).getPowerupList();
-				
 				data.setPowerUps(serializePowerUps(powerUps));
 				data.setTimer(resourcesMap.get(sessionId).getTimer());
-				System.out.println(resourcesMap.get(sessionId).getTimer());
 				Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
 				List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 				ClientInformation client;
