@@ -6,7 +6,7 @@ import resources.Character;
 import resources.Map;
 import resources.Powerup;
 
-public class SheetDeets {
+public class SheetDetails {
 
 	// CHARACTER SPRITE SHEET
 

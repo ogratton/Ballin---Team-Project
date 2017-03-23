@@ -41,7 +41,7 @@ public abstract class AITemplate extends Thread {
 	protected static final double FUZZINESS = 20;
 	// private final long reaction_time = 5; // can be increased once
 	// ray-casting is implemented
-	protected static final long TICK = 40; // loop every <tick>ms
+	protected static final long TICK = 100; // loop every <tick>ms
 	protected static long PRESCIENCE = TICK * 1; // how many ms ahead we look
 													// for our predicted point
 
@@ -73,6 +73,9 @@ public abstract class AITemplate extends Thread {
 	protected int destI = 0; // destination index
 	protected boolean debug;
 
+	protected long lastTick;
+	protected long thisTick;
+	
 	/*
 	 * Notes:
 	 * 
@@ -91,6 +94,9 @@ public abstract class AITemplate extends Thread {
 	public AITemplate(Resources resources, Character character) {
 		this.character = character;
 		this.resources = resources;
+		
+		thisTick = System.nanoTime();
+		lastTick = System.nanoTime();
 
 		// the tiles we don't want to step on
 		bad_tiles = resources.getBadTiles();
@@ -123,7 +129,12 @@ public abstract class AITemplate extends Thread {
 			Thread.sleep(300);
 
 			while (!character.isDead()) {
-
+				
+				thisTick = System.nanoTime();
+				long diff = thisTick - lastTick;
+				System.out.println("FPS: " + (int)(1.0 / ((double)diff / 1000000000.0)));
+				lastTick = thisTick;
+				
 				// common behaviour goes first
 				commonBehaviour();
 
