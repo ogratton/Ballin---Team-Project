@@ -32,7 +32,6 @@ public class OptionsMenu extends JPanel{
 		JLabel musicLabel = UIRes.getLabel("Music Volume");
 		JLabel soundLabel = UIRes.getLabel("Sound Volume");
 		JLabel controlsLabel = UIRes.getLabel("Controls");
-		UIRes.getButtonAndIcon(this, new BackButton(this.backToPanel, "Back"));
 		add(Box.createVerticalStrut(10));
 		add(musicLabel);
 		add(Box.createVerticalStrut(3));
@@ -49,6 +48,8 @@ public class OptionsMenu extends JPanel{
 		add(getControlsPanel());
 		add(Box.createVerticalStrut(10));
 		UIRes.getButtonAndIcon(this, getResetControlsButton());
+		add(Box.createVerticalStrut(3));
+		UIRes.getButtonAndIcon(this, new BackButton(this.backToPanel, "Back"));
 	}
 	
 	JSlider getMusicSlider() {

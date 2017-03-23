@@ -37,6 +37,7 @@ public class LayeredPane extends JLayeredPane {
 	public static boolean victoryShowing = false;
 	public static JPanel inGameMenu;
 	public static JPanel optionsPanel;
+	public static JPanel panel2;
 	public static SplashScreen splash;
 	private Resources resources;
 	private int x;
@@ -70,19 +71,13 @@ public class LayeredPane extends JLayeredPane {
 		
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.width, UIRes.height, ""))));
 		map.setLayout(new BorderLayout());
-		JPanel panel2 = new JPanel();
+		panel2 = new JPanel();
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		
 		optionsPanel = UIRes.optionsPanel;
-		JButton backToInGameButton = new JButton("Back");
-		UIRes.customiseButton(backToInGameButton, true);
-		UIRes.getButtonAndIcon(optionsPanel, backToInGameButton);
-		backToInGameButton.addActionListener(e -> {
-			GameComponent.layers.setLayer(panel2, new Integer(5));
-		});
+		
 		panel2.setBounds(0, 0, UIRes.width, UIRes.height);
 		
-		optionsPanel.remove(0);
 		panel2.setOpaque(false);
 		
 		map.add(optionsPanel, BorderLayout.CENTER);

@@ -39,6 +39,7 @@ public class InGameMenu extends JPanel {
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		BackButton backToStartMenuButton = new BackButton(UIRes.startPanel, "Back to Main Menu");
 		backToStartMenuButton.addActionListener(e -> {
+			UIRes.optionsPanel.setBackToPanel(UIRes.startPanel);
 			frame.dispose();
 		});
 		map.setLayout(new BorderLayout());
@@ -60,6 +61,7 @@ public class InGameMenu extends JPanel {
 			GameComponent.layers.setLayer(panel, new Integer(10));
 			LayeredPane.menuShowing = !LayeredPane.menuShowing;
 		});
+		
 		UIRes.customiseButton(button, true);
 		return button;
 	}
@@ -79,6 +81,10 @@ public class InGameMenu extends JPanel {
 				UIRes.fullReset();
 				System.out.println("Disconnecting from server");
 			}
+			
+			UIRes.optionsPanel.remove(UIRes.optionsPanel.getComponentCount() - 1);
+			UIRes.getButtonAndIcon(UIRes.optionsPanel, new BackButton(UIRes.startPanel, "Back"));
+			
 			frame.dispose();
 		});
 		
@@ -90,7 +96,20 @@ public class InGameMenu extends JPanel {
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
 			GameComponent.layers.setLayer(panel, new Integer(40));
+			
+			UIRes.optionsPanel.remove(UIRes.optionsPanel.getComponentCount() - 1);
+			UIRes.getButtonAndIcon(UIRes.optionsPanel, getBackToInGameMenuButton());
 		});
+		return button;
+	}
+	
+	JButton getBackToInGameMenuButton(){
+		JButton button = new JButton("Back");
+		UIRes.customiseButton(button, true);
+		button.addActionListener(e -> {
+			GameComponent.layers.setLayer(LayeredPane.panel2, new Integer(5));
+		});
+		
 		return button;
 	}
 
