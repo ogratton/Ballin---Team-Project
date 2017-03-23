@@ -11,7 +11,6 @@ import ai.pathfinding.Line;
 import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
-import graphics.LayeredPane;
 import resources.Map.Tile;
 
 //import graphics.old.CharacterModel;
@@ -62,6 +61,8 @@ public class Resources {
 
 	// puck used in hockey game mode, using character class to make things easy
 	private Puck puck;
+	
+	@Deprecated
 	// are we playing a hockey game?
 	private Team[] teams;
 
@@ -171,7 +172,7 @@ public class Resources {
 		this.puck = puck;
 	}
 
-	// Deprecated?
+	@Deprecated
 	/**
 	 * Gets the teams. (for team modes) (unused)
 	 * @return
@@ -180,6 +181,7 @@ public class Resources {
 		return teams;
 	}
 
+	@Deprecated
 	/**
 	 * Sets the teams. (for team modes) (unused)
 	 * @return
