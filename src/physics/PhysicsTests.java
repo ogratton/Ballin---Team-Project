@@ -9,12 +9,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import graphics.sprites.SheetDetails;
+import physics.Physics.CND;
 import resources.Map;
+import resources.Map.Tile;
 import resources.Resources;
 import resources.Resources.Mode;
 import resources.Character;
 import resources.Character.Class;
 import resources.Character.Heading;
+import resources.Collidable;
+import resources.Collidable_Circle;
 
 public class PhysicsTests {
 	private Physics physics;
@@ -45,7 +50,7 @@ public class PhysicsTests {
 	}
 
 	@Test
-	public void testActionPerformed1() {
+	public void testActionPerformed() {
 		//Test physics.actionPerformed().
 		//Test single character movement:
 		// starts character in the middle of the map, then moves them in each direction for twenty steps.
@@ -110,27 +115,14 @@ public class PhysicsTests {
 	}
 	
 	@Test
-	public void testActionPerformed2() {
-		//Test physics.actionPerformed().
-		//Test two character collision:
-		fail("Not yet implemented");
-	}
-	
-	@Test
-	public void testActionPerformed3() {
-		//Test physics.actionPerformed().
-		//Test single character wall collision:
-		
-		fail("Not yet implemented");
-	}
-	@Test
 	public void testUpdateCharacter() {
 		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testUpdateCollidable_Circle() {
-		fail("Not yet implemented");
+		Collidable_Circle c;
+		physics.update(c);
 	}
 
 	@Test
@@ -140,7 +132,7 @@ public class PhysicsTests {
 		c1.setX(-50);
 		assertTrue("Character should be dead now.", physics.dead(c1));
 		for(int i = 0; i < 1000; i++) {
-			c1.setX((Math.random() * 200) - 100);
+			c1.setX((Math.random() * 150) - 100);
 			if(verbose) System.out.println("Character x: " + c1.getX());
 			assertTrue("Random Dead Test", physics.dead(c1) == (c1.getX() < -50));
 		}
@@ -148,7 +140,38 @@ public class PhysicsTests {
 
 	@Test
 	public void testCalculateWallCollisions() {
-		fail("Not yet implemented");
+		Character c = new Character(10, 55, 12, 25, Heading.NW, Class.WARRIOR, 0, "Test");
+		r.getMap().getTiles()[0][0] = Tile.WALL; //top-left (NW) corner tile.
+		//No collision
+		double dx = c.getDx(), dy = c.getDy();
+		double x = c.getX(), y = c.getY();
+		physics.calculateWallCollisions(c);
+		assertTrue("Impossible wall collision Occurred!", Double.compare(c.getDx(), dx) == 0);
+		assertTrue("Impossible wall collision Occurred!", Double.compare(c.getDy(), dy) == 0);
+		
+		//Horizontal collision.
+		dx = -10;
+		dy = 0;
+		c.setDx(dx);
+		c.setDy(dy);
+		physics.move(c);
+		physics.calculateWallCollisions(c);
+		//should have collided. Dx should be in opposite direction to before.
+		assertTrue("Incorrect wall collision horizontal!", c.getDx() > 0);
+		assertTrue("Incorrect wall collision horizontal!", Double.compare(c.getDy(), dy) == 0);
+		
+		//Vertical collision
+		c.setX(12);
+		c.setY(55);
+		dx = 0;
+		dy = -10;
+		c.setDx(dx);
+		c.setDy(dy);
+		physics.move(c);
+		physics.calculateWallCollisions(c);
+		assertTrue("Incorrect wall collision vertical!", Double.compare(c.getDx(), dx) == 0);
+		assertTrue("Incorrect wall collision vertical!", c.getDy() > 0);
+
 	}
 
 	@Test
@@ -163,39 +186,39 @@ public class PhysicsTests {
 		c.resetDashTimer();
 		c.resetBlockTimer();
 		c.setStamina(c.getMaxStamina());
-		assertFalse(physics.special(c));
+		assertFalse("No special should be active",physics.special(c));
 		
 		c.setDashing(true);
-		assertTrue(physics.special(c));
+		assertTrue("Dashing isn't handled correctly1",physics.special(c));
 		
 		c.setBlocking(true);
 		c.setDashing(true);
-		assertFalse(physics.special(c));
+		assertFalse("Special problem",physics.special(c));
 		
 		c.setDashing(false);
-		assertTrue(physics.special(c));
+		assertTrue("Blocking isn't handled correctly1",physics.special(c));
 		
 		c.setBlocking(false);
 		c.setDashing(true);
 		c.setStamina(0);
-		assertFalse(physics.special(c));
+		assertFalse("Dashing isn't handled correctly2",physics.special(c));
 		
 		c.setBlocking(true);
 		c.setDashing(false);
 		c.resetDashTimer();
 		c.resetBlockTimer();
-		assertFalse(physics.special(c));
+		assertFalse("Blocking isn't handled correctly2",physics.special(c));
 		
 		c.incrementDashTimer();
 		c.setBlocking(false);
 		c.setDashing(true);
-		assertTrue(physics.special(c));
+		assertTrue("Dashing isn't handled correctly3",physics.special(c));
 		
 		c.resetDashTimer();
 		c.incrementBlockTimer();
 		c.setBlocking(true);
 		c.setDashing(false);
-		assertTrue(physics.special(c));
+		assertTrue("Blocking isn't handled correctly3",physics.special(c));
 	}
 
 	@Test
@@ -217,13 +240,132 @@ public class PhysicsTests {
 	}
 
 	@Test
-	public void testCollideCollidableCollidableCND() {
-		fail("Not yet implemented");
+	public void testCollideCollidableCollidable() {
+		//Horizontal Collision
+		double dx1 = 5, dx2 = -5, dy1 = 0, dy2 = 0;
+		Collidable_Circle c1 = new Character(10, 30, 50, 25, Heading.E, Class.HORSE, 0, "C1");
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		Collidable_Circle c2 = new Character(10, 60, 50, 25, Heading.W, Class.WARRIOR, 1, "C2");
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		CND cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+		assertTrue((dx1/c1.getDx()) <= 0); // changed signs
+		assertTrue((dx2/c2.getDx()) <= 0); // changed signs
+		
+		//Vertical Collision
+		dx1 = 0;
+		dy1 = 5;
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		c1.setX(50);
+		c1.setY(30);
+		dx2 = 0;
+		dy2 = -1;
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		c2.setX(50);
+		c2.setY(60);
+
+		cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+		assertTrue((dy1/c1.getDy()) <= 0); // changed signs
+		assertTrue((dy2/c2.getDy()) <= 0); // changed signs
+		
+		//Diagonal Collision
+		dx1 = 5;
+		dy1 = 5;
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		c1.setX(30);
+		c1.setY(30);
+		dx2 = -1;
+		dy2 = -1;
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		c2.setX(60);
+		c2.setY(60);
+
+		cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+
+		assertTrue((dx1/c1.getDx()) <= 0); // changed signs
+		assertTrue((dy1/c1.getDy()) <= 0); // changed signs
+		assertTrue((dx2/c2.getDx()) <= 0); // changed signs
+		assertTrue((dy2/c2.getDy()) <= 0); // changed signs
+		
+		// At no point is Collide called without a collision, so no need to test it.
 	}
 
 	@Test
-	public void testCollideCharacterCharacterCND() {
-		fail("Not yet implemented");
+	public void testCollideCharacterCharacter() {
+		//Horizontal Collision
+		double dx1 = 5, dx2 = -5, dy1 = 0, dy2 = 0;
+		Character c1 = new Character(10, 30, 50, 25, Heading.E, Class.HORSE, 0, "C1");
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		Character c2 = new Character(10, 60, 50, 25, Heading.W, Class.WARRIOR, 1, "C2");
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		CND cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+		assertTrue((dx1/c1.getDx()) <= 0); // changed signs
+		assertTrue((dx2/c2.getDx()) <= 0); // changed signs	
+		assertTrue(c1.getLastCollidedWith().equals(c2));
+		assertTrue(c2.getLastCollidedWith().equals(c1));
+		
+		//Vertical Collision
+		c1.setLastCollidedWith(null, 0);
+		c2.setLastCollidedWith(null, 0);
+		dx1 = 0;
+		dy1 = 5;
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		c1.setX(50);
+		c1.setY(30);
+		dx2 = 0;
+		dy2 = -1;
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		c2.setX(50);
+		c2.setY(60);
+
+		cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+		assertTrue((dy1/c1.getDy()) <= 0); // changed signs
+		assertTrue((dy2/c2.getDy()) <= 0); // changed signs
+		assertTrue(c1.getLastCollidedWith().equals(c2));
+		assertTrue(c2.getLastCollidedWith().equals(c1));
+		
+		//Diagonal Collision
+		c1.setLastCollidedWith(null, 0);
+		c2.setLastCollidedWith(null, 0);
+		dx1 = 5;
+		dy1 = 5;
+		c1.setDx(dx1);
+		c1.setDy(dy1);
+		c1.setX(30);
+		c1.setY(30);
+		dx2 = -1;
+		dy2 = -1;
+		c2.setDx(dx2);
+		c2.setDy(dy2);
+		c2.setX(60);
+		c2.setY(60);
+
+		cnd = physics.detectCollision(c1, c2);
+		physics.collide(c1, c2, cnd);
+
+		assertTrue((dx1/c1.getDx()) <= 0); // changed signs
+		assertTrue((dy1/c1.getDy()) <= 0); // changed signs
+		assertTrue((dx2/c2.getDx()) <= 0); // changed signs
+		assertTrue((dy2/c2.getDy()) <= 0); // changed signs
+		assertTrue(c1.getLastCollidedWith().equals(c2));
+		assertTrue(c2.getLastCollidedWith().equals(c1));
+		
+		// At no point is Collide called without a collision, so no need to test it.
+		
 	}
 
 	@Test

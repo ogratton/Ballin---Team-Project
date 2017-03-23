@@ -15,7 +15,7 @@ import graphics.sprites.Sprite;
 import resources.Powerup.Power;
 
 /**
- * @author Luke
+ * @author Alex & Luke
  *
  */
 public class Character extends Observable implements Collidable_Circle {
@@ -208,18 +208,19 @@ public class Character extends Observable implements Collidable_Circle {
 		this(default_mass, 0, 0, SheetDetails.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo,
-			String name) {
-		this(false, false, false, false, false, false, false, // control flags
-				mass, x, // x
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo, String name) {
+		this(mass,
+				x, // x
 				y, // y
-				0.0, // speed_x
-				0.0, // speed_y
-				default_max_speed_x * (1 / mass), default_max_speed_y * (1 / mass), default_acc, // acceleration
-																									// (TODO:
-																									// calculate
-																									// this)
-				default_restitution, radius, direction, classType, playerNo, name);
+				default_max_speed_x * (1 / mass), 
+				default_max_speed_y * (1 / mass), 
+				default_acc, // acceleration (TODO: calculate this)
+				default_restitution, 
+				radius, 
+				direction, 
+				classType, 
+				playerNo, 
+				name);
 
 		// XXX set temp String for single player
 		// overwritten by networking
@@ -227,15 +228,10 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	// master constructor. Any other constructors should eventually call this.
-	private Character(boolean up, boolean right, boolean left, boolean down, boolean jump, boolean punch, boolean block,
-			double mass, double x, double y, double speed_x, double speed_y, double max_speed_x, double max_speed_y,
+	private Character(double mass, double x, double y, double max_speed_x, double max_speed_y,
 			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo,
 			String name) {
 		// new Character();
-		this.up = up;
-		this.right = right;
-		this.left = left;
-		this.down = down;
 
 		this.mass = mass;
 		if (mass == 0)
@@ -245,8 +241,6 @@ public class Character extends Observable implements Collidable_Circle {
 
 		this.x = x;
 		this.y = y;
-		this.dx = speed_x;
-		this.dy = speed_y;
 		this.maxdx = max_speed_x;
 		this.maxdy = max_speed_y;
 		this.acc = acceleration;
