@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import resources.Map;
+import resources.Map.Tile;
 import resources.Resources;
 import resources.Resources.Mode;
 import resources.Character;
@@ -148,7 +149,37 @@ public class PhysicsTests {
 
 	@Test
 	public void testCalculateWallCollisions() {
-		fail("Not yet implemented");
+		Character c1 = new Character(10,55,55,25,Heading.NE, Class.WARRIOR, 0, "Player0");
+		//top-left corner tile
+		r.getMap().getTiles()[0][0] = Tile.WALL;
+		//move character into wall:
+		double dx = c1.getDx();
+		double dy = c1.getDy();
+		//not touching
+		physics.calculateWallCollisions(c1);
+		// should be no changes:
+		assertTrue(Double.compare(c1.getDx(), dx) == 0);
+		assertTrue(Double.compare(c1.getDy(), dy) == 0);
+		
+		dx = -5;
+		dy = -5;
+		c1.setDx(dx);
+		c1.setDy(dy);
+		// move character:
+		physics.move(c1);
+		
+		// should be touching
+		physics.calculateWallCollisions(c1);
+		// should have bounced off:
+		assertTrue(Double.compare(c1.getDx(), dx) == 0);
+		assertTrue(Double.compare(c1.getDy(), dy) == 0);
+		
+		
+		//left wall
+		for(int i = 0; i < r.getMap().getTiles()[0].length; i++)
+			r.getMap().getTiles()[0][i] = Tile.WALL;
+		
+		//wall is box; 
 	}
 
 	@Test
@@ -217,12 +248,12 @@ public class PhysicsTests {
 	}
 
 	@Test
-	public void testCollideCollidableCollidableCND() {
+	public void testCollideCollidableCollidable() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testCollideCharacterCharacterCND() {
+	public void testCollideCharacterCharacter() {
 		fail("Not yet implemented");
 	}
 

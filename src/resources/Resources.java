@@ -23,7 +23,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 
-	public static boolean silent = false; // so alex can run the game :)
+	public static boolean silent = true; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
@@ -81,15 +81,16 @@ public class Resources {
 	// destination list for pathfinding
 	private LinkedList<Point> destList = new LinkedList<Point>();
 
-	private Color cpuColour = new Color(110, 110, 110);
-	private Color p1Colour = new Color(238, 31, 52);
-	private Color p2Colour = new Color(2, 23, 255);
-	private Color p3Colour = new Color(3, 209, 38);
-	private Color p4Colour = new Color(255, 217, 2);
-	private Color p5Colour = new Color(3, 255, 234);
-	private Color p6Colour = new Color(226, 10, 229);
-	private Color p7Colour = new Color(245, 122, 37);
-	private Color p8Colour = new Color(98, 31, 187);
+	//Colour of the various characters.
+	private final Color cpuColour = new Color(110, 110, 110);
+	private final Color p1Colour = new Color(238, 31, 52);
+	private final Color p2Colour = new Color(2, 23, 255);
+	private final Color p3Colour = new Color(3, 209, 38);
+	private final Color p4Colour = new Color(255, 217, 2);
+	private final Color p5Colour = new Color(3, 255, 234);
+	private final Color p6Colour = new Color(226, 10, 229);
+	private final Color p7Colour = new Color(245, 122, 37);
+	private final Color p8Colour = new Color(98, 31, 187);
 
 	private int requestId = 0;
 	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
