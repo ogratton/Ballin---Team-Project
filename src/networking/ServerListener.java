@@ -321,31 +321,34 @@ public class ServerListener extends Listener {
 			  			session = sessions.get(message.getCurrentSessionId());
 			  			//System.out.println("X: " + resourcesMap.get(session.getId()).getPlayerList().get(0).getX());
 					  
+			  			if(session.isGameInProgress()) {
 			  			// Reads the updated data.
-			  			data = (GameData)message.getObject();
-			  			Resources res = resourcesMap.get(session.getId());
-			  			CharacterInfo info = data.getInfo();
-			  			for(int i=0; i<res.getPlayerList().size(); i++) {
-			  				resources.Character ch = res.getPlayerList().get(i);
-			  				
-			  				// Only update the player that was changed.
-			  				if(info.getId().equals(ch.getId())) {
-			  					//c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
-			  					ch.setUp(info.isUp());
-			  					ch.setDown(info.isDown());
-			  					ch.setRight(info.isRight());
-			  					ch.setLeft(info.isLeft());
-			  					if(info.isDashing()) {
-			  						ch.setDashing(info.isDashing());
-			  					}
-//			  					if(info.sendDashing) {
-//			  						c.setDashing(info.isDashing());
-//			  					}
-//			  					if(info.sendBlocking) {
-//			  						c.setBlocking(info.isBlocking());
-//			  					}
-			  				}
+				  			data = (GameData)message.getObject();
+				  			Resources res = resourcesMap.get(session.getId());
+				  			CharacterInfo info = data.getInfo();
+				  			for(int i=0; i<res.getPlayerList().size(); i++) {
+				  				resources.Character ch = res.getPlayerList().get(i);
+				  				
+				  				// Only update the player that was changed.
+				  				if(info.getId().equals(ch.getId())) {
+				  					//c.setControls(info.isUp(), info.isDown(), info.isLeft(), info.isRight(), info.isDashing(), info.isBlocking());
+				  					ch.setUp(info.isUp());
+				  					ch.setDown(info.isDown());
+				  					ch.setRight(info.isRight());
+				  					ch.setLeft(info.isLeft());
+				  					if(info.isDashing()) {
+				  						ch.setDashing(info.isDashing());
+				  					}
+//				  					if(info.sendDashing) {
+//				  						c.setDashing(info.isDashing());
+//				  					}
+//				  					if(info.sendBlocking) {
+//				  						c.setBlocking(info.isBlocking());
+//				  					}
+				  				}
+				  			}
 			  			}
+			  			
 					  
 			  			break;
 			  		default:

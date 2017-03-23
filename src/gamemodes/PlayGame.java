@@ -37,8 +37,11 @@ public class PlayGame {
 	 */
 	public static void start(Resources resources, String mapName, Mode modeType, Map.World style) {
 		resources.mode = modeType;
-		
-		resources.getMusicPlayer().pauseMusic();
+
+		try {
+			resources.getMusicPlayer().pauseMusic();
+		} catch (NullPointerException e) {
+		}
 
 		resources.clearPlayerList();
 

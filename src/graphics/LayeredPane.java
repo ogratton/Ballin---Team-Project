@@ -7,7 +7,6 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -38,7 +37,7 @@ public class LayeredPane extends JLayeredPane {
 	public static JPanel inGameMenu;
 	public static JPanel optionsPanel;
 	public static JPanel panel2;
-	public static SplashScreen splash;
+	public SplashScreen splash;
 	private Resources resources;
 	private VictoryScreen victory;
 	private int x;
@@ -56,7 +55,7 @@ public class LayeredPane extends JLayeredPane {
 	public LayeredPane(Resources resources, boolean debugPaths, JFrame frame) {
 
 		super();
-
+		
 		this.resources = resources;
 
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -69,37 +68,37 @@ public class LayeredPane extends JLayeredPane {
 		splash = new SplashScreen(resources);
 		splash.setBounds(((x - 1200) / 2), ((y - 600) / 2), 1200, 500);
 
-		
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.width, UIRes.height, ""))));
 		map.setLayout(new BorderLayout());
 		panel2 = new JPanel();
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
-		
+
 		optionsPanel = UIRes.optionsPanel;
-		
+
 		panel2.setBounds(0, 0, UIRes.width, UIRes.height);
-		
+
 		panel2.setOpaque(false);
-		
+
 		map.add(optionsPanel, BorderLayout.CENTER);
-		
+
 		panel2.add(Box.createHorizontalStrut(50));
 		panel2.add(map);
-		
+
 		InGameMenu inGameMenu = new InGameMenu(frame, panel2, 650, 500);
 		LayeredPane.inGameMenu = inGameMenu;
 		inGameMenu.setBounds(((x - 650) / 2), ((y - 600) / 2), 650, 500);
-		
+
+		victory = new VictoryScreen(resources);
+
 		add(panel2, new Integer(5));
 		add(inGameMenu, new Integer(10));
 		add(view, new Integer(15));
 		add(splash, new Integer(20));
+		add(victory, new Integer(2));
 
-		if(resources.mode == Mode.Debug){
+		if (resources.mode == Mode.Debug) {
 			setLayer(splash, new Integer(5));
 		}
-		
-		setVisible(true);
 
 	}
 
@@ -131,25 +130,31 @@ public class LayeredPane extends JLayeredPane {
 		}
 	}
 
-
-	public void setVictory(boolean vis){
-		if(vis){
-			 victory = new VictoryScreen(resources);
-				victory.setBounds(((x - 1100) / 2), ((y - 500) / 2), 1100, 400);
-				add(victory, new Integer(25));
-				victoryShowing = true;
+	public void setVictory(boolean vis) {
+		if (vis) {
+			victory = new VictoryScreen(resources);
+			victory.setBounds(((x - 1100) / 2), ((y - 500) / 2), 1100, 400);
+			add(victory, new Integer(25));
+			victoryShowing = true;
 		} else {
 			setLayer(victory, new Integer(6));
+			victoryShowing = false;
+			victory.setVisible(false);
 		}
 	}
-	
-	public void setSplash(boolean vis){
-		if(vis){
+
+	public void setSplash(boolean vis) {
+		if (vis) {
 			setLayer(splash, new Integer(25));
 			splashShowing = true;
 		} else {
 			setLayer(splash, new Integer(5));
+			splashShowing = false;
 		}
 	}
 	
+	public boolean isVictoryShowing(){
+		return this.victoryShowing;
+	}
+
 }
