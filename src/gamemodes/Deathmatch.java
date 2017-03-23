@@ -8,6 +8,7 @@ import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
+import resources.Map.World;
 import resources.Powerup;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -99,8 +100,15 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		p.start();
 		
-		// TODO change to be specific to tile type
-		resources.setSong("thirty");
+		World style = resources.getMap().getWorldType();
+		switch (style)
+		{
+			case SPACE:
+				resources.setSong("ultrastorm30");
+				break;
+			default:
+				resources.setSong("thirty");
+		}
 
 		// Graphics g = new Graphics(resources, null, false);
 		// g.start();

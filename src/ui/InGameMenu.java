@@ -41,6 +41,7 @@ public class InGameMenu extends JPanel {
 		backToStartMenuButton.addActionListener(e -> {
 			UIRes.optionsPanel.setBackToPanel(UIRes.startPanel);
 			frame.dispose();
+			UIRes.resources.setSong("grandma");
 		});
 		map.setLayout(new BorderLayout());
 		panel2.setBorder(new CompoundBorder(new LineBorder(Color.BLACK, 5), new EmptyBorder(50, 50, 50, 50)));
