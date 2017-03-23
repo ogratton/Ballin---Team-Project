@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ai.pathfinding.Line;
-import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
@@ -22,7 +21,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 	//XXX Variables
-	public static boolean silent = true; // so alex can run the game :)
+	public static boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
@@ -68,8 +67,6 @@ public class Resources {
 
 	// map
 	private Map map;
-
-	private MusicPlayer musicPlayer;
 
 	// client ID
 	private String id;
@@ -727,22 +724,6 @@ public class Resources {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @return the music player object
-	 */
-	public MusicPlayer getMusicPlayer() {
-		return musicPlayer;
-	}
-
-	/**
-	 * set the music player object
-	 * 
-	 * @param mp
-	 */
-	public void setMusicPlayer(MusicPlayer mp) {
-		this.musicPlayer = mp;
 	}
 	
 	public void clearPlayerList(){

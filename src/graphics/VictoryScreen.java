@@ -160,10 +160,6 @@ public class VictoryScreen extends JPanel {
 		UIRes.getButtonAndIcon(this, exit);
 		exit.addActionListener(e -> {
 			resources.setFinished(true);
-			if (!Resources.silent && !resources.getMusicPlayer().nowPlaying().equals("grandma")) {
-				resources.getMusicPlayer().changePlaylist("grandma");
-				resources.getMusicPlayer().resumeMusic();
-			}
 
 			try {
 				Message refresh = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), "", "", "");

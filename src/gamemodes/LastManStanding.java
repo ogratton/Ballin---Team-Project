@@ -100,16 +100,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		}
 
 		p.start();
-		
-		if (!Resources.silent)
-		{
-			if (resources.getMap().getWorldType() == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm");
-			} else {
-				resources.getMusicPlayer().changePlaylist("frog");
-			}
-			resources.getMusicPlayer().resumeMusic();
-		}
 
 		while (!isGameOver()) {
 			try {

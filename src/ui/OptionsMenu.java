@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.Checkbox;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
@@ -12,21 +11,22 @@ import java.util.Iterator;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import audio.MusicPlayer;
 import resources.Resources;
 
 @SuppressWarnings("serial")
 public class OptionsMenu extends JPanel{
 	
 	private JPanel backToPanel = UIRes.startPanel;
+	private MusicPlayer musicPlayer;
 
-	public OptionsMenu(JPanel backToPanel){
+	public OptionsMenu(JPanel backToPanel, MusicPlayer musicPlayer){
 		this.backToPanel = backToPanel;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel musicLabel = UIRes.getLabel("Music Volume");
@@ -59,9 +59,9 @@ public class OptionsMenu extends JPanel{
 			musicSlider.addChangeListener(e -> {
 				int volume = musicSlider.getValue();
 				if (volume == 0)
-					UIRes.resources.getMusicPlayer().mute();
+					musicPlayer.mute();
 				else
-					UIRes.resources.getMusicPlayer().setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
+					musicPlayer.setGain((float) ((UIRes.VOL_MAX - volume) * (-0.33)));
 			});
 		}
 

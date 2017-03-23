@@ -56,6 +56,8 @@ public class UIRes {
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
+	public static MusicPlayer musicPlayer;
+	
 	public String lobbyName;
 	public String gameModeName;
 	public String mapName;
@@ -95,8 +97,7 @@ public class UIRes {
 	
 	public static JPanel mainPanel = new JPanel();
 	public static StartMenu startPanel = new StartMenu();
-	public static OptionsMenu optionsPanel = new OptionsMenu(startPanel);
-	
+	public static OptionsMenu optionsPanel = new OptionsMenu(startPanel, musicPlayer);
 	
 	public static int getScreenWidth()
 	{
@@ -108,7 +109,7 @@ public class UIRes {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 	
-	static JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
+	public static JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
 	{
 		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
@@ -282,14 +283,6 @@ public class UIRes {
 		//mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-
-		if (!Resources.silent)
-		{
-			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
-			musicPlayer.changePlaylist("grandma");
-			resources.setMusicPlayer(musicPlayer);
-			musicPlayer.start();
-		}
 
 	}
 

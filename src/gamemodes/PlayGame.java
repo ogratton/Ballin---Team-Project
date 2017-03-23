@@ -3,7 +3,6 @@ package gamemodes;
 import ai.AITemplate;
 import ai.FightingAI;
 import ai.HotPotatoAI;
-import audio.MusicPlayer;
 import resources.Character;
 import resources.Map;
 import resources.MapCosts;
@@ -23,8 +22,6 @@ public class PlayGame {
 
 		Resources resources = new Resources();
 
-		resources.setMusicPlayer(new MusicPlayer(resources, "grandma"));
-
 		start(resources, "asteroid", Mode.Deathmatch, Map.World.CAVE);
 
 	}
@@ -37,11 +34,6 @@ public class PlayGame {
 	 */
 	public static void start(Resources resources, String mapName, Mode modeType, Map.World style) {
 		resources.mode = modeType;
-
-		try {
-			resources.getMusicPlayer().pauseMusic();
-		} catch (NullPointerException e) {
-		}
 
 		resources.clearPlayerList();
 

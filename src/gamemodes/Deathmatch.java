@@ -95,15 +95,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			}
 		}
 
-		if (!Resources.silent && !isServer) {
-			if (resources.getMap().getWorldType() == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm30");
-			} else {
-				resources.getMusicPlayer().changePlaylist("thirty");
-			}
-			resources.getMusicPlayer().resumeMusic();
-		}
-
 		p.start();
 
 		// Graphics g = new Graphics(resources, null, false);
@@ -133,11 +124,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
-		// TODO pause/change music too
-		if (!Resources.silent && !isServer) {
-			resources.getMusicPlayer().changePlaylist(victoryMusic);
-			resources.getMusicPlayer().resumeMusic();
-		}
 
 		System.out.println("WE HAVE A WINNER");
 		getWinners();

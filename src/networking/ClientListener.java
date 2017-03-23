@@ -129,7 +129,6 @@ public class ClientListener extends Listener {
    				
    				resources = new Resources();
    				cModel.setResources(resources);
-   				resources.setMusicPlayer(UIRes.resources.getMusicPlayer());
    				resources.setUp(UIRes.resources.getUp());
    				resources.setDown(UIRes.resources.getDown());
    				resources.setRight(UIRes.resources.getRight());

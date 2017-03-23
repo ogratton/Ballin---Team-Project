@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import audio.MusicPlayer;
 import gamemodes.PlayGame;
 import graphics.sprites.Sprite;
 import networking.NetworkingClient;
@@ -30,9 +31,11 @@ import resources.Resources.Mode;
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel {
 
-	Mode gameMode = null;
-	String mapName = null;
-	Map.World tileSet = null;
+	private Mode gameMode = null;
+	private String mapName = null;
+	private Map.World tileSet = null;
+	
+	private MusicPlayer musicPlayer;
 	
 	public StartMenu() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -49,6 +52,16 @@ public class StartMenu extends JPanel {
 		UIRes.getButtonAndIcon(this, usernameButton);
 		UIRes.getButtonAndIcon(this, new OptionsButton());
 		UIRes.getButtonAndIcon(this, new ExitButton());
+		
+		if (!Resources.silent)
+		{
+			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
+			musicPlayer.changePlaylist("grandma");
+//			resources.setMusicPlayer(musicPlayer);
+			musicPlayer.start();
+		}
+		
+		UIRes.musicPlayer = musicPlayer;
 
 	}
 
@@ -175,11 +188,11 @@ public class StartMenu extends JPanel {
 			}
 			
 			if (!Resources.silent) {
-				// button sound effect
-				UIRes.audioPlayer.play();
-				// change the song
-				// resources.getMusicPlayer().changePlaylist("paris30");
-				// resources.getMusicPlayer().resumeMusic();
+				// XXX (maybe change the song)
+				musicPlayer.changePlaylist("thirty");
+				musicPlayer.resumeMusic();
+				
+				
 			}
 
 		});
