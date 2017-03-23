@@ -80,6 +80,14 @@ public class Resources {
 
 	// destination list for pathfinding
 	private LinkedList<Point> destList = new LinkedList<Point>();
+	// XXX For debugging AI:
+	private Point projectedPos;
+	// The next position that the AI will aim for:
+	private Point AINextDest;
+	// Normal to AINextDext:
+	private Line normal;
+	
+
 
 	//Colour of the various characters.
 	private final Color cpuColour = new Color(110, 110, 110);
@@ -601,8 +609,6 @@ public class Resources {
 		}
 	}
 
-	// XXX Debug
-	private Point projectedPos;
 
 	/**
 	 * XXX Debug for drawing predicted position of AI
@@ -622,7 +628,6 @@ public class Resources {
 		projectedPos = pos;
 	}
 
-	private Point AINextDest;
 
 	/**
 	 * DEBUG: Get the point which the AI is trying to get to
@@ -641,8 +646,6 @@ public class Resources {
 	public void setAINextDest(Point nd) {
 		AINextDest = nd;
 	}
-
-	private Line normal;
 
 	/**
 	 * DEBUG: Get the normal to the next AI destination
