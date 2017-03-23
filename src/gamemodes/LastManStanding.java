@@ -86,13 +86,13 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(2);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {

@@ -13,6 +13,7 @@ import audio.AudioFile;
 import graphics.sprites.SheetDetails;
 import graphics.sprites.Sprite;
 import resources.Powerup.Power;
+import ui.UIRes;
 
 /**
  * @author Alex & Luke
@@ -285,11 +286,11 @@ public class Character extends Observable implements Collidable_Circle {
 
 		if (!Resources.silent) {
 			deathSounds = new AudioFile[3];
-			deathSounds[0] = new AudioFile(FilePaths.sfx + "death1.wav", "Death1");
-			deathSounds[1] = new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
-			deathSounds[2] = new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
+			deathSounds[0] = UIRes.deathSound1;
+			deathSounds[1] = UIRes.deathSound2;
+			deathSounds[2] = UIRes.deathSound3;
 
-			playerOutSound = new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
+			playerOutSound = UIRes.playerOut;
 		}
 	}
 

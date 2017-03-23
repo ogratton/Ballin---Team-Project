@@ -93,7 +93,12 @@ public class UIRes {
 	
 	public static int numberIcons = Character.Class.values().length;
 	
-	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
+	// we need to make the audio statically because we can only make like 16 LineListeners before the sound card cries or something
+	public static AudioFile dingSound = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
+	public static AudioFile deathSound1 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death1.wav", "Death1");
+	public static AudioFile deathSound2 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
+	public static AudioFile deathSound3 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
+	public static AudioFile playerOut = Resources.silent ? null: new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
 	
 	public static JPanel mainPanel = new JPanel();
 	public static StartMenu startPanel = new StartMenu();
