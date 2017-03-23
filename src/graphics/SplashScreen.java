@@ -82,7 +82,7 @@ public class SplashScreen extends JPanel {
 		label4.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(label4);
 		
-		JLabel label6 = new JLabel("Dash: " + dash + " Block: " + block);
+		JLabel label6 = new JLabel("Dash: " + dash);
 		UIRes.setCustomFont(label6, 32);
 		label6.setAlignmentX(CENTER_ALIGNMENT);
 		label6.setBorder(new EmptyBorder(10, 10, 10, 10));

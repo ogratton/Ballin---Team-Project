@@ -22,7 +22,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 	//XXX Variables
-	public static boolean silent = false; // so alex can run the game :)
+	public static boolean silent = true; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
@@ -118,17 +118,18 @@ public class Resources {
 		bad_tiles.add(Tile.ABYSS);
 		bad_tiles.add(Tile.EDGE_ABYSS);
 		bad_tiles.add(Tile.WALL);
+		refresh();
 	}
 
 	/**
-	 * Sets the values of all the resources to their defaults.
+	 * Sets the values of all the resources to their defaults ready for a new game.
 	 */
 	public void refresh() {
 		powerupList = new ArrayList<Powerup>();
 		globalTimer = 0;
 		setFinished(false);
 		setCountdown(3);
-		setFinished(false);
+		
 		//LayeredPane.victoryShowing = false;
 		//LayeredPane.splashShowing = true;
 	}
@@ -787,7 +788,7 @@ public class Resources {
 	}
 	
 	public void incrementTimer(int i) {
-		timer+=i;		
+		timer = timer + i;		
 	}
 
 	public int getTimer() {
@@ -807,6 +808,9 @@ public class Resources {
 	}
 
 	public void setGameOver(boolean isGameOver) {
+		for(int i=0; i<this.getPlayerList().size(); i++) {
+			this.getPlayerList().get(i).setGameOver(true);
+		}
 		this.isGameOver = isGameOver;
 	}
 	

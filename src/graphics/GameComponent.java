@@ -34,6 +34,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	public static LayeredPane layers;
 	private TopBar bar;
 	private Resources resources;
+	private boolean doneWithThisGame = false;
 	private int firstPlayerIndex = 0;
 
 	private boolean fullScreen = false;
@@ -66,6 +67,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		// create the elements of the game
 		bar = new TopBar(resources);
 		layers = new LayeredPane(resources, debugPaths, this);
+		layers.setVictory(false);
 
 		if (updater != null) {
 			for (Character model : resources.getPlayerList()) {
@@ -89,7 +91,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		// fullscreen stuff
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		 GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
 
 		add(layers, BorderLayout.CENTER);
 
@@ -107,33 +109,27 @@ public class GameComponent extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Send the signal that the game has begun
-	 */
-
-	public void begin() {
-		layers.setLayer(LayeredPane.splash, new Integer(5));
-	}
-
-	/**
 	 * What to do on each tick
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
 
-		layers.repaint();
-		bar.update();
+		if (!doneWithThisGame) {
+			
+			layers.repaint();
+			bar.update();
 
-		if (resources.gamemode.isGameOver()) {
-			layers.setVictory(true);
+			if (resources.gamemode.isGameOver() && !layers.isVictoryShowing() && !resources.isFinished()
+					&& !doneWithThisGame) {
+				layers.setVictory(true);
+			}
+
+			if (resources.isFinished()) {
+				layers.setVictory(false);
+				doneWithThisGame = true;
+				this.dispose();
+			}
 		}
-
-		if (resources.isFinished()) {
-			layers.setVictory(false);
-			resources.setCountdown(3);
-			layers.setSplash(true);
-			end();
-		}
-
 	}
 
 	/**
@@ -207,14 +203,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 	}
 
-	public void end() {
-		System.out.println("end");
-		resources.setFinished(false);
-		layers.setVictory(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.dispose();
-	}
-
 	/**
 	 * Key adapter to receive input from keyboard
 	 * 
@@ -267,7 +255,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		public void keyReleased(KeyEvent e) {
 
 			int key = e.getKeyCode();
-			
+
 			if (key == leftKey) {
 				characters.get(firstPlayerIndex).setLeft(false);
 			} else if (key == rightKey) {
@@ -281,7 +269,7 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			
+
 			int key = e.getKeyCode();
 
 			if (key == leftKey) {
@@ -298,7 +286,7 @@ public class GameComponent extends JFrame implements ActionListener {
 				characters.get(firstPlayerIndex).setBlocking(true);
 			} else if (key == KeyEvent.VK_BACK_SPACE) {
 				System.exit(0);
-			}else if (key == KeyEvent.VK_Z) {
+			} else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
 			} else if (key == KeyEvent.VK_ESCAPE) {
 				if (LayeredPane.menuShowing)
@@ -309,6 +297,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			}
 
 		}
-}
+	}
 
 }

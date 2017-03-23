@@ -56,7 +56,7 @@ public class ClientUpdater extends JPanel implements Observer {
 		//System.out.println("Updated");
 		if(resourcesMap.get(sessionId) != null && resourcesMap.get(sessionId).gamemode != null) {
 			if(resourcesMap.get(sessionId).isGameOver()) {
-				System.out.println("Got here");
+				System.out.println("Ending the game");
 				
 				List<resources.Character> characters = resourcesMap.get(sessionId).getPlayerList();
 				List<CharacterInfo> charactersList = new ArrayList<CharacterInfo>();
@@ -112,6 +112,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				
 				data.setPowerUps(serializePowerUps(powerUps));
 				data.setTimer(resourcesMap.get(sessionId).getTimer());
+				System.out.println(resourcesMap.get(sessionId).getTimer());
 				Message message = new Message(Command.GAME, Note.UPDATE, "", "", sessionId, sessionId, data);
 				List<ClientInformation> clients = sessions.get(sessionId).getAllClients();
 				ClientInformation client;

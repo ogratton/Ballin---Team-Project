@@ -50,7 +50,7 @@ public class VictoryScreen extends JPanel {
 		} catch (NullPointerException e) {
 			character = resources.getPlayerList().get(0);
 		}
-
+		
 		String text = "";
 		boolean winner = false;
 
@@ -61,6 +61,8 @@ public class VictoryScreen extends JPanel {
 		} else {
 			text = "Loser...";
 		}
+		
+		System.out.println("VICTORY!!!" + resources.gamemode.getWinners());
 
 		// add the winner text to a label
 		JLabel label = new JLabel(text);
@@ -162,8 +164,13 @@ public class VictoryScreen extends JPanel {
 				resources.getMusicPlayer().changePlaylist("grandma");
 				resources.getMusicPlayer().resumeMusic();
 			}
-			Message refresh = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), "", "", "");
-			UIRes.cModel.getConnection().sendTCP(refresh);
+
+			try {
+				Message refresh = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), "", "", "");
+				UIRes.cModel.getConnection().sendTCP(refresh);
+			} catch (NullPointerException e1) {
+
+			}
 			UIRes.reset();
 		});
 

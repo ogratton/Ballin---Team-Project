@@ -56,7 +56,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 
 		// Set up game
 		setAllLives(-1);
-		if(!isServer) {
+		if (!isServer) {
 			randomRespawn();
 		}
 		resources.mode = Mode.Deathmatch;
@@ -68,7 +68,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		resources.setTimer(30);
+		resources.setTimer(7);
 		// Start game
 		Physics p = new Physics(resources, false);
 
@@ -82,19 +82,20 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			try {
 				Thread.sleep(1000);
 				resources.setCountdown(2);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent)
+					UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent)
+					UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		if (!Resources.silent && !isServer)
-		{
+
+		if (!Resources.silent && !isServer) {
 			if (resources.getMap().getWorldType() == Map.World.SPACE) {
 				resources.getMusicPlayer().changePlaylist("ultrastorm30");
 			} else {
@@ -102,7 +103,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			}
 			resources.getMusicPlayer().resumeMusic();
 		}
-		
 
 		p.start();
 
@@ -112,11 +112,21 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		while (!isGameOver()) {
 			try {
 				System.out.println("Time remaining: " + resources.getTimer() + " seconds");
-				if (resources.getTimer() % 5 == 0) {
-					spawnPowerup();
+				if (resources.getTimer() == 1) {
+					Thread.sleep(1000);
+					resources.incrementTimer(-1);
+					//Thread.sleep(1000);
+					break;
+				} else {
+
+					if (resources.getTimer() % 5 == 0) {
+						spawnPowerup();
+					}
+
+					Thread.sleep(1000);
+					resources.incrementTimer(-1);
+
 				}
-				Thread.sleep(1000);
-				resources.incrementTimer(-1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

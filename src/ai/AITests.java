@@ -7,7 +7,6 @@ import java.awt.Point;
 import org.junit.Before;
 import org.junit.Test;
 
-import ai.AITemplate.Behaviour;
 import gamemodes.DebugMode;
 import resources.Character;
 import resources.Map;
@@ -56,7 +55,6 @@ public class AITests
 	private Resources resources;
 	private Character cpu;
 	private Character controlled;
-	private static Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 
 	@Before
 	public void setUp() throws Exception
@@ -92,7 +90,6 @@ public class AITests
 		DebugMode mode = new DebugMode(resources);
 		mode.start();
 
-		ai.start();
 		
 		assertEquals(Tile.FLAT, ai.getCurrentTile());
 		assertEquals(new Point(20,20), ai.getCurrentTileCoords());
@@ -109,37 +106,21 @@ public class AITests
 			e.printStackTrace();
 		}
 		
-//		assertEquals(ai.currentTarget, controlled);
-//		assertEquals(ai.scanForNearestPlayer(), controlled);
+		assertEquals(ai.currentTarget, controlled);
+		assertEquals(ai.scanForNearestPlayer(), controlled);
 		
-		ai.setBehaviour(Behaviour.POIROT);
-		ai.setDestinations(destinations);
 		
-//		int i = 0;
-//		
-//		while(i < destinations.length)
-//		{
-//			Point aiCurr = ai.currentGoal;
-//			
-//			System.out.println(resources.getMap().tileCoords(aiCurr.x, aiCurr.y));
-//			System.out.println(destinations[i]);
-//			
-//			while(!ai.getCurrentTileCoords().equals(destinations[i]))
-//			{
-//				try
-//				{
-//					Thread.sleep(10);
-//				}
-//				catch (InterruptedException e)
-//				{
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			i++;
-////			assertTrue(ai.getCurrentTileCoords().equals(destinations[i]));
-//		}
 		
+		// wait a bit more
+		try
+		{
+			Thread.sleep(25000);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 

@@ -151,6 +151,8 @@ public class Character extends Observable implements Collidable_Circle {
 	private int teamNumber;
 
 	private int requestId;
+	
+	private boolean isGameOver;
 
 	private int dashCooldown = 0;
 
@@ -1851,4 +1853,13 @@ public class Character extends Observable implements Collidable_Circle {
 		this.name = name;
 	}
 
+	public boolean isGameOver() {
+		return isGameOver;
+	}
+
+	public void setGameOver(boolean isGameOver) {
+		this.isGameOver = isGameOver;
+	}
+
+	
 }

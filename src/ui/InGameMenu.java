@@ -70,6 +70,7 @@ public class InGameMenu extends JPanel {
 		JButton button = new JButton("Back to Main Menu");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e ->{;
+			UIRes.resources.setFinished(true);
 			UIRes.switchPanel(UIRes.startPanel);
 			System.out.println("Is connected: " + (UIRes.cModel.getConnection() != null));
 			if(UIRes.cModel.getConnection() != null){

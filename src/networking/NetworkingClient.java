@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.Client;
 import networking.GameData.Tag;
 import resources.Powerup;
 import resources.Powerup.Power;
+import resources.Resources;
 import resources.Collidable_Circle.CollidableType;
 import resources.Resources.Mode;
 import ui.UIRes;
@@ -40,6 +41,8 @@ public class NetworkingClient extends Thread {
 	}
 	
 	public void run() {
+		
+		Resources.silent = true;
 		
 		Client client = new Client();
 		

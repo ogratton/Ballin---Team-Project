@@ -45,7 +45,6 @@ public class UIRes {
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.10));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.13));
-	public static MenuItems menuItems = new MenuItems();
 	public static String host;
 	public static final int VOL_MAX = 100;
 	public static final int VOL_INIT = 75;
@@ -78,7 +77,6 @@ public class UIRes {
 	public static void reset()
 	{
 		resources = new Resources();
-		menuItems = new MenuItems();
 	}
 	
 	/**
@@ -87,7 +85,6 @@ public class UIRes {
 	public static void fullReset()
 	{
 		resources = new Resources();
-		menuItems = new MenuItems();
 		data = new ConnectionData();
 		cModel = new ConnectionDataModel(data);		
 	}
