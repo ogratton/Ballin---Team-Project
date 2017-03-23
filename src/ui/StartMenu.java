@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import audio.MusicHandler;
 import audio.MusicPlayer;
 import gamemodes.PlayGame;
 import graphics.sprites.Sprite;
@@ -36,6 +37,7 @@ public class StartMenu extends JPanel {
 	private Map.World tileSet = null;
 	
 	private MusicPlayer musicPlayer;
+	private MusicHandler musicHandler;
 	
 	public StartMenu() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -57,11 +59,15 @@ public class StartMenu extends JPanel {
 		{
 			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
 			musicPlayer.changePlaylist("grandma");
-//			resources.setMusicPlayer(musicPlayer);
 			musicPlayer.start();
 		}
 		
+		// passed so the volume sliders can work
 		UIRes.musicPlayer = musicPlayer;
+		
+		// start up the music handler that will
+		musicHandler = new MusicHandler(musicPlayer, UIRes.resources);
+		musicHandler.start();
 
 	}
 
@@ -185,14 +191,14 @@ public class StartMenu extends JPanel {
 			if (mapName != null && gameMode != null && tileSet != null) {
 				UIRes.resources.refresh();
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
-			}
-			
-			if (!Resources.silent) {
-				// XXX (maybe change the song)
-				musicPlayer.changePlaylist("thirty");
-				musicPlayer.resumeMusic();
 				
-				
+				if (!Resources.silent) {
+					// XXX pause music
+//					musicPlayer.changePlaylist("thirty");
+//					musicPlayer.resumeMusic();
+					musicHandler.setResources(UIRes.resources);
+					musicPlayer.pauseMusic();	
+				}
 			}
 
 		});

@@ -49,6 +49,7 @@ public class Resources {
 	// can be as negative as you like but no larger than about 10 I think
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
+	private String song = "grandma";
 
 	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
 	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
@@ -150,6 +151,25 @@ public class Resources {
 	 */
 	public void setPlayerList(ArrayList<Character> playerList) {
 		this.playerList = playerList;
+	}
+	
+	/**
+	 * Set the song
+	 * (music filename minus .wav extension)
+	 * 
+	 * @param song
+	 */
+	public void setSong(String song)
+	{
+		this.song = song;
+	}
+	
+	/**
+	 * @return the song we should be playing
+	 */
+	public String getSong()
+	{
+		return song;
 	}
 
 	// Deprecated?
