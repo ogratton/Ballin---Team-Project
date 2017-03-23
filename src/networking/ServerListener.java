@@ -133,10 +133,18 @@ public class ServerListener extends Listener {
 				  		session.addClient(senderClient.getId(), senderClient);
 				  		senderClient.setSessionId(session.getId());
 				  		response = new Message(Command.SESSION, Note.JOINED, senderClient.getId(), null, session.getId(), null, sessions);
+				  		connections.get(senderClient.getId()).sendTCP(response);
 				  		
-				  		// Sends the response to everyone connected to the server.
+				  		Message reset_ready = new Message(Command.SESSION, Note.RESET_READY, senderClient.getId(), null, null, null, sessions);
+				  		for(int i=0; i<session.getAllClients().size(); i++) {
+				  			connections.get(session.getAllClients().get(i).getId()).sendTCP(reset_ready);
+				  			session.getAllClients().get(i).setReady(false);
+				  			clients.get(session.getAllClients().get(i).getId()).setReady(false);
+				  		}
+				  		
+				  		Message refresh = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response);
+				  			c.sendTCP(refresh);
 				  		}
 			  		
 				  		break;
@@ -153,6 +161,8 @@ public class ServerListener extends Listener {
 				  		
 				  		for(int i=0; i<session.getAllClients().size(); i++) {
 				  			System.out.println("Client ID: " + session.getAllClients().get(i).getId());
+				  			session.getAllClients().get(i).setReady(false);
+				  			clients.get(session.getAllClients().get(i).getId()).setReady(false);
 				  		}
 				  		
 				  		senderClient.setSessionId("");
@@ -175,11 +185,17 @@ public class ServerListener extends Listener {
 				  		Connection conn = connections.get(senderClient.getId());
 				  		conn.sendTCP(response);
 				  		
+				  		session.setGameInProgress(false);
 				  		// Sends the response to everyone connected to the server.
 				  		
-				  		Message response1 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
+				  		Message response1 = new Message(Command.SESSION, Note.RESET_READY, senderClient.getId(), null, null, null, sessions);
+				  		for(int i=0; i<session.getAllClients().size(); i++) {
+				  			connections.get(session.getAllClients().get(i).getId()).sendTCP(response1);
+				  		}
+				  		
+				  		Message response2 = new Message(Command.SESSION, Note.COMPLETED, senderClient.getId(), null, null, null, sessions);
 				  		for(Connection c : connections.values()) {
-				  			c.sendTCP(response1);
+				  			c.sendTCP(response2);
 				  		}
 				  		
 				  		break;
@@ -213,7 +229,6 @@ public class ServerListener extends Listener {
 			  		// Fires when the client presses "Ready"
 			  		case START:
 			  			session = sessions.get(message.getCurrentSessionId());
-			  			session.setGameInProgress(true);
 			  			
 			  			ClientInformation sentClient = (ClientInformation)message.getObject();
 			  			
@@ -238,6 +253,7 @@ public class ServerListener extends Listener {
 			  			//System.out.println("Current Session: " + session);
 			  			// If all the clients are ready, then start the game.
 			  			if(session.allClientsReady()) {
+			  				session.setGameInProgress(true);
 
 			  				NetworkingDemo.startServerGame(session, resourcesMap, sessions, connections);
 			  				
@@ -371,6 +387,7 @@ public class ServerListener extends Listener {
 				    		if(characters.get(i).getId().equals(key)) {
 				    			characters.get(i).setLives(0);
 				    			characters.get(i).setDead(true);
+				    			characters.get(i).setVisible(false);
 				    			//characters.remove(i);
 				    			Message removePlayer = new Message(Command.GAME, Note.REMOVE_PLAYER, null, key, sessionId, sessionId);
 				    			
