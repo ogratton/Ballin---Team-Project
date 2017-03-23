@@ -153,6 +153,41 @@ public class Resources {
 		this.playerList = playerList;
 	}
 
+	// Deprecated?
+	/**
+	 * Gets the puck. (for hockey mode) (unused)
+	 * @return
+	 */
+	public Puck getPuck() {
+		return puck;
+	}
+
+	// Deprecated?
+	/**
+	 * Sets the puck. (for hockey mode) (unused)
+	 * @return
+	 */
+	public void setPuck(Puck puck) {
+		this.puck = puck;
+	}
+
+	// Deprecated?
+	/**
+	 * Gets the teams. (for team modes) (unused)
+	 * @return
+	 */
+	public Team[] getTeams() {
+		return teams;
+	}
+
+	/**
+	 * Sets the teams. (for team modes) (unused)
+	 * @return
+	 */
+	public void setTeams(Team[] teams) {
+		this.teams = teams;
+	}
+	
 	//XXX Controls functions
 	/**
 	 * Get the default up keybinding
@@ -509,25 +544,6 @@ public class Resources {
 	 */
 	public void removePowerup(Powerup p) {
 		p.setActive(false);
-	}
-
-	// Deprecated?
-	public Puck getPuck() {
-		return puck;
-	}
-
-	// Deprecated?
-	public void setPuck(Puck puck) {
-		this.puck = puck;
-	}
-
-	// Deprecated?
-	public Team[] getTeams() {
-		return teams;
-	}
-
-	public void setTeams(Team[] teams) {
-		this.teams = teams;
 	}
 
 	/**
