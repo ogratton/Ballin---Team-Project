@@ -56,6 +56,8 @@ public class UIRes {
 	public static final double labelRatio = 0.3;
 	public static final double sliderRatio = 0.25;
 	
+	public static MusicPlayer musicPlayer;
+	
 	public String lobbyName;
 	public String gameModeName;
 	public String mapName;
@@ -91,12 +93,16 @@ public class UIRes {
 	
 	public static int numberIcons = Character.Class.values().length;
 	
-	public static AudioFile audioPlayer = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
+	// we need to make the audio statically because we can only make like 16 LineListeners before the sound card cries or something
+	public static AudioFile dingSound = Resources.silent ? null: new AudioFile(resources, FilePaths.sfx + "ding.wav", "Ding");
+	public static AudioFile deathSound1 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death1.wav", "Death1");
+	public static AudioFile deathSound2 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
+	public static AudioFile deathSound3 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
+	public static AudioFile playerOut = Resources.silent ? null: new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
 	
 	public static JPanel mainPanel = new JPanel();
 	public static StartMenu startPanel = new StartMenu();
-	public static OptionsMenu optionsPanel = new OptionsMenu(startPanel);
-	
+	public static OptionsMenu optionsPanel = new OptionsMenu(startPanel, musicPlayer);
 	
 	public static int getScreenWidth()
 	{
@@ -108,7 +114,7 @@ public class UIRes {
 		return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	}
 	
-	static JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
+	public static JPanel addSpace(JPanel panel, double widthRatio, double heightRatio)
 	{
 		panel.add(Box.createRigidArea(new Dimension((int) (width * widthRatio), (int) (height * heightRatio))));
 		return panel;
@@ -282,14 +288,6 @@ public class UIRes {
 		//mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setOpaque(false);
 		mainPanel.add(startPanel);
-
-		if (!Resources.silent)
-		{
-			MusicPlayer musicPlayer = new MusicPlayer(resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
-			musicPlayer.changePlaylist("grandma");
-			resources.setMusicPlayer(musicPlayer);
-			musicPlayer.start();
-		}
 
 	}
 

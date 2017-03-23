@@ -86,12 +86,13 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(2);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
-				if (!Resources.silent) UIRes.audioPlayer.play();
+				if (!Resources.silent) UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
@@ -101,16 +102,9 @@ public class LastManStanding extends Thread implements GameModeFFA {
 
 		p.start();
 		
-		if (!Resources.silent)
-		{
-			if (resources.getMap().getWorldType() == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm");
-			} else {
-				resources.getMusicPlayer().changePlaylist("frog");
-			}
-			resources.getMusicPlayer().resumeMusic();
-		}
-
+		// TODO change to be specific to tile type
+		resources.setSong("swing");
+		
 		while (!isGameOver()) {
 			try {
 				Thread.sleep(100);
@@ -135,6 +129,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 			}
 		}
 		resources.setGameOver(true);
+		resources.setSong("grandma");
 	}
 
 	/**

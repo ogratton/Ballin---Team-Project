@@ -31,6 +31,16 @@ import ui.UIRes;
 public class VictoryScreen extends JPanel {
 
 	/**
+	 * Makes a placeholder empty victory screen
+	 * @param resources
+	 * @param placeholder
+	 */
+	
+	public VictoryScreen(){
+		
+	}
+	
+	/**
 	 * Create a new victory screen
 	 * 
 	 * @param resources
@@ -38,7 +48,7 @@ public class VictoryScreen extends JPanel {
 	 */
 
 	public VictoryScreen(Resources resources) {
-		
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		Resources.Mode mode = resources.mode;
@@ -50,7 +60,7 @@ public class VictoryScreen extends JPanel {
 		} catch (NullPointerException e) {
 			character = resources.getPlayerList().get(0);
 		}
-		
+
 		String text = "";
 		boolean winner = false;
 
@@ -61,7 +71,7 @@ public class VictoryScreen extends JPanel {
 		} else {
 			text = "Loser...";
 		}
-		
+
 		System.out.println("VICTORY!!!" + resources.gamemode.getWinners());
 
 		// add the winner text to a label
@@ -75,15 +85,19 @@ public class VictoryScreen extends JPanel {
 
 		String winnerText = "";
 
-		if (winners.size() == 1) {
-			winnerText = "The winner was " + winners.get(0).getName();
-		} else {
-			winnerText = "The winners were " + winners.get(0).getName();
+		try {
+			if (winners.size() == 1) {
+				winnerText = "The winner was " + winners.get(0).getName();
+			} else {
+				winnerText = "The winners were " + winners.get(0).getName();
 
-			for (int i = 1; i < winners.size(); i++) {
-				winnerText += ", " + winners.get(i).getName();
+				for (int i = 1; i < winners.size(); i++) {
+					winnerText += ", " + winners.get(i).getName();
+				}
+
 			}
-
+		} catch (NullPointerException e) {
+			winnerText = "Player";
 		}
 
 		JLabel label4 = new JLabel(winnerText);
@@ -160,10 +174,6 @@ public class VictoryScreen extends JPanel {
 		UIRes.getButtonAndIcon(this, exit);
 		exit.addActionListener(e -> {
 			resources.setFinished(true);
-			if (!Resources.silent && !resources.getMusicPlayer().nowPlaying().equals("grandma")) {
-				resources.getMusicPlayer().changePlaylist("grandma");
-				resources.getMusicPlayer().resumeMusic();
-			}
 
 			try {
 				Message refresh = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), "", "", "");

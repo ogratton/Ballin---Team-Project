@@ -22,72 +22,21 @@ public class MusicTester extends JPanel
 {
 	private static JLabel label;
 	
-	private static Resources resources;
-//	private static final int VOL_MAX = 100;
-//	private static final int VOL_MIN = 0;
-//	public static final int width = 300;
-//	public static final int height = 300;
-//	private static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.1));
-//	private static final double sliderRatio = 0.25;
-//	
-//	private JSlider getMusicSlider() {
-//		JSlider musicSlider = new JSlider(JSlider.VERTICAL, VOL_MIN, VOL_MAX, VOL_MAX);
-//		customiseSlider(musicSlider);
-//		if (!Resources.silent)
-//		{
-//			musicSlider.addChangeListener(e -> {
-//			int volume = musicSlider.getValue();
-//			if (volume == 0)
-//				resources.getMusicPlayer().mute();
-//			else
-//				resources.getMusicPlayer().setGain((float) ((VOL_MAX - volume) * (-0.33)));
-//		});
-//		}
-//		
-//		return musicSlider;
-//	}
-//	
-//	private void customiseComponent(JComponent comp, Dimension size, double ratio) {
-//		comp.setMaximumSize(size);
-//		alignToCenter(comp);
-//		comp.setOpaque(false);
-//	}
-//	
-//	private void alignToCenter(JComponent comp) {
-//		comp.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-//		comp.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-//	}
-//	
-//	private void customiseSlider(JSlider slider) {
-//		customiseComponent(slider, buttonSize, sliderRatio);
-//		slider.setMajorTickSpacing(20);
-//		slider.setMinorTickSpacing(10);
-//		slider.setPaintTicks(true);
-//		slider.setPaintLabels(true);
-//	}
+	private static MusicPlayer mp;
 
-	// TODO
-	// should be a little window that lets you:
-	// see current song
-	// previous song, pause, next song
-	// volume control
-	// browse all songs
-	
-	// would need to make an observer to update track name when next comes on
 
 	public MusicTester()
 	{
 		addKeyListener(new TAdapter());
 		setFocusable(true);
-		resources.getMusicPlayer().start();
-//		resources.getMusicPlayer().resumeMusic();
+		mp.start();
 	}
 
 	public void paintComponent(Graphics g)
 	{
 
 		g.clearRect(0, 0, this.getWidth(), this.getHeight()); // XXX this covers up the weird label bug
-		label.setText(resources.getMusicPlayer().nowPlaying());
+		label.setText(mp.nowPlaying());
 
 	}
 
@@ -100,10 +49,8 @@ public class MusicTester extends JPanel
 		//		File folder = new File(FilePaths.music);
 		//		File[] listOfFiles = folder.listFiles();
 		String[] titles = new String[] { "frog", "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30" };
-
-		resources = res;
 		
-		res.setMusicPlayer(new MusicPlayer(res, titles));
+		mp = new MusicPlayer(res, titles);
 
 		JFrame frame = new JFrame();
 		frame.setLayout(new BorderLayout());
@@ -138,16 +85,16 @@ public class MusicTester extends JPanel
 
 			if (key == KeyEvent.VK_SPACE)
 			{
-				resources.getMusicPlayer().togglePlaying();
+				mp.togglePlaying();
 			}
 
 			if (key == KeyEvent.VK_RIGHT)
 			{
-				resources.getMusicPlayer().nextSong();
+				mp.nextSong();
 			}
 			if (key == KeyEvent.VK_LEFT)
 			{
-				resources.getMusicPlayer().previousSong();
+				mp.previousSong();
 			}
 
 			repaint();

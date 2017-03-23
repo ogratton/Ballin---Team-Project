@@ -19,11 +19,10 @@ public class MusicPlayer extends Thread
 {
 
 	private ArrayList<AudioFile> musicFiles;
-	private int currentSongIndex;
+	private volatile int currentSongIndex;
 	private volatile boolean running;
 	private volatile boolean paused;
 	private float gain;
-	private Resources resources;
 
 	/**
 	 * the gain before muting
@@ -45,10 +44,7 @@ public class MusicPlayer extends Thread
 	 * @param files the 'songs' to play
 	 */
 	public MusicPlayer(Resources resources, String... files)
-	{
-		
-		this.resources = resources;
-		
+	{		
 		musicFiles = new ArrayList<AudioFile>();
 		trackDict = new Hashtable<String, AudioFile>();
 		
@@ -159,10 +155,10 @@ public class MusicPlayer extends Thread
 	public void nextSong()
 	{
 		// stop the song that is playing, if it has not ended already
-		if (!musicFiles.get(currentSongIndex).isStopped())
-		{
+//		if (!musicFiles.get(currentSongIndex).isStopped())
+//		{
 			musicFiles.get(currentSongIndex).stop();
-		}
+//		}
 
 		// remove any previous pause data
 		paused_at = 0;
@@ -186,10 +182,10 @@ public class MusicPlayer extends Thread
 	public void previousSong()
 	{
 		// stop the song that is playing, if it has not ended already
-		if (!musicFiles.get(currentSongIndex).isStopped())
-		{
+//		if (!musicFiles.get(currentSongIndex).isStopped())
+//		{
 			musicFiles.get(currentSongIndex).stop();
-		}
+//		}
 
 		// remove any previous pause data
 		paused_at = 0;

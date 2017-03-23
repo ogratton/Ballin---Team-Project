@@ -88,7 +88,7 @@ public class LayeredPane extends JLayeredPane {
 		LayeredPane.inGameMenu = inGameMenu;
 		inGameMenu.setBounds(((x - 650) / 2), ((y - 600) / 2), 650, 500);
 
-		victory = new VictoryScreen(resources);
+		victory = new VictoryScreen();
 
 		add(panel2, new Integer(5));
 		add(inGameMenu, new Integer(10));
@@ -130,6 +130,11 @@ public class LayeredPane extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * Set the victory screen to be visible or not
+	 * @param vis whether victory is true
+	 */
+	
 	public void setVictory(boolean vis) {
 		if (vis) {
 			victory = new VictoryScreen(resources);
@@ -143,6 +148,11 @@ public class LayeredPane extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * Set the splash screen to be visible or not
+	 * @param vis whether the splash screen is visible
+	 */
+	
 	public void setSplash(boolean vis) {
 		if (vis) {
 			setLayer(splash, new Integer(25));
@@ -152,6 +162,11 @@ public class LayeredPane extends JLayeredPane {
 			splashShowing = false;
 		}
 	}
+	
+	/**
+	 * Is the victory screen showing or not?
+	 * @return if the victory screen is showing
+	 */
 	
 	public boolean isVictoryShowing(){
 		return this.victoryShowing;

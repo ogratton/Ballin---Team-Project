@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import audio.MusicHandler;
+import audio.MusicPlayer;
 import gamemodes.PlayGame;
 import graphics.sprites.Sprite;
 import networking.NetworkingClient;
@@ -30,9 +32,12 @@ import resources.Resources.Mode;
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel {
 
-	Mode gameMode = null;
-	String mapName = null;
-	Map.World tileSet = null;
+	private Mode gameMode = null;
+	private String mapName = null;
+	private Map.World tileSet = null;
+	
+	private MusicPlayer musicPlayer;
+	private MusicHandler musicHandler;
 	
 	public StartMenu() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -49,6 +54,20 @@ public class StartMenu extends JPanel {
 		UIRes.getButtonAndIcon(this, usernameButton);
 		UIRes.getButtonAndIcon(this, new OptionsButton());
 		UIRes.getButtonAndIcon(this, new ExitButton());
+		
+		if (!Resources.silent)
+		{
+			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
+			musicPlayer.changePlaylist("grandma");
+			musicPlayer.start();
+		}
+		
+		// passed so the volume sliders can work
+		UIRes.musicPlayer = musicPlayer;
+		
+		// start up the music handler that will
+		musicHandler = new MusicHandler(musicPlayer, UIRes.resources);
+		musicHandler.start();
 
 	}
 
@@ -172,14 +191,14 @@ public class StartMenu extends JPanel {
 			if (mapName != null && gameMode != null && tileSet != null) {
 				UIRes.resources.refresh();
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
-			}
-			
-			if (!Resources.silent) {
-				// button sound effect
-				UIRes.audioPlayer.play();
-				// change the song
-				// resources.getMusicPlayer().changePlaylist("paris30");
-				// resources.getMusicPlayer().resumeMusic();
+				
+				if (!Resources.silent) {
+					// XXX pause music
+//					musicPlayer.changePlaylist("thirty");
+//					musicPlayer.resumeMusic();
+					musicHandler.setResources(UIRes.resources);
+					musicPlayer.pauseMusic();	
+				}
 			}
 
 		});

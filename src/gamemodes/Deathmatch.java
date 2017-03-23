@@ -8,6 +8,7 @@ import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
 import resources.Map;
+import resources.Map.World;
 import resources.Powerup;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -68,7 +69,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	 * Run the logic of this game mode.
 	 */
 	public void run() {
-		resources.setTimer(7);
+		resources.setTimer(30);
 		// Start game
 		Physics p = new Physics(resources, false);
 
@@ -80,14 +81,16 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
+				if (!Resources.silent)
+					UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(2);
 				if (!Resources.silent)
-					UIRes.audioPlayer.play();
+					UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(1);
 				if (!Resources.silent)
-					UIRes.audioPlayer.play();
+					UIRes.dingSound.play();
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
@@ -95,16 +98,17 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			}
 		}
 
-		if (!Resources.silent && !isServer) {
-			if (resources.getMap().getWorldType() == Map.World.SPACE) {
-				resources.getMusicPlayer().changePlaylist("ultrastorm30");
-			} else {
-				resources.getMusicPlayer().changePlaylist("thirty");
-			}
-			resources.getMusicPlayer().resumeMusic();
-		}
-
 		p.start();
+		
+		World style = resources.getMap().getWorldType();
+		switch (style)
+		{
+			case SPACE:
+				resources.setSong("ultrastorm30");
+				break;
+			default:
+				resources.setSong("thirty");
+		}
 
 		// Graphics g = new Graphics(resources, null, false);
 		// g.start();
@@ -133,11 +137,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
-		// TODO pause/change music too
-		if (!Resources.silent && !isServer) {
-			resources.getMusicPlayer().changePlaylist(victoryMusic);
-			resources.getMusicPlayer().resumeMusic();
-		}
+		
+		resources.setSong(victoryMusic);
 
 		System.out.println("WE HAVE A WINNER");
 		getWinners();

@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ai.pathfinding.Line;
-import audio.MusicPlayer;
 import gamemodes.GameModeFFA;
 import gamemodes.Team;
 import resources.Map.Tile;
@@ -22,7 +21,7 @@ import resources.Map.Tile;
  */
 public class Resources {
 	//XXX Variables
-	public static boolean silent = true; // so alex can run the game :)
+	public static boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
 		Deathmatch, LastManStanding, HotPotato, Hockey, Debug
@@ -50,6 +49,7 @@ public class Resources {
 	// can be as negative as you like but no larger than about 10 I think
 	// let's just agree to have 0 as the max
 	private int sfx_gain = 0;
+	private String song = "grandma";
 
 	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
 	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
@@ -68,8 +68,6 @@ public class Resources {
 
 	// map
 	private Map map;
-
-	private MusicPlayer musicPlayer;
 
 	// client ID
 	private String id;
@@ -153,6 +151,25 @@ public class Resources {
 	 */
 	public void setPlayerList(ArrayList<Character> playerList) {
 		this.playerList = playerList;
+	}
+	
+	/**
+	 * Set the song
+	 * (music filename minus .wav extension)
+	 * 
+	 * @param song
+	 */
+	public void setSong(String song)
+	{
+		this.song = song;
+	}
+	
+	/**
+	 * @return the song we should be playing
+	 */
+	public String getSong()
+	{
+		return song;
 	}
 
 	// Deprecated?
@@ -727,22 +744,6 @@ public class Resources {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @return the music player object
-	 */
-	public MusicPlayer getMusicPlayer() {
-		return musicPlayer;
-	}
-
-	/**
-	 * set the music player object
-	 * 
-	 * @param mp
-	 */
-	public void setMusicPlayer(MusicPlayer mp) {
-		this.musicPlayer = mp;
 	}
 	
 	public void clearPlayerList(){
