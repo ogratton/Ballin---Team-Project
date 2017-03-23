@@ -86,6 +86,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
+				if (!Resources.silent) UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(2);
 				if (!Resources.silent) UIRes.audioPlayer.play();
@@ -100,6 +101,9 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 
 		p.start();
+		
+		// TODO change to be specific to tile type
+		resources.setSong("frog");
 
 		placeBomb();
 		while (!isGameOver()) {

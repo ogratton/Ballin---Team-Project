@@ -80,6 +80,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
+				if (!Resources.silent)
+					UIRes.audioPlayer.play();
 				Thread.sleep(1000);
 				resources.setCountdown(2);
 				if (!Resources.silent)
@@ -96,6 +98,9 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 
 		p.start();
+		
+		// TODO change to be specific to tile type
+		resources.setSong("thirty");
 
 		// Graphics g = new Graphics(resources, null, false);
 		// g.start();
@@ -124,6 +129,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
+		
+		resources.setSong(victoryMusic);
 
 		System.out.println("WE HAVE A WINNER");
 		getWinners();

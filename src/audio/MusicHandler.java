@@ -21,8 +21,21 @@ public class MusicHandler extends Thread
 	
 	public void run()
 	{
-		// needs to look at resources and see when gamemodes are finished
-		String currentSong = musicPlayer.nowPlaying();
+		while (true) {
+			// needs to look at resources and see when gamemodes are finished
+			String currentSong = musicPlayer.nowPlaying();
+			String proposedSong = resources.getSong();
+			if (!currentSong.equals(proposedSong)) {
+				changeSong(proposedSong);
+			} 
+			
+			try 
+			{
+				Thread.sleep(1);
+			} catch (InterruptedException e)
+			{
+			}
+		}
 	}
 	
 	
@@ -35,7 +48,9 @@ public class MusicHandler extends Thread
 	 */
 	public void changeSong(String songName)
 	{
+//		musicPlayer.pauseMusic(); // TODO necessary?
 		musicPlayer.changePlaylist(songName);
+		musicPlayer.resumeMusic();
 	}
 	
 	/**
