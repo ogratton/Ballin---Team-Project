@@ -376,38 +376,29 @@ public class Physics extends Thread implements ActionListener {
 		
 		Tile t1 = resources.getMap().tileAt(c.getX() + c.getRadius(), c.getY());
 		if (t1 == Tile.WALL) { // right edge
-			if(p.x < c.getX()) {
-				c.setX((p.x + c.getX())/2);
-			}
+//			if(p.x < c.getX()) {
+//				c.setX((p.x + c.getX())/2);
+//			}
 			if (c.getDx() < 0.5)
 				c.setDx(0.5);
 			c.setDx(0 - Math.abs(c.getDx()));
 		}
 		t1 = resources.getMap().tileAt(c.getX() - c.getRadius(), c.getY());
 		if (t1 == Tile.WALL) { // left edge
-			if(p.x > c.getX()) {
-				c.setX((p.x + c.getX())/2);
-			}
 			if (c.getDx() < 0.5)
 				c.setDx(0.5);
 			c.setDx(Math.abs(c.getDx()));
 		}
 		t1 = resources.getMap().tileAt(c.getX(), c.getY() + c.getRadius());
 		if (t1 == Tile.WALL) { // bottom edge
-			if(p.y < c.getY()) {
-				c.setY((p.y + c.getY())/2);
-			}
 			if (c.getDy() < 0.5)
-				c.setDx(0.5);
+				c.setDy(0.5);
 			c.setDy(0 - Math.abs(c.getDy()));
 		}
 		t1 = resources.getMap().tileAt(c.getX(), c.getY() - c.getRadius());
 		if (t1 == Tile.WALL) { // top edge
-			if(p.y > c.getY()) {
-				c.setY((p.y + c.getY())/2);
-			}
 			if (c.getDy() < 0.5)
-				c.setDx(0.5);
+				c.setDy(0.5);
 			c.setDy(Math.abs(c.getDy()));
 		}
 
@@ -685,7 +676,7 @@ public class Physics extends Thread implements ActionListener {
 
 	}
 
-	private class Vector {
+	class Vector {
 		public double x = 0;
 		public double y = 0;
 	}
