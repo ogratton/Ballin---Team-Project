@@ -235,8 +235,10 @@ public class ClientListener extends Listener {
            							players.get(i).setLives(charactersList.get(j).getLives());
            							players.get(i).setScore(charactersList.get(j).getScore());
            							players.get(i).hasBomb(charactersList.get(j).isHasBomb());
-           							//players.get(i).setDyingStep(charactersList.get(j).getDyingStep());
-           							//System.out.println(charactersList.get(j).isDashing());
+           							players.get(i).setDyingStep(charactersList.get(j).getDyingStep());
+           							players.get(i).setVisible(charactersList.get(j).isVisible());
+           							players.get(i).setExploding(charactersList.get(j).isExploding());
+           							players.get(i).setTimeOfDeath(charactersList.get(j).getTimeOfDeath());
            						}
            					}
            				}

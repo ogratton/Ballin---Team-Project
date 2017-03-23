@@ -64,7 +64,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				for(int i=0; i<characters.size(); i++) {
 					c = characters.get(i);
 					//System.out.println("X: " + c.getX());
-					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep(), c.isVisible(), c.isExploding(), c.getTimeOfDeath());
 					charactersList.add(info);
 				}
 				
@@ -101,7 +101,7 @@ public class ClientUpdater extends JPanel implements Observer {
 				for(int i=0; i<characters.size(); i++) {
 					c = characters.get(i);
 					//System.out.println("X: " + c.getX());
-					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep());
+					CharacterInfo info = new CharacterInfo(c.getId(), c.getX(), c.getY(), c.getPlayerNumber(), c.isFalling(), c.isDead(), c.isDashing(), c.isBlocking(), c.getStamina(), c.hasPowerup(), c.getLastPowerup(), c.getKills(), c.getDeaths(), c.getSuicides(), c.getLives(), c.getScore(), c.hasBomb(), c.getDyingStep(), c.isVisible(), c.isExploding(), c.getTimeOfDeath());
 					charactersList.add(info);
 				}
 				

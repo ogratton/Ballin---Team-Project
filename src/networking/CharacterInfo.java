@@ -25,6 +25,9 @@ public class CharacterInfo {
 	private resources.Character.Class type;
 	private String name;
 	private int dyingStep;
+	private boolean isVisible;
+	private boolean isExploding;
+	private int timeOfDeath;
 	
 	public CharacterInfo() {
 		
@@ -59,7 +62,7 @@ public class CharacterInfo {
 	 * @param isBlocking Is the player blocking?
 	 * @param stamina The player stamina
 	 */
-	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina, boolean hasPowerUp, Power lastPowerUp, int kills, int deaths, int suicides, int lives, int score, boolean hasBomb, int dyingStep) {
+	public CharacterInfo(String id, double d, double e, int playerNumber, boolean isFalling, boolean isDead, boolean isDashing, boolean isBlocking, int stamina, boolean hasPowerUp, Power lastPowerUp, int kills, int deaths, int suicides, int lives, int score, boolean hasBomb, int dyingStep, boolean isVisible, boolean isExploding, int timeOfDeath) {
 		this.x = d;
 		this.y = e;
 		this.id = id;
@@ -78,6 +81,9 @@ public class CharacterInfo {
 		this.score = score;
 		this.hasBomb = hasBomb;
 		this.dyingStep = dyingStep;
+		this.isVisible = isVisible;
+		this.isExploding = isExploding;
+		this.timeOfDeath = timeOfDeath;
 	}
 	
 	/**
@@ -290,6 +296,30 @@ public class CharacterInfo {
 
 	public void setDyingStep(int dyingStep) {
 		this.dyingStep = dyingStep;
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	public boolean isExploding() {
+		return isExploding;
+	}
+
+	public void setExploding(boolean isExploding) {
+		this.isExploding = isExploding;
+	}
+
+	public int getTimeOfDeath() {
+		return timeOfDeath;
+	}
+
+	public void setTimeOfDeath(int timeOfDeath) {
+		this.timeOfDeath = timeOfDeath;
 	}
 	
 	
