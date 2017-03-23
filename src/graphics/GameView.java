@@ -19,7 +19,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import ai.pathfinding.Line;
-import graphics.sprites.SheetDetails;
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Character;
 import resources.Powerup;
@@ -222,7 +222,7 @@ public class GameView extends JPanel implements Observer {
 
 				if (character.isExploding()) {
 
-					frame = SheetDetails.getMiscSpritesFromType(SheetDetails.Misc.EXPLOSION);
+					frame = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.EXPLOSION);
 
 				} else if (!resources.gamemode.isGameOver()) {
 					frame = character.getNextFrame(oldX, oldY, newX, newY, fullscreen);
@@ -345,7 +345,7 @@ public class GameView extends JPanel implements Observer {
 
 				if (resources.mode == Mode.HotPotato) {
 					if (character.hasBomb()) {
-						g.drawImage(SheetDetails.getBombSprite(), actualX + (int) (30 * currentMultiplier),
+						g.drawImage(SheetDeets.getBombSprite(), actualX + (int) (30 * currentMultiplier),
 								(int) (actualY + currentOffset + deathModifier + (20 * currentMultiplier)), this);
 
 						if (!resources.isLowGraphics()) {

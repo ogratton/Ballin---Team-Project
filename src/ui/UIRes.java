@@ -25,8 +25,9 @@ import javax.swing.JSlider;
 
 import audio.AudioFile;
 import audio.MusicPlayer;
-import graphics.sprites.SheetDetails;
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
+import graphics.sprites.Sprite.SheetType;
 import networking.ConnectionData;
 import networking.ConnectionDataModel;
 import resources.Character;
@@ -44,6 +45,7 @@ public class UIRes {
 	public static String username = "Player";
 	public static final Dimension buttonSize = new Dimension((int) (width * 0.8), (int) (height * 0.10));
 	public static final Dimension labelSize = new Dimension((int) (width * 0.8), (int) (height * 0.13));
+	public static MenuItems menuItems = new MenuItems();
 	public static String host;
 	public static final int VOL_MAX = 100;
 	public static final int VOL_INIT = 75;
@@ -76,6 +78,7 @@ public class UIRes {
 	public static void reset()
 	{
 		resources = new Resources();
+		menuItems = new MenuItems();
 	}
 	
 	/**
@@ -84,6 +87,7 @@ public class UIRes {
 	public static void fullReset()
 	{
 		resources = new Resources();
+		menuItems = new MenuItems();
 		data = new ConnectionData();
 		cModel = new ConnectionDataModel(data);		
 	}
@@ -232,14 +236,14 @@ public class UIRes {
 	}
 
 	static JLabel getSpriteLabel(int x) {
-		BufferedImage icon = Sprite.getSprite(SheetDetails.CHARACTERS, 0, x,
+		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
 				50, 50);
 		JLabel iconLabel = new JLabel(new ImageIcon(icon));
 		return iconLabel;
 	}
 	
 	static ImageIcon getSpriteIcon(int x) {
-		BufferedImage icon = Sprite.getSprite(SheetDetails.CHARACTERS, 0, x,
+		BufferedImage icon = Sprite.getSprite(SheetDeets.CHARACTERS, 0, x,
 				50, 50);
 		ImageIcon spriteIcon = new ImageIcon(icon);
 		return spriteIcon;

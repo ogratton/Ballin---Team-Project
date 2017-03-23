@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import ai.AITemplate;
 import audio.AudioFile;
-import graphics.sprites.SheetDetails;
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import resources.Powerup.Power;
 
@@ -189,7 +189,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the class
 	 */
 	public Character(Class c) {
-		this(default_mass, 0, 0, SheetDetails.getRadiusFromSprite(c), Heading.STILL, c, 0, "Player");
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, 0, "Player");
 	}
 
 	/**
@@ -201,11 +201,11 @@ public class Character extends Observable implements Collidable_Circle {
 	 *            the player number
 	 */
 	public Character(Class c, int playerNo) {
-		this(default_mass, 0, 0, SheetDetails.getRadiusFromSprite(c), Heading.STILL, c, playerNo, "Player");
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, "Player");
 	}
 
 	public Character(Class c, int playerNo, String name) {
-		this(default_mass, 0, 0, SheetDetails.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
+		this(default_mass, 0, 0, SheetDeets.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
 	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo,
@@ -257,25 +257,25 @@ public class Character extends Observable implements Collidable_Circle {
 		this.playerNo = playerNo;
 
 		// imported from graphics.
-		this.characterSheet = SheetDetails.getSpriteSheetFromCharacter(this);
-		this.dashSheet = SheetDetails.getMiscSpritesFromType(SheetDetails.Misc.DASH);
+		this.characterSheet = SheetDeets.getSpriteSheetFromCharacter(this);
+		this.dashSheet = SheetDeets.getMiscSpritesFromType(SheetDeets.Misc.DASH);
 		this.moving = false;
 
 		// sprite ArrayLists
 		rollingSprites = new ArrayList<BufferedImage>();
 		dashSprites = new ArrayList<BufferedImage>();
-		arrow = Sprite.getSprite(SheetDetails.getArrowFromPlayer(playerNo), 0, 0, 50, 50);
-		arrowMe = Sprite.getSprite(SheetDetails.getArrowFromPlayer(playerNo), 0, 1, 50, 50);
-		spikes = SheetDetails.SPIKES;
+		arrow = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 0, 50, 50);
+		arrowMe = Sprite.getSprite(SheetDeets.getArrowFromPlayer(playerNo), 0, 1, 50, 50);
+		spikes = SheetDeets.SPIKES;
 
-		for (int i = 0; i < SheetDetails.CHARACTERS_COLS; i++) {
-			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDetails.CHARACTERS_SIZEX,
-					SheetDetails.CHARACTERS_SIZEX);
+		for (int i = 0; i < SheetDeets.CHARACTERS_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(characterSheet, i, 0, SheetDeets.CHARACTERS_SIZEX,
+					SheetDeets.CHARACTERS_SIZEX);
 			rollingSprites.add(sprite);
 		}
 
-		for (int i = 0; i < SheetDetails.MISC_COLS; i++) {
-			BufferedImage sprite = Sprite.getSprite(dashSheet, i, 0, SheetDetails.MISC_SIZEX, SheetDetails.MISC_SIZEY);
+		for (int i = 0; i < SheetDeets.MISC_COLS; i++) {
+			BufferedImage sprite = Sprite.getSprite(dashSheet, i, 0, SheetDeets.MISC_SIZEX, SheetDeets.MISC_SIZEY);
 			dashSprites.add(sprite);
 		}
 

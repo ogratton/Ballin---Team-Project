@@ -11,6 +11,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import networking.Command;
+import networking.Message;
+import networking.Note;
 import resources.Character;
 import resources.Resources;
 import resources.Resources.Mode;
@@ -155,10 +158,12 @@ public class VictoryScreen extends JPanel {
 		UIRes.getButtonAndIcon(this, exit);
 		exit.addActionListener(e -> {
 			resources.setFinished(true);
-			if (!resources.getMusicPlayer().nowPlaying().equals("grandma")) {
+			if (!Resources.silent && !resources.getMusicPlayer().nowPlaying().equals("grandma")) {
 				resources.getMusicPlayer().changePlaylist("grandma");
 				resources.getMusicPlayer().resumeMusic();
 			}
+			Message refresh = new Message(Command.SESSION, Note.INDEX, UIRes.cModel.getMyId(), "", "", "");
+			UIRes.cModel.getConnection().sendTCP(refresh);
 			UIRes.reset();
 		});
 
