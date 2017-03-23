@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Random;
 
-import graphics.sprites.SheetDetails;
+import graphics.sprites.SheetDeets;
 
 public class Powerup extends Observable implements Collidable_Circle {
 
@@ -36,7 +36,7 @@ public class Powerup extends Observable implements Collidable_Circle {
 		Random rand = new Random();
 		int p = rand.nextInt(Power.values().length);
 		power = Power.values()[p];
-		sprite = SheetDetails.getPowerUpSpriteFromType(power);
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class Powerup extends Observable implements Collidable_Circle {
 	 */
 	public Powerup(Power power) {
 		this.power = power;
-		sprite = SheetDetails.getPowerUpSpriteFromType(power);
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class Powerup extends Observable implements Collidable_Circle {
 	 */
 	public Powerup(Power p, double x, double y, boolean active) {
 		power = p;
-		sprite = SheetDetails.getPowerUpSpriteFromType(power);
+		sprite = SheetDeets.getPowerUpSpriteFromType(power);
 		this.x = x;
 		this.y = y;
 		this.active = active;

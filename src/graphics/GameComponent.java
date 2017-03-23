@@ -35,8 +35,6 @@ public class GameComponent extends JFrame implements ActionListener {
 	private TopBar bar;
 	private Resources resources;
 	private int firstPlayerIndex = 0;
-	private long lastTick;
-	private long thisTick;
 
 	private boolean fullScreen = false;
 
@@ -102,8 +100,6 @@ public class GameComponent extends JFrame implements ActionListener {
 
 		// start the timer to send actionevents
 		timer = new Timer(10, this);
-		lastTick = System.nanoTime();
-		thisTick = System.nanoTime();
 		timer.start();
 
 		// make everything visible and the right size
@@ -125,7 +121,7 @@ public class GameComponent extends JFrame implements ActionListener {
 	 */
 
 	public void actionPerformed(ActionEvent arg0) {
-		
+
 		layers.repaint();
 		bar.update();
 
@@ -138,8 +134,6 @@ public class GameComponent extends JFrame implements ActionListener {
 			LayeredPane.splashShowing = true;
 			end();
 		}
-		
-		lastTick = thisTick;
 
 	}
 

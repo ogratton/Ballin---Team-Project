@@ -20,16 +20,16 @@ import javax.swing.border.LineBorder;
 
 import com.esotericsoftware.kryonet.Client;
 
-import graphics.sprites.SheetDetails;
+import graphics.sprites.SheetDeets;
 import graphics.sprites.Sprite;
 import graphics.sprites.Sprite.SheetType;
+import resources.Character;
 import networking.ClientInformation;
 import networking.Command;
 import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
-import resources.Character;
 
 @SuppressWarnings("serial")
 public class InLobbyMenu extends JPanel implements Observer {
@@ -37,6 +37,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 	private Session session;
 	private ConnectionDataModel cModel;
 	private SessionListMenu sessionList;
+	private int spriteIndex = 0;
 	
 	public InLobbyMenu(Session session, Client client, ConnectionDataModel cModel, SessionListMenu sessionList){
 
@@ -113,7 +114,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 		characterClass.setSize(new Dimension(50,50));
 		for (int i = 0; i < UIRes.numberIcons; i++) {
 			BufferedImage icon = Sprite.getSprite(Sprite.loadSpriteSheet(SheetType.CHARACTER), 0, i,
-					SheetDetails.CHARACTERS_SIZEX, SheetDetails.CHARACTERS_SIZEY);
+					SheetDeets.CHARACTERS_SIZEX, SheetDeets.CHARACTERS_SIZEY);
 			characterClass.addItem(new ImageIcon(icon));
 		}
 		
@@ -139,6 +140,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 				if (client.isReady()) {
 					readyCheck.setForeground(Color.GREEN);
 					client.setCharacterClass(getCharacter(characterClass.getSelectedIndex()));
+					spriteIndex = characterClass.getSelectedIndex();
 					System.out.println(client.getCharacterClass().name());
 					client.setPlayerNumber(index);
 					System.out.println(client.getPlayerNumber());

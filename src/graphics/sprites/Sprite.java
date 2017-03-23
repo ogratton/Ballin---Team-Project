@@ -105,15 +105,16 @@ public class Sprite {
 
 		int tileSize = map.getTileSize();
 
-		// create a new big image to store all the map
+		// create a new buffer and draw two image into the new image
 		BufferedImage newImage = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = newImage.createGraphics();
 		Color oldColor = g2.getColor();
+		// fill background
 		g2.setPaint(Color.WHITE);
 		g2.fillRect(0, 0, (int) width, (int) height);
+		// draw image
 		g2.setColor(oldColor);
 
-		// draw each of the tile sprites
 		for (int i = 0; i < height / tileSize; i++) {
 			for (int j = 0; j < width / tileSize; j++) {
 
