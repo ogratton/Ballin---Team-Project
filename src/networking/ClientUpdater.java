@@ -54,7 +54,7 @@ public class ClientUpdater extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		//System.out.println("Updated");
-		if(resourcesMap.get(sessionId).gamemode != null) {
+		if(resourcesMap.get(sessionId) != null && resourcesMap.get(sessionId).gamemode != null) {
 			if(resourcesMap.get(sessionId).isGameOver()) {
 				System.out.println("Got here");
 				
@@ -92,6 +92,8 @@ public class ClientUpdater extends JPanel implements Observer {
 						connections.get(client.getId()).sendTCP(message1);
 						connections.get(client.getId()).sendTCP(message2);
 					}
+					resourcesMap.remove(sessionId);
+					sessions.get(sessionId).setGameInProgress(false);
 				}
 			}
 			else {
