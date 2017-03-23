@@ -31,6 +31,16 @@ import ui.UIRes;
 public class VictoryScreen extends JPanel {
 
 	/**
+	 * Makes a placeholder empty victory screen
+	 * @param resources
+	 * @param placeholder
+	 */
+	
+	public VictoryScreen(){
+		
+	}
+	
+	/**
 	 * Create a new victory screen
 	 * 
 	 * @param resources

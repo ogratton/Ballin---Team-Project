@@ -52,7 +52,7 @@ public class Graphics extends Thread {
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							
-		comp.setTitle("" + resources.getId());
+		comp.setTitle("Ballin: " + resources.mode.toString());
 		
 	}
 	
