@@ -1,6 +1,6 @@
 package ai;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.awt.Point;
 
@@ -77,13 +77,20 @@ public class AITests
 		resources.addPlayerToList(cpu);
 
 	}
+	
+//	@Test
+	public void whatIsGoingOn() throws InterruptedException
+	{
+		assertTrue(5-4==1);
+	}
 
 	/**
 	 * Uses the FightingAI to test AITemplate functions
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void AITemplateTest()
-	{
+	public void AITemplateTest() throws InterruptedException
+	{		
 		FightingAI ai = new FightingAI(resources, cpu);
 		cpu.setAI(ai);
 		
@@ -96,35 +103,13 @@ public class AITests
 //		System.out.println(ai.distToNearestPlayer());
 		
 		// wait a bit
-		try
-		{
-			Thread.sleep(5000);
-		}
-		catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Thread.sleep(4000);
+
 		
 		assertEquals(ai.currentTarget, controlled);
 		assertEquals(ai.scanForNearestPlayer(), controlled);
 		
-		
-		
-		// wait a bit more
-		try
-		{
-			Thread.sleep(25000);
-		}
-		catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+//		Thread.sleep(25000);
 
-	
-		
 	}
 }

@@ -60,14 +60,13 @@ public class StartMenu extends JPanel {
 			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
 			musicPlayer.changePlaylist("grandma");
 			musicPlayer.start();
+			// passed so the volume sliders can work
+			UIRes.musicPlayer = musicPlayer;
+			
+			// start up the music handler that will
+			musicHandler = new MusicHandler(musicPlayer, UIRes.resources);
+			musicHandler.start();
 		}
-		
-		// passed so the volume sliders can work
-		UIRes.musicPlayer = musicPlayer;
-		
-		// start up the music handler that will
-		musicHandler = new MusicHandler(musicPlayer, UIRes.resources);
-		musicHandler.start();
 
 	}
 

@@ -99,6 +99,7 @@ public class UIRes {
 	public static AudioFile deathSound2 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death2.wav", "Death2");
 	public static AudioFile deathSound3 = Resources.silent ? null: new AudioFile(FilePaths.sfx + "death3.wav", "Death3");
 	public static AudioFile playerOut = Resources.silent ? null: new AudioFile(FilePaths.sfx + "playerOut.wav", "PlayerOut");
+	public static AudioFile explode = Resources.silent ? null: new AudioFile(FilePaths.sfx + "explode.wav", "Explode");
 	
 	public static JPanel mainPanel = new JPanel();
 	public static StartMenu startPanel = new StartMenu();

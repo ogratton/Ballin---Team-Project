@@ -160,6 +160,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			if (c.hasBomb()) {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
+				if (!Resources.silent) UIRes.explode.play();
 				System.out.println(c.getName() + " exploded!");
 				break;
 			}
