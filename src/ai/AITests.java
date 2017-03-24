@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.awt.Point;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,10 +56,13 @@ public class AITests
 	private Resources resources;
 	private Character cpu;
 	private Character controlled;
+	private DebugMode mode;
 
 	@Before
 	public void setUp() throws Exception
 	{
+		Resources.silent = true;
+		
 		resources = new Resources();
 		resources.setMap(new Map(1200, 650, Map.World.SPACE, "asteroid"));
 		new MapCosts(resources);
@@ -75,13 +79,13 @@ public class AITests
 		cpu.setY(520);
 		cpu.setPlayerNumber(0); // so debug stuff is drawn
 		resources.addPlayerToList(cpu);
-
 	}
 	
-//	@Test
-	public void whatIsGoingOn() throws InterruptedException
+	@After
+	public void tearDown()
 	{
-		assertTrue(5-4==1);
+		resources = null;
+		
 	}
 
 	/**
@@ -94,7 +98,7 @@ public class AITests
 		FightingAI ai = new FightingAI(resources, cpu);
 		cpu.setAI(ai);
 		
-		DebugMode mode = new DebugMode(resources);
+		mode = new DebugMode(resources);
 		mode.start();
 
 		
@@ -105,11 +109,8 @@ public class AITests
 		// wait a bit
 		Thread.sleep(4000);
 
-		
 		assertEquals(ai.currentTarget, controlled);
 		assertEquals(ai.scanForNearestPlayer(), controlled);
-		
-//		Thread.sleep(25000);
 
 	}
 }

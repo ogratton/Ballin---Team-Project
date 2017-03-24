@@ -173,7 +173,7 @@ public class Physics extends Thread implements ActionListener {
 				c.decrementLives();
 				if (!client && c.getLives() != 0) {
 					resources.getMap().spawn(c);
-					System.out.println("Respawn");
+//					System.out.println("Respawn");
 				}
 				if (c.isAI()) {
 
@@ -213,7 +213,7 @@ public class Physics extends Thread implements ActionListener {
 				// c.setDashing(false);
 				if (c.getDashCooldown() > 500) {
 					c.setDashCooldown(0);
-					System.out.println("Resetting dash cooldown");
+//					System.out.println("Resetting dash cooldown");
 				}
 			}
 			if (special(c)) {
@@ -258,23 +258,23 @@ public class Physics extends Thread implements ActionListener {
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				// XXX lovely sound effect
 				if (!Resources.silent) {
-					System.out.println("gain: " +resources.getSFXGain());
+//					System.out.println("gain: " +resources.getSFXGain());
 					c.getRandDeathSound().play(resources.getSFXGain());
 				}
 				// Calculate score changes
-				System.out.println("Player " + c.getPlayerNumber() + " died!");
+//				System.out.println("Player " + c.getPlayerNumber() + " died!");
 				Character lastCollidedWith = c.getLastCollidedWith();
 				// If c has collided with someone else in the last 5 seconds
 				if (lastCollidedWith != null && resources.getGlobalTimer() - c.getLastCollidedTime() <= 150) {
 					// give 1 point to whoever they collided with
 					lastCollidedWith.incrementScore(1);
 					c.incrementScore(-1);
-					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
+//					System.out.println("Credit goes to player " + lastCollidedWith.getPlayerNumber() + "! +1 point");
 					lastCollidedWith.incrementKills();
 					c.incrementDeaths();
 				} else {
 					// take 2 points away from c
-					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
+//					System.out.println("Player " + c.getPlayerNumber() + " killed themself... -2 points");
 					c.incrementScore(-2);
 					c.incrementSuicides();
 				}
@@ -304,7 +304,7 @@ public class Physics extends Thread implements ActionListener {
 				// if (c.getType() == CollidableType.Puck) {...}
 				// Goal is scored
 				Character lastCollidedWith = c.getLastCollidedWith();
-				System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
+//				System.out.println("Player " + lastCollidedWith.getPlayerNumber() + " scored!");
 				// Find which goal was scored in
 				// If own goal, -2 points to player, otherwise +1 point
 				// +1 point to team who scored

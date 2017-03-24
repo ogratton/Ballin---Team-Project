@@ -26,6 +26,7 @@ public class GamemodesTests {
 	 */
 	@Before
 	public void setUp() {
+		Resources.silent = true;
 		resources = new Resources();
 		resources.setMap(new Map(1200, 650, Map.World.SPACE, "asteroid"));
 		new MapCosts(resources);

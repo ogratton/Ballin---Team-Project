@@ -139,11 +139,11 @@ public class Map {
 		{
 
 			tiles = mr.readMap(FilePaths.maps+filename+".csv");
-			System.out.println("Map Loaded");
+//			System.out.println("Map Loaded");
 		}
 		catch (IOException e)
 		{
-			System.out.println("File not found");
+			System.out.println("File not found: " + filename + ".csv");
 			e.printStackTrace();
 			
 		}
