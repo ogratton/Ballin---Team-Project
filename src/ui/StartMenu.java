@@ -70,7 +70,7 @@ public class StartMenu extends JPanel {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		JFrame frame = UIRes.createFrame();
 		frame.setVisible(true);
 	}

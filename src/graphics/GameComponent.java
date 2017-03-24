@@ -91,7 +91,11 @@ public class GameComponent extends JFrame implements ActionListener {
 		// fullscreen stuff
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		if (!System.getProperty("os.name").contains("Windows"))
+		{
+			GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+		}
+		
 
 		add(layers, BorderLayout.CENTER);
 
