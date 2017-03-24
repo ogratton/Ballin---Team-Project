@@ -9,15 +9,15 @@ import networking.ConnectionData;
 import networking.ConnectionDataModel;
 
 @SuppressWarnings("serial")
-public class BackButton extends JButton{
+public class BackButton extends JButton {
 
-	public BackButton(JPanel panel, String text){
+	public BackButton(JPanel panel, String text) {
 		setText(text);
 		UIRes.customiseButton(this, true);
-		addActionListener(e ->{;
+		addActionListener(e -> {
 			UIRes.switchPanel(panel);
 			System.out.println(UIRes.cModel.getConnection() == null);
-			if(UIRes.cModel.getConnection() != null){
+			if (UIRes.cModel.getConnection() != null) {
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);
 				UIRes.cModel.setGameInProgress(false);
@@ -26,6 +26,6 @@ public class BackButton extends JButton{
 				UIRes.fullReset();
 			}
 		});
-	}	
-	
+	}
+
 }

@@ -23,7 +23,6 @@ import networking.ConnectionData;
 import networking.ConnectionDataModel;
 import resources.Map;
 
-
 /**
  * 
  * @author Diana Dinca
@@ -55,26 +54,26 @@ public class InGameMenu extends JPanel {
 		add(map);
 
 	}
-	
+
 	JButton getResumeToGameButton(JPanel panel) {
 		JButton button = new JButton("Resume");
 		button.addActionListener(e -> {
 			GameComponent.layers.setLayer(panel, new Integer(10));
 			LayeredPane.menuShowing = !LayeredPane.menuShowing;
 		});
-		
+
 		UIRes.customiseButton(button, true);
 		return button;
 	}
-	
-	JButton backToMainMenuButton(JFrame frame){
+
+	JButton backToMainMenuButton(JFrame frame) {
 		JButton button = new JButton("Back to Main Menu");
 		UIRes.customiseButton(button, true);
-		button.addActionListener(e ->{;
+		button.addActionListener(e -> {
 			UIRes.resources.setFinished(true);
 			UIRes.switchPanel(UIRes.startPanel);
 			System.out.println("Is connected: " + (UIRes.cModel.getConnection() != null));
-			if(UIRes.cModel.getConnection() != null){
+			if (UIRes.cModel.getConnection() != null) {
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);
 				UIRes.cModel.setGameInProgress(false);
@@ -82,36 +81,39 @@ public class InGameMenu extends JPanel {
 				UIRes.cModel = new ConnectionDataModel(new ConnectionData());
 				UIRes.fullReset();
 				System.out.println("Disconnecting from server");
+			} else {
+				System.out.println("TRYING TO END GAME");
+				UIRes.resources.gamemode.setEndGame(true);
 			}
-			
+
 			UIRes.optionsPanel.remove(UIRes.optionsPanel.getComponentCount() - 1);
 			UIRes.getButtonAndIcon(UIRes.optionsPanel, new BackButton(UIRes.startPanel, "Back"));
-			
+
 			frame.dispose();
 		});
-		
+
 		return button;
 	}
-	
-	JButton getOptionsMenu(JPanel panel){
+
+	JButton getOptionsMenu(JPanel panel) {
 		JButton button = new JButton("Options");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
 			GameComponent.layers.setLayer(panel, new Integer(40));
-			
+
 			UIRes.optionsPanel.remove(UIRes.optionsPanel.getComponentCount() - 1);
 			UIRes.getButtonAndIcon(UIRes.optionsPanel, getBackToInGameMenuButton());
 		});
 		return button;
 	}
-	
-	JButton getBackToInGameMenuButton(){
+
+	JButton getBackToInGameMenuButton() {
 		JButton button = new JButton("Back");
 		UIRes.customiseButton(button, true);
 		button.addActionListener(e -> {
 			GameComponent.layers.setLayer(LayeredPane.panel2, new Integer(5));
 		});
-		
+
 		return button;
 	}
 
