@@ -303,7 +303,7 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return a random death sound AudioFile object
 	 */
 	public AudioFile getRandDeathSound() {
-		System.out.println(lives);
+//		System.out.println(lives);
 
 		// XXX I am making the assumption that lives are decremented before this
 		// is called

@@ -72,7 +72,7 @@ public class VictoryScreen extends JPanel {
 			text = "Loser...";
 		}
 
-		System.out.println("VICTORY!!!" + resources.gamemode.getWinners());
+//		System.out.println("VICTORY!!!" + resources.gamemode.getWinners());
 
 		// add the winner text to a label
 		JLabel label = new JLabel(text);

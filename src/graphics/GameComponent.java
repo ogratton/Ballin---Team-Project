@@ -81,7 +81,7 @@ public class GameComponent extends JFrame implements ActionListener {
 		for (int i = 0; i < characters.size(); i++) {
 			if (characters.get(i).getId().equals(resources.getId())) {
 				firstPlayerIndex = i;
-				System.out.println("Player Number: " + characters.get(i).getPlayerNumber());
+//				System.out.println("Player Number: " + characters.get(i).getPlayerNumber());
 				break;
 			}
 		}
