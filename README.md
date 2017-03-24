@@ -3,7 +3,11 @@
 
 <h2>Music Credits:</h2>
 
-"Mega Hyper Ultrastorm" Kevin MacLeod (incompetech.com) <br>
+"Mega Hyper Ultrastorm" by Kevin MacLeod (incompetech.com) <br>
+Licensed under Creative Commons: By Attribution 3.0 License <br>
+http://creativecommons.org/licenses/by/3.0/
+
+"Bonus Rage" by Ozzed (ozzed.net) <br>
 Licensed under Creative Commons: By Attribution 3.0 License <br>
 http://creativecommons.org/licenses/by/3.0/
 

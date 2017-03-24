@@ -57,7 +57,7 @@ public class StartMenu extends JPanel {
 		
 		if (!Resources.silent)
 		{
-			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog");
+			musicPlayer = new MusicPlayer(UIRes.resources, "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "frog", "rage", "rage30");
 			musicPlayer.changePlaylist("grandma");
 			musicPlayer.start();
 			// passed so the volume sliders can work

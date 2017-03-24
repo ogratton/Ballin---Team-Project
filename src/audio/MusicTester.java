@@ -45,7 +45,7 @@ public class MusicTester extends JPanel
 
 		Resources res = new Resources();
 
-		String[] titles = new String[] { "frog", "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30" };
+		String[] titles = new String[] { "frog", "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30", "rage", "rage30"};
 		
 		mp = new MusicPlayer(res, titles);
 

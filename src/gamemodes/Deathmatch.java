@@ -106,8 +106,12 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			case SPACE:
 				resources.setSong("ultrastorm30");
 				break;
+			case CAKE:
+				resources.setSong("rage30");
+				break;
 			default:
 				resources.setSong("thirty");
+				break;
 		}
 
 		// Graphics g = new Graphics(resources, null, false);

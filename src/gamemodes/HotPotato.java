@@ -10,6 +10,7 @@ import physics.Physics;
 import resources.Character;
 import resources.Map;
 import resources.Resources;
+import resources.Map.World;
 import resources.Resources.Mode;
 import ui.UIRes;
 
@@ -102,8 +103,22 @@ public class HotPotato extends Thread implements GameModeFFA {
 
 		p.start();
 		
-		// TODO change to be specific to tile type
-		resources.setSong("frog");
+		World style = resources.getMap().getWorldType();
+		switch (style)
+		{
+			case SPACE:
+				resources.setSong("ultrastorm");
+				break;
+			case CAKE:
+				resources.setSong("rage");
+				break;
+			case LAVA:
+				resources.setSong("frog");
+				break;
+			default:
+				resources.setSong("swing");
+				break;
+		}
 
 		placeBomb();
 		while (!isGameOver()) {
