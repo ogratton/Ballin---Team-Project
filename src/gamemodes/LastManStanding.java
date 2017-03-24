@@ -27,6 +27,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 	private Resources resources;//
 	private boolean isServer = false;//
 	private boolean singlePlayer = false;
+	private boolean endGame = false;
 
 	/**
 	 * Create a new last man standing game mode.
@@ -120,7 +121,7 @@ public class LastManStanding extends Thread implements GameModeFFA {
 				break;
 		}
 		
-		while (!isGameOver()) {
+		while (!isGameOver() && !endGame) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -129,20 +130,6 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
-		System.out.println("WE HAVE A WINNER");
-		System.out.println("Player " + winner.getPlayerNumber() + " survived the longest and reached a score of "
-				+ winner.getScore() + "!");
-		ArrayList<Character> scores = resources.getOrderedScores();
-		for (Character c : scores) {
-			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
-		}
-		System.out.println();
-		for (Character c : getOrderedTimesOfDeath()) {
-			if (c.getLives() == 0) {
-				System.out.println(
-						"Player " + c.getPlayerNumber() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
-			}
-		}
 		resources.setGameOver(true);
 		resources.setSong("grandma");
 	}
@@ -254,5 +241,10 @@ public class LastManStanding extends Thread implements GameModeFFA {
 		for (Character c : resources.getPlayerList()) {
 			resources.getMap().spawn(c);
 		}
+	}
+
+	@Override
+	public void setEndGame(boolean b) {
+		endGame = b;
 	}
 }

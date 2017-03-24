@@ -31,4 +31,9 @@ public interface GameModeFFA {
 	 */
 	public void randomRespawn();
 
+	/**
+	 * @param b Should the game end?
+	 */
+	public void setEndGame(boolean b);
+
 }

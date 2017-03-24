@@ -30,6 +30,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 	private Random rand;
 	private boolean isServer;
 	private boolean singlePlayer = false;
+	private boolean endGame = false;
 
 	/**
 	 * Create a new hot potato game mode.
@@ -121,7 +122,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 
 		placeBomb();
-		while (!isGameOver()) {
+		while (!isGameOver() && !endGame) {
 			try {
 				Thread.sleep(100);
 				resources.incrementTimer(1);
@@ -136,13 +137,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 		}
 		// Game has ended
 		p.pause();
-		System.out.println("WE HAVE A WINNER");
-		System.out.println(winner.getName() + " survived the gauntlet!");
-		for (Character c : getOrderedTimesOfDeath()) {
-			if (c.getTimeOfDeath() != -1) {
-				System.out.println(c.getName() + " survived " + c.getTimeOfDeath() / 100 + " seconds.");
-			}
-		}
 		resources.setGameOver(true);
 		resources.setSong("grandma");
 	}
@@ -160,7 +154,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 			c = players.get(p);
 			if (!c.isExploding() && !c.isDead() && !c.hasBomb()) {
 				c.hasBomb(true);
-				System.out.println(c.getName() + " has been given the bomb!");
 				success = true;
 			}
 		}
@@ -176,7 +169,6 @@ public class HotPotato extends Thread implements GameModeFFA {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
 				if (!Resources.silent) UIRes.explode.play();
-				System.out.println(c.getName() + " exploded!");
 				break;
 			}
 		}
@@ -269,5 +261,10 @@ public class HotPotato extends Thread implements GameModeFFA {
 		for (Character c : resources.getPlayerList()) {
 			resources.getMap().spawn(c);
 		}
+	}
+
+	@Override
+	public void setEndGame(boolean b) {
+		endGame = b;
 	}
 }

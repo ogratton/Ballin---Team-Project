@@ -26,6 +26,7 @@ public class Deathmatch extends Thread implements GameModeFFA {
 	private Resources resources;
 	private boolean isServer = false;
 	private boolean singlePlayer = false;
+	private boolean endGame = false;
 
 	private String victoryMusic = "grandma";
 
@@ -117,9 +118,8 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		// Graphics g = new Graphics(resources, null, false);
 		// g.start();
 
-		while (!isGameOver()) {
+		while (!isGameOver() && !endGame) {
 			try {
-				System.out.println("Time remaining: " + resources.getTimer() + " seconds");
 				if (resources.getTimer() == 1) {
 					Thread.sleep(1000);
 					resources.incrementTimer(-1);
@@ -143,16 +143,6 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		p.pause();
 		
 		resources.setSong(victoryMusic);
-
-		System.out.println("WE HAVE A WINNER");
-		getWinners();
-		System.out.println(
-				"Player " + winner.getPlayerNumber() + " achieved the highest score of  " + winner.getScore() + "!");
-		ArrayList<Character> scores = resources.getOrderedScores();
-		for (Character c : scores) {
-			System.out.print("Player " + c.getPlayerNumber() + " had score " + c.getScore() + ", ");
-		}
-		System.out.println("Deathmatch Ended");
 		resources.setGameOver(true);
 	}
 
@@ -210,6 +200,11 @@ public class Deathmatch extends Thread implements GameModeFFA {
 		for (Character c : resources.getPlayerList()) {
 			resources.getMap().spawn(c);
 		}
+	}
+
+	@Override
+	public void setEndGame(boolean b) {
+		endGame = b;
 	}
 
 }

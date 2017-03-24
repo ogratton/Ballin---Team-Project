@@ -18,6 +18,7 @@ public class DebugMode extends Thread implements GameModeFFA
 {
 
 	private Resources resources;
+	private boolean endGame = false;
 
 	public DebugMode(Resources resources)
 	{
@@ -87,5 +88,10 @@ public class DebugMode extends Thread implements GameModeFFA
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setEndGame(boolean b) {
+		endGame = b;
 	}
 }
