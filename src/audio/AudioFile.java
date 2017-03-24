@@ -216,7 +216,6 @@ public class AudioFile implements LineListener
 	{
 		// for a wav file at 44100hz, this sets it back a second
 		// but seems to actually set it back where it really was
-		// TODO check this isn't platform specific
 		int clip_length = clip.getFrameLength();
 		int res_pos = pos - 44100;
 

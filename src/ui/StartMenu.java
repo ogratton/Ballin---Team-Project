@@ -192,9 +192,6 @@ public class StartMenu extends JPanel {
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
 				
 				if (!Resources.silent) {
-					// XXX pause music
-//					musicPlayer.changePlaylist("thirty");
-//					musicPlayer.resumeMusic();
 					musicHandler.setResources(UIRes.resources);
 					musicPlayer.pauseMusic();	
 				}

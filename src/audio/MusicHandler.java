@@ -48,7 +48,6 @@ public class MusicHandler extends Thread
 	 */
 	public void changeSong(String songName)
 	{
-//		musicPlayer.pauseMusic(); // TODO necessary?
 		musicPlayer.changePlaylist(songName);
 		musicPlayer.resumeMusic();
 	}

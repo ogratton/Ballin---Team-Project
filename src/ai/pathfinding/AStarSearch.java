@@ -130,7 +130,7 @@ public class AStarSearch
 									
 //									System.out.println(neiX + " " + neiY);
 									
-									double cost = resources.getMap().getCostMask()[neiX][neiY]; // XXX ???
+									double cost = resources.getMap().getCostMask()[neiX][neiY];
 									neighbours.add(new SearchNode(neiLoc, current, costSoFar + cost, goal));
 								}
 							}

@@ -37,15 +37,11 @@ public abstract class AITemplate extends Thread
 	protected Behaviour behaviour = Behaviour.ROVING; // default
 
 	// private int raycast_length = 10;
-	protected static final double BRAKING_CONSTANT = 35; // how many ms to brake
-															// for. 40-50 seems
-															// good
+	protected static final double BRAKING_CONSTANT = 35; // how many ms to brake for. 40-50 seems good
 	protected static final double FUZZINESS = 20;
-	// private final long reaction_time = 5; // can be increased once
-	// ray-casting is implemented
+	// private final long reaction_time = 5; // can be increased once ray-casting is implemented
 	protected static final long TICK = 40; // loop every <tick>ms
-	protected static long PRESCIENCE = TICK * 1; // how many ms ahead we look
-													// for our predicted point
+	protected static long PRESCIENCE = TICK * 1; // how many ms ahead we look for our predicted point
 
 	protected ArrayList<Tile> bad_tiles;
 
@@ -58,12 +54,9 @@ public abstract class AITemplate extends Thread
 	protected Point lastWaypoint; // the last waypoint we followed
 	protected Vector normalToNextWaypoint;
 
-	protected boolean success = true; // we start off a winner (because we need
-										// to be motivated to look for new
-										// goals)
+	protected boolean success = true; // we start off a winner (because we need to be motivated to look for new goals)
 
-	protected ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge
-										// tiles (not EDGE_ABYSS)
+	protected ArrayList<Tile> non_edge; // all tiles that are not WALKABLE edge tiles (not EDGE_ABYSS)
 
 	protected Character currentTarget; // for aggressive mode
 	protected Point currentGoal; // for aggressive mode
@@ -73,21 +66,6 @@ public abstract class AITemplate extends Thread
 	protected Point[] destinations = new Point[] { new Point(12, 28), new Point(8, 32), new Point(16, 38), new Point(20, 20) };
 	protected int destI = 0; // destination index
 	protected boolean debug;
-
-	/*
-	 * Notes:
-	 * 
-	 * TODO AI should ray-cast ahead of it and scan that area for danger For now
-	 * change direction randomly to avoid danger (This is Coward behaviour)
-	 * 
-	 * TODO moveAwayFromEdge is still a bit dodgy
-	 * 
-	 * 
-	 * Look at this
-	 * https://www.javacodegeeks.com/2014/08/game-ai-an-introduction-to-
-	 * behaviour-trees.html
-	 * 
-	 */
 
 	public AITemplate(Resources resources, Character character)
 	{
@@ -150,12 +128,10 @@ public abstract class AITemplate extends Thread
 				}
 				else if (behaviour == Behaviour.COWARD)
 				{
-					// TODO
 					cowardBehaviour();
 				}
 				else if (behaviour == Behaviour.AGGRESSIVE)
 				{
-					// TODO
 					aggressiveBehaviour();
 				}
 				else if (behaviour == Behaviour.POTATO)
@@ -222,7 +198,6 @@ public abstract class AITemplate extends Thread
 				resources.setAINextDest(resources.getMap().tileCoordsToMapCoords(destinations[destI].x, destinations[destI].y));
 
 				System.out.println("pathfinding to point " + destinations[destI]);
-				// System.out.println("waypoints: " + waypoints);
 			}
 
 		}
@@ -326,18 +301,13 @@ public abstract class AITemplate extends Thread
 			try
 			{
 				// dash when we are close to the target
-				if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX
-																											// 60
-																											// is
-																											// experimental
-																											// threshold
+				if (StaticHeuristics.euclidean(getOurLocation(), getTargetLocation(currentTarget)) < 60) // XXX 60 is experimental threshold
 				{
 					character.requestDashing();
 				}
 				// if the player has moved considerably since we targeted them
 				// (or has died)
-				else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70 || currentTarget.isDead()) // XXX 70 is experimental
-																																	// threshold
+				else if (StaticHeuristics.euclidean(currentGoal, getTargetLocation(currentTarget)) > 70 || currentTarget.isDead()) // XXX 70 is experimental threshold
 				{
 					// force recalculation next tick by clearing our waypoints
 					waypoints.clear();
@@ -432,15 +402,12 @@ public abstract class AITemplate extends Thread
 	 */
 	protected void moveToWaypoint() throws InterruptedException
 	{
-		// if (debug) resources.setAINextDest(waypoints.peek()); // XXX debug
-
 		success = moveTo(waypoints.peek());
 		if (success)
 		{
 			success = false;
 			if (waypoints.size() > 0)
 			{
-				// System.out.println("made it to a waypoint!");
 				lastWaypoint = waypoints.removeFirst();
 				normalToNextWaypoint = normalToNextWaypoint();
 				brakeChar();
@@ -790,8 +757,7 @@ public abstract class AITemplate extends Thread
 
 		// work out which direction
 		double proportionDx = Math.abs(dX / dY);
-		double ratioDx = 0.5; // how much of the delay should go to countering
-								// dX
+		double ratioDx = 0.5; // how much of the delay should go to countering dX
 
 		// work out relevant ratios (0 and infinity caught later)
 		if (proportionDx < 1)

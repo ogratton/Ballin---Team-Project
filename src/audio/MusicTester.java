@@ -45,9 +45,6 @@ public class MusicTester extends JPanel
 
 		Resources res = new Resources();
 
-		// TODO get all when put music in its own folder
-		//		File folder = new File(FilePaths.music);
-		//		File[] listOfFiles = folder.listFiles();
 		String[] titles = new String[] { "frog", "grandma", "swing", "thirty", "ultrastorm", "ultrastorm30" };
 		
 		mp = new MusicPlayer(res, titles);
