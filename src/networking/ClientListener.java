@@ -225,7 +225,6 @@ public class ClientListener extends Listener {
            					for(int j=0; j<charactersList.size(); j++) {
            						if (charactersList.get(j).getId().equals(players.get(i).getId())) {
            							
-           							//System.out.println("X Pos: " + charactersList.get(j).getX());
            							players.get(i).setX(charactersList.get(j).getX());
            							players.get(i).setY(charactersList.get(j).getY());
            							players.get(i).setBlocking(charactersList.get(j).isBlocking());
@@ -250,27 +249,17 @@ public class ClientListener extends Listener {
            				}
    				}
    				break;
+   			// Decrements the countdown every time a countdown message is received from the server.
    			case COUNTDOWN:
    				if(cModel.getResources() != null) {
    					cModel.getResources().decCountdown();
    				}
    				break;
+   			// Receives a finished message from the server when the game is finished. Resources is reset.
    			case FINISHED:
    				cModel.setResources(new Resources());
    				cModel.setReady(false);
    				cModel.setGameInProgress(false);
-   				//cModel.setCharacters(new ConcurrentHashMap<String, Character>());
-   			case REMOVE_PLAYER:
-//   				String removeClientId = message.getReceiverId();
-//   				ArrayList<Character> characters = cModel.getResources().getPlayerList();
-//   				for(int i=0; i<characters.size(); i++) {
-//   					if(characters.get(i).equals(removeClientId)) {
-//   		   				System.out.println("Player Deleted");
-//   						characters.get(i).setDead(true);
-//   						break;
-//   					}
-//   				}
-   				break;
    			default:
    				break;
    			}
@@ -282,6 +271,12 @@ public class ClientListener extends Listener {
 
 	}
 	
+	/**
+	 * Deserialize the ArrayList of Serialized power ups into an ArrayList
+	 * of deserialized power ups.
+	 * @param serialized ArrayList of serialized power ups
+	 * @return ArrayList of deserialized power ups.
+	 */
 	public static ArrayList<Powerup> deserialize(ArrayList<SerializablePowerUp> serialized) {
 		ArrayList<Powerup> deserialized = new ArrayList<Powerup>();
 		for(int i=0; i<serialized.size(); i++) {

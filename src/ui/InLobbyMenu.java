@@ -68,7 +68,7 @@ public class InLobbyMenu extends JPanel implements Observer {
 		button.addActionListener(e -> {
 
 			Message leaveMessage = new Message(Command.SESSION, Note.LEAVE, cModel.getMyId(), "", cModel.getSessionId(),
-					cModel.getHighlightedSessionId());
+					"");
 			try {
 				cModel.getConnection().sendTCP(leaveMessage);
 				cModel.setReady(false);

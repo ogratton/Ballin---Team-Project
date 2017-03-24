@@ -16,6 +16,12 @@ import com.esotericsoftware.kryonet.Client;
 
 import resources.Resources;
 
+/**
+ * This class observes the Character objects on the Client and sends the changes in the controls
+ * to the Server to update the physics. It only sends an update when the controls have changed.
+ * @author axn598
+ *
+ */
 public class Updater extends JPanel implements Observer {
 
 	/**
@@ -27,13 +33,12 @@ public class Updater extends JPanel implements Observer {
 	private Resources resources;
 	private boolean oldUp, oldRight, oldLeft, oldDown, oldDashing, oldBlocking = false;
 	
-/**
- * This creates a panel of buttons controlling the client GUI. It includes 4 buttons: Exit, Online Clients, Score Card, Request.
- * When a button is clicked it sends a message to the Server Receiver where the message is interpreted.	
- * @param cModel The Client Data Model object. This is where all the information about the client is stored.
- * @param toServer The output stream to the Server Receiver.
- */
-	
+	/**
+	 * Constructs the updater.
+	 * @param cModel The ConnectionDataModel
+	 * @param client The Kryonet Client object
+	 * @param resources Resources object
+	 */
 	public Updater(ConnectionDataModel cModel, Client client, Resources resources) {
 		super();
 		this.cModel = cModel;
@@ -41,13 +46,11 @@ public class Updater extends JPanel implements Observer {
 		this.resources = resources;
 	}
 
-/**
- * Updates the button panel when changes are made to the Client Data Model
- * If the client is connected to another client (i.e: playing a game) the buttons in this panel are disabled.
- * This means that the client is forced to finish or quit the game before trying to press any other commands.
- * @param o
- * @param arg
- */
+
+	/**
+	 * Updates when the character it is observing controls change. It sends the changes in the controls to
+	 * the server.
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		List<resources.Character> characters = resources.getPlayerList();
@@ -55,6 +58,7 @@ public class Updater extends JPanel implements Observer {
 			if(characters.get(i).getId().equals(cModel.getMyId()) && hasControlsChanged(characters.get(i))) {		
 				CharacterInfo info = new CharacterInfo(cModel.getMyId(), characters.get(i).isUp(), characters.get(i).isRight(), characters.get(i).isLeft(), characters.get(i).isDown(), characters.get(i).isDashing(), characters.get(i).isBlocking());
 				
+				// Send a message to update the server.
 				GameData gameData = new GameData(info);
 				Message message = new Message(Command.GAME, Note.UPDATE, cModel.getMyId(), null, cModel.getSessionId(), null, gameData);
 				try {
@@ -67,6 +71,11 @@ public class Updater extends JPanel implements Observer {
 		repaint();
 	}
 	
+	/**
+	 * Check if the controls pressed have changed since the last update.
+	 * @param c The character
+	 * @return true if the controls pressed have changed, false otherwise.
+	 */
 	private boolean hasControlsChanged(resources.Character c) {
 		if(c.isUp() != oldUp || c.isDown() != oldDown || c.isRight() != oldRight || c.isLeft() != oldLeft || c.isBlocking() != oldBlocking || c.isDashing() != oldDashing) {
 			oldUp = c.isUp();

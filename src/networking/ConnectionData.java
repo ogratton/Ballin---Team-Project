@@ -19,9 +19,6 @@ public class ConnectionData {
 	private String sessionId;
 	private ConcurrentMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 	private ClientInformation myClient;
-	private String highlightedSessionId = null;
-	private String highlightedClientId = null;
-	private String receivedMessage;
 	private String targetId;
 	private boolean gameInProgress;
 	private Map<String, Character> characters = new ConcurrentHashMap<String, Character>();
@@ -140,30 +137,6 @@ public class ConnectionData {
 		}
 	    
 	    return sessionList;
-	}
-	
-	public String getHighlightedSessionId() {
-		return highlightedSessionId;
-	}
-	
-	public void setHiglightedSessionId(String id) {
-		highlightedSessionId = id;
-	}
-	
-	public String getHighlightedClientId() {
-		return highlightedClientId;
-	}
-	
-	public void setHighlightedClientId(String clientId) {
-		highlightedClientId = clientId;
-	}
-	
-	public String getReceivedMessage() {
-		return receivedMessage;
-	}
-	
-	public void setReceivedMessage(String message) {
-		receivedMessage = message;
 	}
 	
 	public String getTargetId() {

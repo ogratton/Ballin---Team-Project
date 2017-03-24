@@ -6,7 +6,7 @@ import java.util.List;
 import resources.Powerup;
 
 /**
- * Packages a list of characters into an object so that it can be sent across the network.
+ * Packages a list of characters and other data into an object so that it can be sent across the network.
  * @author aaquibnaved
  *
  */
@@ -73,18 +73,34 @@ public class GameData {
 		return tag;
 	}
 	
+	/**
+	 * Get an ArrayList of serialized power ups.
+	 * @return ArrayList of serialized power ups.
+	 */
 	public ArrayList<SerializablePowerUp> getPowerUps() {
 		return powerUps;
 	}
 	
+	/**
+	 * Set the list of serialized power ups.
+	 * @param powerUps
+	 */
 	public void setPowerUps(ArrayList<SerializablePowerUp> powerUps) {
 		this.powerUps = powerUps;
 	}
 
+	/**
+	 * Get the timer for deathmatch.
+	 * @return The timer
+	 */
 	public int getTimer() {
 		return timer;
 	}
 
+	/**
+	 * Set the timer for deathmatch.
+	 * @param timer The timer for deathmatch.
+	 */
 	public void setTimer(int timer) {
 		this.timer = timer;
 	}

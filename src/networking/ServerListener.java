@@ -308,9 +308,6 @@ public class ServerListener extends Listener {
 			  				Resources res = resourcesMap.get(session.getId());
 			  				GameModeFFA mode = res.gamemode;
 			  				
-			  				GameEndChecker checker = new GameEndChecker(session.getId(), resourcesMap, sessions, connections, resourcesMap.get(session.getId()));
-			  				checker.start();
-			  				
 			  				((Thread) mode).start();
 			  				
 			  			}
@@ -411,6 +408,7 @@ public class ServerListener extends Listener {
 		    }
 		}
 		
+		// Remove a session if it's empty
 		for (Map.Entry<String, Session> entry : sessions.entrySet()) {
 		    String key = entry.getKey();
 		    Session value = entry.getValue();
@@ -420,6 +418,7 @@ public class ServerListener extends Listener {
 		    }
 		}
 
+		// Refresh all the clients
     	Message refresh = new Message(Command.SESSION, Note.COMPLETED, null, null, null, null, sessions);
     	for(Connection c: connections.values()) {
     		c.sendTCP(refresh);

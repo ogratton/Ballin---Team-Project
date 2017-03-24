@@ -82,36 +82,6 @@ public class ConnectionDataModel extends Observable {
 		return this.data.getClient(sessionId, clientId);
 	}
 	
-	public synchronized String getHighlightedSessionId() {
-		return this.data.getHighlightedSessionId();
-	}
-	
-	public synchronized void setHighlightedSessionId(String id) {
-		this.data.setHiglightedSessionId(id);
-		setChanged();
-		notifyObservers();
-	}
-	
-	public synchronized String getHighlightedClientId() {
-		return this.data.getHighlightedClientId();
-	}
-	
-	public synchronized void setHighlightedClientId(String id) {
-		this.data.setHighlightedClientId(id);
-		setChanged();
-		notifyObservers();
-	}
-	
-	public synchronized String getReceivedMessage() {
-		return data.getReceivedMessage();
-	}
-	
-	public synchronized void setReceivedMessage(String message) {
-		data.setReceivedMessage(message);
-		setChanged();
-		notifyObservers();
-	}
-	
 	public synchronized String getTargetId() {
 		return data.getTargetId();
 	}
