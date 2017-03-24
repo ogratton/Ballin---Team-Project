@@ -187,7 +187,8 @@ public class StartMenu extends JPanel {
 			System.out.println("Game mode: " + gameMode);
 			System.out.println("Tiles: " + tileSet);
 			
-			if (mapName != null && gameMode != null && tileSet != null) {
+			// if they didn't cancel
+			if (mapName != null || gameMode != null || tileSet != null) {
 				UIRes.resources.refresh();
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
 				
