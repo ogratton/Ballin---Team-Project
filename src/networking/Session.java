@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import resources.Map;
+import resources.Map.World;
 import resources.Resources.Mode;
 
 /**
@@ -60,7 +63,7 @@ public class Session {
 	 * @param hostName The name of the host
 	 * @param numberOfAI The number of AI in the session
 	 */
-	public Session(String sessionName, ClientInformation client, String mapName, resources.Map.World tileset, Mode modeName, String hostName, int numberOfAI) {
+	public Session(String sessionName, ClientInformation client, String mapName, World tileset, Mode modeName, String hostName, int numberOfAI) {
 		this.id = UUID.randomUUID().toString();
 		this.sessionName = sessionName;
 		this.clients = new ConcurrentHashMap<String, ClientInformation>();

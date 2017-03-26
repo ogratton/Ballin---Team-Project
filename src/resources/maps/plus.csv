@@ -1,0 +1,42 @@
+# TILE KEYS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# RAW TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# a = ABYSS,,# b = FLAT,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER ONE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# c = EDGE_N,,# d = EDGE_E,,# e = EDGE_S,,# f = EDGE_W,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER TWO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# g = EDGE_NE,,# h = EDGE_SE,,# i = EDGE_SW,,# j = EDGE_NW,,# k = EDGE_NS,,# l = EDGE_EW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER THREE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# m = EDGE_NES,,# n = EDGE_ESW,,# o = EDGE_SWN,,# p = EDGE_WNE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# EDGE ORDER FOUR,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# q = EDGE_NESW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# TRANSITION TILES,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# r = EDGE_ABYSS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+# 48 x 26 MAP FOLLOWS,,,# 1200 x 650,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+@GMs:Deathmatch, LastManStanding, Debug
+@Name:Plus
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,j,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,g,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,s,s,s,s,s,s,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,s,s,s,s,s,s,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,f,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,d,a,a,a
+a,a,a,i,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,h,a,a,a
+a,a,a,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a
+a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a

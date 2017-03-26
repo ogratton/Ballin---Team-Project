@@ -88,13 +88,13 @@ public class HotPotato extends Thread implements GameModeFFA {
 		if (singlePlayer) {
 
 			try {
-				if (!Resources.silent) UIRes.dingSound.play();
+				if (!Resources.silent) UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(2);
-				if (!Resources.silent) UIRes.dingSound.play();
+				if (!Resources.silent) UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(1);
-				if (!Resources.silent) UIRes.dingSound.play();
+				if (!Resources.silent) UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(0);
 			} catch (InterruptedException e) {
@@ -168,7 +168,7 @@ public class HotPotato extends Thread implements GameModeFFA {
 			if (c.hasBomb()) {
 				c.setExploding(true);
 				c.setTimeOfDeath(resources.getGlobalTimer());
-				if (!Resources.silent) UIRes.explode.play();
+				if (!Resources.silent) UIRes.explode.play(resources.getSFXGain());
 				break;
 			}
 		}

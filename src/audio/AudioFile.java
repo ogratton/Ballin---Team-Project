@@ -110,11 +110,22 @@ public class AudioFile implements LineListener
 	}
 
 	/**
-	 * Default to playing with normal gain
+	 * Default to playing with gain in resources
 	 */
 	public void play()
 	{
-		play(0);
+		if (noResources)
+		{
+			play(0);
+			System.err.println("you shouldn't be playing that clip like that (specifiy gain)");
+		}
+		else
+		{
+//			int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+//			play(offset);
+			play(0);
+		}
+		
 	}
 
 	public void stop()
@@ -133,11 +144,6 @@ public class AudioFile implements LineListener
 	{
 		if (playState != PlayState.PLAYING)
 		{
-			if (!noResources)
-			{
-				int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
-				gain += offset;
-			}
 			if (gainControl != null) gainControl.setValue(gain);
 			clip.start();
 			playState = PlayState.PLAYING;
@@ -230,8 +236,8 @@ public class AudioFile implements LineListener
 			return;
 		}
 		clip.setFramePosition(res_pos);
-		int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
-		if (gainControl != null) gainControl.setValue(gain + offset);
+//		int offset = resources.getSFXGain() < 0 ? resources.getSFXGain() : 0; // sfx_gain is the gain set by the player in the settings (always <0)
+//		if (gainControl != null) gainControl.setValue(gain + offset);
 		clip.start();
 		playState = PlayState.PLAYING;
 	}
