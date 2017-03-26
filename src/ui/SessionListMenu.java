@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,11 +33,16 @@ import networking.ConnectionDataModel;
 import networking.Message;
 import networking.Note;
 import networking.Session;
-import resources.FilePaths;
 import resources.Map;
 import resources.MapMetaData;
 import resources.Resources.Mode;
 
+/**
+ * Class for the Session List Menu panel.
+ * 
+ * @author Andreea Diana Dinca
+ *
+ */
 @SuppressWarnings("serial")
 public class SessionListMenu extends JPanel implements Observer {
 
@@ -52,29 +56,40 @@ public class SessionListMenu extends JPanel implements Observer {
 	private ConnectionDataModel cModel;
 	private InLobbyMenu lobby;
 	private MapMetaData mmd = new MapMetaData();
-	private File folder = new File(FilePaths.maps);
-	private File[] listOfFiles = folder.listFiles();
 
+	/**
+	 * Constructor of the Session List Menu panel.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 * @param cModel
+	 * 		the connection data model that the server uses
+	 */
 	public SessionListMenu(Client client, ConnectionDataModel cModel) {
 		this.cModel = cModel;
 		cModel.addObserver(this);
 		lobby = new InLobbyMenu(session, client, cModel, this);
 		setOpaque(false);
 		updateSessionsPanel(client);
-		add(addSessionButtons(client, this));
+		add(addSessionButtons(client));
 		add(UIRes.sessionsPanels);
 
 	}
 
+	/**
+	 * Creates a button that allows the user to create a session. Starts the lobby wizard which 
+	 * allows the user to select the name of the lobby, game mode, map and tile set for the game.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 * @return
+	 * 		the button
+	 */
 	JButton createSessionButton(Client client) {
 		JButton button = new JButton("Create Lobby");
 		button.addActionListener(e -> {
 
-			try {
-				createLobbyWizard();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
+			createLobbyWizard();
 
 			if (this.lobbyName != null && this.mapName != null && this.tileSet != null && this.gameMode != null) {
 
@@ -101,6 +116,14 @@ public class SessionListMenu extends JPanel implements Observer {
 		return button;
 	}
 
+	/**
+	 * Creates a button that allows the user to join a session they have selected from the session list.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 * @return
+	 * 		the button
+	 */
 	JButton joinSessionButton(Client client) {
 		JButton button = new JButton("Join");
 		button.addActionListener(e -> {
@@ -141,6 +164,14 @@ public class SessionListMenu extends JPanel implements Observer {
 		return button;
 	}
 
+	/**
+	 * Creates a button that allows the user to refresh the lobby list if it does not update on its own.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 * @return
+	 * 		the button
+	 */
 	JButton refreshSessionList(Client client) {
 		JButton button = new JButton("Refresh");
 		button.addActionListener(e -> {
@@ -156,6 +187,16 @@ public class SessionListMenu extends JPanel implements Observer {
 		return button;
 	}
 
+	/**
+	 * Creates a panel that displays all the details of a specific session.
+	 * 
+	 * @param session
+	 * 		the session the panel is made for
+	 * @param inProgress
+	 * 		flag for the session being in progress or not
+	 * @return
+	 * 		the panel
+	 */
 	JPanel getSessionPanel(Session session, boolean inProgress) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -214,6 +255,12 @@ public class SessionListMenu extends JPanel implements Observer {
 		return panel;
 	}
 
+	/**
+	 * Updates the session panel when the connection data model changes in order to display the correct list of sessions.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 */
 	void updateSessionsPanel(Client client) {
 		UIRes.sessionsPanels.removeAll();
 		UIRes.sessionPanelsList.removeAll(UIRes.sessionPanelsList);
@@ -227,9 +274,17 @@ public class SessionListMenu extends JPanel implements Observer {
 		UIRes.sessionsPanels.repaint();
 	}
 
-	JPanel addSessionButtons(Client client, JPanel sessionPanel) {
+	/**
+	 * Creates a panel containing the create session button, the join session button, the refresh button and the back button.
+	 * 
+	 * @param client
+	 * 		the client of the user connected to the server
+	 * @return
+	 * 		the panel
+	 */
+	JPanel addSessionButtons(Client client) {
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension((int) (UIRes.width * 0.95), (int) (UIRes.height * 0.12)));
+		panel.setPreferredSize(new Dimension((int) (UIRes.frameWidth * 0.95), (int) (UIRes.frameHeight * 0.12)));
 		panel.setOpaque(false);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		JButton createSession = createSessionButton(client);
@@ -242,7 +297,10 @@ public class SessionListMenu extends JPanel implements Observer {
 		return panel;
 	}
 
-	void createLobbyWizard() throws IOException {
+	/**
+	 * Starts the lobby wizard which pops up a number of frames asking the user to choose the lobby name, game mode, map and set of tiles for their game.
+	 */
+	void createLobbyWizard() {
 		JFrame lobbyFrame = new JFrame();
 		JFrame mapFrame = new JFrame();
 		JFrame tileFrame = new JFrame();
@@ -286,7 +344,13 @@ public class SessionListMenu extends JPanel implements Observer {
 				JComboBox<ImageIcon> mapChoice = new JComboBox<ImageIcon>();
 				mapChoice.setMaximumSize(new Dimension(150, 100));
 
-				HashSet<String> mapNames = MapMetaData.getTable().get(this.gameMode);
+				HashSet<String> mapNames = null;
+				try {
+					mapNames = MapMetaData.getTable().get(this.gameMode);
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
 
 				for (String map : mapNames) {
 					ImageIcon icon = new ImageIcon(Sprite.createMap(new Map(1200, 650, Map.World.DESERT, map)));
@@ -343,23 +407,9 @@ public class SessionListMenu extends JPanel implements Observer {
 
 	}
 
-	String[] getMapFileNames() {
-		String[] maps = new String[listOfFiles.length];
-
-		for (int i = 0; i < maps.length; i++) {
-			maps[i] = listOfFiles[i].toString().substring(17, listOfFiles[i].toString().length() - 4);
-		}
-
-		return maps;
-	}
-
-	ArrayList<Mode> getGameModes(String map) throws IOException {
-		map = FilePaths.maps + map + ".csv";
-		mmd.readMetaData(map);
-		ArrayList<Mode> gameModes = mmd.getCompatibleModes();
-		return gameModes;
-	}
-
+	/**
+	 * Whenever the connection data model is changed this method is called in order to update everything that has changed.
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		updateSessionsPanel(client);

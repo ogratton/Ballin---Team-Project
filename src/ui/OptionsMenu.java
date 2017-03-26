@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.Box;
@@ -20,12 +21,31 @@ import javax.swing.JSlider;
 import audio.MusicPlayer;
 import resources.Resources;
 
+/**
+ * Class for the Options Menu panel.
+ * 
+ * @author Andreea Diana Dinca
+ *
+ */
 @SuppressWarnings("serial")
 public class OptionsMenu extends JPanel{
 	
 	private JPanel backToPanel = UIRes.startPanel;
 	private MusicPlayer musicPlayer;
+	
+	private ArrayList<String> controlsList = new ArrayList<String>();
+	private ArrayList<JButton> buttonsList = new ArrayList<JButton>();
+	
+	private boolean isPressed;
 
+	/**
+	 * Constructor of the options panel.
+	 * 
+	 * @param backToPanel 
+	 * 		the panel the user is sent to after clicking the back button
+	 * @param musicPlayer 
+	 * 		the music player
+	 */
 	public OptionsMenu(JPanel backToPanel, MusicPlayer musicPlayer){
 		this.backToPanel = backToPanel;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -53,6 +73,12 @@ public class OptionsMenu extends JPanel{
 		this.musicPlayer = musicPlayer;
 	}
 	
+	/**
+	 * Creates a slider that controls the volume of the music player.
+	 * 
+	 * @return 
+	 * 		the slider
+	 */
 	JSlider getMusicSlider() {
 		JSlider musicSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_INIT);
 		UIRes.customiseSlider(musicSlider);
@@ -69,6 +95,12 @@ public class OptionsMenu extends JPanel{
 		return musicSlider;
 	}
 
+	/**
+	 * Creates a slider that controls the volume of the audio sounds.
+	 * 
+	 * @return 
+	 * 		the slider
+	 */
 	JSlider getAudioSlider() {
 		JSlider audioSlider = new JSlider(JSlider.HORIZONTAL, UIRes.VOL_MIN, UIRes.VOL_MAX, UIRes.VOL_INIT);
 		UIRes.customiseSlider(audioSlider);
@@ -81,10 +113,15 @@ public class OptionsMenu extends JPanel{
 		});
 		return audioSlider;
 	}
-	
+	/**
+	 * Creates a panel containing a label for the Graphics Settings and a button that controls the Graphics Settings.
+	 * 
+	 * @return 
+	 * 		the panel
+	 */
 	JPanel getGraphicsSettings(){
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int)(UIRes.width * 0.85), (int)(UIRes.height * 0.1)));
+		panel.setMaximumSize(new Dimension((int)(UIRes.frameWidth * 0.85), (int)(UIRes.frameHeight * 0.1)));
 		panel.setOpaque(false);
 		panel.setLayout(new GridLayout(1,0));
 		JLabel graphicsQuality = UIRes.getLabel("Graphics Quality");
@@ -107,9 +144,21 @@ public class OptionsMenu extends JPanel{
 		
 	}
 
+	/**
+	 * Creates a panel containing the label of the control and a button that changes the binding for the control mentioned in the label.
+	 * 
+	 * @param buttonLabel 
+	 * 		the label of the control
+	 * @param buttonName 
+	 * 		the name of the button
+	 * @param name 
+	 * 		the name that connects the button to the control
+	 * @return 
+	 * 		the panel
+	 */
 	JPanel getControlButton(String buttonLabel, String buttonName, String name) {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.15)));
+		panel.setMaximumSize(new Dimension((int) (UIRes.frameWidth * 0.85), (int) (UIRes.frameHeight * 0.15)));
 		panel.setOpaque(false);
 		GridLayout controlsGrid = new GridLayout(0, 2);
 		panel.setLayout(controlsGrid);
@@ -122,17 +171,23 @@ public class OptionsMenu extends JPanel{
 		button.setFocusable(true);
 		button.setName(name);
 		setKeyRebindable(button);
-		UIRes.controlsList.add(button.getText());
-		UIRes.buttonsList.add(button);
+		controlsList.add(button.getText());
+		buttonsList.add(button);
 
 		panel.add(label);
 		panel.add(button);
 		return panel;
 	}
 
+	/**
+	 * Creates a panel that contains all the controls.
+	 * 
+	 * @return 
+	 * 		the panel
+	 */
 	JPanel getControlsPanel() {
 		JPanel panel = new JPanel();
-		panel.setMaximumSize(new Dimension((int) (UIRes.width * 0.85), (int) (UIRes.height * 0.30)));
+		panel.setMaximumSize(new Dimension((int) (UIRes.frameWidth * 0.85), (int) (UIRes.frameHeight * 0.30)));
 		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
 		panel.setLayout(box);
 
@@ -149,6 +204,12 @@ public class OptionsMenu extends JPanel{
 		return panel;
 	}
 
+	/**
+	 * Resets a specific button to the default value in the resources object.
+	 * 
+	 * @param button 
+	 * 		the button to be reset
+	 */
 	void resetButton(JButton button) {
 		if (button.getName().equals("up")) {
 			UIRes.resources.setUp(UIRes.resources.getDefaultUp());
@@ -171,40 +232,53 @@ public class OptionsMenu extends JPanel{
 		}
 	}
 
+	/**
+	 * Creates a button that resets all the controls to their default values that are stores in the resources object.
+	 * 
+	 * @return 
+	 * 		the button
+	 */
 	JButton getResetControlsButton() {
 		JButton resetControlsButton = new JButton("Reset controls");
 		UIRes.customiseButton(resetControlsButton, true);
 		resetControlsButton.addActionListener(e -> {
-			Iterator<JButton> i = UIRes.buttonsList.iterator();
+			Iterator<JButton> i = buttonsList.iterator();
 			while (i.hasNext()) {
 				JButton button = i.next();
 				resetButton(button);
 			}
 
-			UIRes.controlsList.removeAll(UIRes.controlsList);
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultUp()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultDown()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultLeft()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultRight()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultDash()).toUpperCase());
-			UIRes.controlsList.add(("" + UIRes.resources.getDefaultBlock()).toUpperCase());
+			controlsList.removeAll(controlsList);
+			controlsList.add(("" + UIRes.resources.getDefaultUp()).toUpperCase());
+			controlsList.add(("" + UIRes.resources.getDefaultDown()).toUpperCase());
+			controlsList.add(("" + UIRes.resources.getDefaultLeft()).toUpperCase());
+			controlsList.add(("" + UIRes.resources.getDefaultRight()).toUpperCase());
+			controlsList.add(("" + UIRes.resources.getDefaultDash()).toUpperCase());
+			controlsList.add(("" + UIRes.resources.getDefaultBlock()).toUpperCase());
 
 		});
 		return resetControlsButton;
 	}
 
+	/**
+	 * Makes a button change its text based on the key the user has pressed after clicking the button. 
+	 * It connects the button to the resources object in order to change the control in game.
+	 * 
+	 * @param button 
+	 * 		the button to be changed
+	 */
 	void setKeyRebindable(JButton button) {
 
 		button.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				UIRes.isPressed = true;
+				isPressed = true;
 				button.addKeyListener(new KeyListener() {
 					@Override
 					public void keyPressed(KeyEvent e) {
-						if (UIRes.isPressed) {
-							UIRes.controlsList.remove(button.getText());
+						if (isPressed) {
+							controlsList.remove(button.getText());
 							if (e.getKeyCode() == KeyEvent.VK_UP) {
 								if (!checkKey("up arrow".toUpperCase()))
 									button.setText("up arrow".toUpperCase());
@@ -234,8 +308,8 @@ public class OptionsMenu extends JPanel{
 								if (!checkKey(("" + (e.getKeyChar())).toUpperCase()))
 									button.setText(("" + e.getKeyChar()).toUpperCase());
 							}
-							UIRes.isPressed = false;
-							UIRes.controlsList.add(button.getText());
+							isPressed = false;
+							controlsList.add(button.getText());
 
 							if (button.getName().equals("up"))
 								UIRes.resources.setUp(e.getKeyCode());
@@ -271,7 +345,7 @@ public class OptionsMenu extends JPanel{
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				button.setForeground(UIRes.colour);
+				button.setForeground(UIRes.fontColour);
 			}
 
 			@Override
@@ -285,8 +359,15 @@ public class OptionsMenu extends JPanel{
 		});
 	}
 
+	/**
+	 * Checks if a key has already been set to another control button.
+	 * @param string
+	 * 		the key that is being checked
+	 * @return
+	 * 		if the key has already been rebound or not
+	 */		
 	boolean checkKey(String string) {
-		if (UIRes.controlsList.contains(string)) {
+		if (controlsList.contains(string)) {
 			JOptionPane.showMessageDialog(new JFrame(),
 					"This key is already assigned for another control. Please assign another key!",
 					"Key already assigned!", JOptionPane.ERROR_MESSAGE);

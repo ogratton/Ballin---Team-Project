@@ -8,9 +8,23 @@ import javax.swing.JPanel;
 import networking.ConnectionData;
 import networking.ConnectionDataModel;
 
+/**
+ * Class for the back button.
+ * 
+ * @author Andreea Diana Dinca
+ *
+ */
 @SuppressWarnings("serial")
 public class BackButton extends JButton {
 
+	/**
+	 * Constructor for the Back Button class.
+	 * 
+	 * @param panel
+	 * 		the panel the back button switches to
+	 * @param text
+	 * 		the text of the button
+	 */
 	public BackButton(JPanel panel, String text) {
 		setText(text);
 		UIRes.customiseButton(this, true);

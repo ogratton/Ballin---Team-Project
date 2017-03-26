@@ -1,10 +1,12 @@
 package ui;
 
 import java.awt.Choice;
+
 import java.awt.Dimension;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,15 +31,31 @@ import resources.MapMetaData;
 import resources.Resources;
 import resources.Resources.Mode;
 
+/**
+ * Class for the Start Menu panel.
+ * 
+ * @author Andreea Diana Dinca
+ *
+ */
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel {
 
-	private String ip = null;
+	private String ip;
 	
 	private MusicPlayer musicPlayer;
 	private MusicHandler musicHandler;
 	
+	/**
+	 * Constructor of the Start Menu panel.
+	 */
 	public StartMenu() {
+		
+		try {
+			ip = Inet4Address.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel titleLabel = UIRes.getLabel("Ballin'");
 		JLabel usernameLabel = UIRes.getLabel("Welcome, " + UIRes.username + "!");
@@ -68,13 +86,18 @@ public class StartMenu extends JPanel {
 
 	}
 
+	/**
+	 * Creates a button that starts the server when clicked on. If the server is already running this will pop up a message telling the user their IP address.
+	 * 
+	 * @return 
+	 * 		the button
+	 */
 	JButton startServerButton() {
 		JButton startServer = new JButton("Start Server");
 		UIRes.customiseButton(startServer, true);
 		startServer.addActionListener(e -> {
 			try {
 				NetworkingServer.main(null);
-				ip = Inet4Address.getLocalHost().getHostAddress();
 				JFrame frame = new JFrame();
 				JOptionPane.showMessageDialog(frame,
 						"You have successfully started the server on your machine! This is your ip address: " + ip);
@@ -87,6 +110,12 @@ public class StartMenu extends JPanel {
 		return startServer;
 	}
 
+	/**
+	 * Creates a button that starts the game wizard which lets the user choose a game mode, map and tile set for the game.
+	 * 
+	 * @return 
+	 * 		the button
+	 */
 	JButton getPlaySingleplayerButton() {
 		JButton startButton = new JButton("Start Singleplayer Game");
 		UIRes.customiseButton(startButton, true);
@@ -203,6 +232,12 @@ public class StartMenu extends JPanel {
 		return startButton;
 	}
 
+	/**
+	 * Creates a button that asks the user to type in the server IP they would like to connect to.
+	 * 
+	 * @return 
+	 * 		the button
+	 */
 	JButton getPlayMultiplayerButton() {
 		JButton startButton = new JButton("Start Multiplayer Game");
 		UIRes.customiseButton(startButton, true);
@@ -221,6 +256,13 @@ public class StartMenu extends JPanel {
 		return startButton;
 	}
 
+	/**
+	 * Creates a button that allows the user to change their username. Updates the label that the button is connected to.
+	 * @param label 
+	 * 		the label the button is connected to
+	 * @return 
+	 * 		the button
+	 */
 	JButton getUsername(JLabel label) {
 		JButton usernameButton = new JButton("Change username");
 		UIRes.customiseButton(usernameButton, true);

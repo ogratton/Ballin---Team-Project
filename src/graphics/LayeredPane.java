@@ -24,7 +24,7 @@ import ui.UIRes;
  * the game
  * 
  * @author George Kaye
- *
+ * 
  */
 
 @SuppressWarnings("serial")
@@ -68,14 +68,14 @@ public class LayeredPane extends JLayeredPane {
 		splash = new SplashScreen(resources);
 		splash.setBounds(((x - 1200) / 2), ((y - 600) / 2), 1200, 500);
 
-		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.width, UIRes.height, ""))));
+		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.frameWidth, UIRes.frameHeight, ""))));
 		map.setLayout(new BorderLayout());
 		panel2 = new JPanel();
 		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 
 		optionsPanel = UIRes.optionsPanel;
 
-		panel2.setBounds(0, 0, UIRes.width, UIRes.height);
+		panel2.setBounds(0, 0, UIRes.frameWidth, UIRes.frameHeight);
 
 		panel2.setOpaque(false);
 
