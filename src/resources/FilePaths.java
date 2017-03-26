@@ -8,7 +8,7 @@ package resources;
 public class FilePaths
 {
 
-	public static final String resources = "./src/resources/";
+	public static final String resources = System.getProperty("user.dir") + "/resources/";
 	
 	public static final String audio = resources + "audio/";
 	public static final String music = audio + "music/";

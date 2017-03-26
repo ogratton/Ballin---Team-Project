@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Kyronet Debug"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Kryonet Debug"/>
-	<classpathentry kind="lib" path="src/resources/kryonet-2.21-all.jar"/>
+	<classpathentry kind="lib" path="resources/kryonet-2.21-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
