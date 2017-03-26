@@ -293,11 +293,17 @@ public class GameComponent extends JFrame implements ActionListener {
 			} else if (key == KeyEvent.VK_Z) {
 				cycleWorld();
 			} else if (key == KeyEvent.VK_ESCAPE) {
-				if (LayeredPane.menuShowing)
+				if (LayeredPane.menuShowing){
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(10));
+					toFront();
+					requestFocus();
+				}
+					
 				else
 					layers.setLayer(LayeredPane.inGameMenu, new Integer(30));
 				LayeredPane.menuShowing = !LayeredPane.menuShowing;
+				toFront();
+				requestFocus();
 			}
 
 		}

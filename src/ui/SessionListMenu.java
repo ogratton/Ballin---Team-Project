@@ -106,22 +106,35 @@ public class SessionListMenu extends JPanel implements Observer {
 		button.addActionListener(e -> {
 			int index = -1;
 			for (int i = 0; i < UIRes.sessionPanelsList.size(); i++) {
-				if (UIRes.sessionPanelsList.get(i).isFocusOwner())
+				if (UIRes.sessionPanelsList.get(i).isFocusOwner()){
 					index = i;
+					UIRes.sessionPanelsList.get(i).transferFocus();
+				}
 			}
-
-			Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
-					cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
-
-			try {
-				cModel.getConnection().sendTCP(joinMessage);
-
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			
+			System.out.println(index);
+			
+			if(index == -1){
+				JFrame frame = new JFrame();
+				JOptionPane.showMessageDialog(frame, "Please select a lobby from the list before clicking on the join button.");
 			}
+			
+			else{
+				
+				Message joinMessage = new Message(Command.SESSION, Note.JOIN, cModel.getMyId(), "",
+						cModel.getAllSessions().get(index).getId(), cModel.getAllSessions().get(index).getId());
 
-			lobby.setSession(cModel.getAllSessions().get(index));
-			UIRes.switchPanel(lobby);
+				try {
+					cModel.getConnection().sendTCP(joinMessage);
+
+				} catch (Exception e1) {
+					JFrame frame = new JFrame();
+					JOptionPane.showMessageDialog(frame, "Please select a lobby from the list before clicking on the join button.");
+				}
+
+				lobby.setSession(cModel.getAllSessions().get(index));
+				UIRes.switchPanel(lobby);
+			}
 		});
 
 		UIRes.customiseButton(button, true);
@@ -198,7 +211,6 @@ public class SessionListMenu extends JPanel implements Observer {
 		}
 		else
 			panel.setBackground(Color.LIGHT_GRAY);
-		panel.requestFocus();
 		return panel;
 	}
 

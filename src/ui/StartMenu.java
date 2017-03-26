@@ -32,9 +32,7 @@ import resources.Resources.Mode;
 @SuppressWarnings("serial")
 public class StartMenu extends JPanel {
 
-	private Mode gameMode = null;
-	private String mapName = null;
-	private Map.World tileSet = null;
+	private String ip = null;
 	
 	private MusicPlayer musicPlayer;
 	private MusicHandler musicHandler;
@@ -70,22 +68,20 @@ public class StartMenu extends JPanel {
 
 	}
 
-	public static void main(String[] args) {		
-		JFrame frame = UIRes.createFrame();
-		frame.setVisible(true);
-	}
-
 	JButton startServerButton() {
 		JButton startServer = new JButton("Start Server");
-		JFrame frame = new JFrame();
 		UIRes.customiseButton(startServer, true);
 		startServer.addActionListener(e -> {
 			try {
 				NetworkingServer.main(null);
+				ip = Inet4Address.getLocalHost().getHostAddress();
+				JFrame frame = new JFrame();
 				JOptionPane.showMessageDialog(frame,
-						"This is your ip address: " + Inet4Address.getLocalHost().getHostAddress());
+						"You have successfully started the server on your machine! This is your ip address: " + ip);
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				JFrame frame = new JFrame();
+				JOptionPane.showMessageDialog(frame,
+						"This is your ip address: " + ip);
 			}
 		});
 		return startServer;
@@ -101,6 +97,10 @@ public class StartMenu extends JPanel {
 			JFrame mapFrame = new JFrame();
 			JFrame tileFrame = new JFrame();
 			JFrame gameModeFrame = new JFrame();
+			
+			Mode gameMode = null;
+			String mapName = null;
+			Map.World tileSet = null;
 
 			JLabel gameModeLabel = new JLabel("Game mode: ");
 			UIRes.customiseLabel(gameModeLabel);
