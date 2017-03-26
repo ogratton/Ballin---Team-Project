@@ -79,22 +79,26 @@ public class Deathmatch extends Thread implements GameModeFFA {
 			SwingUtilities.invokeLater(g);
 		}
 
-		if (singlePlayer) {
+		if (singlePlayer)
+		{
 
-			try {
+			try
+			{
 				if (!Resources.silent)
-					UIRes.dingSound.play();
+					UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(2);
 				if (!Resources.silent)
-					UIRes.dingSound.play();
+					UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(1);
 				if (!Resources.silent)
-					UIRes.dingSound.play();
+					UIRes.dingSound.play(resources.getSFXGain());
 				Thread.sleep(1000);
 				resources.setCountdown(0);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e)
+			{
 				e.printStackTrace();
 			}
 		}
