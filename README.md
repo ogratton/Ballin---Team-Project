@@ -1,5 +1,10 @@
 <h1>Team F1 Project Repository</h1>
 
+<h2>How to Run</h2>
+
+To run jar: 
+- Ensure it is not in a zip file and that the resources folder is present in the same directory.
+- Double click or use command "java -jar Ballin.jar" in a terminal to run
 
 <h2>Music Credits:</h2>
 
