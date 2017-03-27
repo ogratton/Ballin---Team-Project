@@ -48,7 +48,7 @@ public class PathFindingTest
 
 		Resources resources = new Resources();
 		
-		resources.silent = true;
+		Resources.silent = true;
 
 		String mapName = followSetPoints ? "map0" : "asteroid";
 		mapName = hotPotato ? "potato" : mapName;
