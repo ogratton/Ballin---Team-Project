@@ -2,8 +2,6 @@ package networking;
 
 import java.util.UUID;
 
-import graphics.sprites.Sprite;
-
 /**
  * This contains all the information about a particular client.
  * @author aaquibnaved

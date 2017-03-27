@@ -1,6 +1,7 @@
 package physics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
@@ -9,17 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import graphics.sprites.SheetDetails;
 import physics.Physics.CND;
+import resources.Character;
+import resources.Character.Class;
+import resources.Character.Heading;
+import resources.Collidable_Circle;
 import resources.Map;
 import resources.Map.Tile;
 import resources.Resources;
 import resources.Resources.Mode;
-import resources.Character;
-import resources.Character.Class;
-import resources.Character.Heading;
-import resources.Collidable;
-import resources.Collidable_Circle;
 
 public class PhysicsTests {
 	private Physics physics;
@@ -33,7 +32,7 @@ public class PhysicsTests {
 		r = new Resources();
 		physics = new Physics(r, false);
 		r.mode = Mode.LastManStanding;
-		r.silent = true;
+		Resources.silent = true;
 		map = new Map(
 				new Point2D.Double(0,0), // origin
 				1000, // width
@@ -258,7 +257,7 @@ public class PhysicsTests {
 		r.getMap().getTiles()[0][0] = Tile.WALL; //top-left (NW) corner tile.
 		//No collision
 		double dx = c.getDx(), dy = c.getDy();
-		double x = c.getX(), y = c.getY();
+//		double x = c.getX(), y = c.getY();
 		physics.calculateWallCollisions(c);
 		assertTrue("Impossible wall collision Occurred!", Double.compare(c.getDx(), dx) == 0);
 		assertTrue("Impossible wall collision Occurred!", Double.compare(c.getDy(), dy) == 0);

@@ -18,6 +18,7 @@ public class DebugMode extends Thread implements GameModeFFA
 {
 
 	private Resources resources;
+	@SuppressWarnings("unused")
 	private boolean endGame = false;
 
 	public DebugMode(Resources resources)

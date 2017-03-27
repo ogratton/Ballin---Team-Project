@@ -14,6 +14,7 @@ import resources.Resources;
 public class PathFindingJUnit
 {
 	
+	@SuppressWarnings("unused") // it is used really
 	private Resources resources;
 	
 	@Before

@@ -1,14 +1,8 @@
 package networking;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.swing.JPanel;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -22,7 +16,6 @@ import graphics.Graphics;
 import resources.Character;
 import resources.Map;
 import resources.MapCosts;
-import resources.MapReader;
 import resources.Powerup;
 import resources.Resources;
 import resources.Resources.Mode;

@@ -7,9 +7,8 @@ import javax.swing.SwingUtilities;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
-import resources.Map;
-import resources.Resources;
 import resources.Map.World;
+import resources.Resources;
 import resources.Resources.Mode;
 import ui.UIRes;
 

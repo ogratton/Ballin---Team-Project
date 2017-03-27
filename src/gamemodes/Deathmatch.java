@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 import graphics.Graphics;
 import physics.Physics;
 import resources.Character;
-import resources.Map;
 import resources.Map.World;
 import resources.Powerup;
 import resources.Resources;

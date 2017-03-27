@@ -43,6 +43,7 @@ public class AudioFile implements LineListener
 
 	private volatile PlayState playState;
 
+	@SuppressWarnings("unused") // it is used really
 	private Resources resources;
 	private boolean noResources = false; // true if resources will be null
 

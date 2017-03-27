@@ -36,8 +36,8 @@ public class RunAllJUnitTests
 		System.out.println("GAME LOGIC RESULTS: " + result.getFailureCount());
 		
 		// Networking
-//		result = junit.run(NetworkingTests.class );
-//		System.out.println("NETWORKING RESULTS: " + result.getFailureCount());
+		result = junit.run(NetworkingTests.class );
+		System.out.println("NETWORKING RESULTS: " + result.getFailureCount());
 	
 		
 		// General
