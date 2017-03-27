@@ -51,9 +51,6 @@ public class Resources {
 	private int sfx_gain = 0;
 	private String song = "grandma";
 
-	private LinkedList<NetworkMove> clientMoves = new LinkedList<NetworkMove>();
-	private LinkedList<NetworkMove> sentClientMoves = new LinkedList<NetworkMove>();
-
 	// characters
 	private ArrayList<Character> playerList = new ArrayList<Character>();
 	// powerups in play
@@ -95,9 +92,6 @@ public class Resources {
 	private Color p6Colour = new Color(226, 10, 229);
 	private Color p7Colour = new Color(245, 122, 37);
 	private Color p8Colour = new Color(98, 31, 187);
-
-	private int requestId = 0;
-	private List<networking.CharacterInfo> requests = new LinkedList<networking.CharacterInfo>();
 
 	private int countdown = 3;
 	private boolean finished = false;
@@ -667,70 +661,6 @@ public class Resources {
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return The current request id.
-	 */
-	public int getRequestId() {
-		return this.requestId;
-	}
-
-	/**
-	 * @param id
-	 *            The new request id.
-	 */
-	public void setRequestId(int id) {
-		this.requestId = id;
-	}
-
-	/**
-	 * Increment the request id by 1.
-	 */
-	public void incRequestId() {
-		this.requestId++;
-	}
-
-	/**
-	 * Increments and returns the returns id.
-	 * 
-	 * @return The next request id.
-	 */
-	public int getNextRequestId() {
-		this.incRequestId();
-		return this.requestId;
-	}
-
-	public List<networking.CharacterInfo> getRequests() {
-		return requests;
-	}
-
-	public void setRequests(List<networking.CharacterInfo> list) {
-		requests = list;
-	}
-
-	public LinkedList<NetworkMove> getClientMoves() {
-		return clientMoves;
-	}
-
-	public void setClientMoves(LinkedList<NetworkMove> clientMoves) {
-		this.clientMoves = clientMoves;
-	}
-
-	public LinkedList<NetworkMove> getSentClientMoves() {
-		return sentClientMoves;
-	}
-
-	public void setSentClientMoves(LinkedList<NetworkMove> sentClientMoves) {
-		this.sentClientMoves = sentClientMoves;
-	}
-
-	public void transferMoves() {
-		NetworkMove move;
-		while (!clientMoves.isEmpty()) {
-			move = clientMoves.remove();
-			sentClientMoves.offer(move);
-		}
 	}
 
 	/**
