@@ -91,6 +91,8 @@ public class GameComponent extends JFrame implements ActionListener {
 		// fullscreen stuff
 		setUndecorated(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
+		// makes lag on windows for some reason
 		if (!System.getProperty("os.name").contains("Windows"))
 		{
 			GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);

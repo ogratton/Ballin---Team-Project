@@ -8,6 +8,12 @@ import java.io.IOException;
 import graphics.sprites.SheetDetails;
 import graphics.sprites.Sprite;
 
+/**
+ * Class to contain a map with various properties
+ * @author Team F1
+ *
+ */
+
 public class Map {
 	private int width, height;
 	private Point2D origin;

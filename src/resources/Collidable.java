@@ -1,5 +1,11 @@
 package resources;
 
+/**
+ * Interface for a collidable object (i.e. things in the game)
+ * @author George Kaye
+ *
+ */
+
 public interface Collidable {
 	public double getInvMass();
 	public double getRestitution();

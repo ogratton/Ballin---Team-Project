@@ -6,6 +6,14 @@ import resources.Character;
 import resources.Map;
 import resources.Powerup;
 
+/**
+ * Class containing details of the various sprite sheets for the game, with
+ * methods to extract correct sprites
+ * 
+ * @author George Kaye
+ *
+ */
+
 public class SheetDetails {
 
 	// CHARACTER SPRITE SHEET

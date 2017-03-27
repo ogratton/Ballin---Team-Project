@@ -14,6 +14,15 @@ import resources.Character;
 import resources.Resources;
 import ui.UIRes;
 
+/**
+ * Panel containing stats pertaining to the current player, such as stats, lives
+ * and kds. Displays different text depending on gamemode (e.g bomb timer on
+ * HotPotato)
+ * 
+ * @author George Kaye
+ *
+ */
+
 @SuppressWarnings("serial")
 public class PlayerStats extends JPanel {
 
@@ -46,7 +55,6 @@ public class PlayerStats extends JPanel {
 		kda = new JLabel(
 				"K/D/S: " + character.getKills() + "/" + character.getDeaths() + "/" + character.getSuicides());
 
-		
 		// this text will show different info depending on game mode
 		String modeText = "";
 

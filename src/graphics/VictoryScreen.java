@@ -17,7 +17,6 @@ import networking.Note;
 import resources.Character;
 import resources.Resources;
 import resources.Resources.Mode;
-import ui.InGameMenu;
 import ui.UIRes;
 
 /**

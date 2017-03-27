@@ -16,6 +16,8 @@ import resources.Powerup.Power;
 import ui.UIRes;
 
 /**
+ * Class to contain a character object
+ * 
  * @author Alex & Luke
  *
  */
@@ -36,7 +38,9 @@ public class Character extends Observable implements Collidable_Circle {
 		N, E, S, W, NE, NW, SE, SW, STILL
 	};
 
-	// this will have all the Character classes in use.
+	/**
+	 * Enum containing all the classes available to the player
+	 */
 	public enum Class {
 		WIZARD, ARCHER, WARRIOR, MONK, WITCH, HORSE;
 
@@ -69,7 +73,7 @@ public class Character extends Observable implements Collidable_Circle {
 
 		}
 
-	}; // add to this as we develop more classes.
+	};
 
 	private boolean isAI = false;
 	private AITemplate ai;
@@ -152,7 +156,7 @@ public class Character extends Observable implements Collidable_Circle {
 	private int teamNumber;
 
 	private int requestId;
-	
+
 	private boolean isGameOver;
 
 	private int dashCooldown = 0;
@@ -211,19 +215,10 @@ public class Character extends Observable implements Collidable_Circle {
 		this(default_mass, 0, 0, SheetDetails.getRadiusFromSprite(c), Heading.STILL, c, playerNo, name);
 	}
 
-	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo, String name) {
-		this(mass,
-				x, // x
-				y, // y
-				default_max_speed_x * (1 / mass), 
-				default_max_speed_y * (1 / mass), 
-				default_acc, // acceleration (TODO: calculate this)
-				default_restitution, 
-				radius, 
-				direction, 
-				classType, 
-				playerNo, 
-				name);
+	public Character(double mass, double x, double y, int radius, Heading direction, Class classType, int playerNo,
+			String name) {
+		this(mass, x, y, default_max_speed_x * (1 / mass), default_max_speed_y * (1 / mass), default_acc,
+				default_restitution, radius, direction, classType, playerNo, name);
 
 		// XXX set temp String for single player
 		// overwritten by networking
@@ -231,10 +226,8 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	// master constructor. Any other constructors should eventually call this.
-	private Character(double mass, double x, double y, double max_speed_x, double max_speed_y,
-			double acceleration, double restitution, int radius, Heading direction, Class classType, int playerNo,
-			String name) {
-		// new Character();
+	private Character(double mass, double x, double y, double max_speed_x, double max_speed_y, double acceleration,
+			double restitution, int radius, Heading direction, Class classType, int playerNo, String name) {
 
 		this.mass = mass;
 		if (mass == 0)
@@ -303,7 +296,6 @@ public class Character extends Observable implements Collidable_Circle {
 	 * @return a random death sound AudioFile object
 	 */
 	public AudioFile getRandDeathSound() {
-//		System.out.println(lives);
 
 		// XXX I am making the assumption that lives are decremented before this
 		// is called
@@ -1726,18 +1718,14 @@ public class Character extends Observable implements Collidable_Circle {
 	}
 
 	/**
-	 * ???
-	 * 
-	 * @return
+	 * @return The current frame of the rolling animation for this character
 	 */
 	public BufferedImage getCurrentFrame() {
 		return this.currentFrame;
 	}
 
 	/**
-	 * ???
-	 * 
-	 * @return
+	 * @return The first frame of the rolling animation for this character
 	 */
 	public BufferedImage getFirstFrame() {
 		return this.rollingSprites.get(0);
@@ -1854,13 +1842,21 @@ public class Character extends Observable implements Collidable_Circle {
 		this.name = name;
 	}
 
+	/**
+	 * @return If the game is over for this character
+	 */
+
 	public boolean isGameOver() {
 		return isGameOver;
 	}
+
+	/**
+	 * @param isGameOver
+	 *            Set the game over state to the specified value
+	 */
 
 	public void setGameOver(boolean isGameOver) {
 		this.isGameOver = isGameOver;
 	}
 
-	
 }
