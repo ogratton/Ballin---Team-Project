@@ -99,22 +99,20 @@ public class Sprite {
 
 	public static BufferedImage createMap(Map map) {
 
-		// do some calculate first
 		double width = map.getWidth();
 		double height = map.getHeight();
 
 		int tileSize = map.getTileSize();
 
-		// create a new buffer and draw two image into the new image
+		// create a big space for the new map to fit in
 		BufferedImage newImage = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = newImage.createGraphics();
 		Color oldColor = g2.getColor();
-		// fill background
 		g2.setPaint(Color.WHITE);
 		g2.fillRect(0, 0, (int) width, (int) height);
-		// draw image
 		g2.setColor(oldColor);
 
+		// draw each tile onto the new space
 		for (int i = 0; i < height / tileSize; i++) {
 			for (int j = 0; j < width / tileSize; j++) {
 

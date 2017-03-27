@@ -46,9 +46,7 @@ public class Graphics extends Thread {
 	 * Run the thread
 	 */
 	
-	public void run() {
-		
-		
+	public void run() {	
 		
 		comp.setLocationRelativeTo(null);
 		comp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 							

@@ -11,7 +11,7 @@ import resources.Character;
 import resources.Resources;
 
 /**
- * Class to display a panel detailing all players in game
+ * Class to display a panel detailing all players in game 
  * 
  * @author George Kaye
  *

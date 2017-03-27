@@ -5,7 +5,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -55,7 +54,7 @@ public class LayeredPane extends JLayeredPane {
 	public LayeredPane(Resources resources, boolean debugPaths, JFrame frame) {
 
 		super();
-		
+
 		this.resources = resources;
 
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -71,7 +70,6 @@ public class LayeredPane extends JLayeredPane {
 		JLabel map = new JLabel(new ImageIcon(Sprite.createMap(new Map(UIRes.frameWidth, UIRes.frameHeight, ""))));
 		map.setLayout(new BorderLayout());
 		panel2 = new JPanel();
-		BoxLayout box = new BoxLayout(panel2, BoxLayout.Y_AXIS);
 
 		optionsPanel = UIRes.optionsPanel;
 
@@ -132,9 +130,11 @@ public class LayeredPane extends JLayeredPane {
 
 	/**
 	 * Set the victory screen to be visible or not
-	 * @param vis whether victory is true
+	 * 
+	 * @param vis
+	 *            whether victory is true
 	 */
-	
+
 	public void setVictory(boolean vis) {
 		if (vis) {
 			victory = new VictoryScreen(resources);
@@ -150,9 +150,11 @@ public class LayeredPane extends JLayeredPane {
 
 	/**
 	 * Set the splash screen to be visible or not
-	 * @param vis whether the splash screen is visible
+	 * 
+	 * @param vis
+	 *            whether the splash screen is visible
 	 */
-	
+
 	public void setSplash(boolean vis) {
 		if (vis) {
 			setLayer(splash, new Integer(25));
@@ -162,13 +164,14 @@ public class LayeredPane extends JLayeredPane {
 			splashShowing = false;
 		}
 	}
-	
+
 	/**
 	 * Is the victory screen showing or not?
+	 * 
 	 * @return if the victory screen is showing
 	 */
-	
-	public boolean isVictoryShowing(){
+
+	public boolean isVictoryShowing() {
 		return this.victoryShowing;
 	}
 

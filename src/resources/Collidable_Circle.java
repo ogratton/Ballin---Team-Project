@@ -1,5 +1,11 @@
 package resources;
 
+/**
+ * Interface for a collidable circle (most objects in the game)
+ * @author Alex & Luke
+ *
+ */
+
 public interface Collidable_Circle extends Collidable {
 	public enum CollidableType {
 		Character, Puck, Powerup, Wall

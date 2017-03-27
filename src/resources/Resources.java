@@ -20,7 +20,7 @@ import resources.Map.Tile;
  *   If we'd prefer to just pass them to the relevant things, that's cool too.
  */
 public class Resources {
-	//XXX Variables
+	// XXX Variables
 	public static boolean silent = false; // so alex can run the game :)
 
 	public enum Mode {
@@ -61,7 +61,7 @@ public class Resources {
 
 	// puck used in hockey game mode, using character class to make things easy
 	private Puck puck;
-	
+
 	@Deprecated
 	// are we playing a hockey game?
 	private Team[] teams;
@@ -85,8 +85,6 @@ public class Resources {
 	private Point AINextDest;
 	// Normal to AINextDext:
 	private Line normal;
-	
-
 
 	private Color cpuColour = new Color(110, 110, 110);
 	private Color p1Colour = new Color(238, 31, 52);
@@ -104,12 +102,13 @@ public class Resources {
 	private int countdown = 3;
 	private boolean finished = false;
 	private int timer = 30;
-	
+
 	private boolean lowGraphics = false;
 	private boolean isGameOver = false;
-	
+
 	/**
-	 * Creates a new resources object and defines which tiles are not walkable ('bad')
+	 * Creates a new resources object and defines which tiles are not walkable
+	 * ('bad')
 	 */
 	public Resources() {
 		bad_tiles = new ArrayList<Tile>();
@@ -120,19 +119,20 @@ public class Resources {
 	}
 
 	/**
-	 * Sets the values of all the resources to their defaults ready for a new game.
+	 * Sets the values of all the resources to their defaults ready for a new
+	 * game.
 	 */
 	public void refresh() {
 		powerupList = new ArrayList<Powerup>();
 		globalTimer = 0;
 		setFinished(false);
 		setCountdown(3);
-		
-		//LayeredPane.victoryShowing = false;
-		//LayeredPane.splashShowing = true;
+
+		// LayeredPane.victoryShowing = false;
+		// LayeredPane.splashShowing = true;
 	}
 
-	//XXX General functions
+	// XXX General functions
 	/**
 	 * Add a character to the player list
 	 * 
@@ -152,29 +152,27 @@ public class Resources {
 	public void setPlayerList(ArrayList<Character> playerList) {
 		this.playerList = playerList;
 	}
-	
+
 	/**
-	 * Set the song
-	 * (music filename minus .wav extension)
+	 * Set the song (music filename minus .wav extension)
 	 * 
 	 * @param song
 	 */
-	public void setSong(String song)
-	{
+	public void setSong(String song) {
 		this.song = song;
 	}
-	
+
 	/**
 	 * @return the song we should be playing
 	 */
-	public String getSong()
-	{
+	public String getSong() {
 		return song;
 	}
 
 	// Deprecated?
 	/**
 	 * Gets the puck. (for hockey mode) (unused)
+	 * 
 	 * @return
 	 */
 	public Puck getPuck() {
@@ -184,6 +182,7 @@ public class Resources {
 	// Deprecated?
 	/**
 	 * Sets the puck. (for hockey mode) (unused)
+	 * 
 	 * @return
 	 */
 	public void setPuck(Puck puck) {
@@ -193,6 +192,7 @@ public class Resources {
 	@Deprecated
 	/**
 	 * Gets the teams. (for team modes) (unused)
+	 * 
 	 * @return
 	 */
 	public Team[] getTeams() {
@@ -202,13 +202,14 @@ public class Resources {
 	@Deprecated
 	/**
 	 * Sets the teams. (for team modes) (unused)
+	 * 
 	 * @return
 	 */
 	public void setTeams(Team[] teams) {
 		this.teams = teams;
 	}
-	
-	//XXX Controls functions
+
+	// XXX Controls functions
 	/**
 	 * Get the default up keybinding
 	 * 
@@ -465,9 +466,7 @@ public class Resources {
 		return playerList;
 	}
 
-	
-	
-	//XXX Map/playing field functions
+	// XXX Map/playing field functions
 	/**
 	 * Get the map
 	 * 
@@ -542,9 +541,10 @@ public class Resources {
 	public ArrayList<Powerup> getPowerupList() {
 		return powerupList;
 	}
-	
+
 	/**
-	 * @param list An ArrayList of all powerups.
+	 * @param list
+	 *            An ArrayList of all powerups.
 	 */
 	public void setPowerUpList(ArrayList<Powerup> list) {
 		powerupList = list;
@@ -598,7 +598,7 @@ public class Resources {
 		}
 	}
 
-	//XXX AI Functions!
+	// XXX AI Functions!
 	/**
 	 * Debug for drawing predicted position of AI
 	 * 
@@ -616,7 +616,6 @@ public class Resources {
 	public void setProjectedPos(Point pos) {
 		projectedPos = pos;
 	}
-
 
 	/**
 	 * DEBUG: Get the point which the AI is trying to get to
@@ -653,7 +652,7 @@ public class Resources {
 	public void setNormal(Line n) {
 		this.normal = n;
 	}
-	
+
 	// XXX NETWORKING FUNCTIONS:
 	/**
 	 * @return The current id.
@@ -709,7 +708,7 @@ public class Resources {
 	public void setRequests(List<networking.CharacterInfo> list) {
 		requests = list;
 	}
-	
+
 	public LinkedList<NetworkMove> getClientMoves() {
 		return clientMoves;
 	}
@@ -745,31 +744,49 @@ public class Resources {
 		}
 		return null;
 	}
-	
-	public void clearPlayerList(){
+
+	public void clearPlayerList() {
 		this.playerList = new ArrayList<>();
 	}
-	
-	public void setCountdown(int i){
+
+	/**
+	 * Set the countdown at the beginning of the game to a given value
+	 * @param i the value to set the countdown to
+	 */
+	public void setCountdown(int i) {
 		this.countdown = i;
 	}
-	
-	public void decCountdown(){
+
+	/**
+	 * Decrement the count on the countdown at the beginning of the game by 1
+	 */
+	public void decCountdown() {
 		this.countdown -= 1;
 	}
-	
-	public int getCountdown(){
+
+	/**
+	 * @return the current count on the countdown at the beginning of the game
+	 */
+	public int getCountdown() {
 		return this.countdown;
 	}
-	
-	public void setFinished(boolean finished){
+
+	/**
+	 * Set if the game is 'finished' (i.e. it is time to return to the main menu)
+	 * @param finished if the game is 'finished'
+	 */
+	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-	
-	public boolean isFinished(){
+
+	/**
+	 * Get if the game is 'finished' (i.e. it is time to return to the main menu)
+	 * @return if the game is 'finished'
+	 */
+	public boolean isFinished() {
 		return this.finished;
 	}
-	
+
 	/**
 	 * @return An ArrayList of all characters, order by descending score
 	 */
@@ -780,40 +797,71 @@ public class Resources {
 		return scores;
 	}
 
+	/**
+	 * Set the timer to a given value
+	 * @param n the value to set the timer to
+	 */
 	public void setTimer(int n) {
 		timer = n;
 	}
-	
+
+	/**
+	 * Reset the timer to 0
+	 */
 	public void resetTimer() {
 		timer = 0;
 	}
 	
+	/**
+	 * Increment the timer by a value
+	 * @param the value to increment the timer by
+	 */
 	public void incrementTimer(int i) {
-		timer = timer + i;		
+		timer = timer + i;
 	}
 
+	/**
+	 * @return The current count on the timer for this game
+	 */
 	public int getTimer() {
 		return this.timer;
 	}
-	
-	public boolean isLowGraphics(){
+
+	/**
+	 * @return If the game graphics are 'low quality'
+	 */
+	public boolean isLowGraphics() {
 		return this.lowGraphics;
 	}
-	
-	public void setLowGraphics(boolean low){
+
+	/**
+	 * Set if the graphics for this game are 'low quality'
+	 * 
+	 * @param low
+	 *            whether or not the graphics are 'low quality'
+	 */
+	public void setLowGraphics(boolean low) {
 		this.lowGraphics = low;
 	}
 
+	/**
+	 * @return is this game over?
+	 */
 	public boolean isGameOver() {
 		return isGameOver;
 	}
 
+	/**
+	 * Set if the game is over
+	 * 
+	 * @param isGameOver
+	 *            is the game over?
+	 */
 	public void setGameOver(boolean isGameOver) {
-		for(int i=0; i<this.getPlayerList().size(); i++) {
+		for (int i = 0; i < this.getPlayerList().size(); i++) {
 			this.getPlayerList().get(i).setGameOver(true);
 		}
 		this.isGameOver = isGameOver;
 	}
-	
-	
+
 }

@@ -35,6 +35,7 @@ public class TopBar extends JPanel {
 		
 		Character me = null;
 		
+		// single player won't have a connection
 		try{
 			me = UIRes.cModel.getMyCharacter();
 		}catch(NullPointerException e){
