@@ -10,7 +10,7 @@ import graphics.sprites.Sprite;
 
 /**
  * Class to contain a map with various properties
- * @author Team F1
+ * @author Alex & Luke
  *
  */
 

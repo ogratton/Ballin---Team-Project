@@ -2,7 +2,7 @@ package resources;
 
 /**
  * Interface for a collidable circle (most objects in the game)
- * @author George Kaye
+ * @author Alex & Luke
  *
  */
 
