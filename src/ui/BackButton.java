@@ -30,7 +30,6 @@ public class BackButton extends JButton {
 		UIRes.customiseButton(this, true);
 		addActionListener(e -> {
 			UIRes.switchPanel(panel);
-			System.out.println(UIRes.cModel.getConnection() == null);
 			if (UIRes.cModel.getConnection() != null) {
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);

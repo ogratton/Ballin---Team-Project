@@ -182,7 +182,6 @@ public class StartMenu extends JPanel {
 						iterator.next();
 					}
 					mapName = iterator.next();
-					System.out.println(mapName);
 
 					JLabel tileLabel = new JLabel("Tile: ");
 					UIRes.customiseLabel(tileLabel);
@@ -211,13 +210,7 @@ public class StartMenu extends JPanel {
 					mapFrame.dispose();
 			} else
 				gameModeFrame.dispose();
-
-			System.out.println("Map: " + mapName);
-			System.out.println("Game mode: " + gameMode);
-			System.out.println("Tiles: " + tileSet);
 			
-			// TODO these vars aren't cleared after a game is completed
-			// if they didn't cancel
 			if (mapName != null && gameMode != null && tileSet != null) {
 				UIRes.resources.refresh();
 				PlayGame.start(UIRes.resources, mapName, gameMode, tileSet);
@@ -244,11 +237,16 @@ public class StartMenu extends JPanel {
 		startButton.addActionListener(e -> {
 			UIRes.resources.refresh();
 			JFrame frame = new JFrame();
-			String input = JOptionPane.showInputDialog(frame, "Enter the server name:", "Input server",
+			String input = JOptionPane.showInputDialog(frame, "Enter the server address:", "Input server",
 					JOptionPane.PLAIN_MESSAGE);
 			if (input != null) {
-				NetworkingClient client = new NetworkingClient(input, UIRes.username);
-				client.start();
+				try{
+					NetworkingClient client = new NetworkingClient(input, UIRes.username);
+					client.start();					
+				}
+				catch(Exception e1){
+					JOptionPane.showMessageDialog(new JFrame(), "The server address was incorrect. Please try again!");
+				}
 			} else {
 				frame.dispose();
 			}

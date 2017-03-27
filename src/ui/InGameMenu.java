@@ -97,7 +97,6 @@ public class InGameMenu extends JPanel {
 		button.addActionListener(e -> {
 			UIRes.resources.setFinished(true);
 			UIRes.switchPanel(UIRes.startPanel);
-			System.out.println("Is connected: " + (UIRes.cModel.getConnection() != null));
 			if (UIRes.cModel.getConnection() != null) {
 				UIRes.cModel.getConnection().close();
 				UIRes.cModel.setSessionId(null);
@@ -105,9 +104,7 @@ public class InGameMenu extends JPanel {
 				UIRes.cModel.setCharacters(new ConcurrentHashMap<String, resources.Character>());
 				UIRes.cModel = new ConnectionDataModel(new ConnectionData());
 				UIRes.fullReset();
-				System.out.println("Disconnecting from server");
 			} else {
-				System.out.println("TRYING TO END GAME");
 				UIRes.resources.gamemode.setEndGame(true);
 			}
 

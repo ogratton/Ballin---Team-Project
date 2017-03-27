@@ -102,7 +102,6 @@ public class SessionListMenu extends JPanel implements Observer {
 
 				try {
 					cModel.getConnection().sendTCP(createMessage);
-					System.out.println("Session creation sent.");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -135,7 +134,6 @@ public class SessionListMenu extends JPanel implements Observer {
 				}
 			}
 			
-			System.out.println(index);
 			
 			if(index == -1){
 				JFrame frame = new JFrame();
