@@ -33,10 +33,11 @@ public class PhysicsTests {
 		r = new Resources();
 		physics = new Physics(r, false);
 		r.mode = Mode.LastManStanding;
+		r.silent = true;
 		map = new Map(
 				new Point2D.Double(0,0), // origin
-				100, // width
-				100, // height
+				1000, // width
+				1000, // height
 				0.0, // friction (no friction! Hahahahahaaa!)
 				"TestMap");
 		
@@ -54,8 +55,110 @@ public class PhysicsTests {
 		//Test physics.actionPerformed().
 		//Test single character movement:
 		// starts character in the middle of the map, then moves them in each direction for twenty steps.
-		Character c1 = new Character(1, 50, 50, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
+		Character c1 = new Character(1, 500, 500, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
+		Character c2 = new Character(1, 420, 500, 25, Heading.STILL, Class.WARRIOR, 0, "Player 2");
+		Character c3 = new Character(1, 580, 500, 25, Heading.STILL, Class.WARRIOR, 0, "Player 3");
 		r.addPlayerToList(c1);
+		r.addPlayerToList(c2);
+		r.addPlayerToList(c3);
+
+		double acc = c1.getAcc();
+		double maxdx = c1.getMaxDx(), maxdy = c1.getMaxDy();
+		double dx = c1.getDx(), dy = c1.getDy();
+		double x1 = c1.getX(), y1 = c1.getY();
+		double x2 = c2.getX(), y2 = c2.getY();
+		double x3 = c3.getX(), y3 = c3.getY();
+		for(Character.Heading h : new Character.Heading[]{Character.Heading.N, Character.Heading.NW, Character.Heading.NE, Character.Heading.W, Character.Heading.E, Character.Heading.S, Character.Heading.SW, Character.Heading.SE, Character.Heading.STILL}) {
+			switch(h) {
+			case N:
+				c1.setControls(true, false, false, false, false, false);
+				c2.setControls(true, false, false, false, false, false);
+				c3.setControls(true, false, false, false, false, false);
+				break;
+			case E:
+				c1.setControls(false, false, false, true, false, false);
+				c2.setControls(false, false, false, true, false, false);
+				c3.setControls(false, false, false, true, false, false);
+				break;
+			case NE:
+				c1.setControls(true, false, false, true, false, false);
+				c2.setControls(true, false, false, true, false, false);
+				c3.setControls(true, false, false, true, false, false);
+				break;
+			case NW:
+				c1.setControls(true, false, true, false, false, false);
+				c2.setControls(true, false, true, false, false, false);
+				c3.setControls(true, false, true, false, false, false);
+				break;
+			case S:
+				c1.setControls(false, true, false, false, false, false);
+				c2.setControls(false, true, false, false, false, false);
+				c3.setControls(false, true, false, false, false, false);
+				break;
+			case SE:
+				c1.setControls(false, true, false, true, false, false);
+				c2.setControls(false, true, false, true, false, false);
+				c3.setControls(false, true, false, true, false, false);
+				break;
+			case STILL:
+				c1.setControls(false, false, false, false, false, false);
+				c2.setControls(false, false, false, false, false, false);
+				c3.setControls(false, false, false, false, false, false);
+				break;
+			case SW:
+				c1.setControls(false, true, true, false, false, false);
+				c2.setControls(false, true, true, false, false, false);
+				c3.setControls(false, true, true, false, false, false);
+				break;
+			case W:
+				c1.setControls(false, false, true, false, false, false);
+				c2.setControls(false, false, true, false, false, false);
+				c3.setControls(false, false, true, false, false, false);
+				break;
+			}
+			dx = 0.0;
+			dy = 0.0;
+			c1.setDx(dx);
+			c1.setDy(dx);
+			c1.setX(500.0);
+			c1.setY(500.0);
+			c2.setDx(dx);
+			c2.setDy(dx);
+			c2.setX(420.0);
+			c2.setY(500.0);
+			c3.setDx(dx);
+			c3.setDy(dx);
+			c3.setX(580.0);
+			c3.setY(500.0);
+			for(int step = 1; step <= 20; step++) {
+				//20 steps
+				x1 = c1.getX();
+				y1 = c1.getY();
+				x2 = c2.getX();
+				y2 = c2.getY();
+				x3 = c3.getX();
+				y3 = c3.getY();
+				if( c1.isLeft()  ) dx = Math.max(-maxdx, dx - acc);
+				if( c1.isRight() ) dx = Math.min( maxdx, dx + acc);
+				if( c1.isUp()    ) dy = Math.max(-maxdy, dy - acc);
+				if( c1.isDown()  ) dy = Math.min( maxdy, dy + acc);
+				
+				physics.actionPerformed(ev);
+				if(verbose) System.out.println(h + " step " + step + ": dx " + dx + ", dy " + dy + ", coords: (" + x1 + "," + y1 + ")");
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getX(), x1 + dx) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getY(), y1 + dy) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c2.getX(), x2 + dx) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c2.getY(), y2 + dy) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c3.getX(), x3 + dx) == 0);
+				assertTrue("Error somewhere in actionPerformed.",Double.compare(c3.getY(), y3 + dy) == 0);
+			}
+		}
+		
+	}
+	
+	@Test
+	public void testUpdateCharacter() {
+		Character c1 = new Character(1, 50, 50, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
 		double acc = c1.getAcc();
 		double maxdx = c1.getMaxDx(), maxdy = c1.getMaxDy();
 		double dx = c1.getDx(), dy = c1.getDy();
@@ -105,25 +208,35 @@ public class PhysicsTests {
 				if( c1.isUp()    ) dy = Math.max(-maxdy, dy - acc);
 				if( c1.isDown()  ) dy = Math.min( maxdy, dy + acc);
 				
-				physics.actionPerformed(ev);
+				physics.update(c1);
 				if(verbose) System.out.println(h + " step " + step + ": dx " + dx + ", dy " + dy + ", coords: (" + x + "," + y + ")");
-				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getX(), x + dx) == 0);
-				assertTrue("Error somewhere in actionPerformed.",Double.compare(c1.getY(), y + dy) == 0);
+				assertTrue("Error somewhere in update.",Double.compare(c1.getX(), x + dx) == 0);
+				assertTrue("Error somewhere in update.",Double.compare(c1.getY(), y + dy) == 0);
 			}
 		}
-		
-	}
-	
-	@Test
-	public void testUpdateCharacter() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testUpdateCollidable_Circle() {
-		Collidable_Circle c;
-		//physics.update(c);
-		fail("do stuff!");
+		Collidable_Circle c1 = new Character(1, 500, 500, 25, Heading.STILL, Class.WARRIOR, 0, "Player 1");
+		double dx = c1.getDx(), dy = c1.getDy();
+		double x = c1.getX(), y = c1.getY();
+		dx = 1.0;
+		dy = 1.0;
+		c1.setDx(dx);
+		c1.setDy(dy);
+		c1.setX(50.0);
+		c1.setY(50.0);
+		for(int step = 1; step <= 20; step++) {
+			//20 steps
+			x = c1.getX();
+			y = c1.getY();
+			
+			physics.update(c1);
+			if(verbose) System.out.println(" step " + step + ": dx " + dx + ", dy " + dy + ", coords: (" + x + "," + y + ")");
+			assertTrue("Error somewhere in update.",Double.compare(c1.getX(), x + dx) == 0);
+			assertTrue("Error somewhere in update.",Double.compare(c1.getY(), y + dy) == 0);
+		}
 	}
 
 	@Test
