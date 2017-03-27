@@ -2,7 +2,7 @@ package resources;
 
 /**
  * Interface for a collidable object (i.e. things in the game)
- * @author George Kaye
+ * @author Alex & Luke
  *
  */
 
