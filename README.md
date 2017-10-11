@@ -1,5 +1,13 @@
 <h1>Team F1 Project Repository</h1>
 
+## Team Members
+* [George Kaye](https://github.com/georgejkaye): Graphics
+* [Oliver Gratton](https://github.com/ogratton): Music and AI
+* [Alexander C-F](https://github.com/Alexandercofa): Physics and Game Logic
+* Luke Hudson: Physics and Game Logic
+* Andreea Diana Dinca: User Interface
+* [Aaquib Naved](https://github.com/Aaquib-Naved): Networking
+
 <h2>How to Run</h2>
 
 To run jar: 
